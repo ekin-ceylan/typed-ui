@@ -1,0 +1,15 @@
+# Tüm metin dosyalarında satır sonu karakterini LF olarak ayarla
+* text=auto eol=lf
+
+# Binary dosyaları algılayarak satır sonu dönüşümünü engelle
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.mp4 binary
+*.avi binary

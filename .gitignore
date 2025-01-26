@@ -1,0 +1,7 @@
+# Node.js bağımlılıkları
+node_modules/
+dist/
+
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
