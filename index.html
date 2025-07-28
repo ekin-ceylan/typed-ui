@@ -1,48 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Custom Textbox Test</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Textbox Test</title>
+    <body>
+        <text-box placeholder="Type something..." onchange="test(event)" value="5" label="First Name"></text-box>
+        <br />
+        <br />
+        <phone-box label="Phone Number" oninput="input(event)" onchange="test(event)" required></phone-box>
+        <br />
+        <br />
+        <base-input id="base1" field-id="firstname" placeholder="Yaz..." required test="Hello" oninput="input(event)" onchange="test(event)" value="6"></base-input>
 
+        <script type="module" src="./src/main.js"></script>
 
-</head>
+        <script>
+            // document.querySelector('base-input').addEventListener('input', (event) => {
+            //     console.log('Textbox value:', event.target.value);
+            // });
+            // document.getElementById('btn').addEventListener('click', () => {
+            //     console.log('Button clicked!');
+            // });
+            function test(e) {
+                console.log('change');
+            }
 
-<body>
+            function update(e) {
+                console.log(e, 'update');
+            }
 
-    <text-box placeholder="Type something..." type="number" onchange="test(event)" value="5"></text-box>
-    <!-- <base-input id="base1" placeholder="Yaz..." onupdate="update(event)" onchange="test(event)" value="6"></base-input> -->
-    <input is="base-input" oncopy="update(event)" onupdate="update(event)" onchange="test(event)" id="base"
-        placeholder="Yaz..." value="6" />
-    <!-- <custom-button id="btn"></custom-button> -->
+            function input(e) {
+                console.log(e, 'input');
+            }
 
-    <script type="module" src="./src/main.ts"></script>
-
-    <script>
-        // document.querySelector('base-input').addEventListener('input', (event) => {
-        //     console.log('Textbox value:', event.target.value);
-        // });
-        // document.getElementById('btn').addEventListener('click', () => {
-        //     console.log('Button clicked!');
-        // });
-        function test(e) {
-            console.log('change')
-        }
-
-        function update(e) {
-            console.log(e, 'update')
-        }
-
-        const textbox = document.getElementById('base');
-        setTimeout(() => {
-            // console.log(textbox)
-            // textbox.value = 'Yeni Değer';
-            textbox.setAttribute('value', 10);
-        }, 2000);
-        // textbox.addEventListener('update', () => { console.log('clicked') })
-    </script>
-
-</body>
-
+            const textbox = document.getElementById('base1');
+            textbox.addEventListener('update', e => {
+                console.log(e, 'binded update');
+            });
+            setTimeout(() => {
+                // console.log(textbox);
+                // textbox.value = 'Yeni Değer';
+                textbox.setAttribute('value', 10);
+                console.log('Textbox value updated to:', textbox.value);
+            }, 2000);
+        </script>
+    </body>
 </html>
