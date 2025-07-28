@@ -49,8 +49,6 @@ export class BaseInput extends LitElement {
         const el = this.inputElement;
         const v = el.validity;
 
-        console.log('Validating input:', this.inputElement.value, force, this.ariaInvalid, v?.valueMissing);
-
         // invalid ise her inputta tekrar kontrol et, valid ise blur olana kadar bekle
         if (!force && !this.ariaInvalid && !v?.valueMissing) {
             return;
