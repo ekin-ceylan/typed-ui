@@ -1,0 +1,86 @@
+check-box {
+    display: inline-flex;
+}
+
+check-box > label {
+    --shadow-size: 3px;
+    --shadow-blur: 4px;
+    --shadow-hover-color: #57bc1d;
+    --shadow-active-color: #265a0e;
+    --border-color: darkgray;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    color: black;
+}
+
+check-box > label:has(> input:user-invalid) {
+    --shadow-hover-color: #cf3b2c;
+    --shadow-active-color: #7c1a0f;
+    --border-color: #cf3b2c;
+}
+
+check-box > label:hover input ~ .checkmark {
+    border-color: var(--shadow-hover-color);
+    box-shadow: 0 0 var(--shadow-blur) var(--shadow-size) var(--shadow-hover-color);
+}
+
+check-box > label:active input ~ .checkmark {
+    border-color: var(--shadow-active-color);
+    box-shadow: 0 0 var(--shadow-blur) var(--shadow-size) var(--shadow-active-color);
+}
+
+check-box > label > input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+check-box > label > input:checked ~ .checkmark::after {
+    display: block;
+}
+
+check-box > label > input:focus ~ .checkmark {
+    border-color: var(--shadow-hover-color);
+    box-shadow: 0 0 var(--shadow-blur) var(--shadow-size) var(--shadow-hover-color);
+}
+
+check-box > label > input ~ .error {
+    display: none;
+    flex-basis: 100%;
+}
+
+check-box > label > input:user-invalid ~ .error {
+    display: block;
+}
+
+check-box > label .checkmark {
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    border: solid 1px var(--border-color);
+    background-color: white;
+    border-radius: 1px;
+    margin: 1px 12px 0 2px;
+    transition: ease-in-out 0.1s;
+    box-shadow: none;
+    flex-shrink: 0;
+}
+
+check-box > label .checkmark::after {
+    content: ' ';
+    width: 5px;
+    height: 11px;
+    border: solid var(--shadow-active-color);
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+    margin: 1px 0 0 5px;
+    display: none;
+}

@@ -1,23 +1,60 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <link rel="modulepreload" href="./src/main.js" />
+        <link rel="modulepreload" href="./src/components/base-input.js" />
+        <!-- <link rel="modulepreload" href="./src/components/phone-box.js" /> -->
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./src/styles/check-box.css" />
+        <link rel="stylesheet" href="./src/styles/input.css" />
         <title>Custom Textbox Test</title>
     </head>
 
     <body>
-        <text-box placeholder="Type something..." onchange="test(event)" value="5" label="First Name"></text-box>
-        <br />
-        <br />
-        <phone-box label="Phone Number" oninput="input(event)" onchange="test(event)" required></phone-box>
-        <br />
-        <br />
-        <base-input id="base1" field-id="firstname" placeholder="Yaz..." required test="Hello" oninput="input(event)" onchange="test(event)" value="6"></base-input>
+        <form>
+            <base-input id="base1" oninput="input(event)" minlength="4" maxlength="100" label="İsim" field-id="firstname" placeholder="Yaz..." required value="6"></base-input>
+            <br />
+            <br />
+            <text-box placeholder="Type something..." minlength="20" onchange="test(event)" value="5" label="First Name"></text-box>
+            <br />
+            <br />
+            <phone-box label="Phone Number" minlength="20" required></phone-box>
+            <br />
+            <br />
+            <email-box label="E-Posta Adresi" minlength="20" required></email-box>
+            <br />
+            <br />
+            <plate-box field-id="plate-no" label="Plaka Numarası" required></plate-box>
+            <br />
+            <br />
+            <check-box label="Kvkk Onayı" required>Okudum, onaylıyorum <span>!</span></check-box>
+            <br />
+            <br />
+            <button type="submit">Submit</button>
+        </form>
+
+        <pre id="log">Validation logged here...</pre>
+        <input type="text" id="userText" minlength="4" />
 
         <script type="module" src="./src/main.js"></script>
-
         <script>
+            // const userInput = document.getElementById('userText');
+            // const logElement = document.getElementById('log');
+
+            // function log(text) {
+            //     logElement.innerText = text;
+            // }
+
+            // userInput.addEventListener('input', () => {
+            //     // userInput.reportValidity();
+            //     if (userInput.validity.tooShort) {
+            //         log('Not enough characters entered.');
+            //     } else {
+            //         log('Input is valid…');
+            //     }
+            // });
+
             // document.getElementById('btn').addEventListener('click', () => {
             //     console.log('Button clicked!');
             // });
@@ -30,18 +67,20 @@
             }
 
             function input(e) {
-                console.log(e, 'input');
+                console.log(e.target, 'input');
             }
 
             const textbox = document.getElementById('base1');
             textbox.addEventListener('update', e => {
                 console.log(e, 'binded update');
             });
-            setTimeout(() => {
-                // textbox.value = 'Yeni Değer';
-                textbox.setAttribute('value', 10);
-                console.log('Textbox value updated to:', textbox.value);
-            }, 2000);
+            // setTimeout(() => {
+            //     textbox.value = 'Yeni Değer';
+            //     // textbox.setAttribute('value', 10);
+            //     console.log('Textbox value updated to:', textbox.value);
+            // }, 2000);
         </script>
     </body>
 </html>
+
+<!-- herhangi bir attr eklendiğinde nasıl davranacak -->

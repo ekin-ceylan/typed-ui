@@ -16,7 +16,7 @@ export class BaseInput extends LitElement {
             minlength: { type: Number, reflect: true },
             required: { type: Boolean, reflect: true },
             ariaInvalid: { type: Boolean, attribute: 'aria-invalid', reflect: false },
-            validationMessage: { type: String, reflect: false },
+            validationMessage: { type: String, attribute: false, reflect: false },
         };
     }
 
@@ -32,6 +32,10 @@ export class BaseInput extends LitElement {
         return this.label && this.label + (this.required ? '*' : '');
     }
 
+    get minLengthValidationMessage() {
+        return `${this.label} alanı en az ${this.minlength} karakterden oluşmalıdır.`;
+    }
+
     get labelId() {
         return this.fieldId ? `${this.fieldId}-label` : null;
     }
@@ -42,14 +46,17 @@ export class BaseInput extends LitElement {
 
     onInput(e) {
         this.value = e.target.value;
-        this.validate();
+        this.requestUpdate('value');
+        this.updateComplete.then(this.validate.bind(this, false));
     }
+
+    onPaste(e) {}
+
+    onKeydown(e) {}
 
     validate(force = false) {
         const el = this.inputElement;
         const v = el.validity;
-
-        console.log('Validating input:', this.inputElement.value, force, this.ariaInvalid, v?.valueMissing);
 
         // invalid ise her inputta tekrar kontrol et, valid ise blur olana kadar bekle
         if (!force && !this.ariaInvalid && !v?.valueMissing) {
@@ -69,7 +76,7 @@ export class BaseInput extends LitElement {
         } else if (v?.patternMismatch || v?.typeMismatch) {
             this.validationMessage = `Lütfen geçerli bir ${this.label} giriniz.`;
         } else if (v?.tooShort) {
-            this.validationMessage = `${this.label} alanı en az ${el.minLength} karakterden oluşmalıdır.`;
+            this.validationMessage = this.minLengthValidationMessage;
         } else if (v?.tooLong) {
             this.validationMessage = `${this.label} alanı en fazla ${el.maxLength} karakterden oluşmalıdır.`;
         }
@@ -94,8 +101,8 @@ export class BaseInput extends LitElement {
                 id=${ifDefined(this.fieldId)}
                 name=${ifDefined(this.fieldName || this.fieldId)}
                 type=${this.type || 'text'}
-                aria-labelledby="${ifDefined(this.labelId)}"
-                aria-errormessage="${ifDefined(this.errorId)}"
+                aria-labelledby=${ifDefined(this.labelId)}
+                aria-errormessage=${ifDefined(this.errorId)}
                 aria-required=${this.required ? 'true' : 'false'}
                 ?aria-invalid=${this.ariaInvalid}
                 .placeholder=${this.placeholder}
@@ -105,6 +112,8 @@ export class BaseInput extends LitElement {
                 maxlength=${ifDefined(this.maxlength)}
                 minlength=${ifDefined(this.minlength)}
                 @input=${this.onInput}
+                @paste=${this.onPaste}
+                @keydown=${this.onKeydown}
                 @blur=${() => this.validate(true)}
                 @invalid=${() => this.validate(true)}
             />
@@ -120,6 +129,7 @@ export class BaseInput extends LitElement {
         super();
         this.value = null;
         this.label = '';
+        this.placeholder = '';
         this.required = false;
     }
 }
