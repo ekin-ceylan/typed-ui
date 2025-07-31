@@ -31,6 +31,14 @@ export class CheckBox extends LitElement {
         return this._labelElement;
     }
 
+    get errorElement() {
+        if (!this._errorElement) {
+            this._errorElement = this.renderRoot.querySelector('span.error');
+        }
+
+        return this._errorElement;
+    }
+
     get inputLabel() {
         return this.label && this.label + (this.required ? '*' : '');
     }
@@ -75,7 +83,7 @@ export class CheckBox extends LitElement {
         for (let i = 0; i < this.childNodes.length; ) {
             const child = this.childNodes[i];
 
-            if (child === this.labelElement || child.nodeType === Node.COMMENT_NODE) {
+            if (child === this.labelElement || child === this.errorElement || child.nodeType === Node.COMMENT_NODE) {
                 i++;
                 continue;
             }
@@ -123,9 +131,9 @@ export class CheckBox extends LitElement {
                     @invalid=${() => this.validate(true)}
                 />
                 <span class="slot"></span>
-                <span class="checkmark"></span>
-                <span class="error" id=${ifDefined(this.errorId)} aria-live="assertive">${this.validationMessage}</span>
+                <span class="checkmark"></span>                
             </label>
+            <span class="error" id=${ifDefined(this.errorId)} aria-live="assertive">${this.validationMessage}</span>
         `;
     }
 
