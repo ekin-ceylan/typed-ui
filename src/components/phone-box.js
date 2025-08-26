@@ -1,30 +1,7 @@
 import { BaseInput } from './base-input';
 
 export class PhoneBox extends BaseInput {
-    #lastKey = null;
-
-    onKeydown(e) {
-        this.#lastKey = e.key;
-    }
-
-    onInput(e) {
-        const el = e.target;
-        const value = el.value;
-        const caret = el.selectionStart;
-
-        const formatted = this.#formatPhoneNumber(value);
-        e.target.value = formatted;
-
-        if (caret !== value.length) {
-            const isDel = this.#lastKey === 'Delete';
-            const caretPosition = isDel ? caret - value.length + formatted.length : this.#formatPhoneNumber(value.slice(0, caret)).length;
-            el.setSelectionRange(caretPosition, caretPosition); // İmleci eski konumuna getir
-        }
-
-        super.onInput(e);
-    }
-
-    #formatPhoneNumber(value) {
+    mask(value) {
         value = value.replace(/\D/g, ''); // Sayı olmayan karakterleri kaldır
         value = value.slice(0, 11); // İlk 11 karakteri al
 
@@ -38,6 +15,19 @@ export class PhoneBox extends BaseInput {
         }
 
         return value;
+    }
+
+    validateLastChar(keyDownEvent) {
+        const val = keyDownEvent.target.value;
+        const key = keyDownEvent.key;
+        const caret = keyDownEvent.target.selectionStart;
+        const caretEnd = keyDownEvent.target.selectionEnd;
+
+        const newValue = (val.slice(0, caret) + key + val.slice(caretEnd)).replace(/\D/g, '');
+
+        if (newValue.length > 11) return false; // Maksimum uzunluk 11 olmalı
+
+        return /\d/.test(keyDownEvent.key);
     }
 
     constructor() {

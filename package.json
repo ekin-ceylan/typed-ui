@@ -5,6 +5,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build --emptyOutDir",
+        "build:minify": "vite build --emptyOutDir --minify terser",
+        "build:analyze": "vite build --emptyOutDir --analyze",
         "preview": "vite preview",
         "format": "prettier --write \"src/**/*.{ts,js,html,css}\"",
         "lint": "prettier --check \"src/**/*.{ts,js,html,css}\""
@@ -14,6 +16,7 @@
     "license": "ISC",
     "devDependencies": {
         "prettier": "^3.4.2",
+        "terser": "^5.43.1",
         "vite": "^6.0.11"
     },
     "dependencies": {
