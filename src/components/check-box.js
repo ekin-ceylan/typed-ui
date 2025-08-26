@@ -2,42 +2,16 @@ import { LitElement, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 export class CheckBox extends LitElement {
-    static get properties() {
-        return {
-            fieldId: { type: String, attribute: 'field-id' },
-            fieldName: { type: String, attribute: 'field-name' },
-            value: { type: String, reflect: false },
-            label: { type: String, reflect: false },
-            placeholder: { type: String, reflect: true },
-            required: { type: Boolean, reflect: true },
-            ariaInvalid: { type: Boolean, attribute: 'aria-invalid', reflect: false },
-            validationMessage: { type: String, attribute: false, reflect: false },
-        };
-    }
-
-    get inputElement() {
-        if (!this._inputElement) {
-            this._inputElement = this.renderRoot.querySelector('input');
-        }
-
-        return this._inputElement;
-    }
-
-    get labelElement() {
-        if (!this._labelElement) {
-            this._labelElement = this.renderRoot.querySelector('label');
-        }
-
-        return this._labelElement;
-    }
-
-    get errorElement() {
-        if (!this._errorElement) {
-            this._errorElement = this.renderRoot.querySelector('span.error');
-        }
-
-        return this._errorElement;
-    }
+    static properties = {
+        fieldId: { type: String, attribute: 'field-id' },
+        fieldName: { type: String, attribute: 'field-name' },
+        value: { type: String, reflect: false },
+        label: { type: String, reflect: false },
+        placeholder: { type: String, reflect: true },
+        required: { type: Boolean, reflect: true },
+        ariaInvalid: { type: Boolean, attribute: 'aria-invalid', reflect: false },
+        validationMessage: { type: String, attribute: false, reflect: false },
+    };
 
     get inputLabel() {
         return this.label && this.label + (this.required ? '*' : '');
@@ -107,6 +81,10 @@ export class CheckBox extends LitElement {
     }
 
     firstUpdated() {
+        this.inputElement = this.renderRoot.querySelector('input');
+        this.labelElement = this.renderRoot.querySelector('label');
+        this.errorElement = this.renderRoot.querySelector('span.error');
+
         this.#replaceSlot();
     }
 
@@ -131,7 +109,7 @@ export class CheckBox extends LitElement {
                     @invalid=${() => this.validate(true)}
                 />
                 <span class="slot"></span>
-                <span class="checkmark"></span>                
+                <span class="checkmark"></span>
             </label>
             <span class="error" id=${ifDefined(this.errorId)} aria-live="assertive">${this.validationMessage}</span>
         `;

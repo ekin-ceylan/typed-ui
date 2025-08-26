@@ -2,33 +2,39 @@
 <html lang="en">
     <head>
         <link rel="modulepreload" href="./src/main.js" />
-        <link rel="modulepreload" href="./src/components/base-input.js" />
-        <!-- <link rel="modulepreload" href="./src/components/phone-box.js" /> -->
+
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./src/styles/check-box.css" />
         <link rel="stylesheet" href="./src/styles/input.css" />
+        <link rel="stylesheet" href="./src/styles/links.css" />
         <title>Custom Textbox Test</title>
     </head>
 
     <body>
-        <form>
-            <base-input id="base1" oninput="input(event)" minlength="4" maxlength="100" label="İsim" field-id="firstname" placeholder="Yaz..." required value="6"></base-input>
+        <form oninvalid="invalid(event)">
+            <plate-box field-id="plate-no" label="Plaka Numarası" value="55  ty" required></plate-box>
             <br />
             <br />
-            <text-box placeholder="Type something..." minlength="20" onchange="test(event)" value="5" label="First Name"></text-box>
+            <base-input field-id="firstname" maxlength="100" label="İsim" minlength="4" value="tr" placeholder="Yaz..."></base-input>
             <br />
             <br />
-            <phone-box label="Phone Number" minlength="20" required></phone-box>
+            <text-box placeholder="Type something..." minlength="20" onchange="test(event)" value="5" required label="First Name"></text-box>
+            <br />
+            <br />
+            <phone-box label="Phone Number" value="(0212)" required></phone-box>
             <br />
             <br />
             <email-box label="E-Posta Adresi" minlength="20" required></email-box>
             <br />
             <br />
-            <plate-box field-id="plate-no" label="Plaka Numarası" required></plate-box>
+            <integer-box label="Yaş" placeholder="Yaşınızı giriniz" required></integer-box>
             <br />
             <br />
             <check-box label="Kvkk Onayı" required>Okudum, onaylıyorum <span>!</span></check-box>
+            <br />
+            <br />
+            <url-link href="https://www.test.com" target="_blank" aria-label="Example Link">Example Link</url-link>
             <br />
             <br />
             <button type="submit">Submit</button>
@@ -58,8 +64,22 @@
             // document.getElementById('btn').addEventListener('click', () => {
             //     console.log('Button clicked!');
             // });
+
+            // document.querySelector('form').addEventListener(
+            //     'invalid',
+            //     e => {
+            //         e.preventDefault(); // Prevent the default invalid behavior
+            //         console.log('Form is invalid:', e);
+            //     },
+            //     true
+            // );
+
             function test(e) {
-                console.log('change');
+                console.log('change', e.target.unmaskedValue);
+            }
+
+            function invalid(e) {
+                console.log('invalid', e.target);
             }
 
             function update(e) {
@@ -67,13 +87,14 @@
             }
 
             function input(e) {
-                console.log(e.target, 'input');
+                console.log(e, 'input');
             }
 
-            const textbox = document.getElementById('base1');
-            textbox.addEventListener('update', e => {
-                console.log(e, 'binded update');
-            });
+            // const textbox = document.getElementById('base1');
+            // textbox.addEventListener('update', e => {
+            //     console.log(e, 'binded update');
+            // });
+
             // setTimeout(() => {
             //     textbox.value = 'Yeni Değer';
             //     // textbox.setAttribute('value', 10);
