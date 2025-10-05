@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 export class BaseInput extends LitElement {
@@ -6,6 +6,12 @@ export class BaseInput extends LitElement {
     inputElement = null; // DOM input elementi
     regexPattern = null;
     globalRegexPattern = null;
+
+    static styles = css`
+        p {
+            color: blue;
+        }
+    `;
 
     static properties = {
         // Public API properties

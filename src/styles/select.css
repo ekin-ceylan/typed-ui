@@ -1,0 +1,13 @@
+/* select:focus {
+    border-color: rgb(191, 219, 254);
+    outline: 0;
+    box-shadow: 0 0 0 2px rgb(191, 219, 254);
+}
+
+select[aria-invalid] {
+    border-color: #cf3b2c8f;
+}
+
+select[aria-invalid]:focus {
+    box-shadow: 0 0 0 2px #cf3c2c8f;
+} */
