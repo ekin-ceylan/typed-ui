@@ -46,6 +46,7 @@ export class UrlLink extends LitElement {
 
     render() {
         const rel = this.target === '_blank' ? 'noopener noreferrer' : '';
+
         return html` <a href=${this.href} target=${this.target} rel=${rel} aria-label=${ifDefined(this.ariaLabel)}> </a> `;
     }
 

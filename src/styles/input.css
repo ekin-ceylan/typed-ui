@@ -1,9 +1,9 @@
-:is(base-input, text-box, plate-box, phone-box, email-box, integer-box):defined {
+:is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box):defined {
     opacity: 1;
     transition: opacity 0.3s ease;
 }
 
-:is(base-input, text-box, plate-box, phone-box, email-box, integer-box):not(:defined) {
+:is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box):not(:defined) {
     opacity: 0.7;
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
@@ -38,3 +38,10 @@ input:-moz-ui-invalid:focus {
     box-shadow: none !important;
     outline: none !important;
 } /* FF */
+
+select-box {
+    display: inline-flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 300px;
+}

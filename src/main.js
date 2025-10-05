@@ -1,8 +1,9 @@
-import './components/base-input';
-import './components/text-box';
-import './components/phone-box';
-import './components/email-box';
-import './components/check-box';
-import './components/plate-box';
+import './components/text-input/base-input';
+import './components/text-input/text-box';
+import './components/text-input/phone-box';
+import './components/text-input/email-box';
+import './components/text-input/plate-box';
+import './components/text-input/integer-box';
 import './components/url-link';
-import './components/integer-box';
+import './components/check-box';
+import './components/select-box';
