@@ -7,3 +7,4 @@ import './components/text-input/integer-box';
 import './components/url-link';
 import './components/check-box';
 import './components/select-box';
+import './components/modal-dialog';

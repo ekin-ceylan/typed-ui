@@ -48,9 +48,14 @@
             <br />
             <button type="submit">Submit</button>
         </form>
+        <modal-dialog id="myModal" title="My Modal">
+            <p>This is the content of the modal dialog.</p>
+            <button type="button" onclick="document.getElementById('myModal').hide()">Close</button>
+        </modal-dialog>
+        <button type="button" onclick="document.getElementById('myModal').show()">Show Modal</button>
 
-        <pre id="log">Validation logged here...</pre>
-        <input type="text" id="userText" minlength="4" />
+        <!-- <pre id="log">Validation logged here...</pre>
+        <input type="text" id="userText" minlength="4" /> -->
 
         <script type="module" src="./src/main.js"></script>
         <script>
