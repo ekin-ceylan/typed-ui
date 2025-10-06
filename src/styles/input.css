@@ -13,8 +13,13 @@
     display: block;
 }
 
-:is(base-input, text-box, plate-box, phone-box, email-box, integer-box) input[aria-invalid] {
+:is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box) :is(input, select)[aria-invalid] {
     border: 1px solid red;
+}
+
+:is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box, modal-dialog):not(:defined) * {
+    display: none;
+    pointer-events: none;
 }
 
 @keyframes loading {
