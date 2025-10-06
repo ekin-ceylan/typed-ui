@@ -23,7 +23,6 @@ export class SelectBox extends LitElement {
         disabled: { type: Boolean, reflect: true },
     };
 
-    // TODO: props ekle
     static styles = css`
         select-box {
             --sbx-placeholder-color: #757575;
@@ -39,6 +38,11 @@ export class SelectBox extends LitElement {
             --sbx-clear-right-distance: 28px;
 
             --sbx-chevron-right-distance: 12px;
+        }
+
+        select-box[data-not-ready] * {
+            display: none;
+            pointer-events: none;
         }
 
         select-box > div {
@@ -294,15 +298,8 @@ export class SelectBox extends LitElement {
         `;
     }
 
-    firstUpdated() {
-        this.selectElement = this.renderRoot.querySelector('select');
-        const form = this.closest('form');
-        form?.addEventListener('submit', this.onFormSubmit.bind(this));
-    }
-
     connectedCallback() {
         super.connectedCallback();
-        injectStyles(this.#styleId, this.constructor.styles.cssText);
         // Eğer options boşsa ve kullanıcı host içine <option> yazdıysa onları topla
         if (!this.options || this.options.length === 0) {
             const userOptions = Array.from(this.querySelectorAll(':scope > option'));
@@ -320,12 +317,22 @@ export class SelectBox extends LitElement {
         }
     }
 
+    firstUpdated() {
+        this.selectElement = this.renderRoot.querySelector('select');
+        const form = this.closest('form');
+        form?.addEventListener('submit', this.onFormSubmit.bind(this));
+        this.removeAttribute('data-not-ready');
+    }
+
     createRenderRoot() {
         return this; // Shadow DOM'u kapat
     }
 
     constructor() {
         super();
+        this.setAttribute('data-not-ready', '');
+        injectStyles(this.#styleId, this.constructor.styles.cssText);
+
         this.value = null;
         this.label = '';
         this.placeholder = '';
