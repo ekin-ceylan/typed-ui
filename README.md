@@ -1,6 +1,6 @@
 # Type-Safe HTML Library
 
-Bu proje, Web Components ve TypeScript kullanarak geliştirilmiş bir uygulamadır.
+Bu proje, Web Components kullanarak geliştirilmiş bir uygulamadır.
 
 ## 🚀 Proje Başlatma
 
