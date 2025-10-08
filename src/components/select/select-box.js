@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { injectStyles } from '../modules/utilities.js';
+import { injectStyles } from '../../modules/utilities.js';
 
 export class SelectBox extends LitElement {
     #styleId = 'select-box-styles';
@@ -282,7 +282,8 @@ export class SelectBox extends LitElement {
                     @blur=${this.onBlur}
                     @invalid=${this.onInvalid}
                 >
-                    <option value="" disabled selected style="display: none">${this.placeholder}</option>
+                    <option value="" disabled selected hidden>${this.placeholder}</option>
+                    <option disabled ?hidden=${this.options?.length > 0}>Kayıt Bulunamadı</option>
                     ${this.options.map(
                         opt => html`<option value=${opt.value} ?selected=${opt.selected} style="line-height:100px; padding:16px 8px; font-family:sans-serif">${opt.label}</option>`
                     )}

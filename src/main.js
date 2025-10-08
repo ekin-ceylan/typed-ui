@@ -9,5 +9,5 @@ import './components/text-input/password-box';
 import './components/text-input/confirm-password-box';
 import './components/url-link';
 import './components/check-box';
-import './components/select-box';
+import './components/select/select-box';
 import './components/modal-dialog';
