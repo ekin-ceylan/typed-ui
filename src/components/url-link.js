@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-export class UrlLink extends LitElement {
+export default class UrlLink extends LitElement {
     static get properties() {
         return {
             href: { type: String, attribute: 'href', reflect: true },

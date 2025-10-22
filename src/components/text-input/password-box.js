@@ -1,8 +1,8 @@
-import { BaseInput } from './base-input.js';
+import TextBox from './text-box.js';
 import { html, css } from 'lit';
 import { injectStyles } from '../../modules/utilities.js';
 
-export default class PasswordBox extends BaseInput {
+export default class PasswordBox extends TextBox {
     #styleId = 'password-box-styles';
 
     static properties = {

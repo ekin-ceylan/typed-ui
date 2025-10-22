@@ -1,4 +1,3 @@
-import './components/text-input/base-input';
 import './components/text-input/text-box';
 import './components/text-input/phone-box';
 import './components/text-input/email-box';

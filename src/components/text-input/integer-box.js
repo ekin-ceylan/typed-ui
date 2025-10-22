@@ -1,6 +1,6 @@
-import { BaseInput } from './base-input';
+import TextBox from './text-box';
 
-export class IntegerBox extends BaseInput {
+export default class IntegerBox extends TextBox {
     constructor() {
         super();
         this.type = 'text';

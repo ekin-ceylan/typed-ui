@@ -3,7 +3,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { injectStyles } from '../../modules/utilities.js';
 
-export class SelectBox extends LitElement {
+export default class SelectBox extends LitElement {
     #styleId = 'select-box-styles';
     #mouseFlag = false;
     selectElement = null; // DOM select elementi
@@ -14,6 +14,7 @@ export class SelectBox extends LitElement {
         fieldName: { type: String, attribute: 'field-name' },
         value: { type: String, attribute: false }, // Seçili değer
         label: { type: String },
+        hideLabel: { type: Boolean, attribute: 'hide-label' },
         placeholder: { type: String, reflect: true },
         required: { type: Boolean, reflect: true },
         ariaInvalid: { type: Boolean, attribute: 'aria-invalid' },
@@ -258,8 +259,11 @@ export class SelectBox extends LitElement {
             ${this.validationMessage}
         </span>`;
 
+        const label = html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
+
         return html`
-            <label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)} class="tw-text-sm tw-font-medium tw-text-[#4F4F4F] tw-mb-1"> ${this.inputLabel} </label>
+            ${this.label && !this.hideLabel ? label : ``}
+
             <div>
                 <select
                     id=${ifDefined(this.fieldId)}
@@ -281,6 +285,7 @@ export class SelectBox extends LitElement {
                     @keyup=${this.onKeyup}
                     @blur=${this.onBlur}
                     @invalid=${this.onInvalid}
+                    ?data-has-value=${this.value}
                 >
                     <option value="" disabled selected hidden>${this.placeholder}</option>
                     <option disabled ?hidden=${this.options?.length > 0}>Kayıt Bulunamadı</option>
@@ -289,7 +294,7 @@ export class SelectBox extends LitElement {
                     )}
                 </select>
 
-                ${!this.required ? btnClear : null}
+                ${this.required ? null : btnClear}
 
                 <svg class="indicator chevron" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />

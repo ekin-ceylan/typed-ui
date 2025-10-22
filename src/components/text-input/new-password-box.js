@@ -2,7 +2,7 @@ import { html, css } from 'lit';
 import { injectStyles } from '../../modules/utilities.js';
 import PasswordBox from './password-box.js';
 
-export class NewPasswordBox extends PasswordBox {
+export default class NewPasswordBox extends PasswordBox {
     #styleId = 'new-password-box-styles';
     #strengthLabels = ['Şifre çok zayıf', 'Şifre çok zayıf', 'Şifre zayıf', 'Şifre orta', 'Şifre güçlü'];
     #strengthClasses = ['red', 'red', 'orange', 'gold', 'green'];
@@ -108,7 +108,7 @@ export class NewPasswordBox extends PasswordBox {
 
         return html`
             ${base}
-            <div class="strength" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow=${this.strength} aria-label=${this.#strengthLabel}>
+            <div class="strength" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow=${this.strength} aria-valuetext=${this.#strengthLabel}>
                 <div class="fill ${this.#strengthClass}"></div>
             </div>
             <span class="sr-only" aria-live="polite">${this.#strengthLabel}</span>

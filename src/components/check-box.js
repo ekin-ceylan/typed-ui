@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-export class CheckBox extends LitElement {
+export default class CheckBox extends LitElement {
     static properties = {
         fieldId: { type: String, attribute: 'field-id' },
         fieldName: { type: String, attribute: 'field-name' },

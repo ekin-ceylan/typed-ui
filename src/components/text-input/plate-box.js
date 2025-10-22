@@ -1,6 +1,6 @@
-import { BaseInput } from './base-input';
+import TextBox from './text-box';
 
-export class PlateBox extends BaseInput {
+export default class PlateBox extends TextBox {
     get minLengthValidationMessage() {
         return `${this.label} alanı en az ${this.minlength - 2} karakterden oluşmalıdır.`;
     }
@@ -19,6 +19,7 @@ export class PlateBox extends BaseInput {
         const newValue = (value.slice(0, caret) + key + value.slice(caretEnd)).replace(/\s/g, '');
 
         // Yeni karakter eklendiğinde değer paternle uyumlu mu?
+        // ^\d{0,2}(?: [A-PR-VYZa-hj-pr-vyzı]{0,3}(?: \d{0,5})?)?$
         return /^\d{0,2}((?<=\d{2})[A-PR-VYZa-hj-pr-vyzı]{1,3}(?<=\D)\d{0,5})?$/.test(newValue);
     }
 
