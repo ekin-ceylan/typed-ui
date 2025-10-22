@@ -1,6 +1,6 @@
-# Node.js bağımlılıkları
 node_modules/
 dist/
+coverage/
 
 # Sistem dosyaları
 .DS_Store
