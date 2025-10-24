@@ -17,6 +17,12 @@
     border: 1px solid red;
 }
 
+*[data-not-ready],
+*[data-not-ready] * {
+    display: none;
+    pointer-events: none;
+}
+
 :is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box, modal-dialog):not(:defined) * {
     display: none;
     pointer-events: none;

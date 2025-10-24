@@ -327,7 +327,7 @@ export default class SelectBox extends LitElement {
         this.selectElement = this.renderRoot.querySelector('select');
         const form = this.closest('form');
         form?.addEventListener('submit', this.onFormSubmit.bind(this));
-        this.removeAttribute('data-not-ready');
+        this.toggleAttribute('data-not-ready', false);
     }
 
     createRenderRoot() {
@@ -336,7 +336,7 @@ export default class SelectBox extends LitElement {
 
     constructor() {
         super();
-        this.setAttribute('data-not-ready', '');
+        this.toggleAttribute('data-not-ready', true);
         injectStyles(this.#styleId, this.constructor.styles.cssText);
 
         this.value = null;

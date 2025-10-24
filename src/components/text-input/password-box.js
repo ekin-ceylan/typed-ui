@@ -11,9 +11,8 @@ export default class PasswordBox extends TextBox {
     };
 
     static styles = css`
-        :is(password-box, confirm-password-box) {
+        :is(password-box, new-password-box, confirm-password-box) {
             --password-indicator-size: 20px;
-            --password-toggle-right-distance: 8px;
 
             --password-toggle-color: #6c6c6c;
             --password-toggle-hover: #3e3e3e;
@@ -26,10 +25,6 @@ export default class PasswordBox extends TextBox {
         }
 
         :is(password-box, new-password-box, confirm-password-box) > .btn-toggle {
-            /* position: absolute;
-            top: 50%;
-            transform: translateY(-50%); */
-
             width: var(--password-indicator-size);
             height: var(--password-indicator-size);
             transition: all 0.2s;
@@ -38,7 +33,6 @@ export default class PasswordBox extends TextBox {
             background: none;
             line-height: 0px;
             padding: 2px;
-            right: var(--password-toggle-right-distance);
             border-radius: 3px;
 
             color: var(--password-toggle-color);

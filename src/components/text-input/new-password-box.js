@@ -16,9 +16,6 @@ export default class NewPasswordBox extends PasswordBox {
             --password-strength-height: 4px;
             --password-strength-bg: #e1e1e1;
             --password-strength-radius: 3px;
-
-            position: relative;
-            display: inline-block;
         }
 
         new-password-box .sr-only {

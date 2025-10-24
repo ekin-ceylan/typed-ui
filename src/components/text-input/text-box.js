@@ -1,30 +1,21 @@
-import { LitElement, html, nothing } from 'lit';
+import { html, nothing } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import BaseElement from '../base-element.js';
 
-export default class TextBox extends LitElement {
+export default class TextBox extends BaseElement {
     #lastKey = null;
-    inputElement = null; // DOM input elementi
+
     regexPattern = null;
     globalRegexPattern = null;
 
     static properties = {
-        // Public API properties
-        fieldId: { type: String, attribute: 'field-id' },
-        fieldName: { type: String, attribute: 'field-name' },
-        value: { type: String, attribute: false },
-        label: { type: String },
-        hideLabel: { type: Boolean, attribute: 'hide-label' },
         type: { type: String, reflect: true },
-        placeholder: { type: String, reflect: true },
         inputmode: { type: String, reflect: true },
         pattern: { type: String, reflect: true },
         maxlength: { type: Number, reflect: true },
         minlength: { type: Number, reflect: true },
         max: { type: Number, reflect: true },
         min: { type: Number, reflect: true },
-        required: { type: Boolean, reflect: true },
-        ariaInvalid: { type: Boolean, attribute: 'aria-invalid' },
-        validationMessage: { state: true },
         autounmask: { type: Boolean },
         autocomplete: { type: String, reflect: true },
     };
@@ -34,22 +25,7 @@ export default class TextBox extends LitElement {
         return [...base, 'value']; // Lit’in kendi listesi + listem
     }
 
-    get inputLabel() {
-        return this.label && this.label + (this.required ? '*' : '');
-    }
-
-    get labelId() {
-        return this.fieldId ? `${this.fieldId}-label` : null;
-    }
-
-    get errorId() {
-        return this.fieldId ? `${this.fieldId}-error` : null;
-    }
-
     // #region VALİDASYON MESAJLARI
-    get requiredValidationMessage() {
-        return `${this.label} alanı gereklidir.`;
-    }
 
     get minLengthValidationMessage() {
         return `${this.label} alanı en az ${this.minlength} karakterden oluşmalıdır.`;
@@ -253,10 +229,6 @@ export default class TextBox extends LitElement {
             this.regexPattern = new RegExp(this.pattern);
             this.globalRegexPattern = new RegExp(this.pattern, 'g');
         }
-    }
-
-    createRenderRoot() {
-        return this; // Shadow DOM'u kapat
     }
 
     constructor() {
