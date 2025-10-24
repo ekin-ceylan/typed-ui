@@ -9,6 +9,8 @@ export default class ModalDialog extends LitElement {
     static properties = {
         open: { type: Boolean },
         slots: { type: Object, attribute: false },
+        backdropClose: { type: Boolean, attribute: 'backdrop-close' },
+        escClose: { type: Boolean, attribute: 'esc-close' },
     };
 
     static styles = css`
@@ -94,12 +96,14 @@ export default class ModalDialog extends LitElement {
         clearTimeout(this.#timeout);
 
         this.#timeout = setTimeout(() => {
+            document.body.classList.add('overflow-hidden');
             this.#dialog?.classList.add('active');
         }, 20);
     }
 
     #hide() {
         this.#dialog?.classList.remove('active');
+        document.body.classList.remove('overflow-hidden');
         clearTimeout(this.#timeout);
 
         this.#timeout = setTimeout(() => {
@@ -107,9 +111,16 @@ export default class ModalDialog extends LitElement {
         }, 300);
     }
 
+    #clickedOnBackdrop = e => {
+        const r = this.#dialog.getBoundingClientRect();
+        const [x, y] = [e.clientX, e.clientY];
+
+        return x < r.left || x > r.right || y < r.top || y > r.bottom;
+    };
+
     constructor() {
         super();
-        this.setAttribute('data-not-ready', '');
+        this.toggleAttribute('data-not-ready', true);
         injectStyles(this.#styleId, this.constructor.styles.cssText);
         this.open = false;
     }
@@ -121,7 +132,20 @@ export default class ModalDialog extends LitElement {
 
     firstUpdated() {
         this.#dialog = this.renderRoot.querySelector('dialog');
-        this.removeAttribute('data-not-ready');
+        this.toggleAttribute('data-not-ready', false);
+
+        this.#dialog.addEventListener('cancel', e => {
+            e.preventDefault(); // prevent browser to close modal immediately
+
+            if (this.escClose) this.hide();
+        });
+
+        this.#dialog.addEventListener('click', e => {
+            if (!this.backdropClose) return; // if no backdropClose attr
+            if (!this.#clickedOnBackdrop(e)) return; //  if clicked inside dialog
+            e.preventDefault();
+            this.hide();
+        });
     }
 
     updated() {
