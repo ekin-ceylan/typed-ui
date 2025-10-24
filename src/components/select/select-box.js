@@ -1,24 +1,15 @@
-import { LitElement, html, css } from 'lit';
+import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { injectStyles } from '../../modules/utilities.js';
+import BaseElement from '../base-element.js';
 
-export default class SelectBox extends LitElement {
+export default class SelectBox extends BaseElement {
     #styleId = 'select-box-styles';
     #mouseFlag = false;
-    selectElement = null; // DOM select elementi
 
     // Public & internal reactive properties
     static properties = {
-        fieldId: { type: String, attribute: 'field-id' },
-        fieldName: { type: String, attribute: 'field-name' },
-        value: { type: String, attribute: false }, // Seçili değer
-        label: { type: String },
-        hideLabel: { type: Boolean, attribute: 'hide-label' },
-        placeholder: { type: String, reflect: true },
-        required: { type: Boolean, reflect: true },
-        ariaInvalid: { type: Boolean, attribute: 'aria-invalid' },
-        validationMessage: { state: true },
         options: { type: Array }, // [{ value, label }]
         isOpen: { state: false }, // Açık / kapalı (yaklaşık)
         disabled: { type: Boolean, reflect: true },
@@ -132,22 +123,6 @@ export default class SelectBox extends LitElement {
         return [...base, 'value']; // Lit’in kendi listesi + listem
     }
 
-    get inputLabel() {
-        return this.label && this.label + (this.required ? '*' : '');
-    }
-
-    get labelId() {
-        return this.fieldId ? `${this.fieldId}-label` : null;
-    }
-
-    get errorId() {
-        return this.fieldId ? `${this.fieldId}-error` : null;
-    }
-
-    get requiredValidationMessage() {
-        return `${this.label} alanı gereklidir.`;
-    }
-
     // #region EVENT LISTENERS
     onInput(e) {
         e.stopPropagation();
@@ -198,13 +173,14 @@ export default class SelectBox extends LitElement {
         }
     }
     // #endregion EVENT LISTENERS
+
     #clear() {
         this.value = '';
         this.dispatchEvent(new CustomEvent('input', this.#eventInitDict()));
         this.dispatchEvent(new CustomEvent('change', this.#eventInitDict()));
     }
     #checkValidity() {
-        const el = this.selectElement;
+        const el = this.inputElement;
         const v = el.validity;
 
         el.setCustomValidity('');
@@ -306,6 +282,7 @@ export default class SelectBox extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
+
         // Eğer options boşsa ve kullanıcı host içine <option> yazdıysa onları topla
         if (!this.options || this.options.length === 0) {
             const userOptions = Array.from(this.querySelectorAll(':scope > option'));
@@ -324,19 +301,13 @@ export default class SelectBox extends LitElement {
     }
 
     firstUpdated() {
-        this.selectElement = this.renderRoot.querySelector('select');
+        this.inputElement = this.renderRoot.querySelector('select');
         const form = this.closest('form');
         form?.addEventListener('submit', this.onFormSubmit.bind(this));
-        this.toggleAttribute('data-not-ready', false);
-    }
-
-    createRenderRoot() {
-        return this; // Shadow DOM'u kapat
     }
 
     constructor() {
         super();
-        this.toggleAttribute('data-not-ready', true);
         injectStyles(this.#styleId, this.constructor.styles.cssText);
 
         this.value = null;

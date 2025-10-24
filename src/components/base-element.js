@@ -39,6 +39,7 @@ export default class BaseElement extends LitElement {
         await this.updateComplete;
         this.toggleAttribute('data-not-ready', false);
     }
+
     connectedCallback() {
         super.connectedCallback();
         this.#firstUpdateCompleted();
