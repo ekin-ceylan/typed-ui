@@ -1,7 +1,7 @@
 {
-    "name": "type-safe-html-lib",
-    "version": "1.0.0",
-    "description": "",
+    "name": "typed-ui",
+    "version": "0.1.0",
+    "description": "Typed UI: Field/data-type specific, accessible, extensible Web Components.",
     "scripts": {
         "dev": "vite",
         "build": "vite build --emptyOutDir",
@@ -14,7 +14,17 @@
         "test:run": "vitest run",
         "test:coverage": "vitest --coverage"
     },
-    "keywords": [],
+    "keywords": [
+        "typed-ui",
+        "web-components",
+        "custom-elements",
+        "form",
+        "field",
+        "data-type",
+        "accessibility",
+        "a11y",
+        "validation"
+    ],
     "author": "",
     "license": "ISC",
     "devDependencies": {
