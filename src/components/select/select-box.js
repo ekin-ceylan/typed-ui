@@ -2,9 +2,9 @@ import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { injectStyles } from '../../modules/utilities.js';
-import BaseElement from '../base-element.js';
+import BaseInput from '../../core/base-input.js';
 
-export default class SelectBox extends BaseElement {
+export default class SelectBox extends BaseInput {
     #styleId = 'select-box-styles';
     #mouseFlag = false;
 
@@ -302,8 +302,6 @@ export default class SelectBox extends BaseElement {
 
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('select');
-        const form = this.closest('form');
-        form?.addEventListener('submit', this.onFormSubmit.bind(this));
     }
 
     constructor() {

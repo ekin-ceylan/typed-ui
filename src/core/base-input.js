@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 
-export default class BaseElement extends LitElement {
+export default class BaseInput extends LitElement {
     inputElement = null; // DOM input elementi
 
     static properties = {
@@ -31,13 +31,20 @@ export default class BaseElement extends LitElement {
         return `${this.label} alanı gereklidir.`;
     }
 
-    createRenderRoot() {
-        return this; // Shadow DOM'u kapat
+    /**
+     * Abstract handler for the nearest <form> submit. Must be overridden.
+     * Typical flow: e.preventDefault(); validate; set validationMessage / ariaInvalid;
+     * dispatch a custom event with current value.
+     * Make async if server-side validation is needed.
+     * @abstract
+     * @param {SubmitEvent|Event} SubmitEvent
+     */
+    onFormSubmit(_event) {
+        throw new Error(`${this.constructor.name}: onFormSubmit(submitEvent) override edilmek zorunda.`);
     }
 
-    async #firstUpdateCompleted() {
-        await this.updateComplete;
-        this.toggleAttribute('data-not-ready', false);
+    createRenderRoot() {
+        return this; // Shadow DOM'u kapat
     }
 
     connectedCallback() {
@@ -48,5 +55,22 @@ export default class BaseElement extends LitElement {
     constructor() {
         super();
         this.toggleAttribute('data-not-ready', true);
+        this.#validateAbstracts();
+    }
+    async #firstUpdateCompleted() {
+        await this.updateComplete;
+        const form = this.closest('form');
+        form?.addEventListener('submit', this.onFormSubmit.bind(this));
+        this.toggleAttribute('data-not-ready', false);
+    }
+
+    #validateAbstracts() {
+        const baseProto = BaseInput.prototype;
+
+        for (const name of ['onFormSubmit']) {
+            if (this[name] === baseProto[name]) {
+                throw new Error(`${this.constructor.name}: ${name}() metodunu override etmelisiniz.`);
+            }
+        }
     }
 }

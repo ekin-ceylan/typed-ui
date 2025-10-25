@@ -1,8 +1,8 @@
 import { html, nothing } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import BaseElement from '../base-element.js';
+import BaseInput from '../../core/base-input.js';
 
-export default class TextBox extends BaseElement {
+export default class TextBox extends BaseInput {
     #lastKey = null;
 
     regexPattern = null;
@@ -106,7 +106,7 @@ export default class TextBox extends BaseElement {
         return maskedValue;
     }
 
-    validate(value, unmaskedValue) {
+    validate(value, _unmaskedValue) {
         if (this.required && !value) return this.requiredValidationMessage;
         if (value?.length > 0 && value.length < this.minlength) return this.minLengthValidationMessage;
         if (value.length > this.maxlength) return this.maxLengthValidationMessage;
@@ -222,8 +222,6 @@ export default class TextBox extends BaseElement {
 
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('input');
-        const form = this.closest('form');
-        form?.addEventListener('submit', this.onFormSubmit.bind(this));
 
         if (this.pattern) {
             this.regexPattern = new RegExp(this.pattern);
