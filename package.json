@@ -25,11 +25,7 @@
         "a11y",
         "validation"
     ],
-    "author": {
-        name: "Ekin Ceylan",
-        email: "ekinceylan@gmail.com",
-        url: "https://github.com/ekin-ceylan"
-    },
+    "author": "Ekin Ceylan <ekinceylan@gmail.com> (https://github.com/ekin-ceylan)",
     "license": "ISC",
     "devDependencies": {
         "@vitest/coverage-v8": "^3.2.4",
