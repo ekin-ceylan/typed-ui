@@ -1,8 +1,8 @@
 import { html, nothing } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import BaseInput from '../../core/base-input.js';
+import InputBase from '../../core/input-base.js';
 
-export default class TextBox extends BaseInput {
+export default class TextBox extends InputBase {
     #lastKey = null;
 
     regexPattern = null;

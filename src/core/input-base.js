@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 
-export default class BaseInput extends LitElement {
+export default class InputBase extends LitElement {
     inputElement = null; // DOM input elementi
 
     static properties = {
@@ -65,7 +65,7 @@ export default class BaseInput extends LitElement {
     }
 
     #validateAbstracts() {
-        const baseProto = BaseInput.prototype;
+        const baseProto = InputBase.prototype;
 
         for (const name of ['onFormSubmit']) {
             if (this[name] === baseProto[name]) {

@@ -2,9 +2,9 @@ import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { injectStyles } from '../../modules/utilities.js';
-import BaseInput from '../../core/base-input.js';
+import InputBase from '../../core/input-base.js';
 
-export default class SelectBox extends BaseInput {
+export default class SelectBox extends InputBase {
     #styleId = 'select-box-styles';
     #mouseFlag = false;
 
