@@ -11,10 +11,13 @@
     "exports": {
         ".": "./src/index.js",
         "./core": "./src/core/index.js",
-        "./mixins": "./src/mixins/index.js"
+        "./mixins": "./src/mixins/index.js",
+        "./dist": "./dist/typed-ui.es.js",
+        "./dist/iife": "./dist/typed-ui.iife.js"
     },
     "files": [
         "src",
+        "dist",
         "README.md",
         "LICENSE"
     ],

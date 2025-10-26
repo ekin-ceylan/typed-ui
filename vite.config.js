@@ -4,15 +4,21 @@ export default {
     build: {
         emptyOutDir: true,
         outDir: 'dist',
-        minify: 'terser', // veya 'esbuild' (daha hızlı)
+        lib: {
+            entry: 'src/index.js',
+            name: 'TypedUI',
+            fileName: format => `typed-ui.${format}.js`, // Format'ı dosya adına ekle
+            formats: ['es', 'iife'],
+        },
         rollupOptions: {
+            external: [], // lit'i bundle içine dahil et (CDN için)
             output: {
                 manualChunks: undefined,
+                globals: {}, // IIFE için global değişken adı
             },
         },
-        // CSS minification
-        cssMinify: true,
-        // Source maps (isteğe bağlı)
-        sourcemap: false,
+        minify: 'terser', // veya 'esbuild' (daha hızlı)
+        cssMinify: true, // CSS minification
+        sourcemap: false, // Source maps (isteğe bağlı)
     },
 };
