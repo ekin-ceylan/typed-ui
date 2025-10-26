@@ -51,7 +51,7 @@
     "bugs": {
         "url": "https://github.com/ekin-ceylan/typed-ui/issues"
     },
-    "homepage": "https://github.com/ekin-ceylan/typed-ui#readme"
+    "homepage": "https://github.com/ekin-ceylan/typed-ui#readme",
     "devDependencies": {
         "@vitest/coverage-v8": "^3.2.4",
         "jsdom": "^27.0.1",
