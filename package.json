@@ -18,6 +18,7 @@
     "files": [
         "src",
         "dist",
+        "types",
         "README.md",
         "LICENSE"
     ],
@@ -62,5 +63,6 @@
     },
     "dependencies": {
         "lit": "^3.3.1"
-    }
+    },
+    "types": "types/index.d.ts"
 }
