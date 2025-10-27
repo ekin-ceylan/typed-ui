@@ -1,6 +1,6 @@
 import { LitElement, TemplateResult, CSSResultGroup } from 'lit';
 
-export declare class InputBase extends LitElement {
+export declare abstract class InputBase extends LitElement {
     inputElement: HTMLInputElement | null;
 
     fieldId?: string;

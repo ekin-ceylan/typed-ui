@@ -4,7 +4,7 @@
     "title": "Typed UI",
     "description": "Typed UI: Field/data-type specific, accessible, extensible Web Components.",
     "author": "Ekin Ceylan <ekinceylan@gmail.com> (https://github.com/ekin-ceylan)",
-    "license": "ISC",
+    "license": "MIT",
     "type": "module",
     "main": "src/index.js",
     "module": "src/index.js",
