@@ -10,7 +10,7 @@ export declare abstract class InputBase extends LitElement {
     hideLabel?: boolean;
     placeholder?: string;
     required?: boolean;
-    ariaInvalid?: boolean;
+    ariaInvalid: string | null;
     validationMessage?: string;
 
     get inputLabel(): string | null;
@@ -18,9 +18,9 @@ export declare abstract class InputBase extends LitElement {
     get errorId(): string | null;
     get requiredValidationMessage(): string;
 
-    abstract override onFormSubmit(event: SubmitEvent | Event): void;
+    abstract onFormSubmit(event: SubmitEvent | Event): void;
 
-    protected override createRenderRoot(): Element | ShadowRoot;
+    protected override createRenderRoot(): HTMLElement | DocumentFragment;
     connectedCallback(): void;
     constructor();
 }
@@ -37,7 +37,7 @@ export declare class ModalDialog extends LitElement {
     override connectedCallback(): void;
     protected override firstUpdated(): void;
     protected override updated(): void;
-    protected override createRenderRoot(): Element | ShadowRoot;
+    protected override createRenderRoot(): HTMLElement | DocumentFragment;
     protected override render(): unknown;
 
     constructor();
@@ -67,7 +67,7 @@ export declare class TextBox extends InputBase {
     constructor();
 
     protected override firstUpdated(): void;
-    protected override attributeChangedCallback(name: string, oldValue: any, newValue: any): void;
+    override attributeChangedCallback(name: string, oldValue: any, newValue: any): void;
 
     // Public API
     mask(value: string): string;
