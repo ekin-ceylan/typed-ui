@@ -1,11 +1,18 @@
 import { LitElement, html, css } from 'lit';
 import { injectStyles } from '../modules/utilities.js';
 
+/**
+ * Modal dialog web component built with Lit.
+ *
+ * @tag modal-dialog
+ * @summary Accessible modal dialog with optional backdrop & ESC close.
+ * @slot default - Dialog content.
+ */
 export default class ModalDialog extends LitElement {
-    #styleId = 'modal-dialog-styles';
-    #dialog = null;
-    #timeout = null;
-
+    /**
+     * Component reactive properties
+     * @type {import('lit').PropertyDeclarations}
+     */
     static properties = {
         open: { type: Boolean },
         slots: { type: Object, attribute: false },
@@ -13,6 +20,10 @@ export default class ModalDialog extends LitElement {
         escClose: { type: Boolean, attribute: 'esc-close' },
     };
 
+    /**
+     * Component reactive properties
+     * @type {import('lit').CSSResult }
+     */
     static styles = css`
         modal-dialog {
             --modal-close-size: 16px;
@@ -84,13 +95,66 @@ export default class ModalDialog extends LitElement {
         }
     `;
 
+    #styleId = 'modal-dialog-styles';
+    #dialog = null;
+    #timeout = undefined;
+
+    constructor() {
+        super();
+        this.toggleAttribute('data-not-ready', true);
+        injectStyles(this.#styleId, this.constructor.styles.cssText);
+        /** @public @type {boolean} */
+        this.open = false;
+        /** @protected @type {NodeListOf<Element> | null} */
+        this.slots = null;
+        /** @public @type {boolean} Close when clicking outside the dialog. */
+        this.backdropClose = false;
+        /** @public @type {boolean} Close when pressing the Escape key. */
+        this.escClose = false;
+    }
+
+    /** @override */
+    connectedCallback() {
+        super.connectedCallback();
+        this.slots = this.renderRoot.querySelectorAll(':scope > *:not(dialog)'); // Collect light-DOM children to project into the dialog
+    }
+
+    /** @override @protected */
+    updated() {
+        if (this.#dialog) {
+            this.open ? this.#show() : this.#hide();
+        }
+    }
+
+    /** @override @protected */
+    firstUpdated() {
+        this.#dialog = this.renderRoot.querySelector('dialog');
+        this.toggleAttribute('data-not-ready', false);
+
+        this.#dialog?.addEventListener('cancel', e => {
+            e.preventDefault(); // prevent browser to close modal immediately
+
+            if (this.escClose) this.hide();
+        });
+
+        this.#dialog?.addEventListener('click', e => {
+            if (!this.backdropClose) return; // if no backdropClose attr
+            if (!this.#clickedOnBackdrop(e)) return; //  if clicked inside dialog
+            e.preventDefault();
+            this.hide();
+        });
+    }
+
+    /** Open the dialog programmatically. */
     show() {
         this.open = true;
     }
+    /** Close the dialog programmatically. */
     hide() {
         this.open = false;
     }
 
+    /** Show with small delay for CSS transitions. */
     #show() {
         this.#dialog?.showModal();
         clearTimeout(this.#timeout);
@@ -100,7 +164,7 @@ export default class ModalDialog extends LitElement {
             this.#dialog?.classList.add('active');
         }, 20);
     }
-
+    /** Hide with small delay for CSS transitions. */
     #hide() {
         this.#dialog?.classList.remove('active');
         document.body.classList.remove('overflow-hidden');
@@ -111,6 +175,10 @@ export default class ModalDialog extends LitElement {
         }, 300);
     }
 
+    /**
+     * Returns true if click was on the backdrop area (outside dialog rect).
+     * @param {MouseEvent} e
+     */
     #clickedOnBackdrop = e => {
         const r = this.#dialog.getBoundingClientRect();
         const [x, y] = [e.clientX, e.clientY];
@@ -118,46 +186,12 @@ export default class ModalDialog extends LitElement {
         return x < r.left || x > r.right || y < r.top || y > r.bottom;
     };
 
-    constructor() {
-        super();
-        this.toggleAttribute('data-not-ready', true);
-        injectStyles(this.#styleId, this.constructor.styles.cssText);
-        this.open = false;
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        this.slots = this.renderRoot.querySelectorAll(':scope > *:not(dialog)');
-    }
-
-    firstUpdated() {
-        this.#dialog = this.renderRoot.querySelector('dialog');
-        this.toggleAttribute('data-not-ready', false);
-
-        this.#dialog.addEventListener('cancel', e => {
-            e.preventDefault(); // prevent browser to close modal immediately
-
-            if (this.escClose) this.hide();
-        });
-
-        this.#dialog.addEventListener('click', e => {
-            if (!this.backdropClose) return; // if no backdropClose attr
-            if (!this.#clickedOnBackdrop(e)) return; //  if clicked inside dialog
-            e.preventDefault();
-            this.hide();
-        });
-    }
-
-    updated() {
-        if (this.#dialog) {
-            this.open ? this.#show() : this.#hide();
-        }
-    }
-
+    /** @override @protected Render in light DOM to keep page styles. */
     createRenderRoot() {
         return this;
     }
 
+    /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         return html` <dialog role="dialog" aria-modal="true" tabindex="-1">
             <button type="button" @click=${this.hide} class="btn-close" aria-label="Close">

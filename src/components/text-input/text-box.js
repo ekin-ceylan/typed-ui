@@ -3,11 +3,6 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import InputBase from '../../core/input-base.js';
 
 export default class TextBox extends InputBase {
-    #lastKey = null;
-
-    regexPattern = null;
-    globalRegexPattern = null;
-
     static properties = {
         type: { type: String, reflect: true },
         inputmode: { type: String, reflect: true },
@@ -24,6 +19,10 @@ export default class TextBox extends InputBase {
         const base = super.observedAttributes ?? [];
         return [...base, 'value']; // Lit’in kendi listesi + listem
     }
+
+    regexPattern = null;
+    globalRegexPattern = null;
+    #lastKey = null;
 
     // #region VALİDASYON MESAJLARI
 
@@ -48,52 +47,43 @@ export default class TextBox extends InputBase {
     }
     // #endregion VALİDASYON MESAJLARI
 
-    // #region OLAY YÖNETİCİLERİ
-    onInput(e) {
-        e.stopPropagation();
-        this.#handleInput(e.target);
-        this.#checkValidity(false);
-        this.dispatchEvent(new CustomEvent('input', this.#eventInitDict(e)));
+    // #region LIFECYCLE
+
+    constructor() {
+        super();
+        this.value = null;
+        this.label = '';
+        this.placeholder = '';
+        this.required = false;
+
+        this.autounmask = false;
     }
 
-    onChange(e) {
-        e.stopPropagation();
-        if (this.autounmask) this.value = this.unmaskedValue;
-        this.dispatchEvent(new CustomEvent('change', this.#eventInitDict(e)));
-    }
+    firstUpdated() {
+        this.inputElement = this.renderRoot.querySelector('input');
 
-    onKeydown(e) {
-        if (!this.pattern) return;
-        this.#lastKey = e.key;
-        const keyCode = e.keyCode;
-
-        // değer bir karakter değilse
-        if ([8, 9, 27, 13, 46].includes(keyCode) || (35 <= keyCode && keyCode < 40) || e.ctrlKey || e.altKey || e.metaKey) {
-            return;
-        }
-
-        // Yeni karakter, değeri uyumsuz hale getiriyorsa engelle
-        if (!this.validateLastChar(e)) {
-            e.preventDefault();
+        if (this.pattern) {
+            this.regexPattern = new RegExp(this.pattern);
+            this.globalRegexPattern = new RegExp(this.pattern, 'g');
         }
     }
 
-    onBlur(_e) {
-        this.#checkValidity(true);
-    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
 
-    onInvalid(_e) {
-        // e.preventDefault(); // mesaj baloncuğu çıkmaz
-        this.#checkValidity(true);
-    }
+        if (name === 'value' && this.value != newValue) {
+            this.value = newValue;
 
-    onFormSubmit(e) {
-        if (!this.#checkValidity(true)) {
-            e.preventDefault();
+            this.updateComplete.then(() => {
+                this.#handleInput(this.inputElement);
+                this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
+            });
         }
     }
-    // #endregion OLAY YÖNETİCİLERİ
 
+    // #endregion LIFECYCLE
+
+    // #region PUBLIC API
     mask(value) {
         const masked = this.globalRegexPattern //
             ? value?.match(this.globalRegexPattern)?.join('') || '' //
@@ -121,6 +111,81 @@ export default class TextBox extends InputBase {
         return this.regexPattern ? this.regexPattern.test(keyDownEvent.key) : true;
     }
 
+    // #endregion PUBLIC API
+
+    // #region OLAY YÖNETİCİLERİ
+    /**
+     * @protected Handles the input event for the text box.
+     * @param {InputEvent & { target: HTMLInputElement }} e
+     * @returns {void}
+     */
+    onInput(e) {
+        e.stopPropagation();
+        this.#handleInput(e.target);
+        this.#checkValidity(false);
+        this.dispatchEvent(new CustomEvent('input', this.#eventInitDict(e)));
+    }
+
+    /**
+     * @protected Handles the change event for the text box.
+     * @param {Event & { target: HTMLInputElement }} e
+     * @returns {void}
+     */
+    onChange(e) {
+        e.stopPropagation();
+        if (this.autounmask) this.value = this.unmaskedValue;
+        this.dispatchEvent(new CustomEvent('change', this.#eventInitDict(e)));
+    }
+
+    /**
+     * @protected Handles the keydown event for the text box.
+     * @param {KeyboardEvent & { target: HTMLInputElement }} e
+     * @returns {void}
+     */
+    onKeydown(e) {
+        if (!this.pattern) return;
+        this.#lastKey = e.key;
+        const keyCode = e.code;
+
+        // değer bir karakter değilse
+        if ([8, 9, 27, 13, 46].includes(keyCode) || (35 <= keyCode && keyCode < 40) || e.ctrlKey || e.altKey || e.metaKey) {
+            return;
+        }
+
+        // Yeni karakter, değeri uyumsuz hale getiriyorsa engelle
+        if (!this.validateLastChar(e)) {
+            e.preventDefault();
+        }
+    }
+
+    /**
+     * @protected Handles the blur event for the text box.
+     * @param {Event} _e
+     */
+    onBlur(_e) {
+        this.#checkValidity(true);
+    }
+
+    /**
+     * @protected Handles the invalid event for the text box.
+     * @param {InvalidEvent} _e
+     */
+    onInvalid(_e) {
+        // e.preventDefault(); // mesaj baloncuğu çıkmaz
+        this.#checkValidity(true);
+    }
+
+    /**
+     * @protected Handles the form submit event for the text box.
+     * @param {SubmitEvent} e
+     */
+    onFormSubmit(e) {
+        if (!this.#checkValidity(true)) {
+            e.preventDefault();
+        }
+    }
+    // #endregion OLAY YÖNETİCİLERİ
+
     #handleInput(el) {
         const formattedValue = this.#formatValueAndReplaceCaret(el); // Maskelenmiş değer
         this.unmaskedValue = this.unmask(formattedValue);
@@ -139,7 +204,7 @@ export default class TextBox extends InputBase {
 
         setTimeout(() => {
             if (caret === value.length) return;
-            const isDel = this.#lastKey === 'Delete';
+            const isDel = this.#lastKey == 'Delete';
             const caretPosition = isDel ? caret - value.length + formatted.length : this.mask(value.slice(0, caret)).length;
             el.setSelectionRange(caretPosition, caretPosition); // İmleci eski konumuna getir
         }, 0);
@@ -178,19 +243,7 @@ export default class TextBox extends InputBase {
         };
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-
-        if (name === 'value' && this.value != newValue) {
-            this.value = newValue;
-
-            this.updateComplete.then(() => {
-                this.#handleInput(this.inputElement);
-                this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
-            });
-        }
-    }
-
+    /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         return html`
             ${this.label && !this.hideLabel ? html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}>${this.inputLabel}</label>` : ``}
@@ -218,23 +271,6 @@ export default class TextBox extends InputBase {
             />
             <span id=${ifDefined(this.errorId)} aria-live="assertive" ?hidden=${!this.validationMessage}>${this.validationMessage}</span>
         `;
-    }
-
-    firstUpdated() {
-        this.inputElement = this.renderRoot.querySelector('input');
-
-        if (this.pattern) {
-            this.regexPattern = new RegExp(this.pattern);
-            this.globalRegexPattern = new RegExp(this.pattern, 'g');
-        }
-    }
-
-    constructor() {
-        super();
-        this.value = null;
-        this.label = '';
-        this.placeholder = '';
-        this.required = false;
     }
 }
 
