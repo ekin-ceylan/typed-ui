@@ -15,6 +15,7 @@
         "./dist": "./dist/typed-ui.es.js",
         "./dist/iife": "./dist/typed-ui.iife.js"
     },
+    "types": "types/index.d.ts",
     "files": [
         "src",
         "dist",
@@ -22,18 +23,7 @@
         "README.md",
         "LICENSE"
     ],
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build --emptyOutDir",
-        "build:minify": "vite build --emptyOutDir --minify terser",
-        "build:analyze": "vite build --emptyOutDir --analyze",
-        "preview": "vite preview",
-        "format": "prettier --write \"src/**/*.{ts,js,html,css}\"",
-        "lint": "prettier --check \"src/**/*.{ts,js,html,css}\"",
-        "test": "vitest",
-        "test:run": "vitest run",
-        "test:coverage": "vitest --coverage"
-    },
+    "sideEffects": false,
     "keywords": [
         "typed-ui",
         "web-components",
@@ -53,6 +43,22 @@
         "url": "https://github.com/ekin-ceylan/typed-ui/issues"
     },
     "homepage": "https://github.com/ekin-ceylan/typed-ui#readme",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build --emptyOutDir",
+        "build:minify": "vite build --emptyOutDir --minify terser",
+        "build:analyze": "vite build --emptyOutDir --analyze",
+        "preview": "vite preview",
+        "format": "prettier --write \"src/**/*.{ts,js,html,css}\"",
+        "lint": "prettier --check \"src/**/*.{ts,js,html,css}\"",
+        "test": "vitest",
+        "test:run": "vitest run",
+        "test:coverage": "vitest --coverage",
+        "prepublishOnly": "npm run test:run && npm run build"
+    },
+    "dependencies": {
+        "lit": "^3.3.1"
+    },
     "devDependencies": {
         "@vitest/coverage-v8": "^3.2.4",
         "jsdom": "^27.0.1",
@@ -60,9 +66,5 @@
         "terser": "^5.43.1",
         "vite": "^6.0.11",
         "vitest": "^3.2.4"
-    },
-    "dependencies": {
-        "lit": "^3.3.1"
-    },
-    "types": "types/index.d.ts"
+    }
 }
