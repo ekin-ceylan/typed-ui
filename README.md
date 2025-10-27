@@ -1,15 +1,34 @@
-# Type-Safe HTML Library
+# Typed UI
 
-Bu proje, Web Components kullanarak geliştirilmiş bir uygulamadır.
+Field/data-type specific, accessible, extensible Web Components library.
 
-## 🚀 Proje Başlatma
+**Note:** "Typed" refers to field/data type (currency, number, plate, select, combobox...), not TypeScript.
 
-Projeyi çalıştırmak için aşağıdaki adımları takip edebilirsiniz:
+## Installation
 
 ```bash
-# Bağımlılıkları yükleyin
+npm install typed-ui
+```
+
+## Usage
+
+```js
+import { TextBox, PlateBox, SelectBox } from 'typed-ui';
+
+// Or via CDN:
+// <script type="module" src="https://unpkg.com/typed-ui/dist/typed-ui.es.js"></script>
+```
+
+## Development
+
+```bash
+# Install dependencies
 npm install
 
-# Geliştirme ortamını başlatın
+# Start development server
 npm run dev
 ```
+
+## License
+
+MIT
