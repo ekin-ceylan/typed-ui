@@ -4,3 +4,5 @@ export { default as PlateBox } from './components/text-input/plate-box.js';
 
 // Select components
 export { default as SelectBox } from './components/select/select-box.js';
+
+export { default as CheckBox } from './components/check-box.js';
