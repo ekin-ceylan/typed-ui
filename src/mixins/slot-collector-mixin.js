@@ -7,7 +7,8 @@ export default function SlotCollectorMixin(Base) {
         }
 
         #collectSlots() {
-            this._slotNodes = Array.from(this.childNodes).filter(node => node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim()));
+            this._slotNodes = Array.from(this.childNodes) //
+                .filter(node => node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim()));
         }
 
         bindSlots() {
@@ -15,23 +16,25 @@ export default function SlotCollectorMixin(Base) {
 
             for (const slotEl of slotElements) {
                 const slotName = slotEl.getAttribute('name') || 'default';
+                const fragment = document.createDocumentFragment();
 
                 for (const node of this._slotNodes) {
                     const nodeSlot = node.getAttribute?.('slot') || 'default';
 
                     if (nodeSlot === slotName) {
-                        slotEl.parentNode.insertBefore(node, slotEl);
+                        fragment.appendChild(node);
                     }
                 }
-                // Slot placeholder'ını kaldır (isteğe bağlı)
-                slotEl.remove();
+
+                fragment.hasChildNodes() //
+                    ? slotEl.replaceWith(fragment)
+                    : slotEl.replaceWith(...slotEl.childNodes);
             }
         }
 
         async #firstUpdateCompleted() {
             await this.updateComplete;
-            // Tüm slot placeholder'larını bul
-            this.bindSlots();
+            this.bindSlots(); // Tüm slot placeholder'larını bul
         }
     };
 }
