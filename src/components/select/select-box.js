@@ -3,8 +3,9 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { injectStyles } from '../../modules/utilities.js';
 import InputBase from '../../core/input-base.js';
+import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
 
-export default class SelectBox extends InputBase {
+export default class SelectBox extends SlotCollectorMixin(InputBase) {
     #styleId = 'select-box-styles';
     #mouseFlag = false;
 
@@ -203,6 +204,14 @@ export default class SelectBox extends InputBase {
         };
     }
 
+    #createOptionElement(opt) {
+        return {
+            value: opt.getAttribute('value') ?? '',
+            label: (opt.textContent || '').trim(),
+            selected: opt.hasAttribute('selected'),
+        };
+    }
+
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
 
@@ -280,24 +289,22 @@ export default class SelectBox extends InputBase {
         `;
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-
-        // Eğer options boşsa ve kullanıcı host içine <option> yazdıysa onları topla
-        if (!this.options || this.options.length === 0) {
-            const userOptions = Array.from(this.querySelectorAll(':scope > option'));
-
-            this.options = userOptions?.map(o => {
-                const opt = {
-                    value: o.getAttribute('value') ?? '',
-                    label: (o.textContent || '').trim(),
-                    selected: o.hasAttribute('selected'),
-                };
-                o.remove();
-
-                return opt;
-            });
+    bindSlots(collectedNodes) {
+        if (this.options?.length) {
+            return; // if options come from attribute, do not override
         }
+
+        this.options = collectedNodes?.reduce((acc, o) => {
+            if (o instanceof HTMLOptionElement) {
+                const opt = this.#createOptionElement(o);
+                if (opt.selected) this.value = opt.value;
+                acc.push(opt);
+            }
+
+            o.remove(); // Remove the original node
+
+            return acc;
+        }, []);
     }
 
     firstUpdated() {

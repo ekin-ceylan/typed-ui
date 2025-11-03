@@ -1,24 +1,26 @@
 export default function SlotCollectorMixin(Base) {
     return class SlotCollector extends Base {
+        #slotNodes = [];
+
         connectedCallback() {
             super.connectedCallback();
-            this.#collectSlots();
+            this.#slotNodes = this.#collectSlots();
             this.#firstUpdateCompleted();
         }
 
         #collectSlots() {
-            this._slotNodes = Array.from(this.childNodes) //
+            return Array.from(this.childNodes) //
                 .filter(node => node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim()));
         }
 
-        bindSlots() {
+        bindSlots(collectedNodes = []) {
             const slotElements = Array.from(this.querySelectorAll('slot'));
 
             for (const slotEl of slotElements) {
                 const slotName = slotEl.getAttribute('name') || 'default';
                 const fragment = document.createDocumentFragment();
 
-                for (const node of this._slotNodes) {
+                for (const node of collectedNodes) {
                     const nodeSlot = node.getAttribute?.('slot') || 'default';
 
                     if (nodeSlot === slotName) {
@@ -34,7 +36,7 @@ export default function SlotCollectorMixin(Base) {
 
         async #firstUpdateCompleted() {
             await this.updateComplete;
-            this.bindSlots(); // Tüm slot placeholder'larını bul
+            this.bindSlots(this.#slotNodes); // Tüm slot placeholder'larını bul
         }
     };
 }
