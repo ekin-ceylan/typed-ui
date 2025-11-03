@@ -14,6 +14,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         options: { type: Array }, // [{ value, label }]
         isOpen: { state: false }, // Açık / kapalı (yaklaşık)
         disabled: { type: Boolean, reflect: true },
+        optionList: { type: Array, state: true, attribute: false }, // internal
     };
 
     static styles = css`
@@ -204,12 +205,27 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         };
     }
 
-    #createOptionElement(opt) {
-        return {
-            value: opt.getAttribute('value') ?? '',
-            label: (opt.textContent || '').trim(),
-            selected: opt.hasAttribute('selected'),
-        };
+    #toOptionElement(raw) {
+        if (raw instanceof HTMLOptionElement) {
+            return raw;
+        }
+
+        if (typeof raw === 'string' || typeof raw === 'number') {
+            const opt = document.createElement('option');
+            opt.value = String(raw);
+            opt.label = String(raw);
+
+            return opt;
+        }
+
+        if (raw && typeof raw === 'object') {
+            const opt = document.createElement('option');
+            Object.assign(opt, raw);
+
+            return opt;
+        }
+
+        throw new TypeError(`Invalid option entry: ${String(raw)}`);
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -220,6 +236,17 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
 
             this.updateComplete.then(() => {
                 this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
+            });
+        } else if (name === 'options' && Array.isArray(this.options)) {
+            if (!Array.isArray(this.options)) {
+                throw new TypeError('options must be an array');
+            }
+
+            this.optionList = this.options.map(o => {
+                const opt = this.#toOptionElement(o);
+                if (opt.selected) this.value = opt.value;
+
+                return opt;
             });
         }
     }
@@ -273,10 +300,8 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
                     ?data-has-value=${this.value}
                 >
                     <option value="" disabled selected hidden>${this.placeholder}</option>
-                    <option disabled ?hidden=${this.options?.length > 0}>Kayıt Bulunamadı</option>
-                    ${this.options.map(
-                        opt => html`<option value=${opt.value} ?selected=${opt.selected} style="line-height:100px; padding:16px 8px; font-family:sans-serif">${opt.label}</option>`
-                    )}
+                    <option disabled ?hidden=${this.optionList?.length > 0}>Kayıt Bulunamadı</option>
+                    ${this.optionList}
                 </select>
 
                 ${this.required ? null : btnClear}
@@ -289,22 +314,23 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         `;
     }
 
+    /**
+     * @override @protected Binds the collected nodes to the select box options.
+     * @param {NodeList} collectedNodes - The nodes to bind.
+     */
     bindSlots(collectedNodes) {
-        if (this.options?.length) {
-            return; // if options come from attribute, do not override
+        const hasOptions = this.options?.length > 0;
+
+        for (const node of collectedNodes) {
+            if (!hasOptions && node instanceof HTMLOptionElement) {
+                this.optionList.push(node);
+                if (node.selected) this.value = node.value;
+            } else {
+                node.remove(); // remove all other nodes
+            }
         }
 
-        this.options = collectedNodes?.reduce((acc, o) => {
-            if (o instanceof HTMLOptionElement) {
-                const opt = this.#createOptionElement(o);
-                if (opt.selected) this.value = opt.value;
-                acc.push(opt);
-            }
-
-            o.remove(); // Remove the original node
-
-            return acc;
-        }, []);
+        this.requestUpdate();
     }
 
     firstUpdated() {
@@ -320,6 +346,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         this.placeholder = '';
         this.required = false;
         this.options = [];
+        this.optionList = [];
         this.isOpen = false;
     }
 }

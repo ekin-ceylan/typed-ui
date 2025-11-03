@@ -56,6 +56,14 @@
             </select-box>
             <br />
             <br />
+            <select-box id="sb-attr" options='[{"value":"1","label":"Bir"},{"value":"2","label":"İki","selected":true},{"value":"3","label":"Üç"}]' placeholder="Seçiniz">
+                <option value="ch">Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+            </select-box>
+            <br />
+            <br />
+            <select-box id="sb-dynamic" placeholder="Dinamik"></select-box>
+            <br />
+            <br />
             <button type="submit">Submit</button>
         </form>
         <modal-dialog id="my-modal" backdrop-close>
@@ -66,7 +74,20 @@
 
         <!-- <pre id="log">Validation logged here...</pre>
         <input type="text" id="userText" minlength="4" /> -->
-
+        <script type="module">
+            // Dinamik attr set
+            setTimeout(() => {
+                const el = document.getElementById('sb-dynamic');
+                el.setAttribute(
+                    'options',
+                    JSON.stringify([
+                        { value: 'x', label: 'X' },
+                        { value: 'y', label: 'Y', selected: true },
+                        { value: 'z', label: 'Z' },
+                    ])
+                );
+            }, 1500);
+        </script>
         <script type="module" src="./src/main.js"></script>
         <script>
             // const userInput = document.getElementById('userText');
