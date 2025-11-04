@@ -1,73 +1,13 @@
-import { html, css } from 'lit';
-import { injectStyles } from '../../modules/utilities.js';
+import { html } from 'lit';
 import PasswordBox from './password-box.js';
 
 export default class NewPasswordBox extends PasswordBox {
-    #styleId = 'new-password-box-styles';
     #strengthLabels = ['Şifre çok zayıf', 'Şifre çok zayıf', 'Şifre zayıf', 'Şifre orta', 'Şifre güçlü'];
     #strengthClasses = ['red', 'red', 'orange', 'gold', 'green'];
 
     static properties = {
         strength: { type: Number, state: true }, // şifre gücü (0-4)
     };
-
-    static styles = css`
-        new-password-box {
-            --password-strength-height: 4px;
-            --password-strength-bg: #e1e1e1;
-            --password-strength-radius: 3px;
-        }
-
-        new-password-box .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0 0 0 0);
-            white-space: nowrap;
-            border: 0;
-        }
-
-        new-password-box > .strength {
-            margin-top: 4px;
-            background: var(--password-strength-bg);
-            height: var(--password-strength-height);
-            border-radius: var(--password-strength-radius);
-            overflow: hidden;
-            position: relative;
-        }
-
-        new-password-box > .strength > .fill {
-            height: 100%;
-            width: 0%;
-            background: red;
-            transition:
-                width 0.25s ease,
-                background-color 0.25s ease;
-        }
-
-        new-password-box > .strength > .fill.red {
-            background-color: red;
-            width: 25%;
-        }
-
-        new-password-box > .strength > .fill.orange {
-            background-color: orange;
-            width: 50%;
-        }
-
-        new-password-box > .strength > .fill.gold {
-            background-color: gold;
-            width: 75%;
-        }
-
-        new-password-box > .strength > .fill.green {
-            background-color: green;
-            width: 100%;
-        }
-    `;
 
     get #strengthLabel() {
         return this.#strengthLabels[this.strength] || 'Şifre yok';
@@ -91,9 +31,8 @@ export default class NewPasswordBox extends PasswordBox {
 
     constructor() {
         super();
-        this.autocomplete = 'new-password';
 
-        injectStyles(this.#styleId, this.constructor.styles.cssText);
+        this.autocomplete = 'new-password';
     }
 
     #calcStrength(v) {

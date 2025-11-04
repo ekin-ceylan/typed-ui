@@ -1,71 +1,11 @@
 import TextBox from './text-box.js';
-import { html, css } from 'lit';
-import { injectStyles } from '../../modules/utilities.js';
+import { html } from 'lit';
 
 export default class PasswordBox extends TextBox {
-    #styleId = 'password-box-styles';
-
     static properties = {
         revealed: { type: Boolean, reflect: true }, // şifrenin görünür olup olmadığını tutar
         spellcheck: { type: Boolean, reflect: true },
     };
-
-    static styles = css`
-        :is(password-box, new-password-box, confirm-password-box) {
-            --password-indicator-size: 20px;
-
-            --password-toggle-color: #6c6c6c;
-            --password-toggle-hover: #3e3e3e;
-            --password-toggle-active: #222;
-            --password-toggle-bg-hover: rgba(0, 0, 0, 0.05);
-            --password-toggle-bg-active: rgba(0, 0, 0, 0.1);
-
-            position: relative;
-            display: inline-block;
-        }
-
-        :is(password-box, new-password-box, confirm-password-box) > .btn-toggle {
-            width: var(--password-indicator-size);
-            height: var(--password-indicator-size);
-            transition: all 0.2s;
-
-            border: none;
-            background: none;
-            line-height: 0px;
-            padding: 2px;
-            border-radius: 3px;
-
-            color: var(--password-toggle-color);
-
-            cursor: pointer;
-        }
-
-        :is(password-box, new-password-box, confirm-password-box) > .btn-toggle:hover {
-            background: var(--password-toggle-bg-hover);
-            color: var(--password-toggle-hover);
-        }
-
-        :is(password-box, new-password-box, confirm-password-box) > .btn-toggle:active {
-            background: var(--password-toggle-bg-active);
-            /* transform: translateY(-50%) scale(0.85); */
-            transform: scale(0.85);
-            color: var(--password-toggle-active);
-        }
-
-        :is(password-box, new-password-box, confirm-password-box) > .btn-toggle > svg {
-            color: inherit;
-            fill: currentColor;
-        }
-        :is(password-box, new-password-box, confirm-password-box) > .btn-toggle > svg:first-child,
-        :is(password-box, new-password-box, confirm-password-box)[revealed] > .btn-toggle > svg:last-child {
-            display: none;
-        }
-
-        :is(password-box, new-password-box, confirm-password-box)[revealed] > .btn-toggle > svg:first-child,
-        :is(password-box, new-password-box, confirm-password-box) > .btn-toggle > svg:last-child {
-            display: block;
-        }
-    `;
 
     validate(value) {
         const base = super.validate(value);
@@ -76,12 +16,11 @@ export default class PasswordBox extends TextBox {
 
     constructor() {
         super();
+
         this.type = 'password';
         this.autocomplete = 'current-password';
         this.revealed = false;
         this.spellcheck = false;
-
-        injectStyles(this.#styleId, this.constructor.styles.cssText);
     }
 
     #toggleVisibility() {
