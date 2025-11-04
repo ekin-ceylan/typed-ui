@@ -76,6 +76,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         this.dispatchEvent(new CustomEvent('input', this.#eventInitDict()));
         this.dispatchEvent(new CustomEvent('change', this.#eventInitDict()));
     }
+
     #checkValidity() {
         const el = this.inputElement;
         const v = el.validity;
@@ -123,6 +124,13 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         throw new TypeError(`Invalid option entry: ${String(raw)}`);
     }
 
+    #completeOptionUpdate() {
+        this.requestUpdate();
+        this.updateComplete.then(() => {
+            this.value = this.inputElement?.value || this.value;
+        });
+    }
+
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
 
@@ -132,19 +140,16 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
             this.updateComplete.then(() => {
                 this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
             });
-        } else if (name === 'options' && Array.isArray(this.options)) {
+        } else if (name === 'options') {
             if (!Array.isArray(this.options)) {
                 throw new TypeError('options must be an array');
             }
 
-            this.optionList = this.options.map(o => {
-                const opt = this.#toOptionElement(o);
-                if (opt.selected) this.value = opt.value;
-
-                return opt;
-            });
-
+            this.optionList = this.options.map(o => this.#toOptionElement(o));
             this.requestUpdate();
+            this.updateComplete.then(() => {
+                this.value = this.inputElement?.value || this.value;
+            });
         }
     }
 
@@ -186,7 +191,6 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
                     aria-required=${this.required ? 'true' : 'false'}
                     ?aria-invalid=${this.ariaInvalid}
-                    aria-expanded=${String(this.isOpen)}
                     @input=${this.onInput}
                     @change=${this.onChange}
                     @mousedown=${this.onMousedown}
@@ -196,6 +200,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
                     @blur=${this.onBlur}
                     @invalid=${this.onInvalid}
                     ?data-has-value=${this.value}
+                    ?data-open=${this.isOpen}
                 >
                     <option value="" disabled selected hidden>${this.placeholder}</option>
                     <option disabled ?hidden=${this.optionList?.length > 0}>Kayıt Bulunamadı</option>
@@ -220,15 +225,17 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         const hasOptions = this.options?.length > 0;
 
         for (const node of collectedNodes) {
-            if (!hasOptions && node instanceof HTMLOptionElement) {
+            const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
+
+            if (!hasOptions && isAllowedType) {
                 this.optionList.push(node);
-                if (node.selected) this.value = node.value;
-            } else {
-                node.remove(); // remove all other nodes
+                continue;
             }
+
+            node.remove(); // remove all other nodes
         }
 
-        this.requestUpdate();
+        this.#completeOptionUpdate();
     }
 
     firstUpdated() {
@@ -240,7 +247,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
 
         this.value = null;
         this.label = '';
-        this.placeholder = '';
+        this.placeholder = 'Seçiniz';
         this.required = false;
         this.options = [];
         this.optionList = [];

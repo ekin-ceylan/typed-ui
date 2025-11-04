@@ -53,16 +53,13 @@ select-box > div > select ~ .indicator {
 }
 
 select-box > div > select ~ .btn-clear {
+    color: var(--sbx-clear-color);
     border: none;
     background: none;
     line-height: 0px;
     padding: 4px;
     right: var(--sbx-clear-right-distance);
     border-radius: 2px;
-}
-
-select-box > div > select ~ .btn-clear {
-    color: var(--sbx-clear-color);
 }
 
 select-box > div > select ~ .btn-clear:not(:disabled) {
@@ -95,6 +92,6 @@ select-box > div > select ~ .chevron {
     pointer-events: none;
 }
 
-select-box > div > select[aria-expanded='true'] ~ .chevron {
+select-box > div > select[data-open] ~ .chevron {
     transform: translateY(-50%) rotate(180deg);
 }

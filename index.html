@@ -57,12 +57,33 @@
             </select-box>
             <br />
             <br />
-            <select-box id="sb-attr" options='[{"value":"1","label":"Bir"},{"value":"2","label":"İki","selected":true},{"value":"3","label":"Üç"}]' placeholder="Seçiniz">
+            <select-box id="sb-attr" required options='[{"value":"1","label":"Bir"},{"value":"2","label":"İki","selected":true},{"value":"3","label":"Üç"}]' placeholder="Seçiniz">
                 <option value="ch">Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
             </select-box>
             <br />
             <br />
-            <select-box id="sb-dynamic" placeholder="Dinamik"></select-box>
+            <select-box id="sb-dynamic" placeholder="Dinamik Seçiniz"></select-box>
+            <br />
+            <br />
+            <select placeholder="Seçiniz">
+                <option value="tr">Türkiye</option>
+                <option value="de">Almanya</option>
+                <option value="us" selected>ABD</option>
+                <option value="ch">Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+            </select>
+            <br />
+            <br />
+            <select-box name="cars" field-id="cars" label="test">
+                <optgroup label="Swedish Cars">
+                    <option value="volvo" selected>Volvo</option>
+                    <option value="saab">Saab</option>
+                </optgroup>
+                <optgroup label="German Cars">
+                    <option value="mercedes">Mercedes</option>
+                    <div value="mercedes">Mercedes</div>
+                    <option value="audi">Audi</option>
+                </optgroup>
+            </select-box>
             <br />
             <br />
             <button type="submit">Submit</button>

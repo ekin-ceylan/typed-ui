@@ -37,6 +37,11 @@ export default function SlotCollectorMixin(Base) {
         async #firstUpdateCompleted() {
             await this.updateComplete;
             this.bindSlots(this.#slotNodes); // Tüm slot placeholder'larını bul
+            this.afterSlotsBinded();
+        }
+
+        afterSlotsBinded() {
+            // Override edilebilir
         }
     };
 }
