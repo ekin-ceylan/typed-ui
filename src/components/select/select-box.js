@@ -1,12 +1,10 @@
-import { html, css } from 'lit';
+import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { injectStyles } from '../../modules/utilities.js';
 import InputBase from '../../core/input-base.js';
 import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
 
 export default class SelectBox extends SlotCollectorMixin(InputBase) {
-    #styleId = 'select-box-styles';
     #mouseFlag = false;
 
     // Public & internal reactive properties
@@ -16,109 +14,6 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         disabled: { type: Boolean, reflect: true },
         optionList: { type: Array, state: true, attribute: false }, // internal
     };
-
-    static styles = css`
-        select-box {
-            --sbx-placeholder-color: #757575;
-            --sbx-placeholder-focus-color: #111;
-
-            --sbx-indicator-size: 16px;
-
-            --sbx-clear-color: #6c6c6c;
-            --sbx-clear-hover: #3e3e3e;
-            --sbx-clear-active: #222;
-            --sbx-clear-bg-hover: rgba(0, 0, 0, 0.05);
-            --sbx-clear-bg-active: rgba(0, 0, 0, 0.1);
-            --sbx-clear-right-distance: 28px;
-
-            --sbx-chevron-right-distance: 12px;
-        }
-
-        select-box[data-not-ready] * {
-            display: none;
-            pointer-events: none;
-        }
-
-        select-box > div {
-            position: relative;
-            display: inline-block;
-        }
-
-        select-box > div > select {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-
-            box-sizing: border-box;
-            padding-right: calc(var(--sbx-clear-right-distance) + var(--sbx-indicator-size));
-            text-overflow: ellipsis;
-            width: 100%;
-        }
-
-        select-box > div > select.placeholder {
-            color: var(--sbx-placeholder-color);
-        }
-        select-box > div > select.placeholder:focus {
-            color: var(--sbx-placeholder-focus-color);
-        }
-
-        select-box > div > select ~ .indicator {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-
-            width: var(--sbx-indicator-size);
-            height: var(--sbx-indicator-size);
-            transition: all 0.2s;
-        }
-
-        select-box > div > select ~ .btn-clear {
-            border: none;
-            background: none;
-            line-height: 0px;
-            padding: 4px;
-            right: var(--sbx-clear-right-distance);
-            border-radius: 2px;
-        }
-
-        select-box > div > select ~ .btn-clear {
-            color: var(--sbx-clear-color);
-        }
-
-        select-box > div > select ~ .btn-clear:not(:disabled) {
-            cursor: pointer;
-        }
-
-        select-box > div > select ~ .btn-clear:not(:disabled):hover {
-            background: var(--sbx-clear-bg-hover);
-            color: var(--sbx-clear-hover);
-        }
-
-        select-box > div > select ~ .btn-clear:not(:disabled):active {
-            background: var(--sbx-clear-bg-active);
-            transform: translateY(-50%) scale(0.85);
-            color: var(--sbx-clear-active);
-        }
-
-        select-box > div > select ~ .btn-clear:disabled {
-            opacity: 0.35;
-            pointer-events: none;
-        }
-
-        select-box > div > select ~ .btn-clear > svg {
-            color: inherit;
-            fill: currentColor;
-        }
-
-        select-box > div > select ~ .chevron {
-            right: var(--sbx-chevron-right-distance);
-            pointer-events: none;
-        }
-
-        select-box > div > select[aria-expanded='true'] ~ .chevron {
-            transform: translateY(-50%) rotate(180deg);
-        }
-    `;
 
     static get observedAttributes() {
         const base = super.observedAttributes ?? [];
@@ -248,9 +143,12 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
 
                 return opt;
             });
+
+            this.requestUpdate();
         }
     }
 
+    /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         const btnClear = html`
             <button type="button" class="indicator btn-clear" ?disabled=${!this.value} @click=${this.#clear} aria-label="Seçimi temizle">
@@ -339,7 +237,6 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
 
     constructor() {
         super();
-        injectStyles(this.#styleId, this.constructor.styles.cssText);
 
         this.value = null;
         this.label = '';
