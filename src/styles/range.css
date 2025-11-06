@@ -1,0 +1,29 @@
+range-select {
+    --range-node-offset: 18px;
+    --range-node-size: 26px;
+    --range-thumb-radius-moz: 10px;
+    --range-thumb-radius-webkit: 11px;
+    --range-track-height-moz: 5px;
+    --range-track-height-webkit: 8px;
+    --range-offset: calc(var(--range-node-size) / 2 - var(--range-thumb-radius-moz));
+    --range-bg-color: #ced4da;
+    display: block;
+}
+
+range-select > div {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+range-select > div > input[type='range'] {
+    flex-grow: 1;
+}
+range-select > div > input[type='range']:hover {
+    cursor: pointer;
+}
+
+range-select > div > output {
+    margin-left: 5px;
+    font-weight: bold;
+}

@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="./src/styles/links.css" />
         <link rel="stylesheet" href="./src/styles/select.css" />
         <link rel="stylesheet" href="./src/styles/password.css" />
+        <link rel="stylesheet" href="./src/styles/range.css" />
         <title>Custom Textbox Test</title>
     </head>
 
@@ -48,10 +49,10 @@
             <url-link href="https://www.test.com" target="_blank" aria-label="Example Link">Example Link</url-link>
             <br />
             <br />
-            <select-box style="max-width: 300px" field-id="country" label="Ülke" placeholder="Seçiniz">
+            <select-box style="max-width: 300px" field-id="country" label="Ülke" placeholder="Seçiniz" required>
                 <option value="tr">Türkiye</option>
                 <option value="de">Almanya</option>
-                <option value="us" selected>ABD</option>
+                <option value="us">ABD</option>
                 <option value="ch">Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
                 <div value="chi">ÇinÇin</div>
             </select-box>
@@ -84,6 +85,9 @@
                     <option value="audi">Audi</option>
                 </optgroup>
             </select-box>
+            <br />
+            <br />
+            <range-select field-id="range" label="Range" min="0" max="100" step="20" required></range-select>
             <br />
             <br />
             <button type="submit">Submit</button>

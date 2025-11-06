@@ -1,4 +1,5 @@
-import { LitElement } from 'lit';
+import { LitElement, html } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 export default class InputBase extends LitElement {
     /**
@@ -14,11 +15,12 @@ export default class InputBase extends LitElement {
         placeholder: { type: String, reflect: true },
         required: { type: Boolean, reflect: true },
         ariaInvalid: { type: String, attribute: 'aria-invalid' },
-        validationMessage: { state: true },
     };
 
     /** @type {HTMLInputElement | HTMLSelectElement | null} */
     inputElement = null; // DOM input elementi
+    /** @type {string | null } */
+    validationMessage = '';
 
     get inputLabel() {
         return this.label && this.label + (this.required ? '*' : '');
@@ -28,6 +30,11 @@ export default class InputBase extends LitElement {
     }
     get errorId() {
         return this.fieldId ? `${this.fieldId}-error` : null;
+    }
+    get validationMessageHtml() {
+        return html` <span id=${ifDefined(this.errorId)} class="${this.validationMessage ? 'error' : ''}" ?hidden=${!this.validationMessage} aria-live="assertive">
+            ${this.validationMessage}
+        </span>`;
     }
     get requiredValidationMessage() {
         return `${this.label} alanı gereklidir.`;

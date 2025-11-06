@@ -165,15 +165,6 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
             </button>
         `;
 
-        const validationMessage = html`<span
-            id=${ifDefined(this.errorId)}
-            class="${this.validationMessage ? 'error' : ''}"
-            ?hidden=${!this.validationMessage}
-            aria-live="assertive"
-        >
-            ${this.validationMessage}
-        </span>`;
-
         const label = html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
 
         return html`
@@ -192,7 +183,6 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
                     aria-required=${this.required ? 'true' : 'false'}
                     ?aria-invalid=${this.ariaInvalid}
                     @input=${this.onInput}
-                    @change=${this.onChange}
                     @mousedown=${this.onMousedown}
                     @mouseup=${this.onMouseup}
                     @keydown=${this.onKeydown}
@@ -213,7 +203,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </div>
-            ${this.required ? validationMessage : null}
+            ${this.required ? this.validationMessageHtml : null}
         `;
     }
 

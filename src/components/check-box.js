@@ -12,7 +12,6 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         placeholder: { type: String, reflect: true },
         required: { type: Boolean, reflect: true },
         ariaInvalid: { type: Boolean, attribute: 'aria-invalid', reflect: false },
-        validationMessage: { type: String, attribute: false, reflect: false },
     };
 
     get inputLabel() {
