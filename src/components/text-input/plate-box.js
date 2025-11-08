@@ -1,6 +1,12 @@
 import TextBox from './text-box';
 
 export default class PlateBox extends TextBox {
+    #validationPattern = `\\d{2} [A-PR-VYZa-hj-pr-vyzı]{1,3} \\d{2,5}`;
+    #lazySelectionPattern = `\\d{1,2}(?:[A-PR-VYZa-hj-pr-vyzı]{1,3}(?:\\d{1,5})?)?`;
+    #lastCharRegex = new RegExp(`^${this.#lazySelectionPattern}$`);
+    #maskingRegex = new RegExp(this.#lazySelectionPattern);
+    #groupingRegex = /^(\d{1,2})([A-PR-VYZa-hj-pr-vyzı]{1,3})(\d{1,5})?$/;
+
     get minLengthValidationMessage() {
         return `${this.label} alanı en az ${this.minlength - 2} karakterden oluşmalıdır.`;
     }
@@ -10,41 +16,39 @@ export default class PlateBox extends TextBox {
     }
 
     validateLastChar(e) {
-        const el = this.inputElement;
-        const value = el.value;
-        const caret = el.selectionStart;
-        const caretEnd = el.selectionEnd;
+        const value = this.inputElement.value;
+        const caret = this.inputElement.selectionStart;
+        const caretEnd = this.inputElement.selectionEnd;
         const key = e.key;
 
-        const newValue = (value.slice(0, caret) + key + value.slice(caretEnd)).replace(/\s/g, '');
+        const newValue = (value.slice(0, caret) + key + value.slice(caretEnd)).replaceAll(' ', '');
 
-        // Yeni karakter eklendiğinde değer paternle uyumlu mu?
-        // ^\d{0,2}(?: [A-PR-VYZa-hj-pr-vyzı]{0,3}(?: \d{0,5})?)?$
-        return /^\d{0,2}((?<=\d{2})[A-PR-VYZa-hj-pr-vyzı]{1,3}(?<=\D)\d{0,5})?$/.test(newValue);
+        return this.#lastCharRegex.test(newValue); // Yeni karakter eklendiğinde değer paternle uyumlu mu?
     }
 
     mask(value) {
-        // Geçerli karakterleri seç
-        value = value.replace(/\s/g, '');
-        value = value.match(/^\d{1,2}(?:[A-PR-VYZa-hj-pr-vyzı]{1,3}\d{0,5}|[A-PR-VYZa-hj-pr-vyzı]{1,2})?/); // Geçersiz karakterleri kaldır
+        value = value?.replaceAll(' ', '')?.match(this.#maskingRegex); // Geçerli kısmı al
         value = value ? value[0] : '';
 
         // Formatı uygula
-        if (value?.length > 1) {
-            const pattern = /^(\d{0,2}?)([A-PR-VYZa-hj-pr-vyzı]{1,3})(\d{1,5})?$/;
-            value = value.replace(pattern, (_, a, b, c) => [a, b, c].filter(Boolean).join(' '));
+        if (value?.length > 2) {
+            value = value.replace(this.#groupingRegex, (_, a, b, c) => [a, b, c].filter(Boolean).join(' '));
         }
 
-        return value?.toString().toUpperCase(); // Büyük harfe çevir
+        return value?.toString().toUpperCase('tr-TR'); // Büyük harfe çevir
+    }
+
+    unmask(maskedValue) {
+        return maskedValue.replaceAll(' ', '');
     }
 
     constructor() {
         super();
         this.inputmode = 'text';
         this.placeholder = '34 ABC 123';
-        this.pattern = '\\d{2} [A-PR-VYZa-hj-pr-vyzı]{1,3} \\d{2,5}';
-        this.maxlength = 10; // Maksimum karakter sayısı
-        this.minlength = 9; // Minimum karakter sayısı
+        this.pattern = this.#validationPattern;
+        this.maxlength = 10;
+        this.minlength = 9;
     }
 }
 
