@@ -35,7 +35,7 @@ export default class PlateBox extends TextBox {
             value = value.replace(this.#groupingRegex, (_, a, b, c) => [a, b, c].filter(Boolean).join(' '));
         }
 
-        return value?.toString().toUpperCase('tr-TR'); // Büyük harfe çevir
+        return value?.toLocaleUpperCase('tr-TR'); // Büyük harfe çevir
     }
 
     unmask(maskedValue) {

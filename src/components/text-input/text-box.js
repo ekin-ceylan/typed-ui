@@ -146,7 +146,7 @@ export default class TextBox extends InputBase {
         if (!this.pattern) return;
         this.#lastKey = e.key;
         const keyCode = e.code;
-        const allowedKeys = ['Backspace', 'Tab', 'Escape', 'Enter', 'Delete', 'ArrowLeft', 'ArrowRight'];
+        const allowedKeys = ['Backspace', 'Tab', 'Escape', 'Enter', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
 
         // değer bir karakter değilse
         if (allowedKeys.includes(keyCode) || e.ctrlKey || e.altKey || e.metaKey) {
