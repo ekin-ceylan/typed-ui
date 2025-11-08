@@ -2,10 +2,10 @@ import TextBox from './text-box';
 
 export default class PlateBox extends TextBox {
     #validationPattern = `\\d{2} [A-PR-VYZa-hj-pr-vyzı]{1,3} \\d{2,5}`;
-    #lazySelectionPattern = `\\d{1,2}(?:[A-PR-VYZa-hj-pr-vyzı]{1,3}(?:\\d{1,5})?)?`;
-    #lastCharRegex = new RegExp(`^${this.#lazySelectionPattern}$`);
-    #maskingRegex = new RegExp(this.#lazySelectionPattern);
-    #groupingRegex = /^(\d{1,2})([A-PR-VYZa-hj-pr-vyzı]{1,3})(\d{1,5})?$/;
+    #lazySelectionPattern = `\\d(?:\\d(?:[A-PR-VYZa-hj-pr-vyzı]{1,3}(?:\\d{1,5})?)?)?`;
+    #testRegex = new RegExp(`^${this.#lazySelectionPattern}$`);
+    #matchRegex = new RegExp(this.#lazySelectionPattern);
+    #groupingRegex = /^(\d{2})([A-PR-VYZa-hj-pr-vyzı]{1,3})(\d{1,5})?$/;
 
     get minLengthValidationMessage() {
         return `${this.label} alanı en az ${this.minlength - 2} karakterden oluşmalıdır.`;
@@ -23,11 +23,11 @@ export default class PlateBox extends TextBox {
 
         const newValue = (value.slice(0, caret) + key + value.slice(caretEnd)).replaceAll(' ', '');
 
-        return this.#lastCharRegex.test(newValue); // Yeni karakter eklendiğinde değer paternle uyumlu mu?
+        return this.#testRegex.test(newValue); // Yeni karakter eklendiğinde değer paternle uyumlu mu?
     }
 
     mask(value) {
-        value = value?.replaceAll(' ', '')?.match(this.#maskingRegex); // Geçerli kısmı al
+        value = value?.replaceAll(' ', '')?.match(this.#matchRegex); // Geçerli kısmı al
         value = value ? value[0] : '';
 
         // Formatı uygula
