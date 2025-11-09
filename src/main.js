@@ -9,5 +9,6 @@ import './components/text-input/confirm-password-box';
 import './components/url-link';
 import './components/check-box';
 import './components/select/select-box';
+import './components/select/combo-box';
 import './components/select/range-select';
 import './components/modal-dialog';

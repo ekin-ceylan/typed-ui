@@ -1,4 +1,5 @@
-select-box {
+select-box,
+combo-box {
     --sbx-placeholder-color: #757575;
     --sbx-placeholder-focus-color: #111;
 
@@ -14,12 +15,12 @@ select-box {
     --sbx-chevron-right-distance: 12px;
 }
 
-select-box[data-not-ready] * {
+:is(select-box, combo-box)[data-not-ready] * {
     display: none;
     pointer-events: none;
 }
 
-select-box > div {
+:is(select-box, combo-box) > div {
     position: relative;
     display: inline-block;
 }
@@ -42,7 +43,8 @@ select-box > div > select.placeholder:focus {
     color: var(--sbx-placeholder-focus-color);
 }
 
-select-box > div > select ~ .indicator {
+select-box > div > select ~ .indicator,
+combo-box > div > .indicator {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -52,7 +54,8 @@ select-box > div > select ~ .indicator {
     transition: all 0.2s;
 }
 
-select-box > div > select ~ .btn-clear {
+select-box > div > select ~ .btn-clear,
+combo-box > div > .btn-clear {
     color: var(--sbx-clear-color);
     border: none;
     background: none;
@@ -62,36 +65,60 @@ select-box > div > select ~ .btn-clear {
     border-radius: 2px;
 }
 
-select-box > div > select ~ .btn-clear:not(:disabled) {
+select-box > div > select ~ .btn-clear:not(:disabled),
+combo-box > div > .btn-clear:not(:disabled) {
     cursor: pointer;
 }
 
-select-box > div > select ~ .btn-clear:not(:disabled):hover {
+select-box > div > select ~ .btn-clear:not(:disabled):hover,
+combo-box > div > .btn-clear:not(:disabled):hover {
     background: var(--sbx-clear-bg-hover);
     color: var(--sbx-clear-hover);
 }
 
-select-box > div > select ~ .btn-clear:not(:disabled):active {
+select-box > div > select ~ .btn-clear:not(:disabled):active,
+combo-box > div > .btn-clear:not(:disabled):active {
     background: var(--sbx-clear-bg-active);
     transform: translateY(-50%) scale(0.85);
     color: var(--sbx-clear-active);
 }
 
-select-box > div > select ~ .btn-clear:disabled {
+select-box > div > select ~ .btn-clear:disabled,
+combo-box > div > .btn-clear:disabled {
     opacity: 0.35;
     pointer-events: none;
 }
 
-select-box > div > select ~ .btn-clear > svg {
+select-box > div > select ~ .btn-clear > svg,
+combo-box > div > .btn-clear > svg {
     color: inherit;
     fill: currentColor;
 }
 
-select-box > div > select ~ .chevron {
+select-box > div > select ~ .chevron,
+combo-box > div > .chevron {
     right: var(--sbx-chevron-right-distance);
     pointer-events: none;
 }
 
-select-box > div > select[data-open] ~ .chevron {
+select-box > div > select[data-open] ~ .chevron,
+combo-box > div > .chevron {
     transform: translateY(-50%) rotate(180deg);
+}
+
+combo-box > div[data-open] > div[role='listbox'] {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+combo-box > div > div[role='listbox'] {
+    display: none;
 }

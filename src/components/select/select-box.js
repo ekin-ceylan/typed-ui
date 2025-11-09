@@ -17,7 +17,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
 
     static get observedAttributes() {
         const base = super.observedAttributes ?? [];
-        return [...base, 'value']; // Lit’in kendi listesi + listem
+        return [...base, 'value', 'options']; // Lit’in kendi listesi + listem
     }
 
     // #region EVENT LISTENERS
@@ -146,10 +146,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
             }
 
             this.optionList = this.options.map(o => this.#toOptionElement(o));
-            this.requestUpdate();
-            this.updateComplete.then(() => {
-                this.value = this.inputElement?.value || this.value;
-            });
+            this.#completeOptionUpdate();
         }
     }
 
@@ -246,3 +243,5 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
 }
 
 customElements.define('select-box', SelectBox);
+
+// test case: başlangıç değeri varsa seçili gelsin
