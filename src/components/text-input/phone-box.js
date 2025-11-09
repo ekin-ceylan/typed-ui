@@ -2,7 +2,7 @@ import TextBox from './text-box';
 
 export class PhoneBox extends TextBox {
     mask(value) {
-        value = value.replace(/\D/g, ''); // Sayı olmayan karakterleri kaldır
+        value = value.replaceAll(/\D/g, ''); // Sayı olmayan karakterleri kaldır
         value = value.slice(0, 11); // İlk 11 karakteri al
 
         if (value.length > 0 && value[0] !== '0') {
@@ -23,7 +23,7 @@ export class PhoneBox extends TextBox {
         const caret = keyDownEvent.target.selectionStart;
         const caretEnd = keyDownEvent.target.selectionEnd;
 
-        const newValue = (val.slice(0, caret) + key + val.slice(caretEnd)).replace(/\D/g, '');
+        const newValue = (val.slice(0, caret) + key + val.slice(caretEnd)).replaceAll(/\D/g, '');
 
         if (newValue.length > 11) return false; // Maksimum uzunluk 11 olmalı
 
@@ -35,7 +35,7 @@ export class PhoneBox extends TextBox {
 
         this.type = 'tel';
         this.placeholder = '0 ___ ___ __ __';
-        this.pattern = '0 \\d{3} \\d{3} \\d{2} \\d{2}';
+        this.pattern = `0 \\d{3} \\d{3} \\d{2} \\d{2}`;
         this.inputmode = 'tel';
     }
 }

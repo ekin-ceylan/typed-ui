@@ -12,9 +12,9 @@ export function injectStyles(styleId, styleText) {
 
 export function cleanupStyles(styleText) {
     return styleText
-        .replace(/(^\s+)|\n|(\s+$)/gm, '') // Remove newlines and leading/trailing spaces
-        .replace(/\s*;?\s*}\s*/g, '}') // Remove any unnecessary spaces around '}' and the last ';'
-        .replace(/\s*{\s*/g, '{') // Remove unnecessary spaces around '{'
-        .replace(/\s*:\s*/g, ':') // Remove unnecessary spaces around ':'
+        .replaceAll(/(^\s+)|\n|(\s+$)/gm, '') // Remove newlines and leading/trailing spaces
+        .replaceAll(/\s*;?\s*}\s*/g, '}') // Remove any unnecessary spaces around '}' and the last ';'
+        .replaceAll(/\s*{\s*/g, '{') // Remove unnecessary spaces around '{'
+        .replaceAll(/\s*:\s*/g, ':') // Remove unnecessary spaces around ':'
         .trim();
 }

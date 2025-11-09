@@ -107,6 +107,11 @@ export default class TextBox extends InputBase {
         return '';
     }
 
+    /**
+     * @protected Validates the last character entered.
+     * @param   {KeyboardEvent & { target: HTMLInputElement }} keyDownEvent
+     * @returns {Boolean} Whether the last character is valid or not.
+     */
     validateLastChar(keyDownEvent) {
         return this.regexPattern ? this.regexPattern.test(keyDownEvent.key) : true;
     }
