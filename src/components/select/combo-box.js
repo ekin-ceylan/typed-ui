@@ -7,6 +7,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
     static properties = {
         options: { type: Array }, // [{ value, label }]
         isOpen: { state: false }, // Açık / kapalı (yaklaşık)
+        filter: { type: String, state: false }, // Filtre metni
         disabled: { type: Boolean, reflect: true },
         optionList: { type: Array, state: true, attribute: false }, // internal
     };
@@ -16,34 +17,17 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         return [...base, 'value', 'options']; // Lit’in kendi listesi + listem
     }
 
-    #clear() {
-        this.value = '';
-        this.dispatchEvent(new CustomEvent('input', this.#eventInitDict()));
-        this.dispatchEvent(new CustomEvent('change', this.#eventInitDict()));
+    get filteredOptions() {
+        return this.optionList.filter(opt => {
+            const searchValue = this.filter?.toLowerCase() || '';
+            const optionText = opt.textContent.toLowerCase();
+            return optionText.includes(searchValue);
+        });
     }
 
-    #optionToDiv(opt, selectedValue) {
-        const div = document.createElement('div');
-        div.setAttribute('role', 'option');
-        div.dataset.value = opt.value;
-        div.innerHTML = opt.label ?? opt.innerHTML;
+    onFocusOut(e) {
+        if (this.contains(e.relatedTarget)) return;
 
-        if (opt.disabled) {
-            div.setAttribute('aria-disabled', 'true');
-        }
-
-        if (opt.selected || selectedValue === opt.value) {
-            div.setAttribute('aria-selected', 'true');
-        }
-
-        return div;
-    }
-
-    onInput(e) {
-        this.isOpen = false;
-    }
-
-    onBlur(_e) {
         this.isOpen = false;
         this.#checkValidity();
     }
@@ -57,36 +41,38 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
     }
 
     onInvalid(_e) {
-        console.log('ComboBox onInvalid');
         // e.preventDefault(); // mesaj baloncuğu çıkmaz
         this.#checkValidity();
     }
 
     onFormSubmit(e) {
-        console.log('ComboBox onFormSubmit');
         if (!this.#checkValidity()) {
             e.preventDefault();
         }
     }
 
     onOptionClick(e) {
-        const option = e.target;
+        const option = e.currentTarget;
 
-        if (!option?.dataset?.value) {
-            return;
+        if (option?.dataset?.value) {
+            this.#onInput(option);
         }
-
-        this.#setSelectedOption(option);
-        this.value = option.dataset.value;
-        this.inputElement.value = this.value;
     }
 
-    #setSelectedOption(option) {
-        if (this.selectedOption == option) return;
+    #onInput(selectedOption) {
+        this.isOpen = false;
+
+        if (this.selectedOption == selectedOption) return;
 
         this.selectedOption?.removeAttribute('aria-selected');
-        this.selectedOption = option;
-        this.selectedOption.setAttribute('aria-selected', 'true');
+        this.selectedOption = selectedOption;
+        this.selectedOption?.setAttribute('aria-selected', 'true');
+        this.inputElement.value = selectedOption?.dataset.value || '';
+        this.searchElement.value = '';
+        this.value = selectedOption?.dataset.value || null;
+        this.displayElement.innerHTML = this.selectedOption?.innerHTML || this.placeholder;
+        this.#checkValidity();
+        // this.dispatchEvent(new CustomEvent('input', this.#eventInitDict(e)));
     }
 
     #checkValidity() {
@@ -99,6 +85,30 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         el.setCustomValidity(this.validationMessage);
 
         return !this.validationMessage;
+    }
+
+    #clear() {
+        this.#onInput(null);
+        this.dispatchEvent(new CustomEvent('input', this.#eventInitDict()));
+        this.dispatchEvent(new CustomEvent('change', this.#eventInitDict()));
+    }
+
+    #optionToDiv(opt) {
+        const div = document.createElement('div');
+        div.setAttribute('role', 'option');
+        div.dataset.value = opt.value;
+        div.innerHTML = opt.label ?? opt.innerHTML;
+        div.addEventListener('click', this.onOptionClick.bind(this));
+
+        if (opt.disabled) {
+            div.setAttribute('aria-disabled', 'true');
+        }
+
+        if (opt.selected || this.value === opt.value) {
+            div.setAttribute('aria-selected', 'true');
+        }
+
+        return div;
     }
 
     #toListElement(raw) {
@@ -145,6 +155,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         }
     }
 
+    /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         const btnClear = html`
             <button type="button" class="indicator btn-clear" ?disabled=${!this.value} @click=${this.#clear} aria-label="Seçimi temizle">
@@ -158,7 +169,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
 
         return html`
             ${this.labelHtml}
-            <div role="combobox" ?data-open=${this.isOpen} tabindex="-1">
+            <div role="combobox" ?data-open=${this.isOpen} tabindex="0" @focusout=${this.onFocusOut}>
                 <input
                     id=${ifDefined(this.fieldId)}
                     name=${ifDefined(this.fieldName || this.fieldId)}
@@ -171,11 +182,11 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
                     ?aria-invalid=${this.ariaInvalid}
                     aria-readonly="true"
                     @invalid=${this.onInvalid}
-                    @input=${this.onInput}
                     @focus=${this.onFocusValue}
                     data-role="value"
+                    tabindex="-1"
                 />
-                <input type="text" data-role="display" aria-readonly="true" aria-haspopup="listbox" aria-expanded=${this.isOpen} tabindex="0" readonly />
+                <div data-role="display" aria-haspopup="listbox"></div>
                 <input
                     type="search"
                     data-role="search"
@@ -183,16 +194,17 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
                     spellcheck="false"
                     aria-expanded=${this.isOpen}
                     aria-labelledby=${ifDefined(this.labelId)}
-                    @blur=${this.onBlur}
                     @focus=${this.onFocus}
+                    @input=${e => (this.filter = e.target.value)}
+                    tabindex="-1"
                 />
                 ${this.required ? null : btnClear}
                 <svg class="indicator chevron" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
                 <div id=${this.fieldId + '-list'} role="listbox" aria-expanded=${this.isOpen ? 'true' : 'false'}>
-                    <div disabled ?hidden=${this.optionList?.length > 0}>Kayıt Bulunamadı</div>
-                    ${this.optionList}
+                    <div disabled ?hidden=${this.filteredOptions?.length > 0}>Kayıt Bulunamadı</div>
+                    ${this.filteredOptions}
                 </div>
             </div>
             ${this.required ? this.validationMessageHtml : null}
@@ -208,8 +220,9 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
 
         for (const node of collectedNodes) {
             if (!hasOptions && node instanceof HTMLOptionElement) {
-                this.optionList.push(this.#optionToDiv(node));
-                node.selected && (this.value = node.value);
+                const optionDiv = this.#optionToDiv(node);
+                this.optionList.push(optionDiv);
+                optionDiv.ariaSelected && this.#onInput(optionDiv);
             }
 
             node.remove(); // remove all nodes
@@ -221,7 +234,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('input[data-role="value"]');
         this.searchElement = this.renderRoot.querySelector('input[data-role="search"]');
-        this.displayElement = this.renderRoot.querySelector('input[data-role="display"]');
+        this.displayElement = this.renderRoot.querySelector('div[data-role="display"]');
     }
 
     constructor() {

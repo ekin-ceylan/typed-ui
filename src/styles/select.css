@@ -132,6 +132,29 @@ combo-box > div > div[role='listbox'] > div:hover {
 }
 
 combo-box > div:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #2684ff;
+    outline: solid 2px #4d90fe;
+}
+
+combo-box input[data-role='value'] {
+    position: absolute;
+    border: none;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    padding: 0;
+}
+
+combo-box :is(input[data-role='search'], div[data-role='display']) {
+    box-sizing: border-box;
+    width: 100%;
+    padding-right: calc(var(--sbx-clear-right-distance) + var(--sbx-indicator-size));
+}
+
+combo-box div[data-role='display'] {
+    position: absolute;
+}
+
+combo-box input[data-role='search'] {
+    position: relative;
+    background: transparent;
 }

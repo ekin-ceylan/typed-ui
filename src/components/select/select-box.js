@@ -25,7 +25,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         e.stopPropagation();
         this.value = e.target.value;
         this.isOpen = false;
-        this.#checkValidity(false);
+        this.#checkValidity();
         this.dispatchEvent(new CustomEvent('input', this.#eventInitDict(e)));
     }
 
