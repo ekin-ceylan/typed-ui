@@ -39,7 +39,67 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         return div;
     }
 
-    onFormSubmit(e) {}
+    onInput(e) {
+        this.isOpen = false;
+    }
+
+    onBlur(_e) {
+        this.isOpen = false;
+        this.#checkValidity();
+    }
+
+    onFocus(_e) {
+        this.isOpen = true;
+    }
+
+    onFocusValue(e) {
+        e.target.parentElement.focus();
+    }
+
+    onInvalid(_e) {
+        console.log('ComboBox onInvalid');
+        // e.preventDefault(); // mesaj baloncuğu çıkmaz
+        this.#checkValidity();
+    }
+
+    onFormSubmit(e) {
+        console.log('ComboBox onFormSubmit');
+        if (!this.#checkValidity()) {
+            e.preventDefault();
+        }
+    }
+
+    onOptionClick(e) {
+        const option = e.target;
+
+        if (!option?.dataset?.value) {
+            return;
+        }
+
+        this.#setSelectedOption(option);
+        this.value = option.dataset.value;
+        this.inputElement.value = this.value;
+    }
+
+    #setSelectedOption(option) {
+        if (this.selectedOption == option) return;
+
+        this.selectedOption?.removeAttribute('aria-selected');
+        this.selectedOption = option;
+        this.selectedOption.setAttribute('aria-selected', 'true');
+    }
+
+    #checkValidity() {
+        const el = this.inputElement;
+        const v = el.validity;
+
+        el.setCustomValidity('');
+        this.ariaInvalid = !v?.valid;
+        this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
+        el.setCustomValidity(this.validationMessage);
+
+        return !this.validationMessage;
+    }
 
     #toListElement(raw) {
         if (raw instanceof HTMLOptionElement || typeof raw === 'object') {
@@ -95,18 +155,42 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
                 </svg>
             </button>
         `;
-        const label = html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
 
         return html`
-            ${this.label && !this.hideLabel ? label : ``}
-            <div data-open=${this.isOpen}>
-                <input type="hidden" id=${ifDefined(this.fieldId)} name=${ifDefined(this.fieldName || this.fieldId)} />
-                <input type="search" />
+            ${this.labelHtml}
+            <div role="combobox" ?data-open=${this.isOpen} tabindex="-1">
+                <input
+                    id=${ifDefined(this.fieldId)}
+                    name=${ifDefined(this.fieldName || this.fieldId)}
+                    type="text"
+                    .value=${this.value ?? ''}
+                    ?required=${this.required}
+                    aria-labelledby=${ifDefined(this.labelId)}
+                    aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
+                    aria-required=${this.required ? 'true' : 'false'}
+                    ?aria-invalid=${this.ariaInvalid}
+                    aria-readonly="true"
+                    @invalid=${this.onInvalid}
+                    @input=${this.onInput}
+                    @focus=${this.onFocusValue}
+                    data-role="value"
+                />
+                <input type="text" data-role="display" aria-readonly="true" aria-haspopup="listbox" aria-expanded=${this.isOpen} tabindex="0" readonly />
+                <input
+                    type="search"
+                    data-role="search"
+                    autocomplete="off"
+                    spellcheck="false"
+                    aria-expanded=${this.isOpen}
+                    aria-labelledby=${ifDefined(this.labelId)}
+                    @blur=${this.onBlur}
+                    @focus=${this.onFocus}
+                />
                 ${this.required ? null : btnClear}
                 <svg class="indicator chevron" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
-                <div role="listbox" aria-expanded=${this.isOpen ? 'true' : 'false'}>
+                <div id=${this.fieldId + '-list'} role="listbox" aria-expanded=${this.isOpen ? 'true' : 'false'}>
                     <div disabled ?hidden=${this.optionList?.length > 0}>Kayıt Bulunamadı</div>
                     ${this.optionList}
                 </div>
@@ -135,7 +219,9 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
     }
 
     firstUpdated() {
-        this.inputElement = this.renderRoot.querySelector('input[type="hidden"]');
+        this.inputElement = this.renderRoot.querySelector('input[data-role="value"]');
+        this.searchElement = this.renderRoot.querySelector('input[data-role="search"]');
+        this.displayElement = this.renderRoot.querySelector('input[data-role="display"]');
     }
 
     constructor() {
@@ -152,3 +238,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
 }
 
 customElements.define('combo-box', ComboBox);
+
+// search forma dahil edilmemeli
+// aria-activedescendant="opt-3"
+// aria-controls

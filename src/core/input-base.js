@@ -36,6 +36,9 @@ export default class InputBase extends LitElement {
             ${this.validationMessage}
         </span>`;
     }
+    get labelHtml() {
+        return this.hideLabel ? null : html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
+    }
     get requiredValidationMessage() {
         return `${this.label} alanı gereklidir.`;
     }

@@ -1,3 +1,10 @@
+*[data-not-ready],
+*[data-not-ready] *,
+*:not(:defined) * {
+    display: none;
+    pointer-events: none;
+}
+
 :is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box, combo-box):defined {
     opacity: 1;
     transition: opacity 0.3s ease;
@@ -15,13 +22,6 @@
 
 :is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box) :is(input, select)[aria-invalid] {
     border: 1px solid red;
-}
-
-*[data-not-ready],
-*[data-not-ready] *,
-*:not(:defined) * {
-    display: none;
-    pointer-events: none;
 }
 
 :is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box, modal-dialog):not(:defined) * {

@@ -15,11 +15,6 @@ combo-box {
     --sbx-chevron-right-distance: 12px;
 }
 
-:is(select-box, combo-box)[data-not-ready] * {
-    display: none;
-    pointer-events: none;
-}
-
 :is(select-box, combo-box) > div {
     position: relative;
     display: inline-block;
@@ -102,11 +97,16 @@ combo-box > div > .chevron {
 }
 
 select-box > div > select[data-open] ~ .chevron,
-combo-box > div > .chevron {
+combo-box > div[data-open] > .chevron {
     transform: translateY(-50%) rotate(180deg);
 }
 
+combo-box > div > div[role='listbox'] {
+    display: none;
+}
+
 combo-box > div[data-open] > div[role='listbox'] {
+    display: block;
     position: absolute;
     top: 100%;
     left: 0;
@@ -119,6 +119,19 @@ combo-box > div[data-open] > div[role='listbox'] {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-combo-box > div > div[role='listbox'] {
-    display: none;
+combo-box > div > div[role='listbox'] > div {
+    padding: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+combo-box > div > div[role='listbox'] > div:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+combo-box > div:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #2684ff;
 }
