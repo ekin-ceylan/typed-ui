@@ -12,13 +12,15 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         options: { type: Array }, // [{ value, label }]
         isOpen: { state: false }, // Açık / kapalı (yaklaşık)
         disabled: { type: Boolean, reflect: true },
-        optionList: { type: Array, state: true, attribute: false }, // internal
     };
 
     static get observedAttributes() {
         const base = super.observedAttributes ?? [];
         return [...base, 'value', 'options']; // Lit’in kendi listesi + listem
     }
+
+    /** @type {HTMLOptionElement[] | HTMLOptGroupElement[]} */
+    #optionList = [];
 
     // #region EVENT LISTENERS
     onInput(e) {
@@ -145,7 +147,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
                 throw new TypeError('options must be an array');
             }
 
-            this.optionList = this.options.map(o => this.#toOptionElement(o));
+            this.#optionList = this.options.map(o => this.#toOptionElement(o));
             this.#completeOptionUpdate();
         }
     }
@@ -190,8 +192,8 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
                     ?data-open=${this.isOpen}
                 >
                     <option value="" disabled selected hidden>${this.placeholder}</option>
-                    <option disabled ?hidden=${this.optionList?.length > 0}>Kayıt Bulunamadı</option>
-                    ${this.optionList}
+                    <option disabled ?hidden=${this.#optionList?.length > 0}>Kayıt Bulunamadı</option>
+                    ${this.#optionList}
                 </select>
 
                 ${this.required ? null : btnClear}
@@ -215,7 +217,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
             const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
 
             if (!hasOptions && isAllowedType) {
-                this.optionList.push(node);
+                this.#optionList.push(node);
                 continue;
             }
 
@@ -237,7 +239,6 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         this.placeholder = 'Seçiniz';
         this.required = false;
         this.options = [];
-        this.optionList = [];
         this.isOpen = false;
     }
 }
