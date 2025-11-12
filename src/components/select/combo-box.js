@@ -29,6 +29,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         if (this.contains(e.relatedTarget)) return;
 
         this.isOpen = false;
+        this.filter = '';
         this.#checkValidity();
     }
 
@@ -68,7 +69,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         this.selectedOption = selectedOption;
         this.selectedOption?.setAttribute('aria-selected', 'true');
         this.inputElement.value = selectedOption?.dataset.value || '';
-        this.searchElement.value = '';
+        this.filter = '';
         this.value = selectedOption?.dataset.value || null;
         this.displayElement.innerHTML = this.selectedOption?.innerHTML || this.placeholder;
         this.#checkValidity();
@@ -186,9 +187,10 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
                     data-role="value"
                     tabindex="-1"
                 />
-                <div data-role="display" aria-haspopup="listbox"></div>
+                <div data-role="display" aria-haspopup="listbox">${this.placeholder}</div>
                 <input
                     type="search"
+                    .value=${this.filter || ''}
                     data-role="search"
                     autocomplete="off"
                     spellcheck="false"
