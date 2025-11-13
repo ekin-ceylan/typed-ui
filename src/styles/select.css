@@ -112,7 +112,7 @@ combo-box > div[data-open] > div[role='listbox'] {
     left: 0;
     right: 0;
     z-index: 10;
-    max-height: 200px;
+    max-height: 100px;
     overflow-y: auto;
     background: #fff;
     border: 1px solid #ccc;
@@ -129,8 +129,12 @@ combo-box > div > div[role='listbox'] > div:not([hidden]) {
     text-overflow: ellipsis;
 }
 
-combo-box > div > div[role='listbox'] > div:hover {
+combo-box > div > div[role='listbox'] > div[aria-selected] {
     background: rgba(0, 0, 0, 0.1);
+}
+
+combo-box > div > div[role='listbox'] > div[data-active] {
+    background: rgba(0, 0, 0, 0.2);
 }
 
 combo-box > div:focus {

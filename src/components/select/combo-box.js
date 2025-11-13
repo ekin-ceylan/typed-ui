@@ -13,6 +13,8 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         isOpen: { state: false }, // Açık / kapalı (yaklaşık)
         filter: { type: String, state: false }, // Filtre metni
         disabled: { type: Boolean, reflect: true },
+        nativeBehavior: { type: Boolean, attribute: 'native-behavior' }, // native select gibi davranır
+        activeIndex: { type: Number, state: true, attribute: false },
     };
 
     static get observedAttributes() {
@@ -37,35 +39,6 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
 
     // #endregion STATICS, FIELDS, GETTERS
 
-    // #region EVENT LISTENERS
-
-    onFocusOut(e) {
-        if (this.contains(e.relatedTarget)) return;
-
-        this.#closeList();
-    }
-
-    onFocus(_e) {
-        this.#openList();
-    }
-
-    onFocusValue(e) {
-        e.target.parentElement.focus();
-    }
-
-    onInvalid(_e) {
-        // e.preventDefault(); // mesaj baloncuğu çıkmaz
-        this.#checkValidity();
-    }
-
-    onFormSubmit(e) {
-        if (!this.#checkValidity()) {
-            e.preventDefault();
-        }
-    }
-
-    // #endregion EVENT LISTENERS
-
     constructor() {
         super();
 
@@ -76,6 +49,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         this.isOpen = false;
         /** @type {ComboBoxOption[]} */ this.options = [];
         /** @type {ComboBoxOption | null} */ this.selectedOption = null;
+        this.activeIndex = -1;
     }
 
     // #region LIFECYCLE METHODS
@@ -83,6 +57,8 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         this.inputElement = this.renderRoot.querySelector('input[data-role="value"]');
         this.searchElement = this.renderRoot.querySelector('input[data-role="search"]');
         this.displayElement = this.renderRoot.querySelector('div[data-role="display"]');
+        this.comboboxDiv = this.renderRoot.querySelector('div[role="combobox"]');
+        this.clearButton = this.renderRoot.querySelector('button[data-role="clear"]');
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -91,7 +67,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         if (name === 'value' && this.value != newValue) {
             this.value = newValue;
             const matchedOption = this.#optionList.find(o => o.value === this.value) || null;
-            matchedOption && this.#onInput(matchedOption);
+            matchedOption && this.#onSelect(matchedOption);
 
             this.updateComplete.then(() => {
                 this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
@@ -103,7 +79,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
 
             this.#optionList = this.options.map(o => {
                 const opt = this.#toListElement(o);
-                opt.selected && this.#onInput(opt);
+                opt.selected && this.#onSelect(opt);
                 return opt;
             });
 
@@ -124,7 +100,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
             if (!hasOptions && node instanceof HTMLOptionElement) {
                 const option = this.#parseOption(node);
                 this.#optionList.push(option);
-                option.selected && this.#onInput(option);
+                option.selected && this.#onSelect(option);
             }
 
             node.remove(); // remove all nodes
@@ -133,21 +109,101 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         this.requestUpdate();
     }
 
+    // #region EVENT LISTENERS
+
+    /**
+     * Handles focus out event to close the list.
+     * @param {FocusEvent} e
+     */
+    onFocusOut(e) {
+        if (this.contains(e.relatedTarget)) return;
+
+        this.#closeList();
+    }
+
+    onFocusSearch(_e) {
+        this.#openList();
+    }
+
+    onFocusValue(e) {
+        e.target.parentElement.focus();
+    }
+
+    onInputSearch(e) {
+        this.filter = e.target.value;
+        this.activeIndex = 0;
+        this.#scrollToActive();
+    }
+
+    onKeydown(e) {
+        if (e.target === this.clearButton) return;
+
+        const isArrowKey = e.key === 'ArrowDown' || e.key === 'ArrowUp';
+        const key = e.key;
+
+        if (key === 'Escape') {
+            this.#closeList();
+            this.comboboxDiv.focus();
+        } else if (this.nativeBehavior && isArrowKey) {
+            e.preventDefault();
+            const [option, idx] = this.#getAdjacentOption(key === 'ArrowDown');
+            this.activeIndex = idx;
+            option && this.#onSelect(option);
+            this.#scrollToActive();
+        } else if (isArrowKey && this.isOpen) {
+            e.preventDefault();
+            this.activeIndex = this.#getAdjacentIndex(key === 'ArrowDown');
+            this.#scrollToActive();
+        } else if (this.isOpen && (key === 'Tab' || key === 'Enter')) {
+            e.preventDefault();
+
+            if (this.nativeBehavior) {
+                this.#closeList();
+            } else {
+                this.renderRoot.querySelector('div[role="option"][data-active]')?.click();
+            }
+
+            this.comboboxDiv.focus();
+        } else if (!this.isOpen && (key === ' ' || key === 'Enter')) {
+            e.preventDefault();
+            this.searchElement.focus();
+        }
+    }
+
+    onInvalid(_e) {
+        // e.preventDefault(); // mesaj baloncuğu çıkmaz
+        this.#checkValidity();
+    }
+
+    onFormSubmit(e) {
+        if (!this.#checkValidity()) {
+            e.preventDefault();
+        }
+    }
+
+    onOptionClick(option) {
+        this.#onSelect(option);
+        this.#closeList();
+    }
+
+    // #endregion EVENT LISTENERS
+
+    // #region PRIVATE METHODS
     /**
      * Handles option selection.
-     * @param {Object} selectedOption
+     * @param {ComboBoxOption} selectedOption
      */
-    #onInput(selectedOption) {
-        this.isOpen = false;
+    #onSelect(selectedOption) {
+        this.dispatchEvent(new CustomEvent('input', this.#eventInitDict()));
 
         if (this.#selectedOption === selectedOption) return;
 
         this.#selectedOption = selectedOption;
         this.selectedOption = { value: selectedOption?.value, label: selectedOption?.label };
         this.inputElement.value = selectedOption?.value || '';
+        this.displayElement.innerHTML = this.#selectedOption?.innerHTML || this.placeholder;
         this.value = selectedOption?.value || null;
-        this.#closeList();
-        this.dispatchEvent(new CustomEvent('input', this.#eventInitDict()));
+        this.dispatchEvent(new CustomEvent('change', this.#eventInitDict()));
     }
 
     #checkValidity() {
@@ -162,20 +218,54 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         return !this.validationMessage;
     }
 
+    #getAdjacentOption(next) {
+        const direction = next ? 1 : -1;
+        const idx = this.filteredOptions.indexOf(this.#selectedOption);
+        const adjacentIndex = idx + direction;
+        const option = this.filteredOptions[adjacentIndex] || null;
+
+        return [option, adjacentIndex];
+    }
+
+    #getAdjacentIndex(next) {
+        const direction = next ? 1 : -1;
+        return Math.min(Math.max(this.activeIndex + direction, 0), this.filteredOptions.length - 1);
+    }
+
+    #scrollToActive() {
+        requestAnimationFrame(() => {
+            const listbox = this.renderRoot.querySelector('div[role="listbox"]');
+            const option =
+                this.renderRoot.querySelector('div[role="listbox"] div[role="option"][data-active]') ||
+                this.renderRoot.querySelector('div[role="listbox"] div:nth-child(1 of [role="option"])');
+
+            if (!option || !listbox) return;
+            const optionRect = option.getBoundingClientRect();
+            const listRect = listbox.getBoundingClientRect();
+            const offset = optionRect.top - listRect.top;
+            const scroll = offset - listRect.height / 2 + optionRect.height / 2;
+            listbox.scrollTop += scroll;
+        });
+    }
+
     #openList() {
         this.isOpen = true;
+        this.dispatchEvent(new CustomEvent('open', this.#eventInitDict()));
+        this.activeIndex = this.filteredOptions.indexOf(this.#selectedOption);
+        this.#scrollToActive();
     }
+
     #closeList() {
         this.isOpen = false;
+        this.searchElement.blur();
         this.filter = '';
-        this.displayElement.innerHTML = this.#selectedOption?.innerHTML || this.placeholder;
+        this.activeIndex = -1;
         this.#checkValidity();
+        this.dispatchEvent(new CustomEvent('close', this.#eventInitDict()));
     }
 
     #clear() {
-        this.#onInput(null);
-        this.dispatchEvent(new CustomEvent('input', this.#eventInitDict()));
-        this.dispatchEvent(new CustomEvent('change', this.#eventInitDict()));
+        this.#onSelect(null);
     }
 
     /**
@@ -202,11 +292,28 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         };
     }
 
-    #optToDiv(opt) {
+    #createOptionId(index) {
+        return `${this.fieldId}-option-${index}`;
+    }
+
+    #optToDiv(opt, i) {
         const isSelected = opt.selected || this.inputElement.value === opt.value;
+        const isActive = this.activeIndex === -1 ? isSelected : this.activeIndex === i;
+        const optionId = this.#createOptionId(i);
 
         return html`
-            <div role="option" data-value=${opt.value} ?aria-disabled=${!!opt.disabled} ?aria-selected=${isSelected} @click=${_e => this.#onInput(opt)}>
+            <div
+                id=${optionId}
+                role="option"
+                ?data-active=${isActive && this.isOpen}
+                data-value=${opt.value}
+                ?aria-disabled=${!!opt.disabled}
+                ?aria-selected=${isSelected}
+                @click=${_e => this.onOptionClick(opt)}
+                @mouseenter=${_e => {
+                    this.activeIndex = i;
+                }}
+            >
                 ${unsafeHTML(opt.innerHTML)}
             </div>
         `;
@@ -225,22 +332,27 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         throw new TypeError(`Invalid option entry: ${String(raw)}`);
     }
 
-    #eventInitDict(originalEvent) {
+    #eventInitDict() {
         return {
             bubbles: true,
             cancelable: true,
             composed: true,
             detail: {
-                originalEvent,
-                synthetic: !(originalEvent && originalEvent instanceof Event),
+                value: this.selectedOption?.value || null,
+                label: this.selectedOption?.label || '',
+                open: this.isOpen,
+                synthetic: true,
             },
         };
     }
 
+    // #endregion PRIVATE METHODS
+
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
+        const activeDescendantId = this.activeIndex >= 0 ? this.#createOptionId(this.activeIndex) : undefined;
         const btnClear = html`
-            <button type="button" class="indicator btn-clear" ?disabled=${!this.value} @click=${this.#clear} aria-label="Seçimi temizle">
+            <button type="button" class="indicator btn-clear" ?disabled=${!this.value} @click=${this.#clear} data-role="clear" aria-label="Seçimi temizle">
                 <svg fill="currentColor" viewBox="0 0 460.775 460.775" xml:space="preserve">
                     <path
                         d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55  c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55  c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505  c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55  l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719  c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z"
@@ -249,14 +361,25 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
             </button>
         `;
 
+        const chevron = html` <svg class="indicator chevron" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>`;
+
         return html`
             ${this.labelHtml}
-            <div role="combobox" ?data-open=${this.isOpen} ?data-filtered=${!!this.filter} tabindex="0" @focusout=${this.onFocusOut}>
+            <div
+                role="combobox"
+                aria-activedescendant=${ifDefined(activeDescendantId)}
+                ?data-open=${this.isOpen}
+                ?data-filtered=${!!this.filter}
+                tabindex="0"
+                @focusout=${this.onFocusOut}
+                @keydown=${this.onKeydown}
+            >
                 <input
                     id=${ifDefined(this.fieldId)}
                     name=${ifDefined(this.fieldName || this.fieldId)}
                     type="text"
-                    .value=${this.value ?? ''}
                     ?required=${this.required}
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
@@ -272,19 +395,16 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
                 <input
                     type="search"
                     .value=${this.filter || ''}
-                    data-role="search"
                     autocomplete="off"
                     spellcheck="false"
                     aria-expanded=${this.isOpen}
                     aria-labelledby=${ifDefined(this.labelId)}
-                    @focus=${this.onFocus}
-                    @input=${e => (this.filter = e.target.value)}
+                    @focus=${this.onFocusSearch}
+                    @input=${this.onInputSearch}
+                    data-role="search"
                     tabindex="-1"
                 />
-                ${this.required ? null : btnClear}
-                <svg class="indicator chevron" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
+                ${this.required ? null : btnClear} ${chevron}
                 <div id=${this.fieldId + '-list'} role="listbox" aria-expanded=${this.isOpen ? 'true' : 'false'}>
                     <div aria-disabled ?hidden=${this.filteredOptions?.length > 0}>Kayıt Bulunamadı</div>
                     ${this.filteredOptions.map(this.#optToDiv.bind(this))}
@@ -300,3 +420,4 @@ customElements.define('combo-box', ComboBox);
 // search forma dahil edilmemeli
 // aria-activedescendant="opt-3"
 // aria-controls
+// value var ama seçeneklerde yok -> seçenekler güncellendiğinde vlaue eşleşmeli
