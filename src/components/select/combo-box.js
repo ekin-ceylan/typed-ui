@@ -147,12 +147,15 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         } else if (this.nativeBehavior && isArrowKey) {
             e.preventDefault();
             const [option, idx] = this.#getAdjacentOption(key === 'ArrowDown');
-            this.activeIndex = idx;
-            option && this.#onSelect(option);
-            this.#scrollToActive();
+
+            if (option) {
+                this.activeIndex = idx;
+                this.#onSelect(option);
+                this.#scrollToActive();
+            }
         } else if (isArrowKey && this.isOpen) {
             e.preventDefault();
-            this.activeIndex = this.#getAdjacentIndex(key === 'ArrowDown');
+            this.activeIndex = this.#getAdjacentIndex(key === 'ArrowDown'); // TODO: gereksiz olabilir
             this.#scrollToActive();
         } else if (this.isOpen && (key === 'Tab' || key === 'Enter')) {
             e.preventDefault();
@@ -218,6 +221,11 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         return !this.validationMessage;
     }
 
+    /**
+     * Gets the adjacent option based on the current selection.
+     * @param {Boolean} next
+     * @returns {[ComboBoxOption|null, number]} The adjacent option and its index.
+     */
     #getAdjacentOption(next) {
         const direction = next ? 1 : -1;
         const idx = this.filteredOptions.indexOf(this.#selectedOption);
@@ -227,6 +235,11 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         return [option, adjacentIndex];
     }
 
+    /**
+     * Gets the adjacent index based on the current active index.
+     * @param {Boolean} next
+     * @returns {number} The adjacent index.
+     */
     #getAdjacentIndex(next) {
         const direction = next ? 1 : -1;
         return Math.min(Math.max(this.activeIndex + direction, 0), this.filteredOptions.length - 1);
