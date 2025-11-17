@@ -155,7 +155,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
             }
         } else if (isArrowKey && this.isOpen) {
             e.preventDefault();
-            this.activeIndex = this.#getAdjacentIndex(key === 'ArrowDown'); // TODO: gereksiz olabilir
+            this.activeIndex = this.#getAdjacentIndex(key === 'ArrowDown');
             this.#scrollToActive();
         } else if (this.isOpen && (key === 'Tab' || key === 'Enter')) {
             e.preventDefault();
