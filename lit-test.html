@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Slot Distribution Test</title>
+        <link rel="modulepreload" href="./src/main.js" />
+        <link rel="stylesheet" href="./src/styles/input.css" />
+        <link rel="stylesheet" href="./src/styles/select.css" />
+    </head>
+    <body>
+        <slot-demo-host></slot-demo-host>
+
+        <script type="module" src="./src/main.js"></script>
+        <script type="module">
+            // --- Reactive parent component ---
+            import { LitElement, html } from 'lit';
+
+            class SlotDemoHost extends LitElement {
+                static properties = {
+                    showHeader: { type: Boolean },
+                    headerText: { type: String },
+                    items: { type: Array },
+                };
+                constructor() {
+                    super();
+                    this.showHeader = false;
+                    this.headerText = 'Reactive Header';
+                    this.items = ['Alpha', 'Beta'];
+                }
+                createRenderRoot() {
+                    return this;
+                }
+                #addItem() {
+                    this.items = [...this.items, 'Item ' + (this.items.length + 1)];
+                }
+                #removeItem() {
+                    this.items = this.items.slice(0, -1);
+                }
+                #reverseItems() {
+                    this.items = [...this.items].reverse();
+                }
+                render() {
+                    return html`<div class="demo-controls">
+                            <button @click=${() => this.#addItem()}>Add Item</button>
+                            <button @click=${() => this.#removeItem()}>Remove Item</button>
+                            <button @click=${() => this.#reverseItems()}>Reverse Items</button>
+                        </div>
+                        <select-box field-id="reactive-select" .options=${this.items.map(i => ({ value: i, label: i }))}> </select-box> `;
+                }
+            }
+            customElements.define('slot-demo-host', SlotDemoHost);
+        </script>
+    </body>
+</html>
