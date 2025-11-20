@@ -78,11 +78,6 @@
             </select-box>
             <br />
             <br />
-            <select-box id="sb-attr" required options='[{"value":"1","label":"Bir"},{"value":"2","label":"İki","selected":true},{"value":"3","label":"Üç"}]' placeholder="Seçiniz">
-                <option value="ch">Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
-            </select-box>
-            <br />
-            <br />
             <select-box id="sb-dynamic" placeholder="Dinamik Seçiniz"></select-box>
             <br />
             <br />
@@ -125,14 +120,11 @@
             // Dinamik attr set
             setTimeout(() => {
                 const el = document.getElementById('sb-dynamic');
-                el.setAttribute(
-                    'options',
-                    JSON.stringify([
-                        { value: 'x', label: 'X' },
-                        { value: 'y', label: 'Y', selected: true },
-                        { value: 'z', label: 'Z' },
-                    ])
-                );
+                el.options = [
+                    { value: 'x', label: 'X' },
+                    { value: 'y', label: 'Y', selected: true },
+                    { value: 'z', label: 'Z' },
+                ];
             }, 1500);
         </script>
         <script type="module" src="./src/main.js"></script>

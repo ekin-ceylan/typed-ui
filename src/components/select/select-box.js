@@ -9,18 +9,31 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
 
     // Public & internal reactive properties
     static properties = {
-        options: { type: Array }, // [{ value, label }]
+        options: { type: Array, attribute: false }, // [{ value, label }]
         isOpen: { state: false }, // Açık / kapalı (yaklaşık)
         disabled: { type: Boolean, reflect: true },
     };
 
     static get observedAttributes() {
         const base = super.observedAttributes ?? [];
-        return [...base, 'value', 'options']; // Lit’in kendi listesi + listem
+        return [...base, 'value']; // Lit’in kendi listesi + listem
     }
 
     /** @type {HTMLOptionElement[] | HTMLOptGroupElement[]} */
     #optionList = [];
+    #options = [];
+
+    get options() {
+        return this.#options;
+    }
+    set options(val) {
+        if (!Array.isArray(val)) {
+            throw new TypeError('options must be an array');
+        }
+        this.#options = val;
+        this.#optionList = val.map(o => this.#toOptionElement(o));
+        this.#completeOptionUpdate();
+    }
 
     // #region EVENT LISTENERS
     onInput(e) {
@@ -142,13 +155,6 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
             this.updateComplete.then(() => {
                 this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
             });
-        } else if (name === 'options') {
-            if (!Array.isArray(this.options)) {
-                throw new TypeError('options must be an array');
-            }
-
-            this.#optionList = this.options.map(o => this.#toOptionElement(o));
-            this.#completeOptionUpdate();
         }
     }
 
