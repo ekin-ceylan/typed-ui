@@ -5,12 +5,9 @@ import InputBase from '../../core/input-base.js';
 import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
 
 export default class SelectBox extends SlotCollectorMixin(InputBase) {
-    #mouseFlag = false;
-
-    // Public & internal reactive properties
     static properties = {
-        options: { type: Array, attribute: false }, // [{ value, label }]
-        isOpen: { state: false }, // Açık / kapalı (yaklaşık)
+        options: { type: Array, attribute: false },
+        isOpen: { state: false }, // Açık / kapalı
         disabled: { type: Boolean, reflect: true },
     };
 
@@ -19,9 +16,10 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         return [...base, 'value']; // Lit’in kendi listesi + listem
     }
 
-    /** @type {HTMLOptionElement[] | HTMLOptGroupElement[]} */
+    /** @type {SelectBoxOption[]} */
     #optionList = [];
     #options = [];
+    #mouseFlag = false;
 
     get options() {
         return this.#options;
@@ -117,23 +115,20 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
     }
 
     #toOptionElement(raw) {
-        if (raw instanceof HTMLOptionElement) {
+        if (raw instanceof SelectBoxOption) {
             return raw;
         }
 
-        if (typeof raw === 'string' || typeof raw === 'number') {
-            const opt = document.createElement('option');
-            opt.value = String(raw);
-            opt.label = String(raw);
+        if (raw instanceof HTMLOptionElement || raw instanceof HTMLOptGroupElement) {
+            return new SelectBoxOption(raw);
+        }
 
-            return opt;
+        if (typeof raw === 'string' || typeof raw === 'number') {
+            return new SelectBoxOption({ value: String(raw), label: String(raw) });
         }
 
         if (raw && typeof raw === 'object') {
-            const opt = document.createElement('option');
-            Object.assign(opt, raw);
-
-            return opt;
+            return new SelectBoxOption(raw);
         }
 
         throw new TypeError(`Invalid option entry: ${String(raw)}`);
@@ -199,7 +194,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
                 >
                     <option value="" disabled selected hidden>${this.placeholder}</option>
                     <option disabled ?hidden=${this.#optionList?.length > 0}>Kayıt Bulunamadı</option>
-                    ${this.#optionList}
+                    ${this.#optionList.map(option => option.htmlElement)}
                 </select>
 
                 ${this.required ? null : btnClear}
@@ -217,20 +212,20 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
      * @param {NodeList} collectedNodes - The nodes to bind.
      */
     bindSlots(collectedNodes) {
-        const hasOptions = this.options?.length > 0;
-
-        for (const node of collectedNodes) {
-            const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
-
-            if (!hasOptions && isAllowedType) {
-                this.#optionList.push(node);
-                continue;
-            }
-
-            node.remove(); // remove all other nodes
+        if (this.options?.length > 0) {
+            collectedNodes.map(node => node.remove()); // detach nodes
+            return;
         }
 
-        this.#completeOptionUpdate();
+        this.options = collectedNodes.reduce((acc, node) => {
+            const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
+            if (isAllowedType) {
+                acc.push(new SelectBoxOption(node));
+            }
+            node.remove(); // remove nodes
+
+            return acc;
+        }, []);
     }
 
     firstUpdated() {
@@ -244,11 +239,47 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         this.label = '';
         this.placeholder = 'Seçiniz';
         this.required = false;
-        this.options = [];
         this.isOpen = false;
+
+        /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | SelectBoxOption[] | []} */
+        this.options = [];
     }
 }
 
 customElements.define('select-box', SelectBox);
 
 // test case: başlangıç değeri varsa seçili gelsin
+
+class SelectBoxOption {
+    label = '';
+    value = '';
+    selected = false;
+    disabled = false;
+    options = []; // alt seçenekler (optgroup için)
+
+    get isOptGroup() {
+        return this.options?.length > 0;
+    }
+
+    get htmlElement() {
+        if (this.isOptGroup) {
+            return html`<optgroup label=${this.label}>${this.options.map(childOption => childOption.htmlElement)}</optgroup>`;
+        }
+        return html`<option value=${this.value} ?selected=${this.selected} ?disabled=${this.disabled}>${this.label}</option>`;
+    }
+
+    constructor(option) {
+        this.value = option?.value || '';
+        this.label = option?.label || '';
+        this.selected = option?.selected || false;
+        this.disabled = option?.disabled || false;
+
+        if (option instanceof HTMLOptGroupElement) {
+            this.options = Array.from(option.children)
+                .filter(child => child instanceof HTMLOptionElement)
+                .map(child => new SelectBoxOption(child));
+        } else {
+            this.options = option?.options || [];
+        }
+    }
+}
