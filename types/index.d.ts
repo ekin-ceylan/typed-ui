@@ -1,6 +1,13 @@
 import { LitElement, TemplateResult, CSSResultGroup } from 'lit';
 
-export declare abstract class InputBase extends LitElement {
+// Base Classes
+export declare abstract class LightComponentBase extends LitElement {
+    protected override createRenderRoot(): HTMLElement | DocumentFragment;
+    connectedCallback(): void;
+    constructor();
+}
+
+export declare abstract class InputBase extends LightComponentBase {
     inputElement: HTMLInputElement | null;
 
     fieldId?: string;
@@ -20,27 +27,24 @@ export declare abstract class InputBase extends LitElement {
 
     abstract onFormSubmit(event: SubmitEvent | Event): void;
 
-    protected override createRenderRoot(): HTMLElement | DocumentFragment;
     connectedCallback(): void;
     constructor();
 }
 
-export declare class ModalDialog extends LitElement {
+// Components
+export declare class ModalDialog extends SlotCollectorMixin(LightComponentBase) {
     open: boolean;
-    slots?: NodeListOf<Element>;
     backdropClose?: boolean;
     escClose?: boolean;
 
-    show(): void;
-    hide(): void;
+    constructor();
 
-    override connectedCallback(): void;
     protected override firstUpdated(): void;
     protected override updated(): void;
-    protected override createRenderRoot(): HTMLElement | DocumentFragment;
     protected override render(): unknown;
 
-    constructor();
+    show(): void;
+    hide(): void;
 }
 
 export declare class TextBox extends InputBase {
@@ -87,12 +91,9 @@ export declare class TextBox extends InputBase {
     protected override render(): import('lit').TemplateResult;
 }
 
-// SlotCollectorMixin
-export function SlotCollectorMixin<T extends new (...args: any[]) => {}>(
-    base: T
-): T & {
-    slottedChildren: Element[];
+// Mixins
+export function SlotCollectorMixin<T extends new (...args: any[]) => {}>(base: T): T & {
+    protected bindSlots(collectedNodes?: Node[]): void;
+    protected afterSlotsBinded(): void;
     connectedCallback(): void;
-    disconnectedCallback(): void;
-    // ...diğer mixin metodları...
 };

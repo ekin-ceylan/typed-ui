@@ -1,7 +1,8 @@
-import { LitElement, html } from 'lit';
+import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import LightComponentBase from './light-component-base';
 
-export default class InputBase extends LitElement {
+export default class InputBase extends LightComponentBase {
     /**
      * Component reactive properties
      * @type {import('lit').PropertyDeclarations}
@@ -19,6 +20,7 @@ export default class InputBase extends LitElement {
 
     /** @type {HTMLInputElement | HTMLSelectElement | null} */
     inputElement = null; // DOM input elementi
+
     /** @type {string | null } */
     validationMessage = '';
 
@@ -45,7 +47,6 @@ export default class InputBase extends LitElement {
 
     constructor() {
         super();
-        this.toggleAttribute('data-not-ready', true);
         this.#validateAbstracts();
     }
 
@@ -70,7 +71,6 @@ export default class InputBase extends LitElement {
         await this.updateComplete;
         const form = this.closest('form');
         form?.addEventListener('submit', this.onFormSubmit.bind(this));
-        this.toggleAttribute('data-not-ready', false);
     }
 
     #validateAbstracts() {
@@ -81,10 +81,5 @@ export default class InputBase extends LitElement {
                 throw new Error(`${this.constructor.name}: ${name}() metodunu override etmelisiniz.`);
             }
         }
-    }
-
-    /** @override @protected Render in light DOM to keep page styles. */
-    createRenderRoot() {
-        return this; // Shadow DOM'u kapat
     }
 }
