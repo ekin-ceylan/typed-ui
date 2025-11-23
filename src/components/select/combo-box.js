@@ -245,7 +245,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         return Math.min(Math.max(this.activeIndex + direction, 0), this.filteredOptions.length - 1);
     }
 
-    #scrollToActive() {
+    #scrollToActive(instant = false) {
         requestAnimationFrame(() => {
             const listbox = this.renderRoot.querySelector('div[role="listbox"]');
             const option =
@@ -253,11 +253,12 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
                 this.renderRoot.querySelector('div[role="listbox"] div:nth-child(1 of [role="option"])');
 
             if (!option || !listbox) return;
+
             const optionRect = option.getBoundingClientRect();
             const listRect = listbox.getBoundingClientRect();
             const offset = optionRect.top - listRect.top;
-            const scroll = offset - listRect.height / 2 + optionRect.height / 2;
-            listbox.scrollTop += scroll;
+            const scroll = listbox.scrollTop + (offset - listRect.height / 2 + optionRect.height / 2);
+            listbox.scrollTo({ top: scroll, behavior: instant ? 'auto' : 'smooth' });
         });
     }
 
@@ -265,7 +266,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
         this.isOpen = true;
         this.dispatchEvent(new CustomEvent('open', this.#eventInitDict()));
         this.activeIndex = this.filteredOptions.indexOf(this.#selectedOption);
-        this.#scrollToActive();
+        this.#scrollToActive(true);
     }
 
     #closeList() {
@@ -282,7 +283,6 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
     }
 
     /**
-     *
      * @typedef {Object} ComboBoxOption
      * @property {string} value
      * @property {string} label

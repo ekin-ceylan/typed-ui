@@ -103,6 +103,7 @@ combo-box > div[data-open] > .chevron {
 
 combo-box > div > div[role='listbox'] {
     display: none;
+    scroll-behavior: auto;
 }
 
 combo-box > div[data-open] > div[role='listbox'] {
