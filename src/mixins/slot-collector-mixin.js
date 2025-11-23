@@ -22,8 +22,11 @@ export default function SlotCollectorMixin(Base) {
                 for (const node of collectedNodes) {
                     const nodeSlot = node.getAttribute?.('slot') || 'default';
 
-                    if (nodeSlot === slotName) {
+                    if (!this.validateNode(node, slotName)) {
+                        node.remove();
+                    } else if (nodeSlot === slotName) {
                         fragment.appendChild(node);
+                        node?.removeAttribute?.('slot');
                     }
                 }
 
@@ -31,6 +34,11 @@ export default function SlotCollectorMixin(Base) {
                     ? slotEl.replaceWith(fragment)
                     : slotEl.replaceWith(...slotEl.childNodes);
             }
+        }
+
+        validateNode(node, slotName) {
+            // Override edilebilir
+            return true;
         }
 
         afterSlotsBinded() {
