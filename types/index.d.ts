@@ -8,7 +8,7 @@ export declare abstract class LightComponentBase extends LitElement {
 }
 
 export declare abstract class InputBase extends LightComponentBase {
-    inputElement: HTMLInputElement | null;
+    inputElement: HTMLInputElement | HTMLSelectElement | null;
 
     fieldId?: string;
     fieldName?: string;
