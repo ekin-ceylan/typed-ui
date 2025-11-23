@@ -1,5 +1,6 @@
-import { LitElement, html, css } from 'lit';
-import { injectStyles } from '../modules/utilities.js';
+import { html } from 'lit';
+import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
+import LightComponentBase from '../core/light-component-base.js';
 
 /**
  * Modal dialog web component built with Lit.
@@ -8,128 +9,36 @@ import { injectStyles } from '../modules/utilities.js';
  * @summary Accessible modal dialog with optional backdrop & ESC close.
  * @slot default - Dialog content.
  */
-export default class ModalDialog extends LitElement {
+export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) {
     /**
      * Component reactive properties
      * @type {import('lit').PropertyDeclarations}
      */
     static properties = {
         open: { type: Boolean },
-        slots: { type: Object, attribute: false },
         backdropClose: { type: Boolean, attribute: 'backdrop-close' },
         escClose: { type: Boolean, attribute: 'esc-close' },
     };
 
-    /**
-     * Component reactive properties
-     * @type {import('lit').CSSResult }
-     */
-    static styles = css`
-        modal-dialog {
-            --modal-close-size: 16px;
-            --modal-close-location: 10px;
-            --modal-close-bg-hover: rgba(0, 0, 0, 0.05);
-            --modal-close-bg-active: rgba(0, 0, 0, 0.1);
-            --modal-close-color: #6c6c6c;
-            --modal-close-hover: #3e3e3e;
-            --modal-close-active: #222;
-
-            --modal-backdrop-color: black;
-        }
-
-        modal-dialog[data-not-ready] * {
-            display: none;
-            pointer-events: none;
-        }
-
-        modal-dialog > dialog {
-            opacity: 0;
-            transform: translateY(100vh) scale(0, 0);
-            transition: all 0.3s ease;
-        }
-
-        modal-dialog > dialog[open].active {
-            opacity: 1;
-            transform: translateY(0) scale(1, 1);
-        }
-
-        modal-dialog > dialog::backdrop {
-            opacity: 0;
-            background: var(--modal-backdrop-color);
-            transition: all 0.3s ease;
-        }
-
-        modal-dialog > dialog.active::backdrop {
-            opacity: 0.5;
-        }
-
-        modal-dialog > dialog > .btn-close {
-            position: absolute;
-            top: var(--modal-close-location);
-            right: var(--modal-close-location);
-            width: var(--modal-close-size);
-            height: var(--modal-close-size);
-            color: var(--modal-close-color);
-            transition: all 0.2s;
-            background: none;
-            border: none;
-            border-radius: calc(var(--modal-close-size) / 8);
-            cursor: pointer;
-            padding: 2px;
-        }
-
-        modal-dialog > dialog > .btn-close:hover {
-            background: var(--modal-close-bg-hover);
-            color: var(--modal-close-hover);
-        }
-
-        modal-dialog > dialog > .btn-close:active {
-            background: var(--modal-close-bg-active);
-            color: var(--modal-close-active);
-            transform: scale(0.85);
-        }
-
-        modal-dialog > dialog > .btn-close > svg {
-            color: inherit;
-            fill: currentColor;
-        }
-    `;
-
-    #styleId = 'modal-dialog-styles';
     #dialog = null;
     #timeout = undefined;
 
     constructor() {
         super();
-        this.toggleAttribute('data-not-ready', true);
-        injectStyles(this.#styleId, this.constructor.styles.cssText);
+
         /** @public @type {boolean} */
         this.open = false;
+
         /** @protected @type {NodeListOf<Element> | null} */
-        this.slots = null;
-        /** @public @type {boolean} Close when clicking outside the dialog. */
         this.backdropClose = false;
+
         /** @public @type {boolean} Close when pressing the Escape key. */
         this.escClose = false;
-    }
-
-    /** @override */
-    connectedCallback() {
-        super.connectedCallback();
-        this.slots = this.renderRoot.querySelectorAll(':scope > *:not(dialog)'); // Collect light-DOM children to project into the dialog
-    }
-
-    /** @override @protected */
-    updated() {
-        if (this.#dialog) {
-            this.open ? this.#show() : this.#hide();
-        }
     }
 
     /** @override @protected */
     firstUpdated() {
         this.#dialog = this.renderRoot.querySelector('dialog');
-        this.toggleAttribute('data-not-ready', false);
 
         this.#dialog?.addEventListener('cancel', e => {
             e.preventDefault(); // prevent browser to close modal immediately
@@ -143,6 +52,13 @@ export default class ModalDialog extends LitElement {
             e.preventDefault();
             this.hide();
         });
+    }
+
+    /** @override @protected */
+    updated() {
+        if (this.#dialog) {
+            this.open ? this.#show() : this.#hide();
+        }
     }
 
     /** Open the dialog programmatically. */
@@ -186,11 +102,6 @@ export default class ModalDialog extends LitElement {
         return x < r.left || x > r.right || y < r.top || y > r.bottom;
     };
 
-    /** @override @protected Render in light DOM to keep page styles. */
-    createRenderRoot() {
-        return this;
-    }
-
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         return html` <dialog role="dialog" aria-modal="true" tabindex="-1">
@@ -201,7 +112,7 @@ export default class ModalDialog extends LitElement {
                     />
                 </svg>
             </button>
-            ${this.slots}
+            <slot></slot>
         </dialog>`;
     }
 }

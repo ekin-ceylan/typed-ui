@@ -8,11 +8,10 @@ export default function SlotCollectorMixin(Base) {
             this.#firstUpdateCompleted();
         }
 
-        #collectSlots() {
-            return Array.from(this.childNodes) //
-                .filter(node => node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim()));
-        }
-
+        /**
+         * Binds the collected nodes to their respective slot elements.
+         * @param {Node[]} collectedNodes - Collected nodes to bind to slots.
+         */
         bindSlots(collectedNodes = []) {
             const slotElements = Array.from(this.querySelectorAll('slot'));
 
@@ -34,14 +33,19 @@ export default function SlotCollectorMixin(Base) {
             }
         }
 
+        afterSlotsBinded() {
+            // Override edilebilir
+        }
+
         async #firstUpdateCompleted() {
             await this.updateComplete;
             this.bindSlots(this.#slotNodes); // Tüm slot placeholder'larını bul
             this.afterSlotsBinded();
         }
 
-        afterSlotsBinded() {
-            // Override edilebilir
+        #collectSlots() {
+            return Array.from(this.childNodes) //
+                .filter(node => node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim()));
         }
     };
 }
