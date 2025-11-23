@@ -1,9 +1,13 @@
 export default function SlotCollectorMixin(Base) {
     return class SlotCollector extends Base {
         #slotNodes = [];
+        #runFlag = false;
 
         connectedCallback() {
             super.connectedCallback();
+
+            if (this.#runFlag) return;
+            this.#runFlag = true;
             this.#slotNodes = this.#collectSlots();
             this.#firstUpdateCompleted();
         }
