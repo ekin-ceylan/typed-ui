@@ -103,7 +103,8 @@ combo-box > div[data-open] > .chevron {
 
 combo-box > div {
     background-color: #e9e9ed;
-    font-size: 14px;
+    font-family: 'MS Shell Dlg \32', 'Microsoft Sans Serif', sans-serif;
+    font-size: 13.33px;
 }
 
 combo-box > div > div[role='listbox'] {
@@ -172,12 +173,17 @@ combo-box div[data-role='display'] {
     position: absolute;
     display: flex;
     align-items: center;
-    padding-left: 3px;
+    padding-left: 6px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     height: 100%;
     width: calc(100% - var(--sbx-clear-right-distance) - var(--sbx-indicator-size));
+    color: var(--sbx-placeholder-color);
+}
+
+combo-box > div[data-has-value] div[data-role='display'] {
+    color: inherit;
 }
 
 combo-box > div[data-open] div[data-role='display'] {
@@ -188,6 +194,7 @@ combo-box > div[data-filtered] div[data-role='display'] {
 }
 
 combo-box input[data-role='search'] {
+    padding-left: 4px;
     position: relative;
     background: transparent;
     box-sizing: border-box;

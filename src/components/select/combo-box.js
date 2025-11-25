@@ -385,6 +385,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
                 aria-activedescendant=${ifDefined(activeDescendantId)}
                 ?data-open=${this.isOpen}
                 ?data-filtered=${!!this.filter}
+                ?data-has-value=${this.inputElement?.value}
                 tabindex="0"
                 @focusout=${this.onFocusOut}
                 @keydown=${this.onKeydown}
