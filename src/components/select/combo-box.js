@@ -322,7 +322,7 @@ export default class ComboBox extends SlotCollectorMixin(InputBase) {
                 data-value=${opt.value}
                 ?aria-disabled=${!!opt.disabled}
                 ?aria-selected=${isSelected}
-                @click=${_e => this.onOptionClick(opt)}
+                @click=${opt.disabled ? undefined : _e => this.onOptionClick(opt)}
                 @mouseenter=${_e => {
                     this.activeIndex = i;
                 }}

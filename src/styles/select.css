@@ -101,12 +101,20 @@ combo-box > div[data-open] > .chevron {
     transform: translateY(-50%) rotate(180deg);
 }
 
+combo-box > div {
+    background-color: #e9e9ed;
+    font-size: 14px;
+}
+
 combo-box > div > div[role='listbox'] {
     display: none;
     scroll-behavior: auto;
+    border-radius: 10px;
+    border: solid 1px #ccc;
 }
 
 combo-box > div[data-open] > div[role='listbox'] {
+    padding: 4px;
     display: block;
     position: absolute;
     top: 100%;
@@ -115,7 +123,7 @@ combo-box > div[data-open] > div[role='listbox'] {
     z-index: 10;
     max-height: 100px;
     overflow-y: auto;
-    background: #fff;
+    background: #f2f2f2;
     border: 1px solid #ccc;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
@@ -123,19 +131,28 @@ combo-box > div[data-open] > div[role='listbox'] {
 combo-box > div > div[role='listbox'] > div:not([hidden]) {
     display: flex;
     align-items: center;
-    padding: 2px;
+    padding: 4px;
     cursor: pointer;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border-radius: 4px;
 }
 
 combo-box > div > div[role='listbox'] > div[aria-selected] {
-    background: rgba(0, 0, 0, 0.1);
+    background: #d5d5d6;
 }
 
 combo-box > div > div[role='listbox'] > div[data-active] {
     background: rgba(0, 0, 0, 0.2);
+}
+
+combo-box > div > div[role='listbox'] > div[aria-disabled] {
+    background: #e9e9ed;
+    color: #6e6e6f;
+    cursor: default;
+    pointer-events: none;
+    user-select: none;
 }
 
 combo-box > div:focus {
