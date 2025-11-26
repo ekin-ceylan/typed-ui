@@ -1,20 +1,10 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
-import InputBase from '../../core/input-base.js';
-import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
+import SelectBase from './select-base.js';
 
-export default class SelectBox extends SlotCollectorMixin(InputBase) {
-    static properties = {
-        options: { type: Array, attribute: false },
-        isOpen: { state: false }, // Açık / kapalı
-        disabled: { type: Boolean, reflect: true },
-    };
-
-    static get observedAttributes() {
-        const base = super.observedAttributes ?? [];
-        return [...base, 'value']; // Lit’in kendi listesi + listem
-    }
+export default class SelectBox extends SelectBase {
+    // #region STATICS, FIELDS, GETTERS
 
     /** @type {SelectBoxOption[]} */
     #optionList = [];
@@ -31,6 +21,56 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         this.#options = val;
         this.#optionList = val.map(o => this.#toOptionElement(o));
         this.#completeOptionUpdate();
+    }
+
+    // #endregion STATICS, FIELDS, GETTERS
+
+    constructor() {
+        super();
+
+        /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | SelectBoxOption[] | []} */
+        this.options = [];
+    }
+
+    // #region LIFECYCLE METHODS
+
+    firstUpdated() {
+        this.inputElement = this.renderRoot.querySelector('select');
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
+
+        if (name === 'value' && this.value != newValue) {
+            this.value = newValue;
+
+            this.updateComplete.then(() => {
+                this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
+            });
+        }
+    }
+
+    // #endregion LIFECYCLE METHODS
+
+    /**
+     * @override @protected Binds the collected nodes to the select box options.
+     * @param {NodeList} collectedNodes - The nodes to bind.
+     */
+    bindSlots(collectedNodes) {
+        if (this.options?.length > 0) {
+            collectedNodes.map(node => node.remove()); // detach nodes
+            return;
+        }
+
+        this.options = collectedNodes.reduce((acc, node) => {
+            const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
+            if (isAllowedType) {
+                acc.push(new SelectBoxOption(node));
+            }
+            node.remove(); // remove nodes
+
+            return acc;
+        }, []);
     }
 
     // #region EVENT LISTENERS
@@ -84,6 +124,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
     }
     // #endregion EVENT LISTENERS
 
+    // #region PRIVATE METHODS
     #clear() {
         this.value = '';
         this.dispatchEvent(new CustomEvent('input', this.#eventInitDict()));
@@ -141,17 +182,7 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
         });
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-
-        if (name === 'value' && this.value != newValue) {
-            this.value = newValue;
-
-            this.updateComplete.then(() => {
-                this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
-            });
-        }
-    }
+    // #endregion PRIVATE METHODS
 
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
@@ -205,44 +236,6 @@ export default class SelectBox extends SlotCollectorMixin(InputBase) {
             </div>
             ${this.required ? this.validationMessageHtml : null}
         `;
-    }
-
-    /**
-     * @override @protected Binds the collected nodes to the select box options.
-     * @param {NodeList} collectedNodes - The nodes to bind.
-     */
-    bindSlots(collectedNodes) {
-        if (this.options?.length > 0) {
-            collectedNodes.map(node => node.remove()); // detach nodes
-            return;
-        }
-
-        this.options = collectedNodes.reduce((acc, node) => {
-            const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
-            if (isAllowedType) {
-                acc.push(new SelectBoxOption(node));
-            }
-            node.remove(); // remove nodes
-
-            return acc;
-        }, []);
-    }
-
-    firstUpdated() {
-        this.inputElement = this.renderRoot.querySelector('select');
-    }
-
-    constructor() {
-        super();
-
-        this.value = null;
-        this.label = '';
-        this.placeholder = 'Seçiniz';
-        this.required = false;
-        this.isOpen = false;
-
-        /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | SelectBoxOption[] | []} */
-        this.options = [];
     }
 }
 
