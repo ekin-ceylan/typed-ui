@@ -67,18 +67,10 @@ export default class ComboBox extends SelectBase {
         this.#setInputAndDisplay(this.#selectedOption);
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-
-        if (name === 'value' && this.value != newValue) {
-            this.value = newValue;
-            const matchedOption = this.#optionList.find(o => o.value === this.value) || null;
-            matchedOption && this.#onSelect(matchedOption);
-
-            this.updateComplete.then(() => {
-                this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
-            });
-        }
+    handleValueUpdate() {
+        const matchedOption = this.#optionList.find(o => o.value === this.value) || null;
+        matchedOption && this.#onSelect(matchedOption);
+        this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
     }
 
     // #endregion LIFECYCLE METHODS

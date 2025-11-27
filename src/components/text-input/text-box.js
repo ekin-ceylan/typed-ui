@@ -15,11 +15,6 @@ export default class TextBox extends InputBase {
         autocomplete: { type: String, reflect: true },
     };
 
-    static get observedAttributes() {
-        const base = super.observedAttributes ?? [];
-        return [...base, 'value']; // Lit’in kendi listesi + listem
-    }
-
     regexPattern = null;
     globalRegexPattern = null;
     #lastKey = null;
@@ -68,17 +63,9 @@ export default class TextBox extends InputBase {
         }
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-
-        if (name === 'value' && this.value != newValue) {
-            this.value = newValue;
-
-            this.updateComplete.then(() => {
-                this.#handleInput(this.inputElement);
-                this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
-            });
-        }
+    handleValueUpdate() {
+        this.#handleInput(this.inputElement);
+        this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
     }
 
     // #endregion LIFECYCLE
@@ -125,6 +112,7 @@ export default class TextBox extends InputBase {
      * @returns {void}
      */
     onInput(e) {
+        console.log('TextBox onInput');
         e.stopPropagation();
         this.#handleInput(e.target);
         this.#checkValidity(false);

@@ -10,7 +10,7 @@ export default class InputBase extends LightComponentBase {
     static properties = {
         fieldId: { type: String, attribute: 'field-id' },
         fieldName: { type: String, attribute: 'field-name' },
-        value: { type: String, attribute: false },
+        value: { type: String },
         label: { type: String },
         hideLabel: { type: Boolean, attribute: 'hide-label' },
         placeholder: { type: String, reflect: true },
@@ -18,11 +18,24 @@ export default class InputBase extends LightComponentBase {
         ariaInvalid: { type: String, attribute: 'aria-invalid' },
     };
 
+    /** @type {string} */
+    #value = null;
+    #updateEventDict = { bubbles: true, cancelable: true, composed: true, detail: { isComposing: false, synthetic: true } };
+
     /** @type {HTMLInputElement | HTMLSelectElement | null} */
     inputElement = null; // DOM input elementi
-
     /** @type {string | null } */
     validationMessage = '';
+
+    get value() {
+        return this.#value;
+    }
+    set value(val) {
+        if (val === this.inputElement?.value) return;
+        this.#value = val;
+        this.requestUpdate('value');
+        this.updateComplete.then(this.handleValueUpdate.bind(this));
+    }
 
     get inputLabel() {
         return this.label && this.label + (this.required ? '*' : '');
@@ -48,6 +61,10 @@ export default class InputBase extends LightComponentBase {
     constructor() {
         super();
         this.#validateAbstracts();
+    }
+
+    handleValueUpdate() {
+        this.dispatchEvent(new CustomEvent('update', this.#updateEventDict));
     }
 
     /**

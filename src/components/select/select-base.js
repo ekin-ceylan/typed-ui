@@ -8,11 +8,6 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
         isOpen: { state: false }, // Açık / kapalı
         disabled: { type: Boolean, reflect: true },
     };
-
-    static get observedAttributes() {
-        const base = super.observedAttributes ?? [];
-        return [...base, 'value']; // Lit’in kendi listesi + listem
-    }
     // #endregion STATICS, FIELDS, GETTERS
 
     constructor() {

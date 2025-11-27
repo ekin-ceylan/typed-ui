@@ -38,18 +38,6 @@ export default class SelectBox extends SelectBase {
         this.inputElement = this.renderRoot.querySelector('select');
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-
-        if (name === 'value' && this.value != newValue) {
-            this.value = newValue;
-
-            this.updateComplete.then(() => {
-                this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
-            });
-        }
-    }
-
     // #endregion LIFECYCLE METHODS
 
     /**
