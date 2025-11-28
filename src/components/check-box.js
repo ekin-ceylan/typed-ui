@@ -7,7 +7,6 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
     static properties = {
         fieldId: { type: String, attribute: 'field-id' },
         fieldName: { type: String, attribute: 'field-name' },
-        value: { type: String, reflect: false },
         label: { type: String, reflect: false },
         placeholder: { type: String, reflect: true },
         required: { type: Boolean, reflect: true },

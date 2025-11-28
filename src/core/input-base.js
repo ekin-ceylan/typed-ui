@@ -31,8 +31,8 @@ export default class InputBase extends LightComponentBase {
         return this.#value;
     }
     set value(val) {
-        if (val === this.inputElement?.value) return;
         this.#value = val;
+        if (val === this.inputElement?.value) return;
         this.requestUpdate('value');
         this.updateComplete.then(this.handleValueUpdate.bind(this));
     }
