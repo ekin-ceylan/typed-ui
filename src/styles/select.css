@@ -109,24 +109,30 @@ combo-box > div {
 
 combo-box > div > div[role='listbox'] {
     display: none;
+    position: absolute;
     scroll-behavior: auto;
     border-radius: 10px;
-    border: solid 1px #ccc;
-}
-
-combo-box > div[data-open] > div[role='listbox'] {
     padding: 4px;
-    display: block;
-    position: absolute;
     top: 100%;
+    bottom: auto;
     left: 0;
     right: 0;
     z-index: 10;
-    max-height: 100px;
+    max-height: 200px;
     overflow-y: auto;
-    background: #f2f2f2;
+    background: #f3f3f3;
+    /* background: #e9e9ed; */
     border: 1px solid #ccc;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    /* border: 1px solid #bebebe; */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+combo-box > div[data-open] > div[role='listbox'] {
+    display: block;
+}
+
+combo-box > div[data-up] > div[role='listbox'] {
+    top: auto;
+    bottom: 100%;
 }
 
 combo-box > div > div[role='listbox'] > div:not([hidden]) {

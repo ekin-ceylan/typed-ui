@@ -11,6 +11,7 @@ export default class ComboBox extends SelectBase {
         filter: { type: String, state: false }, // Filtre metni
         nativeBehavior: { type: Boolean, attribute: 'native-behavior' }, // native select gibi davranır
         activeIndex: { type: Number, state: true, attribute: false },
+        directionUp: { type: Boolean, attribute: false, reflect: false }, // açılır kutu yönü
     };
 
     /** @type {ComboBoxOption[]} */ #optionList = [];
@@ -62,6 +63,7 @@ export default class ComboBox extends SelectBase {
         this.searchElement = this.renderRoot.querySelector('input[data-role="search"]');
         this.displayElement = this.renderRoot.querySelector('div[data-role="display"]');
         this.comboboxDiv = this.renderRoot.querySelector('div[role="combobox"]');
+        this.listboxDiv = this.renderRoot.querySelector('div[role="listbox"]');
         this.clearButton = this.renderRoot.querySelector('button[data-role="clear"]');
 
         this.#setInputAndDisplay(this.#selectedOption);
@@ -187,7 +189,9 @@ export default class ComboBox extends SelectBase {
 
         if (this.#selectedOption === selectedOption) return;
 
+        this.#selectedOption && (this.#selectedOption.selected = false);
         this.#selectedOption = selectedOption;
+        this.#selectedOption.selected = true;
         this.selectedOption = { value: selectedOption?.value, label: selectedOption?.label };
         this.#setInputAndDisplay(selectedOption);
         this.value = selectedOption?.value || null;
@@ -259,9 +263,26 @@ export default class ComboBox extends SelectBase {
 
     #openList() {
         this.isOpen = true;
+        this.#calcListSizeAndDirection();
         this.dispatchEvent(new CustomEvent('open', this.#eventInitDict()));
         this.activeIndex = this.filteredOptions.indexOf(this.#selectedOption);
         this.#scrollToActive(true);
+    }
+
+    #calcListSizeAndDirection() {
+        requestAnimationFrame(() => {
+            const rect = this.comboboxDiv.getBoundingClientRect();
+            const topMargin = Number.parseInt(globalThis.getComputedStyle(document.body).marginTop, 10) + 4;
+            const bottomMargin = Number.parseInt(globalThis.getComputedStyle(document.body).marginBottom, 10) + 4;
+            const spaceBelow = window.innerHeight - rect.bottom - bottomMargin;
+            const spaceAbove = rect.top - topMargin;
+            const listHeight = this.listboxDiv.scrollHeight;
+
+            this.directionUp = spaceBelow < listHeight && spaceAbove > spaceBelow;
+            const maxHeight = this.directionUp ? spaceAbove : spaceBelow;
+            this.listboxDiv.style.maxHeight = `${Math.min(listHeight, maxHeight)}px`;
+            this.requestUpdate();
+        });
     }
 
     #closeList() {
@@ -305,8 +326,7 @@ export default class ComboBox extends SelectBase {
     }
 
     #optToDiv(opt, i) {
-        const isSelected = opt.selected || this.inputElement?.value === opt.value;
-        const isActive = this.activeIndex === -1 ? isSelected : this.activeIndex === i;
+        const isActive = this.activeIndex === -1 ? opt.selected : this.activeIndex === i;
         const optionId = this.#createOptionId(i);
 
         return html`
@@ -316,7 +336,7 @@ export default class ComboBox extends SelectBase {
                 ?data-active=${isActive && this.isOpen}
                 data-value=${opt.value}
                 ?aria-disabled=${!!opt.disabled}
-                ?aria-selected=${isSelected}
+                ?aria-selected=${opt.selected}
                 @click=${opt.disabled ? undefined : _e => this.onOptionClick(opt)}
                 @mouseenter=${_e => {
                     this.activeIndex = i;
@@ -381,6 +401,7 @@ export default class ComboBox extends SelectBase {
                 ?data-open=${this.isOpen}
                 ?data-filtered=${!!this.filter}
                 ?data-has-value=${this.inputElement?.value}
+                ?data-up=${this.directionUp}
                 tabindex="0"
                 @focusout=${this.onFocusOut}
                 @keydown=${this.onKeydown}
