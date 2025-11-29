@@ -20,7 +20,6 @@ export default class InputBase extends LightComponentBase {
 
     /** @type {string} */
     #value = null;
-    #updateEventDict = { bubbles: true, cancelable: true, composed: true, detail: { isComposing: false, synthetic: true } };
 
     /** @type {HTMLInputElement | HTMLSelectElement | null} */
     inputElement = null; // DOM input elementi
@@ -64,7 +63,12 @@ export default class InputBase extends LightComponentBase {
     }
 
     handleValueUpdate() {
-        this.dispatchEvent(new CustomEvent('update', this.#updateEventDict));
+        this.dispatchCustomEvent('update');
+    }
+
+    clear() {
+        this.value = null;
+        this.dispatchCustomEvent('clear');
     }
 
     /**

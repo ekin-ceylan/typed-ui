@@ -72,7 +72,7 @@ export default class ComboBox extends SelectBase {
     handleValueUpdate() {
         const matchedOption = this.#optionList.find(o => o.value === this.value) || null;
         matchedOption && this.#onSelect(matchedOption);
-        this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
+        this.dispatchCustomEvent('update');
     }
 
     // #endregion LIFECYCLE METHODS
@@ -95,6 +95,14 @@ export default class ComboBox extends SelectBase {
         }
 
         this.requestUpdate();
+    }
+
+    /**
+     * @override @protected Clears the current selection.
+     */
+    clear() {
+        super.clear();
+        this.#onSelect(null);
     }
 
     // #region EVENT LISTENERS
@@ -185,17 +193,17 @@ export default class ComboBox extends SelectBase {
      * @param {ComboBoxOption} selectedOption
      */
     #onSelect(selectedOption) {
-        this.dispatchEvent(new CustomEvent('input', this.#eventInitDict()));
+        this.dispatchCustomEvent('input');
 
         if (this.#selectedOption === selectedOption) return;
 
         this.#selectedOption && (this.#selectedOption.selected = false);
         this.#selectedOption = selectedOption;
-        this.#selectedOption.selected = true;
+        this.#selectedOption && (this.#selectedOption.selected = true);
         this.selectedOption = { value: selectedOption?.value, label: selectedOption?.label };
         this.#setInputAndDisplay(selectedOption);
         this.value = selectedOption?.value || null;
-        this.dispatchEvent(new CustomEvent('change', this.#eventInitDict()));
+        this.dispatchCustomEvent('change');
     }
 
     #setInputAndDisplay(selectedOption) {
@@ -264,7 +272,7 @@ export default class ComboBox extends SelectBase {
     #openList() {
         this.isOpen = true;
         this.#calcListSizeAndDirection();
-        this.dispatchEvent(new CustomEvent('open', this.#eventInitDict()));
+        this.dispatchCustomEvent('open');
         this.activeIndex = this.filteredOptions.indexOf(this.#selectedOption);
         this.#scrollToActive(true);
     }
@@ -291,11 +299,7 @@ export default class ComboBox extends SelectBase {
         this.filter = '';
         this.activeIndex = -1;
         this.#checkValidity();
-        this.dispatchEvent(new CustomEvent('close', this.#eventInitDict()));
-    }
-
-    #clear() {
-        this.#onSelect(null);
+        this.dispatchCustomEvent('close');
     }
 
     /**
@@ -360,27 +364,13 @@ export default class ComboBox extends SelectBase {
         throw new TypeError(`Invalid option entry: ${String(raw)}`);
     }
 
-    #eventInitDict() {
-        return {
-            bubbles: true,
-            cancelable: true,
-            composed: true,
-            detail: {
-                value: this.selectedOption?.value || null,
-                label: this.selectedOption?.label || '',
-                open: this.isOpen,
-                synthetic: true,
-            },
-        };
-    }
-
     // #endregion PRIVATE METHODS
 
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         const activeDescendantId = this.activeIndex >= 0 ? this.#createOptionId(this.activeIndex) : undefined;
         const btnClear = html`
-            <button type="button" class="indicator btn-clear" ?disabled=${!this.value} @click=${this.#clear} data-role="clear" aria-label="Seçimi temizle">
+            <button type="button" class="indicator btn-clear" ?disabled=${!this.value} @click=${this.clear} data-role="clear" aria-label="Seçimi temizle">
                 <svg fill="currentColor" viewBox="0 0 460.775 460.775" xml:space="preserve">
                     <path
                         d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55  c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55  c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505  c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55  l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719  c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z"

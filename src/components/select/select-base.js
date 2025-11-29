@@ -22,8 +22,4 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
         // /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | SelectBoxOption[] | []} */
         // this.options = [];
     }
-
-    // clear() {
-    //     this.value = null;
-    // }
 }
