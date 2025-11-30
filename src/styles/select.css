@@ -1,5 +1,7 @@
-select-box,
-combo-box {
+select-box {
+    --sbx-bg-color: #e9e9ed;
+    --sbx-hover-bg-color: #d0d0d7;
+
     --sbx-placeholder-color: #757575;
     --sbx-placeholder-focus-color: #111;
 
@@ -15,9 +17,14 @@ combo-box {
     --sbx-chevron-right-distance: 12px;
 }
 
-:is(select-box, combo-box) > div {
+select-box > div {
     position: relative;
     display: inline-block;
+    background: var(--sbx-bg-color);
+}
+
+select-box > div:hover {
+    background-color: var(--sbx-hover-bg-color);
 }
 
 select-box > div > select {
@@ -29,17 +36,17 @@ select-box > div > select {
     padding-right: calc(var(--sbx-clear-right-distance) + var(--sbx-indicator-size));
     text-overflow: ellipsis;
     width: 100%;
+    background: transparent;
 }
 
-select-box > div > select.placeholder {
+select-box > div > select:not([data-has-value]) {
     color: var(--sbx-placeholder-color);
 }
-select-box > div > select.placeholder:focus {
+select-box > div > select:not([data-has-value]):focus {
     color: var(--sbx-placeholder-focus-color);
 }
 
-select-box > div > select ~ .indicator,
-combo-box > div > .indicator {
+select-box > div > select ~ :is([data-clear], [data-chevron]) {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -49,8 +56,7 @@ combo-box > div > .indicator {
     transition: all 0.2s;
 }
 
-select-box > div > select ~ .btn-clear,
-combo-box > div > .btn-clear {
+select-box > div > select ~ [data-clear] {
     color: var(--sbx-clear-color);
     border: none;
     background: none;
@@ -60,150 +66,36 @@ combo-box > div > .btn-clear {
     border-radius: 2px;
 }
 
-select-box > div > select ~ .btn-clear:not(:disabled),
-combo-box > div > .btn-clear:not(:disabled) {
+select-box > div > select ~ [data-clear]:not(:disabled) {
     cursor: pointer;
 }
 
-select-box > div > select ~ .btn-clear:not(:disabled):hover,
-combo-box > div > .btn-clear:not(:disabled):hover {
+select-box > div > select ~ [data-clear]:not(:disabled):hover {
     background: var(--sbx-clear-bg-hover);
     color: var(--sbx-clear-hover);
 }
 
-select-box > div > select ~ .btn-clear:not(:disabled):active,
-combo-box > div > .btn-clear:not(:disabled):active {
+select-box > div > select ~ [data-clear]:not(:disabled):active {
     background: var(--sbx-clear-bg-active);
     transform: translateY(-50%) scale(0.85);
     color: var(--sbx-clear-active);
 }
 
-select-box > div > select ~ .btn-clear:disabled,
-combo-box > div > .btn-clear:disabled {
+select-box > div > select ~ [data-clear]:disabled {
     opacity: 0.35;
     pointer-events: none;
 }
 
-select-box > div > select ~ .btn-clear > svg,
-combo-box > div > .btn-clear > svg {
+select-box > div > select ~ [data-clear] > svg {
     color: inherit;
     fill: currentColor;
 }
 
-select-box > div > select ~ .chevron,
-combo-box > div > .chevron {
+select-box > div > select ~ [data-chevron] {
     right: var(--sbx-chevron-right-distance);
     pointer-events: none;
 }
 
-select-box > div > select[data-open] ~ .chevron,
-combo-box > div[data-open] > .chevron {
+select-box > div > select[data-open] ~ [data-chevron] {
     transform: translateY(-50%) rotate(180deg);
-}
-
-combo-box > div {
-    background-color: #e9e9ed;
-    font-family: 'MS Shell Dlg \32', 'Microsoft Sans Serif', sans-serif;
-    font-size: 13.33px;
-}
-
-combo-box > div > div[role='listbox'] {
-    display: none;
-    position: absolute;
-    scroll-behavior: auto;
-    border-radius: 10px;
-    padding: 4px;
-    top: 100%;
-    bottom: auto;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    max-height: 200px;
-    overflow-y: auto;
-    background: #f3f3f3;
-    /* background: #e9e9ed; */
-    border: 1px solid #ccc;
-    /* border: 1px solid #bebebe; */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-combo-box > div[data-open] > div[role='listbox'] {
-    display: block;
-}
-
-combo-box > div[data-up] > div[role='listbox'] {
-    top: auto;
-    bottom: 100%;
-}
-
-combo-box > div > div[role='listbox'] > div:not([hidden]) {
-    display: flex;
-    align-items: center;
-    padding: 4px;
-    cursor: pointer;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    border-radius: 4px;
-}
-
-combo-box > div > div[role='listbox'] > div[aria-selected] {
-    background: #d5d5d6;
-}
-
-combo-box > div > div[role='listbox'] > div[data-active] {
-    background: rgba(0, 0, 0, 0.2);
-}
-
-combo-box > div > div[role='listbox'] > div[aria-disabled] {
-    background: #e9e9ed;
-    color: #6e6e6f;
-    cursor: default;
-    pointer-events: none;
-    user-select: none;
-}
-
-combo-box > div:focus {
-    outline: solid 2px #4d90fe;
-}
-
-combo-box input[data-role='value'] {
-    position: absolute;
-    border: none;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    padding: 0;
-}
-
-combo-box div[data-role='display'] {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    padding-left: 6px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    height: 100%;
-    width: calc(100% - var(--sbx-clear-right-distance) - var(--sbx-indicator-size));
-    color: var(--sbx-placeholder-color);
-}
-
-combo-box > div[data-has-value] div[data-role='display'] {
-    color: inherit;
-}
-
-combo-box > div[data-open] div[data-role='display'] {
-    opacity: 0.5;
-}
-combo-box > div[data-filtered] div[data-role='display'] {
-    opacity: 0;
-}
-
-combo-box input[data-role='search'] {
-    padding-left: 4px;
-    position: relative;
-    background: transparent;
-    box-sizing: border-box;
-    width: 100%;
-    padding-right: calc(var(--sbx-clear-right-distance) + var(--sbx-indicator-size));
 }

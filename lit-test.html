@@ -7,34 +7,83 @@
         <link rel="modulepreload" href="./src/main.js" />
         <link rel="stylesheet" href="./src/styles/input.css" />
         <link rel="stylesheet" href="./src/styles/select.css" />
+        <link rel="stylesheet" href="./src/styles/combo-box.css" />
     </head>
     <body>
-        <slot-demo-host></slot-demo-host>
-        <br />
-        <br />
-        <select-box name="cars" field-id="cars" label="test">
-            <optgroup label="Swedish Cars">
-                <option value="volvo" selected>Volvo</option>
-                <option value="saab">Saab</option>
-            </optgroup>
-            <optgroup label="German Cars">
-                <option value="mercedes">Mercedes</option>
-                <div value="mercedes">Mercedes</div>
-                <option value="audi">Audi</option>
-            </optgroup>
-        </select-box>
-        <br />
-        <br />
-        <select-box style="max-width: 300px" field-id="country" label="Ülke" placeholder="Seçiniz" required>
-            <option value="tr">Türkiye</option>
-            <option value="de" selected>Almanya</option>
-            <option value="us">ABD</option>
-            <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
-            <div value="chi">ÇinÇin</div>
-        </select-box>
-        <br />
-        <br />
-
+        <form>
+            <slot-demo-host></slot-demo-host>
+            <br />
+            <br />
+            <combo-box label="Kombo Native" field-id="combo-country-native" native-behavior placeholder="Seçiniz" value="de">
+                <option value="tr">
+                    <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
+                    Türkiye
+                </option>
+                <option value="de">
+                    <img src="https://flagcdn.com/de.svg" alt="Germany Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
+                    Almanya
+                </option>
+                <option value="us">
+                    <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
+                    ABD
+                </option>
+                <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <option value="kp">Kuzey Kore</option>
+                <option value="jp">Japonya</option>
+                <option value="it">İtalya</option>
+            </combo-box>
+            <br />
+            <br />
+            <combo-box label="Kombo" field-id="combo-country" placeholder="Seçiniz" value="xx" required>
+                <option value="tr">Türkiye</option>
+                <option value="de">Almanya</option>
+                <option value="us" selected>ABD</option>
+                <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <option value="kp">Kuzey Kore</option>
+                <option value="jp">Japonya</option>
+                <option value="it">İtalya</option>
+            </combo-box>
+            <br />
+            <br />
+            <select-box name="cars" field-id="cars" label="test">
+                <optgroup label="Swedish Cars">
+                    <option value="volvo" selected>Volvo</option>
+                    <option value="saab">Saab</option>
+                </optgroup>
+                <optgroup label="German Cars">
+                    <option value="mercedes">Mercedes</option>
+                    <div value="mercedes">Mercedes</div>
+                    <option value="audi">Audi</option>
+                </optgroup>
+            </select-box>
+            <br />
+            <br />
+            <select-box style="max-width: 300px" field-id="country" label="Ülke" placeholder="Seçiniz" required>
+                <option value="tr">Türkiye</option>
+                <option value="de" selected>Almanya</option>
+                <option value="us">ABD</option>
+                <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <div value="chi">ÇinÇin</div>
+                <option value="kp">Kuzey Kore</option>
+                <option value="jp">Japonya</option>
+                <option value="it">İtalya</option>
+            </select-box>
+            <br />
+            <br />
+            <label for="native">Native Select</label><br />
+            <select placeholder="Seçiniz" id="native">
+                <option value="tr">Türkiye</option>
+                <option value="de">Almanya</option>
+                <option value="us" selected>ABD</option>
+                <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <option value="kp">Kuzey Kore</option>
+                <option value="jp">Japonya</option>
+                <option value="it">İtalya</option>
+            </select>
+            <br />
+            <br />
+            <button type="submit">Submit</button>
+        </form>
         <script type="module" src="./src/main.js"></script>
         <script type="module">
             // --- Reactive parent component ---
@@ -76,8 +125,14 @@
                             <button @click=${() => this.#removeItem()}>Remove Item</button>
                             <button @click=${() => this.#reverseItems()}>Reverse Items</button>
                         </div>
+                        <br />
+                        <br />
                         <select-box field-id="reactive-select" .options=${this.items}> </select-box>
+                        <br />
+                        <br />
                         <combo-box label="Kombo" field-id="combo-select" .options=${this.items2}> </combo-box>
+                        <br />
+                        <br />
                         <select-box field-id="reactive-select-2" .options=${this.items2}> </select-box> `;
                 }
             }
