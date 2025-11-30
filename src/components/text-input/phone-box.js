@@ -1,6 +1,6 @@
 import TextBox from './text-box';
 
-export class PhoneBox extends TextBox {
+export default class PhoneBox extends TextBox {
     mask(value) {
         value = value.replaceAll(/\D/g, ''); // Sayı olmayan karakterleri kaldır
         value = value.slice(0, 11); // İlk 11 karakteri al
