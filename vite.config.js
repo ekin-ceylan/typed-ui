@@ -1,3 +1,7 @@
+import minifyHTMLPlugin from 'rollup-plugin-minify-html-literals';
+
+const minifyHTML = minifyHTMLPlugin.default ?? minifyHTMLPlugin;
+
 export default {
     base: '',
     root: './',
@@ -7,8 +11,8 @@ export default {
         lib: {
             entry: 'src/index.js',
             name: 'TypedUI',
-            fileName: format => `typed-ui.${format}.js`, // Format'ı dosya adına ekle
             formats: ['es', 'iife'],
+            fileName: format => `typed-ui.${format}.js`, // Format'ı dosya adına ekle
         },
         rollupOptions: {
             external: [], // lit'i bundle içine dahil et (CDN için)
@@ -16,8 +20,9 @@ export default {
                 manualChunks: undefined,
                 globals: {}, // IIFE için global değişken adı
             },
+            plugins: [minifyHTML()],
         },
-        minify: 'terser', // veya 'esbuild' (daha hızlı)
+        minify: false, // veya 'esbuild' (daha hızlı)
         cssMinify: true, // CSS minification
         sourcemap: false, // Source maps (isteğe bağlı)
     },
