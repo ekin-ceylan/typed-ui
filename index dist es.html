@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- <link rel="modulepreload" href="./src/main.js" /> -->
+
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./src/styles/check-box.css" />
+        <link rel="stylesheet" href="./src/styles/input.css" />
+        <link rel="stylesheet" href="./src/styles/links.css" />
+        <link rel="stylesheet" href="./src/styles/select.css" />
+        <link rel="stylesheet" href="./src/styles/combo-box.css" />
+        <link rel="stylesheet" href="./src/styles/password.css" />
+        <link rel="stylesheet" href="./src/styles/range.css" />
+        <link rel="stylesheet" href="./src/styles/dialog.css" />
+        <title>Custom Textbox Test</title>
+    </head>
+
+    <body>
+        <form oninvalid="invalid(event)">
+            <plate-box field-id="plate-no" label="Plaka Numarası" value="55  ty" required></plate-box>
+            <br />
+            <br />
+            <combo-box label="Kombo Native" field-id="combo-country-native" native-behavior placeholder="Seçiniz" value="de">
+                <option value="tr">
+                    <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
+                    Türkiye
+                </option>
+                <option value="de">
+                    <img src="https://flagcdn.com/de.svg" alt="Germany Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
+                    Almanya
+                </option>
+                <option value="us">
+                    <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
+                    ABD
+                </option>
+                <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <option value="kp">Kuzey Kore</option>
+                <option value="jp">Japonya</option>
+                <option value="it">İtalya</option>
+            </combo-box>
+            <br />
+            <br />
+            <combo-box label="Kombo" field-id="combo-country" placeholder="Seçiniz" value="xx" required>
+                <option value="tr">
+                    <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
+                    Türkiye
+                </option>
+                <option value="de">
+                    <img src="https://flagcdn.com/de.svg" alt="Germany Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
+                    Almanya
+                </option>
+                <option value="us">
+                    <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
+                    ABD
+                </option>
+                <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <option value="kp">Kuzey Kore</option>
+                <option value="jp">Japonya</option>
+                <option value="it">İtalya</option>
+            </combo-box>
+            <br />
+            <br />
+            <text-box field-id="firstname" maxlength="100" label="İsim" minlength="2" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ \-]+" value="tr" placeholder="Yaz..."></text-box>
+            <br />
+            <br />
+            <text-box placeholder="Type something..." minlength="20" onchange="test(event)" value="5" required label="First Name"></text-box>
+            <br />
+            <br />
+            <phone-box label="Phone Number" value="(0212)" required></phone-box>
+            <br />
+            <br />
+            <email-box label="E-Posta Adresi" minlength="20" required></email-box>
+            <br />
+            <br />
+            <integer-box label="Yaş" placeholder="Yaşınızı giriniz" required></integer-box>
+            <br />
+            <br />
+            <new-password-box field-id="new-password" label="Yeni Şifre" placeholder="Şifrenizi giriniz" minlength="8" required></new-password-box>
+            <br />
+            <br />
+            <confirm-password-box field-id="confirm-password" match="#new-password" label="Şifre Tekrar" placeholder="Şifrenizi giriniz" required></confirm-password-box>
+            <br />
+            <br />
+            <password-box field-id="password" label="Şifre" placeholder="Şifrenizi giriniz" minlength="8" required></password-box>
+            <br />
+            <br />
+            <check-box field-id="cekbaks" label="Kvkk Onayı" required>Okudum, onaylıyorum <span>!</span></check-box>
+            <br />
+            <br />
+            <url-link href="https://www.test.com" target="_blank" aria-label="Example Link">Example Link</url-link>
+            <br />
+            <br />
+            <select-box style="max-width: 300px" field-id="country" label="Ülke" placeholder="Seçiniz" required>
+                <option value="tr">Türkiye</option>
+                <option value="de">Almanya</option>
+                <option value="us">ABD</option>
+                <option value="ch">Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <div value="chi">ÇinÇin</div>
+            </select-box>
+            <br />
+            <br />
+            <select-box id="sb-dynamic" placeholder="Dinamik Seçiniz"></select-box>
+            <br />
+            <br />
+            <select placeholder="Seçiniz" id="native">
+                <option value="tr">Türkiye</option>
+                <option value="de">Almanya</option>
+                <option value="us" selected>ABD</option>
+                <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <option value="kp">Kuzey Kore</option>
+                <option value="jp">Japonya</option>
+                <option value="it">İtalya</option>
+            </select>
+            <br />
+            <br />
+            <select-box name="cars" field-id="cars" label="test">
+                <optgroup label="Swedish Cars">
+                    <option value="volvo" selected>Volvo</option>
+                    <option value="saab">Saab</option>
+                </optgroup>
+                <optgroup label="German Cars">
+                    <option value="mercedes">Mercedes</option>
+                    <div value="mercedes">Mercedes</div>
+                    <option value="audi">Audi</option>
+                </optgroup>
+            </select-box>
+            <br />
+            <br />
+            <range-select field-id="range" label="Range" min="0" max="100" step="20" required></range-select>
+            <br />
+            <br />
+
+            <button type="submit">Submit</button>
+        </form>
+        <modal-dialog id="my-modal" backdrop-close>
+            <p>This is the content of the modal dialog.</p>
+            <button type="button" onclick="document.getElementById('my-modal').hide()">Close</button>
+        </modal-dialog>
+        <button type="button" onclick="document.getElementById('my-modal').show()">Show Modal</button>
+        <script type="module">
+            import './dist/typed-ui.es.min.js';
+        </script>
+        <!-- <pre id="log">Validation logged here...</pre>
+        <input type="text" id="userText" minlength="4" /> -->
+        <script type="module">
+            // Dinamik attr set
+            setTimeout(() => {
+                const el = document.getElementById('sb-dynamic');
+                el.options = [
+                    { value: 'x', label: 'X' },
+                    { value: 'y', label: 'Y', selected: true },
+                    { value: 'z', label: 'Z' },
+                ];
+            }, 1500);
+        </script>
+        <!-- <script type="text/javascript" src="./dist/typed-ui.iife.min.js"></script> -->
+        <script>
+            // const userInput = document.getElementById('userText');
+            // const logElement = document.getElementById('log');
+
+            // function log(text) {
+            //     logElement.innerText = text;
+            // }
+
+            // userInput.addEventListener('input', () => {
+            //     // userInput.reportValidity();
+            //     if (userInput.validity.tooShort) {
+            //         log('Not enough characters entered.');
+            //     } else {
+            //         log('Input is valid…');
+            //     }
+            // });
+
+            // document.getElementById('btn').addEventListener('click', () => {
+            //     console.log('Button clicked!');
+            // });
+
+            // document.querySelector('form').addEventListener(
+            //     'invalid',
+            //     e => {
+            //         e.preventDefault(); // Prevent the default invalid behavior
+            //         console.log('Form is invalid:', e);
+            //     },
+            //     true
+            // );
+
+            function test(e) {
+                console.log('change', e.target.unmaskedValue);
+            }
+
+            function invalid(e) {
+                console.log('invalid', e.target);
+            }
+
+            function update(e) {
+                console.log(e, 'update');
+            }
+
+            function input(e) {
+                console.log(e, 'input');
+            }
+
+            // const textbox = document.getElementById('base1');
+            // textbox.addEventListener('update', e => {
+            //     console.log(e, 'binded update');
+            // });
+
+            // setTimeout(() => {
+            //     textbox.value = 'Yeni Değer';
+            //     // textbox.setAttribute('value', 10);
+            //     console.log('Textbox value updated to:', textbox.value);
+            // }, 2000);
+        </script>
+    </body>
+</html>
+
+<!-- herhangi bir attr eklendiğinde nasıl davranacak -->
