@@ -1,8 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { minify } from 'terser';
+import fs from 'node:fs';
 
 const dist = 'dist';
-
 const terserOptions = {
     compress: {
         passes: 3,
@@ -14,6 +14,24 @@ const terserOptions = {
         comments: false,
     },
 };
+const LICENSE = `/**
+ * @license
+ * Typed UI v0.3.0
+ * (c) 2025 Ekin Ceylan
+ * License: MIT
+ */
+`;
+
+function prependLicense(filePath) {
+    const code = fs.readFileSync(filePath, 'utf8');
+
+    // Aynı dosyaya iki kere eklememek için
+    if (code.startsWith('/**') && code.includes('@license')) {
+        return;
+    }
+
+    fs.writeFileSync(filePath, LICENSE + code, 'utf8');
+}
 
 async function minifyFile(input, output) {
     const code = await readFile(input, 'utf8');
@@ -44,7 +62,14 @@ async function run() {
     // await unlink(`${dist}/typed-ui.iife.js`);
 }
 
-run().catch(err => {
+try {
+    await run();
+    const targets = ['typed-ui.iife.js', 'typed-ui.iife.min.js', 'typed-ui.es.js', 'typed-ui.es.min.js'];
+
+    for (const target of targets) {
+        prependLicense(`${dist}/${target}`);
+    }
+} catch (err) {
     console.error('Minify failed:', err);
     process.exit(1);
-});
+}

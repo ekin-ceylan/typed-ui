@@ -46,7 +46,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build --emptyOutDir",
-        "postbuild": "node scripts/minify-bundles.mjs",
+        "postbuild": "node scripts/postbuild.mjs",
         "build:analyze": "vite build --emptyOutDir --analyze",
         "preview": "vite preview",
         "format": "prettier --write \"src/**/*.{ts,js,html,css}\"",
