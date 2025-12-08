@@ -138,6 +138,13 @@
             <button type="button" onclick="document.getElementById('my-modal').hide()">Close</button>
         </modal-dialog>
         <button type="button" onclick="document.getElementById('my-modal').show()">Show Modal</button>
+        <script type="importmap">
+            {
+                "imports": {
+                    "lit": "https://unpkg.com/lit@3.1.0/index.js?module"
+                }
+            }
+        </script>
         <script type="module">
             import './dist/typed-ui.all.min.js';
         </script>
