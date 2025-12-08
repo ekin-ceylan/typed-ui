@@ -1,29 +1,27 @@
 import minifyHTMLPlugin from 'rollup-plugin-minify-html-literals';
+import { terserOptions } from './scripts/constants.js';
 
 const minifyHTML = minifyHTMLPlugin.default ?? minifyHTMLPlugin;
 
 export default {
+    configFile: false,
     base: '',
     root: './',
     build: {
         emptyOutDir: true,
         outDir: 'dist',
+        terserOptions: terserOptions,
         lib: {
-            entry: 'src/index.js',
+            entry: 'src/entries/all.js',
             name: 'TypedUI',
-            formats: ['es', 'iife'],
-            fileName: format => `typed-ui.${format}.js`, // Format'ı dosya adına ekle
+            formats: ['iife'],
+            fileName: _ => 'typed-ui.iife.min.js',
         },
         rollupOptions: {
-            external: [], // lit'i bundle içine dahil et (CDN için)
-            output: {
-                manualChunks: undefined,
-                globals: {}, // IIFE için global değişken adı
-            },
             plugins: [minifyHTML()],
         },
-        minify: false, // veya 'esbuild' (daha hızlı)
+        minify: 'terser',
         cssMinify: true, // CSS minification
-        sourcemap: false, // Source maps (isteğe bağlı)
+        sourcemap: true, // Source maps (isteğe bağlı)
     },
 };

@@ -45,9 +45,9 @@
     "homepage": "https://github.com/ekin-ceylan/typed-ui#readme",
     "scripts": {
         "dev": "vite",
-        "build": "vite build --emptyOutDir",
-        "postbuild": "node scripts/postbuild.mjs",
-        "build:analyze": "vite build --emptyOutDir --analyze",
+        "build": "npm run build:cdn && npm run build:esm",
+        "build:esm": "node scripts/build-esm.mjs",
+        "build:cdn": "vite build --emptyOutDir",
         "preview": "vite preview",
         "format": "prettier --write \"src/**/*.{ts,js,html,css}\"",
         "lint": "prettier --check \"src/**/*.{ts,js,html,css}\"",
