@@ -16,7 +16,7 @@ npm install typed-ui
 import { TextBox, PlateBox, SelectBox, Checkbox } from 'typed-ui';
 
 // Or via CDN:
-// <script type="module" src="https://unpkg.com/typed-ui/dist/typed-ui.es.js"></script>
+// <script type="module" src="https://unpkg.com/typed-ui/dist/typed-ui.all.min.js"></script>
 ```
 
 ## Development
