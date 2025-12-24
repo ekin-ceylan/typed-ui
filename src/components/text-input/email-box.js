@@ -37,6 +37,7 @@ export default class EmailBox extends TextBox {
         this.placeholder = '____@____.___';
         this.maxlength = 254;
         this.pattern = null;
+        this.autocomplete = 'email';
     }
 }
 
