@@ -117,4 +117,4 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
     }
 }
 
-customElements.define('modal-dialog', ModalDialog);
+// customElements.define('modal-dialog', ModalDialog);

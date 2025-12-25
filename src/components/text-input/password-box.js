@@ -67,4 +67,4 @@ export default class PasswordBox extends TextBox {
     }
 }
 
-customElements.define('password-box', PasswordBox);
+// customElements.define('password-box', PasswordBox);

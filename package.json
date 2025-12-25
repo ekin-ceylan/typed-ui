@@ -6,18 +6,15 @@
     "author": "Ekin Ceylan <ekinceylan@gmail.com> (https://github.com/ekin-ceylan)",
     "license": "MIT",
     "type": "module",
-    "main": "src/index.js",
-    "module": "src/index.js",
+    "main": "dist/typed-ui.all.js",
+    "module": "dist/typed-ui.all.js",
     "exports": {
-        ".": "./src/index.js",
-        "./core": "./src/core/index.js",
-        "./mixins": "./src/mixins/index.js",
-        "./dist": "./dist/typed-ui.es.js",
-        "./dist/iife": "./dist/typed-ui.iife.js"
+        ".": "./dist/typed-ui.all.js",
+        "./base": "./dist/typed-ui.base.js",
+        "./iife": "./dist/typed-ui.iife.js"
     },
     "types": "types/index.d.ts",
     "files": [
-        "src",
         "dist",
         "types",
         "README.md",
@@ -45,9 +42,7 @@
     "homepage": "https://github.com/ekin-ceylan/typed-ui#readme",
     "scripts": {
         "dev": "vite",
-        "build": "npm run build:cdn && npm run build:esm",
-        "build:esm": "node scripts/build-esm.mjs",
-        "build:cdn": "vite build --emptyOutDir",
+        "build": "node scripts/build-esb.mjs",
         "preview": "vite preview",
         "format": "prettier --write \"src/**/*.{ts,js,html,css}\"",
         "lint": "prettier --check \"src/**/*.{ts,js,html,css}\"",
@@ -61,11 +56,13 @@
     },
     "devDependencies": {
         "@vitest/coverage-v8": "^3.2.4",
+        "esbuild-plugin-minify-html-literals": "^3.0.0",
         "jsdom": "^27.0.1",
         "prettier": "^3.4.2",
-        "rollup-plugin-minify-html-literals": "^1.2.6",
-        "terser": "^5.43.1",
         "vite": "^6.0.11",
         "vitest": "^3.2.4"
+    },
+    "peerDependencies": {
+        "lit": "^3.3.0"
     }
 }

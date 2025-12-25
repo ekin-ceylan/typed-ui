@@ -1,15 +1,22 @@
 export default function SlotCollectorMixin(Base) {
     return class SlotCollector extends Base {
         #slotNodes = [];
-        #runFlag = false;
+        #isCollected = false;
+
+        constructor() {
+            super();
+            this.#slotNodes = this.#collectSlots(); // başlangıçta DOM'a bağlıysa çalışır
+            queueMicrotask(() => this.toggleAttribute('data-not-ready', true));
+            this.#firstUpdateCompleted();
+        }
 
         connectedCallback() {
             super.connectedCallback();
 
-            if (this.#runFlag) return;
-            this.#runFlag = true;
-            this.#slotNodes = this.#collectSlots();
-            this.#firstUpdateCompleted();
+            if (!this.#isCollected) {
+                this.#isCollected = true;
+                this.#slotNodes.push(...this.#collectSlots()); // sonradan DOM'a bağlandıysa çalışır
+            }
         }
 
         /**
@@ -52,12 +59,15 @@ export default function SlotCollectorMixin(Base) {
         async #firstUpdateCompleted() {
             await this.updateComplete;
             this.bindSlots(this.#slotNodes); // Tüm slot placeholder'larını bul
+            this.toggleAttribute('data-not-ready', false);
             this.afterSlotsBinded();
         }
 
         #collectSlots() {
-            return Array.from(this.childNodes) //
-                .filter(node => node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim()));
+            return Array.from(this.childNodes).filter(node => {
+                node.remove(); // detach nodes
+                return node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+            });
         }
     };
 }

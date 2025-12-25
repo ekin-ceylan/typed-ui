@@ -52,4 +52,4 @@ export default class NewPasswordBox extends PasswordBox {
     }
 }
 
-customElements.define('new-password-box', NewPasswordBox);
+// customElements.define('new-password-box', NewPasswordBox);

@@ -1,6 +1,5 @@
 import { html } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { ifDefined } from '../../modules/utilities.js';
 import SelectBase from './select-base.js';
 
 export default class ComboBox extends SelectBase {
@@ -345,9 +344,8 @@ export default class ComboBox extends SelectBase {
                 @mouseenter=${_e => {
                     this.activeIndex = i;
                 }}
-            >
-                ${unsafeHTML(opt.innerHTML)}
-            </div>
+                .innerHTML=${opt.innerHTML}
+            ></div>
         `;
     }
 
@@ -422,7 +420,7 @@ export default class ComboBox extends SelectBase {
     }
 }
 
-customElements.define('combo-box', ComboBox);
+// customElements.define('combo-box', ComboBox);
 
 // search forma dahil edilmemeli
 // aria-activedescendant="opt-3"

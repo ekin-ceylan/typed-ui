@@ -47,4 +47,4 @@ export default class IntegerBox extends TextBox {
     // }
 }
 
-customElements.define('integer-box', IntegerBox);
+// customElements.define('integer-box', IntegerBox);

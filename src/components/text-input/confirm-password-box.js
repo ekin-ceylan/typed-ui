@@ -26,4 +26,4 @@ export default class ConfirmPasswordBox extends PasswordBox {
     }
 }
 
-customElements.define('confirm-password-box', ConfirmPasswordBox);
+// customElements.define('confirm-password-box', ConfirmPasswordBox);

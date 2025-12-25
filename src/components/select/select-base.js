@@ -34,7 +34,7 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
 
         this.value = null;
         this.label = '';
-        this.placeholder = 'Seçiniz';
+        // this.placeholder = 'Seçiniz';
         this.required = false;
         this.isOpen = false;
 

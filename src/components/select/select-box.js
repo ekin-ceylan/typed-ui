@@ -1,6 +1,5 @@
 import { html } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined.js';
-import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined, classMap } from '../../modules/utilities.js';
 import SelectBase from './select-base.js';
 
 export default class SelectBox extends SelectBase {
@@ -172,7 +171,7 @@ export default class SelectBox extends SelectBase {
                 <select
                     id=${ifDefined(this.fieldId)}
                     name=${ifDefined(this.fieldName || this.fieldId)}
-                    class=${classMap({ placeholder: !this.value })}
+                    class=${ifDefined(this.inputClass)}
                     .value=${this.value ?? ''}
                     ?required=${this.required}
                     ?disabled=${this.disabled}
@@ -202,7 +201,7 @@ export default class SelectBox extends SelectBase {
     }
 }
 
-customElements.define('select-box', SelectBox);
+// customElements.define('select-box', SelectBox);
 
 // test case: başlangıç değeri varsa seçili gelsin
 

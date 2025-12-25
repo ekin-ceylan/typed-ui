@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import { ifDefined } from '../modules/utilities.js';
 import SlotCollectorMixin from '../mixins/slot-collector-mixin';
 import LightComponentBase from '../core/light-component-base';
 
@@ -31,4 +31,4 @@ export default class UrlLink extends SlotCollectorMixin(LightComponentBase) {
     }
 }
 
-customElements.define('url-link', UrlLink);
+// customElements.define('url-link', UrlLink);

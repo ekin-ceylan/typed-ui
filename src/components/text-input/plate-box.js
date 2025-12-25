@@ -52,7 +52,8 @@ export default class PlateBox extends TextBox {
     }
 }
 
-customElements.define('plate-box', PlateBox);
+// customElements.define('plate-box', PlateBox);
+
 // yapıştırma testleri
 // yazma testleri
 // silme testleri

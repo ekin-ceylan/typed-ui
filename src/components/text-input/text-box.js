@@ -1,5 +1,5 @@
 import { html, nothing } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import { ifDefined } from '../../modules/utilities.js';
 import InputBase from '../../core/input-base.js';
 
 export default class TextBox extends InputBase {
@@ -112,7 +112,6 @@ export default class TextBox extends InputBase {
      * @returns {void}
      */
     onInput(e) {
-        console.log('TextBox onInput');
         e.stopPropagation();
         this.#handleInput(e.target);
         this.#checkValidity(false);
@@ -244,6 +243,7 @@ export default class TextBox extends InputBase {
             <input
                 id=${ifDefined(this.fieldId)}
                 name=${ifDefined(this.fieldName || this.fieldId)}
+                class=${ifDefined(this.inputClass)}
                 type=${this.type || 'text'}
                 .value=${this.value ?? ''}
                 aria-labelledby=${ifDefined(this.labelId)}
@@ -263,9 +263,9 @@ export default class TextBox extends InputBase {
                 @blur=${this.onBlur}
                 @invalid=${this.onInvalid}
             />
-            <span id=${ifDefined(this.errorId)} aria-live="assertive" ?hidden=${!this.validationMessage}>${this.validationMessage}</span>
+            ${this.validationMessageHtml}
         `;
     }
 }
 
-customElements.define('text-box', TextBox);
+// customElements.define('text-box', TextBox);

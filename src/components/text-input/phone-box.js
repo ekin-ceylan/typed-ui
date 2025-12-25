@@ -41,7 +41,7 @@ export default class PhoneBox extends TextBox {
     }
 }
 
-customElements.define('phone-box', PhoneBox);
+// customElements.define('phone-box', PhoneBox);
 
 // Case list
 // paste test

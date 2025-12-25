@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import { ifDefined } from '../../modules/utilities.js';
 import InputBase from '../../core/input-base.js';
 
 export default class RangeSelect extends InputBase {
@@ -66,4 +66,4 @@ export default class RangeSelect extends InputBase {
     }
 }
 
-customElements.define('range-select', RangeSelect);
+// customElements.define('range-select', RangeSelect);

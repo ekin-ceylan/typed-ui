@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import { ifDefined } from '../modules/utilities.js';
 import LightComponentBase from './light-component-base';
 
 export default class InputBase extends LightComponentBase {
@@ -10,6 +10,7 @@ export default class InputBase extends LightComponentBase {
     static properties = {
         fieldId: { type: String, attribute: 'field-id' },
         fieldName: { type: String, attribute: 'field-name' },
+        inputClass: { type: String, attribute: 'input-class' },
         value: { type: String },
         label: { type: String },
         hideLabel: { type: Boolean, attribute: 'hide-label' },

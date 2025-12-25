@@ -1,5 +1,6 @@
 *[data-not-ready],
 *[data-not-ready] *,
+*:not(:defined),
 *:not(:defined) * {
     display: none;
     pointer-events: none;
@@ -9,12 +10,12 @@
     scroll-behavior: smooth;
 }
 
-:is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box, combo-box):defined {
+/* :is(base-input, check-box, text-box, plate-box, phone-box, email-box, integer-box, select-box, combo-box):defined {
     opacity: 1;
     transition: opacity 0.3s ease;
 }
 
-:is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box, combo-box):not(:defined) {
+:is(base-input, check-box, text-box, plate-box, phone-box, email-box, integer-box, select-box, combo-box):not(:defined) {
     opacity: 0.7;
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
@@ -22,13 +23,13 @@
     width: 200px;
     height: 20px;
     display: block;
-}
+} */
 
-:is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box) :is(input, select)[aria-invalid] {
+:is(base-input, check-box, text-box, plate-box, phone-box, email-box, integer-box, select-box) :is(input, select)[aria-invalid] {
     border: 1px solid red;
 }
 
-:is(base-input, text-box, plate-box, phone-box, email-box, integer-box, select-box, modal-dialog):not(:defined) * {
+:is(base-input, check-box, text-box, plate-box, phone-box, email-box, integer-box, select-box, modal-dialog):not(:defined) * {
     display: none;
     pointer-events: none;
 }

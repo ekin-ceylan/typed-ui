@@ -41,4 +41,4 @@ export default class EmailBox extends TextBox {
     }
 }
 
-customElements.define('email-box', EmailBox);
+// customElements.define('email-box', EmailBox);
