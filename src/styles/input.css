@@ -1,7 +1,7 @@
 *[data-not-ready],
-*[data-not-ready] *,
-*:not(:defined),
-*:not(:defined) * {
+/* *[data-not-ready] *, */
+*:not(:defined)/*
+*:not(:defined) *  */ {
     display: none;
     pointer-events: none;
 }
@@ -29,10 +29,10 @@
     border: 1px solid red;
 }
 
-:is(base-input, check-box, text-box, plate-box, phone-box, email-box, integer-box, select-box, modal-dialog):not(:defined) * {
+/* :is(base-input, check-box, text-box, plate-box, phone-box, email-box, integer-box, select-box, modal-dialog):not(:defined) * {
     display: none;
     pointer-events: none;
-}
+} */
 
 @keyframes loading {
     0% {
