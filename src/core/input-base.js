@@ -2,6 +2,12 @@ import { html } from 'lit';
 import { ifDefined } from '../modules/utilities.js';
 import LightComponentBase from './light-component-base';
 
+/**
+ * Base class for input components providing common functionality for form inputs.
+ * This is an abstract class that must be extended and have onFormSubmit() implemented.
+ * @template {HTMLInputElement | HTMLSelectElement} TElement
+ * @abstract @extends LightComponentBase
+ */
 export default class InputBase extends LightComponentBase {
     /**
      * Component reactive properties
@@ -17,15 +23,18 @@ export default class InputBase extends LightComponentBase {
         placeholder: { type: String, reflect: true },
         required: { type: Boolean, reflect: true },
         ariaInvalid: { type: String, attribute: 'aria-invalid' },
+        disabled: { type: Boolean, reflect: true },
     };
 
     /** @type {string} */
     #value = null;
 
-    /** @type {HTMLInputElement | HTMLSelectElement | null} */
+    /** @type {TElement | null} */
     inputElement = null; // DOM input elementi
     /** @type {string | null } */
     validationMessage = '';
+    /** @type {string | null } */
+    unmaskedValue = null;
 
     get value() {
         return this.#value;
@@ -46,6 +55,11 @@ export default class InputBase extends LightComponentBase {
     get errorId() {
         return this.fieldId ? `${this.fieldId}-error` : null;
     }
+    /**
+     * Returns the HTML template for displaying validation error messages.
+     * The span element includes ARIA attributes for accessibility and is hidden when no validation message exists.
+     * @returns {import('lit').TemplateResult} Lit HTML template with validation message
+     */
     get validationMessageHtml() {
         return html` <span id=${ifDefined(this.errorId)} class="${this.validationMessage ? 'error' : ''}" ?hidden=${!this.validationMessage} aria-live="assertive">
             ${this.validationMessage}
@@ -60,6 +74,26 @@ export default class InputBase extends LightComponentBase {
 
     constructor() {
         super();
+
+        /** @property {string} Unique identifier for the input field */
+        this.fieldId = '';
+        /** @property {string} Name attribute for the input field */
+        this.fieldName = '';
+        /** @property {string} CSS class to apply to the input element */
+        this.inputClass = '';
+        /** @property {string} Label text for the input field */
+        this.label = '';
+        /** @property {boolean} Whether to hide the label visually */
+        this.hideLabel = false;
+        /** @property {string} Placeholder text for the input */
+        this.placeholder = '';
+        /** @property {boolean} Whether the input is required */
+        this.required = false;
+        /** @property {string} ARIA invalid state for accessibility */
+        this.ariaInvalid = '';
+        /** @property {boolean} Whether the input is disabled */
+        this.disabled = false;
+
         this.#validateAbstracts();
     }
 
@@ -76,7 +110,7 @@ export default class InputBase extends LightComponentBase {
      * Abstract handler for the nearest <form> submit. Must be overridden.
      * Typical flow: e.preventDefault(); validate; set validationMessage / ariaInvalid;
      * dispatch a custom event with current value. Make async if server-side validation is needed.
-     * @abstract
+     * @abstract @protected
      * @param {SubmitEvent | Event} _event
      */
     onFormSubmit(_event) {

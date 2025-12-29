@@ -1,27 +1,49 @@
+/**
+ * @typedef {import('lit').LitElement} LitElement
+ */
+
+/**
+ * @template TInstance
+ * @typedef {new (...args: any[]) => TInstance} Constructor
+ */
+
+/**
+ * @typedef {{
+ *   bindSlots(collectedNodes?: (Element|Text)[]): void
+ *   afterSlotsBinded(): void
+ *   validateNode(node: Node, slotName: string): boolean
+ * }} SlotCollectorApi
+ */
+
+/**
+ * @template {Constructor<LitElement>} TBase
+ * @param {TBase} Base
+ * @returns {Constructor<LitElement & SlotCollectorApi> & TBase}
+ */
 export default function SlotCollectorMixin(Base) {
     return class SlotCollector extends Base {
         #slotNodes = [];
         #isCollected = false;
 
-        constructor() {
-            super();
+        constructor(...args) {
+            super(...args);
             this.#slotNodes = this.#collectSlots(); // başlangıçta DOM'a bağlıysa çalışır
             queueMicrotask(() => this.toggleAttribute('data-not-ready', true));
-            this.#firstUpdateCompleted();
         }
 
         connectedCallback() {
-            super.connectedCallback();
+            super.connectedCallback?.();
 
             if (!this.#isCollected) {
                 this.#isCollected = true;
                 this.#slotNodes.push(...this.#collectSlots()); // sonradan DOM'a bağlandıysa çalışır
+                this.#firstUpdateCompleted();
             }
         }
 
         /**
          * Binds the collected nodes to their respective slot elements.
-         * @param {Node[]} collectedNodes - Collected nodes to bind to slots.
+         * @param {(HTMLElement|Text)[]} collectedNodes - Collected nodes to bind to slots.
          */
         bindSlots(collectedNodes = []) {
             const slotElements = Array.from(this.querySelectorAll('slot'));
@@ -31,13 +53,14 @@ export default function SlotCollectorMixin(Base) {
                 const fragment = document.createDocumentFragment();
 
                 for (const node of collectedNodes) {
-                    const nodeSlot = node.getAttribute?.('slot') || 'default';
+                    const isElement = node instanceof Element;
+                    const nodeSlot = (isElement && node.getAttribute('slot')) || 'default';
 
                     if (!this.validateNode(node, slotName)) {
                         node.remove();
                     } else if (nodeSlot === slotName) {
                         fragment.appendChild(node);
-                        node?.removeAttribute?.('slot');
+                        isElement && node.removeAttribute('slot');
                     }
                 }
 

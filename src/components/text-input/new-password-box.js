@@ -6,6 +6,7 @@ export default class NewPasswordBox extends PasswordBox {
     #strengthClasses = ['red', 'red', 'orange', 'gold', 'green'];
 
     static properties = {
+        ...super.properties,
         strength: { type: Number, state: true }, // şifre gücü (0-4)
     };
 
@@ -36,7 +37,7 @@ export default class NewPasswordBox extends PasswordBox {
     }
 
     #calcStrength(v) {
-        return (v.length >= 8) + /[A-Z]/.test(v) + /\d/.test(v) + /[^A-Za-z0-9]/.test(v);
+        return Number(v.length >= 8) + Number(/[A-Z]/.test(v)) + Number(/\d/.test(v)) + Number(/[^A-Za-z0-9]/.test(v));
     }
 
     render() {

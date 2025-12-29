@@ -2,8 +2,12 @@ import { html, nothing } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
 import InputBase from '../../core/input-base.js';
 
+/**
+ * @extends {InputBase<HTMLInputElement>}
+ */
 export default class TextBox extends InputBase {
     static properties = {
+        ...super.properties,
         type: { type: String, reflect: true },
         inputmode: { type: String, reflect: true },
         pattern: { type: String, reflect: true },
@@ -13,10 +17,16 @@ export default class TextBox extends InputBase {
         min: { type: Number, reflect: true },
         autounmask: { type: Boolean },
         autocomplete: { type: String, reflect: true },
+        spellcheck: { type: Boolean, reflect: true },
     };
 
+    /** @type {RegExp|null} The compiled regex pattern for single character validation */
     regexPattern = null;
+
+    /** @type {RegExp|null} The compiled regex pattern with global flag for masking operations */
     globalRegexPattern = null;
+
+    /** @type {String|null} The last key pressed during keydown event */
     #lastKey = null;
 
     // #region VALİDASYON MESAJLARI
@@ -51,7 +61,35 @@ export default class TextBox extends InputBase {
         this.placeholder = '';
         this.required = false;
 
+        /** @type {String} The type attribute for the input element (e.g., 'text', 'email', 'tel') */
+        this.type = 'text';
+
+        /** @type {String} The inputmode attribute for the input element (e.g., 'numeric', 'decimal', 'tel') */
+        this.inputmode = undefined;
+
+        /** @type {String} The regex pattern for input validation */
+        this.pattern = undefined;
+
+        /** @type {Number} The maximum length of the input value */
+        this.maxlength = undefined;
+
+        /** @type {Number} The minimum length of the input value */
+        this.minlength = undefined;
+
+        /** @type {Number} The maximum numeric value allowed */
+        this.max = undefined;
+
+        /** @type {Number} The minimum numeric value allowed */
+        this.min = undefined;
+
+        /** @type {Boolean} Whether to unmask the value on change event */
         this.autounmask = false;
+
+        /** @type {String} The autocomplete attribute for the input element */
+        this.autocomplete = undefined;
+
+        /** @type {Boolean} Whether spellcheck is enabled for the input element */
+        this.spellcheck = false;
     }
 
     firstUpdated() {
@@ -64,13 +102,19 @@ export default class TextBox extends InputBase {
     }
 
     handleValueUpdate() {
-        this.#handleInput(this.inputElement);
+        this.#handleInput(/** @type {HTMLInputElement} */ (this.inputElement));
         this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
     }
 
     // #endregion LIFECYCLE
 
     // #region PUBLIC API
+
+    /**
+     * Masks the input value by applying the global regex pattern and converting to uppercase.
+     * @param {String} value - The value to be masked
+     * @returns {String} The masked value in uppercase
+     */
     mask(value) {
         const masked = this.globalRegexPattern //
             ? value?.match(this.globalRegexPattern)?.join('') || '' //
@@ -83,7 +127,13 @@ export default class TextBox extends InputBase {
         return maskedValue;
     }
 
-    validate(value, _unmaskedValue) {
+    /**
+     * Validates the input value against defined constraints (required, length, numeric range, pattern).
+     * @param {String} value - The value to validate
+     * @param {String} unmaskedValue - The unmasked value (currently unused)
+     * @returns {String} Empty string if valid, otherwise returns the appropriate validation error message
+     */
+    validate(value, unmaskedValue) {
         if (this.required && !value) return this.requiredValidationMessage;
         if (value?.length > 0 && value.length < this.minlength) return this.minLengthValidationMessage;
         if (value.length > this.maxlength) return this.maxLengthValidationMessage;
@@ -161,9 +211,9 @@ export default class TextBox extends InputBase {
 
     /**
      * @protected Handles the invalid event for the text box.
-     * @param {InvalidEvent} _e
+     * @param {Event & { target: HTMLInputElement }} event
      */
-    onInvalid(_e) {
+    onInvalid(event) {
         // e.preventDefault(); // mesaj baloncuğu çıkmaz
         this.#checkValidity(true);
     }
@@ -179,27 +229,36 @@ export default class TextBox extends InputBase {
     }
     // #endregion OLAY YÖNETİCİLERİ
 
-    #handleInput(el) {
-        const formattedValue = this.#formatValueAndReplaceCaret(el); // Maskelenmiş değer
+    /**
+     * Handles input processing by formatting the value, updating unmasked value, and setting the final value.
+     * @param {HTMLInputElement} element - The input element to process
+     * @returns {void}
+     */
+    #handleInput(element) {
+        const formattedValue = this.#formatValueAndReplaceCaret(element); // Maskelenmiş değer
         this.unmaskedValue = this.unmask(formattedValue);
         this.value = this.autounmask ? this.unmaskedValue : formattedValue;
-        el.value = formattedValue;
-        el.unmaskedValue = this.unmaskedValue;
+        element.value = formattedValue;
+        // element.unmaskedValue = this.unmaskedValue;
     }
 
-    #formatValueAndReplaceCaret(el) {
-        const value = el.value;
+    /**
+     * Formats the input value using the mask and adjusts the caret position accordingly.
+     * @param {HTMLInputElement} element - The input element whose value needs to be formatted
+     * @returns {String} The formatted value after applying the mask pattern
+     */
+    #formatValueAndReplaceCaret(element) {
+        const value = element.value;
+        if (!this.pattern || !value) return value;
 
-        if (!this.pattern || (value !== 0 && !value)) return value;
-
-        const caret = el.selectionStart;
+        const caret = element.selectionStart;
         const formatted = this.mask(value);
 
         setTimeout(() => {
             if (caret === value.length) return;
             const isDel = this.#lastKey == 'Delete';
             const caretPosition = isDel ? caret - value.length + formatted.length : this.mask(value.slice(0, caret)).length;
-            el.setSelectionRange(caretPosition, caretPosition); // İmleci eski konumuna getir
+            element.setSelectionRange(caretPosition, caretPosition); // İmleci eski konumuna getir
         }, 0);
 
         return formatted;
@@ -215,22 +274,29 @@ export default class TextBox extends InputBase {
         }
 
         el.setCustomValidity('');
-        this.validationMessage = this.validate(el.value, el.unmaskedValue);
-        this.ariaInvalid = !!this.validationMessage;
+        this.validationMessage = this.validate(el.value, this.unmaskedValue);
+        this.ariaInvalid = String(!!this.validationMessage);
         el.setCustomValidity(this.validationMessage || '');
 
         return !this.validationMessage;
     }
 
+    /**
+     * Creates an event initialization dictionary for custom events.
+     * @param {InputEvent | Event & { target: HTMLInputElement }} [originalEvent] - The original browser event that triggered this custom event
+     * @returns {Object} An event initialization object with bubbles, cancelable, composed, and detail properties
+     */
     #eventInitDict(originalEvent) {
+        const isInputEvent = originalEvent instanceof InputEvent;
+
         return {
             bubbles: true,
             cancelable: true,
             composed: true,
             detail: {
                 originalEvent,
-                inputType: originalEvent?.inputType || 'insertText',
-                isComposing: !!originalEvent?.isComposing,
+                inputType: isInputEvent ? originalEvent.inputType : 'insertText',
+                isComposing: !!(isInputEvent && originalEvent?.isComposing),
                 synthetic: !(originalEvent && originalEvent instanceof Event),
             },
         };
@@ -246,6 +312,7 @@ export default class TextBox extends InputBase {
                 class=${ifDefined(this.inputClass)}
                 type=${this.type || 'text'}
                 .value=${this.value ?? ''}
+                ?disabled=${this.disabled}
                 aria-labelledby=${ifDefined(this.labelId)}
                 aria-errormessage=${ifDefined(this.errorId)}
                 aria-required=${this.required ? 'true' : 'false'}
@@ -253,6 +320,7 @@ export default class TextBox extends InputBase {
                 .placeholder=${this.placeholder}
                 autocomplete=${ifDefined(this.autocomplete)}
                 ?required=${this.required}
+                .spellcheck=${this.spellcheck}
                 inputmode=${ifDefined(this.inputmode)}
                 pattern=${this.pattern || nothing}
                 maxlength=${ifDefined(this.maxlength)}
@@ -267,5 +335,3 @@ export default class TextBox extends InputBase {
         `;
     }
 }
-
-// customElements.define('text-box', TextBox);

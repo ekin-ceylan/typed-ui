@@ -43,6 +43,10 @@
     "scripts": {
         "dev": "vite",
         "build": "node scripts/build-esb.mjs",
+        "build:types": "npm run types:raw && npm run types:bundle && npm run types:clean",
+        "types:raw": "tsc -p tsconfig.types.json",
+        "types:bundle": "rollup -c scripts/rollup.dts.config.mjs",
+        "types:clean": "rimraf types-tmp",
         "preview": "vite preview",
         "format": "prettier --write \"src/**/*.{ts,js,html,css}\"",
         "lint": "prettier --check \"src/**/*.{ts,js,html,css}\"",
@@ -52,13 +56,17 @@
         "prepublishOnly": "npm run test:run && npm run build"
     },
     "dependencies": {
-        "lit": "^3.3.1"
+        "lit": "^3.3.0"
     },
     "devDependencies": {
         "@vitest/coverage-v8": "^3.2.4",
         "esbuild-plugin-minify-html-literals": "^3.0.0",
         "jsdom": "^27.0.1",
         "prettier": "^3.4.2",
+        "rimraf": "^6.1.2",
+        "rollup": "^4.54.0",
+        "rollup-plugin-dts": "^6.3.0",
+        "typescript": "^5.9.3",
         "vite": "^6.0.11",
         "vitest": "^3.2.4"
     },

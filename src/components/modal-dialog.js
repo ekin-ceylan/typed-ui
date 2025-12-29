@@ -26,13 +26,13 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
     constructor() {
         super();
 
-        /** @public @type {boolean} */
+        /** @type {boolean} */
         this.open = false;
 
-        /** @protected @type {NodeListOf<Element> | null} */
+        /** @type {boolean} */
         this.backdropClose = false;
 
-        /** @public @type {boolean} Close when pressing the Escape key. */
+        /** @type {boolean} Close when pressing the Escape key. */
         this.escClose = false;
     }
 
@@ -116,5 +116,3 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
         </dialog>`;
     }
 }
-
-// customElements.define('modal-dialog', ModalDialog);

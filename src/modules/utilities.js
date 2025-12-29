@@ -10,6 +10,13 @@ export function injectStyles(styleId, styleText) {
     document.head.appendChild(style);
 }
 
+/**
+ * Cleans up CSS style text by removing unnecessary whitespace and formatting.
+ * Removes newlines, leading/trailing spaces, and normalizes spacing around CSS syntax characters.
+ *
+ * @param {string} styleText - The CSS style text to clean up.
+ * @returns {string} The cleaned and minified CSS style text.
+ */
 export function cleanupStyles(styleText) {
     return styleText
         .replaceAll(/(^\s+)|\n|(\s+$)/gm, '') // Remove newlines and leading/trailing spaces

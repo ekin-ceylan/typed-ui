@@ -3,12 +3,12 @@ import { html } from 'lit';
 
 export default class PasswordBox extends TextBox {
     static properties = {
+        ...super.properties,
         revealed: { type: Boolean, reflect: true }, // şifrenin görünür olup olmadığını tutar
-        spellcheck: { type: Boolean, reflect: true },
     };
 
-    validate(value) {
-        const base = super.validate(value);
+    validate(value, unmaskedValue) {
+        const base = super.validate(value, unmaskedValue);
 
         if (base) return base;
         if (/\s/.test(value)) return `${this.label} alanı boşluk içermemelidir.`;
@@ -19,8 +19,9 @@ export default class PasswordBox extends TextBox {
 
         this.type = 'password';
         this.autocomplete = 'current-password';
+
+        /** @type {Boolean} Whether the password is revealed or not */
         this.revealed = false;
-        this.spellcheck = false;
     }
 
     #toggleVisibility() {
@@ -66,5 +67,3 @@ export default class PasswordBox extends TextBox {
         `;
     }
 }
-
-// customElements.define('password-box', PasswordBox);

@@ -1,7 +1,8 @@
 import { html } from 'lit';
-import { ifDefined, classMap } from '../../modules/utilities.js';
+import { ifDefined } from '../../modules/utilities.js';
 import SelectBase from './select-base.js';
 
+/** @extends {SelectBase<HTMLSelectElement>} */
 export default class SelectBox extends SelectBase {
     // #region STATICS, FIELDS, GETTERS
 
@@ -26,7 +27,6 @@ export default class SelectBox extends SelectBase {
 
     constructor() {
         super();
-
         /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | SelectBoxOption[] | []} */
         this.options = [];
     }
@@ -40,12 +40,12 @@ export default class SelectBox extends SelectBase {
     // #endregion LIFECYCLE METHODS
 
     /**
-     * @override @protected Binds the collected nodes to the select box options.
-     * @param {NodeList} collectedNodes - The nodes to bind.
+     * @override Binds the collected nodes to the select box options.
+     * @param {(HTMLElement|Text)[]} collectedNodes - The nodes to bind.
      */
     bindSlots(collectedNodes) {
         if (this.options?.length > 0) {
-            collectedNodes.map(node => node.remove()); // detach nodes
+            collectedNodes.forEach(node => node.remove()); // detach nodes
             return;
         }
 
@@ -124,7 +124,7 @@ export default class SelectBox extends SelectBase {
         const v = el.validity;
 
         el.setCustomValidity('');
-        this.ariaInvalid = !v?.valid;
+        this.ariaInvalid = String(!v?.valid);
         this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
         el.setCustomValidity(this.validationMessage);
 
@@ -200,8 +200,6 @@ export default class SelectBox extends SelectBase {
         `;
     }
 }
-
-// customElements.define('select-box', SelectBox);
 
 // test case: başlangıç değeri varsa seçili gelsin
 

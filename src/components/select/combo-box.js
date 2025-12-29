@@ -2,10 +2,12 @@ import { html } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
 import SelectBase from './select-base.js';
 
+/** @extends {SelectBase<HTMLInputElement>} */
 export default class ComboBox extends SelectBase {
     // #region STATICS, FIELDS, GETTERS
 
     static properties = {
+        ...super.properties,
         selectedOption: { type: Object, state: true, attribute: false }, // internal
         filter: { type: String, state: false }, // Filtre metni
         nativeBehavior: { type: Boolean, attribute: 'native-behavior' }, // native select gibi davranır
@@ -51,17 +53,28 @@ export default class ComboBox extends SelectBase {
     constructor() {
         super();
 
-        /** @type {ComboBoxOption[]} */ this.options = [];
-        /** @type {ComboBoxOption | null} */ this.selectedOption = null;
+        /** @type {ComboBoxOption[]} */
+        this.options = [];
+        /** @type {ComboBoxOption | null} */
+        this.selectedOption = null;
+        /** @type {string} */
+        this.filter = '';
+        /** @type {Boolean} */
+        this.nativeBehavior = false;
+
         this.activeIndex = -1;
     }
 
     // #region LIFECYCLE METHODS
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('input[data-role="value"]');
+        /** @type {HTMLInputElement} */
         this.searchElement = this.renderRoot.querySelector('input[data-role="search"]');
         this.displayElement = this.renderRoot.querySelector('div[data-role="display"]');
+
+        /** @type {HTMLDivElement} */
         this.comboboxDiv = this.renderRoot.querySelector('div[role="combobox"]');
+        /** @type {HTMLDivElement} */
         this.listboxDiv = this.renderRoot.querySelector('div[role="listbox"]');
         this.clearButton = this.renderRoot.querySelector('button[data-role="clear"]');
 
@@ -77,8 +90,8 @@ export default class ComboBox extends SelectBase {
     // #endregion LIFECYCLE METHODS
 
     /**
-     * @override @protected Binds the collected nodes to the combo box options.
-     * @param {NodeList} collectedNodes - The nodes to bind.
+     * @override Binds the collected nodes to the combo box options.
+     * @param {(HTMLElement|Text)[]} collectedNodes - The nodes to bind.
      */
     bindSlots(collectedNodes) {
         const hasOptions = this.options?.length > 0;
@@ -97,7 +110,7 @@ export default class ComboBox extends SelectBase {
     }
 
     /**
-     * @override @protected Clears the current selection.
+     * @override Clears the current selection.
      */
     clear() {
         super.clear();
@@ -111,7 +124,10 @@ export default class ComboBox extends SelectBase {
      * @param {FocusEvent} e
      */
     onFocusOut(e) {
-        if (this.contains(e.relatedTarget)) return;
+        const rt = e.relatedTarget;
+        const isNode = rt instanceof Node || rt instanceof Element;
+
+        if (isNode && this.contains(rt)) return;
 
         this.#closeList();
     }
@@ -158,7 +174,9 @@ export default class ComboBox extends SelectBase {
             if (this.nativeBehavior) {
                 this.#closeList();
             } else {
-                this.renderRoot.querySelector('div[role="option"][data-active]')?.click();
+                /** @type {HTMLDivElement} */
+                const opt = this.renderRoot.querySelector('div[role="option"][data-active]');
+                opt.click();
             }
 
             this.comboboxDiv.focus();
@@ -217,7 +235,7 @@ export default class ComboBox extends SelectBase {
         const v = el.validity;
 
         el.setCustomValidity('');
-        this.ariaInvalid = !v?.valid;
+        this.ariaInvalid = String(!v?.valid);
         this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
         el.setCustomValidity(this.validationMessage);
 
@@ -355,7 +373,7 @@ export default class ComboBox extends SelectBase {
         }
 
         if (typeof raw === 'string' || typeof raw === 'number') {
-            const opt = { value: String(raw), label: String(raw) };
+            const opt = /** @type {HTMLOptionElement} */ ({ value: String(raw), label: String(raw) });
             return this.#parseOption(opt);
         }
 
@@ -419,9 +437,6 @@ export default class ComboBox extends SelectBase {
         `;
     }
 }
-
-// customElements.define('combo-box', ComboBox);
-
 // search forma dahil edilmemeli
 // aria-activedescendant="opt-3"
 // aria-controls

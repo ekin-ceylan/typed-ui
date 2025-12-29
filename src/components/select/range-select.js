@@ -7,12 +7,20 @@ export default class RangeSelect extends InputBase {
         min: { type: Number },
         max: { type: Number },
         step: { type: Number },
-        disabled: { type: Boolean, reflect: true },
     };
 
     onInput(e) {
         this.value = e.target.value;
         // this.#checkValidity();
+    }
+
+    /**
+     * @protected Handles the invalid event for the text box.
+     * @param {Event & { target: HTMLInputElement }} event
+     */
+    onInvalid(event) {
+        // e.preventDefault(); // mesaj baloncuğu çıkmaz
+        // this.#checkValidity(true);
     }
 
     onFormSubmit(_event) {
@@ -60,10 +68,10 @@ export default class RangeSelect extends InputBase {
         super();
         this.min = 0;
         this.max = 100;
-        this.value = this.min || 0;
+        /** @type {number} */
+        this.step = 1;
+        this.value = String(this.min || 0);
         this.label = '';
         this.required = false;
     }
 }
-
-// customElements.define('range-select', RangeSelect);

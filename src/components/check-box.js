@@ -31,7 +31,7 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         const v = el.validity;
 
         el.setCustomValidity('');
-        this.ariaInvalid = !v?.valid;
+        this.ariaInvalid = String(!v?.valid);
         this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
         el.setCustomValidity(this.validationMessage);
     }
@@ -74,5 +74,3 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         this.required = false;
     }
 }
-
-// customElements.define('check-box', CheckBox);

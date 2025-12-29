@@ -7,8 +7,8 @@ export default class EmailBox extends TextBox {
         return e.key !== ' '; // Boşluğa izin verme
     }
 
-    validate(value) {
-        const base = super.validate(value);
+    validate(value, unmaskedValue) {
+        const base = super.validate(value, unmaskedValue);
 
         if (base) return base;
         if (!this.#pattern.test(value)) return this.patternValidationMessage;
@@ -40,5 +40,3 @@ export default class EmailBox extends TextBox {
         this.autocomplete = 'email';
     }
 }
-
-// customElements.define('email-box', EmailBox);
