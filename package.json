@@ -9,11 +9,19 @@
     "main": "dist/typed-ui.all.js",
     "module": "dist/typed-ui.all.js",
     "exports": {
-        ".": "./dist/typed-ui.all.js",
-        "./base": "./dist/typed-ui.base.js",
-        "./iife": "./dist/typed-ui.iife.js"
+        ".": {
+            "import": "./dist/typed-ui.all.js",
+            "types": "./dist/typed-ui.all.d.ts"
+        },
+        "./base": {
+            "import": "./dist/typed-ui.base.js",
+            "types": "./dist/typed-ui.base.d.ts"
+        },
+        "./iife": {
+            "import": "./dist/typed-ui.iife.js"
+        }
     },
-    "types": "types/index.d.ts",
+    "types": "dist/typed-ui.all.d.ts",
     "files": [
         "dist",
         "types",
@@ -42,7 +50,8 @@
     "homepage": "https://github.com/ekin-ceylan/typed-ui#readme",
     "scripts": {
         "dev": "vite",
-        "build": "node scripts/build-esb.mjs",
+        "build": "rimraf dist/* --glob && npm run build:bundle && npm run build:types",
+        "build:bundle": "node scripts/build-esb.mjs",
         "build:types": "npm run types:raw && npm run types:bundle && npm run types:clean",
         "types:raw": "tsc -p tsconfig.types.json",
         "types:bundle": "rollup -c scripts/rollup.dts.config.mjs",
