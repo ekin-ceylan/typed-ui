@@ -46,37 +46,59 @@ export default function SlotCollectorMixin(Base) {
          * @param {(HTMLElement|Text)[]} collectedNodes - Collected nodes to bind to slots.
          */
         bindSlots(collectedNodes = []) {
-            const slotElements = Array.from(this.querySelectorAll('slot'));
+            /** @type {Map<string, (Element|Text)[]>} */
+            const bySlot = new Map();
 
-            for (const slotEl of slotElements) {
-                const slotName = slotEl.getAttribute('name') || 'default';
-                const fragment = document.createDocumentFragment();
+            // validate nodes and group by slot name
+            for (const node of collectedNodes) {
+                const isElement = node instanceof Element;
+                const nodeSlotName = (isElement && node.getAttribute('slot')) || 'default';
 
-                for (const node of collectedNodes) {
-                    const isElement = node instanceof Element;
-                    const nodeSlot = (isElement && node.getAttribute('slot')) || 'default';
-
-                    if (!this.validateNode(node, slotName)) {
-                        node.remove();
-                    } else if (nodeSlot === slotName) {
-                        fragment.appendChild(node);
-                        isElement && node.removeAttribute('slot');
-                    }
+                if (!this.validateNode(node, nodeSlotName)) {
+                    node.remove();
+                    continue;
                 }
 
-                fragment.hasChildNodes() //
-                    ? slotEl.replaceWith(fragment)
-                    : slotEl.replaceWith(...slotEl.childNodes);
+                this.#pushToMapArray(bySlot, nodeSlotName, node);
+                isElement && node.removeAttribute('slot');
+            }
+
+            const slotElements = Array.from(this.querySelectorAll('slot'));
+
+            // Replace placeholder slots with collected nodes
+            for (const slotEl of slotElements) {
+                const slotName = slotEl.getAttribute('name') || 'default';
+                const nodes = bySlot.get(slotName);
+
+                if (nodes?.length) {
+                    const fragment = document.createDocumentFragment();
+                    fragment.append(...nodes);
+                    slotEl.replaceWith(fragment);
+                    bySlot.delete(slotName); // Aynı isimli ikinci bir <slot> varsa (nadir) sil
+                } else {
+                    slotEl.replaceWith(...slotEl.childNodes); // Fallback içerik
+                }
             }
         }
 
+        #pushToMapArray(map, key, value) {
+            if (!map.has(key)) map.set(key, []);
+            map.get(key).push(value);
+        }
+
+        /**
+         * Validates nodes for slot binding.
+         * @param {HTMLElement|Text} node
+         * @param {String} slotName
+         * @returns {Boolean}
+         */
         validateNode(node, slotName) {
-            // Override edilebilir
             return true;
         }
 
+        /** Called after slots have been bound. */
         afterSlotsBinded() {
-            // Override edilebilir
+            this.requestUpdate();
         }
 
         async #firstUpdateCompleted() {

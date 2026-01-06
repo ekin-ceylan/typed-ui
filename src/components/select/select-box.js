@@ -40,24 +40,24 @@ export default class SelectBox extends SelectBase {
     // #endregion LIFECYCLE METHODS
 
     /**
-     * @override Binds the collected nodes to the select box options.
-     * @param {(HTMLElement|Text)[]} collectedNodes - The nodes to bind.
+     * @override Validates nodes for slot binding.
+     * @param {HTMLElement|Text} node
+     * @param {String} slotName
+     * @returns {Boolean}
      */
-    bindSlots(collectedNodes) {
-        if (this.options?.length > 0) {
-            collectedNodes.forEach(node => node.remove()); // detach nodes
-            return;
+    validateNode(node, slotName) {
+        if (slotName != 'default') {
+            return true;
         }
 
-        this.options = collectedNodes.reduce((acc, node) => {
-            const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
-            if (isAllowedType) {
-                acc.push(new SelectBoxOption(node));
-            }
-            node.remove(); // remove nodes
+        const hasOptions = this.options?.length > 0;
+        const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
 
-            return acc;
-        }, []);
+        if (!hasOptions && isAllowedType) {
+            this.#optionList.push(new SelectBoxOption(node));
+        }
+
+        return false;
     }
 
     // #region EVENT LISTENERS
@@ -190,7 +190,7 @@ export default class SelectBox extends SelectBase {
                     ?data-open=${this.isOpen}
                 >
                     <option value="" disabled selected hidden>${this.placeholder}</option>
-                    <option disabled ?hidden=${this.#optionList?.length > 0}>Kayıt Bulunamadı</option>
+                    <option disabled ?hidden=${this.#optionList?.length > 0}>${this.noOptionsLabel}</option>
                     ${this.#optionList.map(option => option.htmlElement)}
                 </select>
 

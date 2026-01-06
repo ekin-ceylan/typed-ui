@@ -90,23 +90,25 @@ export default class ComboBox extends SelectBase {
     // #endregion LIFECYCLE METHODS
 
     /**
-     * @override Binds the collected nodes to the combo box options.
-     * @param {(HTMLElement|Text)[]} collectedNodes - The nodes to bind.
+     * @override Validates nodes for slot binding.
+     * @param {HTMLElement|Text} node
+     * @param {String} slotName
+     * @returns {Boolean}
      */
-    bindSlots(collectedNodes) {
-        const hasOptions = this.options?.length > 0;
-
-        for (const node of collectedNodes) {
-            if (!hasOptions && node instanceof HTMLOptionElement) {
-                const option = this.#parseOption(node);
-                this.#optionList.push(option);
-                option.selected && this.#onSelect(option);
-            }
-
-            node.remove(); // remove all nodes
+    validateNode(node, slotName) {
+        if (slotName != 'default') {
+            return true;
         }
 
-        this.requestUpdate();
+        const hasOptions = this.options?.length > 0;
+
+        if (!hasOptions && node instanceof HTMLOptionElement) {
+            const option = this.#parseOption(node);
+            this.#optionList.push(option);
+            option.selected && this.#onSelect(option);
+        }
+
+        return false;
     }
 
     /**
@@ -429,7 +431,9 @@ export default class ComboBox extends SelectBase {
                 />
                 ${this.required ? null : this.btnClear} ${this.chevron}
                 <div id=${this.fieldId + '-list'} role="listbox" aria-expanded=${this.isOpen ? 'true' : 'false'}>
-                    <div aria-disabled ?hidden=${this.filteredOptions?.length > 0}>Kayıt Bulunamadı</div>
+                    <div aria-disabled ?hidden=${this.filteredOptions?.length > 0}>
+                        <slot name="no-options">${this.noOptionsLabel}</slot>
+                    </div>
                     ${this.filteredOptions.map(this.#optToDiv.bind(this))}
                 </div>
             </div>

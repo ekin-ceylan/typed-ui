@@ -12,6 +12,7 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
     // #region STATICS, FIELDS, GETTERS
     static properties = {
         ...super.properties,
+        noOptionsLabel: { type: String, attribute: 'no-options-label' },
         isOpen: { type: Boolean, attribute: false }, // Açık / kapalı
         // options: { type: Array, attribute: false },
     };
@@ -45,6 +46,9 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
 
         /** @type {Boolean} */
         this.isOpen = false;
+
+        /** @type {String} */
+        this.noOptionsLabel = 'Kayıt Bulunamadı';
 
         // /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | SelectBoxOption[] | []} */
         // /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | []} */
