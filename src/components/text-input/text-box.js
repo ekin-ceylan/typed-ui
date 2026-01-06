@@ -320,7 +320,7 @@ export default class TextBox extends InputBase {
                 aria-labelledby=${ifDefined(this.labelId)}
                 aria-errormessage=${ifDefined(this.errorId)}
                 aria-required=${this.required ? 'true' : 'false'}
-                ?aria-invalid=${this.invalid}
+                aria-invalid=${ifDefined(this.ariaInvalid)}
                 .placeholder=${this.placeholder}
                 autocomplete=${ifDefined(this.autocomplete)}
                 ?required=${this.required}

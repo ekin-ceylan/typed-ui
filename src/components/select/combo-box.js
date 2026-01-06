@@ -409,7 +409,7 @@ export default class ComboBox extends SelectBase {
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
                     aria-required=${this.required ? 'true' : 'false'}
-                    ?aria-invalid=${this.invalid}
+                    aria-invalid=${ifDefined(this.ariaInvalid)}
                     aria-readonly="true"
                     @invalid=${this.onInvalid}
                     @focus=${this.onFocusValue}

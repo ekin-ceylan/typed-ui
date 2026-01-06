@@ -180,7 +180,7 @@ export default class SelectBox extends SelectBase {
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
                     aria-required=${this.required ? 'true' : 'false'}
-                    ?aria-invalid=${this.invalid}
+                    aria-invalid=${ifDefined(this.ariaInvalid)}
                     @input=${this.onInput}
                     @mousedown=${this.onMousedown}
                     @mouseup=${this.onMouseup}

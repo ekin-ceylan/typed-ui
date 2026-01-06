@@ -55,7 +55,7 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
                     aria-label=${ifDefined(this.inputLabel)}
                     aria-errormessage=${ifDefined(this.errorId)}
                     aria-required=${this.required ? 'true' : 'false'}
-                    ?aria-invalid=${this.invalid}
+                    aria-invalid=${ifDefined(this.ariaInvalid)}
                     ?required=${this.required}
                     @input=${this.onInput}
                     @invalid=${this.#checkValidity}

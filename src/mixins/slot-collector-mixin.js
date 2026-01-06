@@ -53,14 +53,21 @@ export default function SlotCollectorMixin(Base) {
             for (const node of collectedNodes) {
                 const isElement = node instanceof Element;
                 const nodeSlotName = (isElement && node.getAttribute('slot')) || 'default';
+                isElement && node.removeAttribute('slot');
 
                 if (!this.validateNode(node, nodeSlotName)) {
                     node.remove();
                     continue;
                 }
 
+                if (node instanceof HTMLTemplateElement) {
+                    const nodes = this.#extractTemplateContent(node);
+                    this.#pushToMapArray(bySlot, nodeSlotName, ...nodes);
+                    node.remove();
+                    continue;
+                }
+
                 this.#pushToMapArray(bySlot, nodeSlotName, node);
-                isElement && node.removeAttribute('slot');
             }
 
             const slotElements = Array.from(this.querySelectorAll('slot'));
@@ -81,11 +88,6 @@ export default function SlotCollectorMixin(Base) {
             }
         }
 
-        #pushToMapArray(map, key, value) {
-            if (!map.has(key)) map.set(key, []);
-            map.get(key).push(value);
-        }
-
         /**
          * Validates nodes for slot binding.
          * @param {HTMLElement|Text} node
@@ -99,6 +101,29 @@ export default function SlotCollectorMixin(Base) {
         /** Called after slots have been bound. */
         afterSlotsBinded() {
             this.requestUpdate();
+        }
+
+        /**
+         * @param {Map<string, (Element|Text)[]>} map
+         * @param {string} key
+         * @param {...(Element|Text)} value
+         */
+        #pushToMapArray(map, key, ...value) {
+            if (!map.has(key)) map.set(key, []);
+            map.get(key).push(...value);
+        }
+
+        #extractTemplateContent(template) {
+            return template.content
+                ? Array.from(template.content.childNodes).filter(node => {
+                      if (node.nodeType === Node.ELEMENT_NODE) {
+                          node.removeAttribute('slot');
+                          return true;
+                      }
+
+                      return node.nodeType === Node.TEXT_NODE && node.textContent.trim();
+                  })
+                : [];
         }
 
         async #firstUpdateCompleted() {

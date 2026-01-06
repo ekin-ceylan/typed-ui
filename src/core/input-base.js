@@ -23,9 +23,17 @@ export default class InputBase extends LightComponentBase {
         hideLabel: { type: Boolean, attribute: 'hide-label' },
         placeholder: { type: String, reflect: true },
         required: { type: Boolean, reflect: true },
-        invalid: { type: Boolean, state: true },
+        ariaInvalid: { type: String, attribute: false, reflect: false },
         disabled: { type: Boolean, reflect: true },
     };
+
+    get invalid() {
+        return this.ariaInvalid === 'true' || this.ariaInvalid === 'grammar' || this.ariaInvalid === 'spelling';
+    }
+
+    set invalid(value) {
+        this.ariaInvalid = value ? 'true' : undefined;
+    }
 
     /** @type {string} */
     #value = null;
