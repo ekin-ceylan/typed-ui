@@ -29,7 +29,7 @@ export default class TextBox extends InputBase {
     /** @type {String|null} The last key pressed during keydown event */
     #lastKey = null;
 
-    // #region VALİDASYON MESAJLARI
+    // #region VALIDATION MESSAGES
 
     get minLengthValidationMessage() {
         return `${this.label} alanı en az ${this.minlength} karakterden oluşmalıdır.`;
@@ -50,7 +50,7 @@ export default class TextBox extends InputBase {
     get patternValidationMessage() {
         return `Lütfen geçerli bir ${this.label} giriniz.`;
     }
-    // #endregion VALİDASYON MESAJLARI
+    // #endregion VALIDATION MESSAGES
 
     // #region LIFECYCLE
 
@@ -98,6 +98,10 @@ export default class TextBox extends InputBase {
         if (this.pattern) {
             this.regexPattern = new RegExp(this.pattern);
             this.globalRegexPattern = new RegExp(this.pattern, 'g');
+        }
+
+        if (this.inputElement && this.value != null) {
+            this.inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
         }
     }
 
@@ -155,7 +159,7 @@ export default class TextBox extends InputBase {
 
     // #endregion PUBLIC API
 
-    // #region OLAY YÖNETİCİLERİ
+    // #region EVENT LISTENERS
     /**
      * @protected Handles the input event for the text box.
      * @param {InputEvent & { target: HTMLInputElement }} e
@@ -227,7 +231,7 @@ export default class TextBox extends InputBase {
             e.preventDefault();
         }
     }
-    // #endregion OLAY YÖNETİCİLERİ
+    // #endregion EVENT LISTENERS
 
     /**
      * Handles input processing by formatting the value, updating unmasked value, and setting the final value.

@@ -42,6 +42,7 @@
             <br />
             <br />
             <combo-box label="Kombo" field-id="combo-country" placeholder="Seçiniz" value="xx" required>
+                <span slot="no-options">Kayıtsız</span>
                 <option value="tr">
                     <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
                     Türkiye
@@ -91,7 +92,8 @@
             <url-link href="https://www.test.com" target="_blank" aria-label="Example Link">Example Link</url-link>
             <br />
             <br />
-            <select-box style="max-width: 300px" field-id="country" label="Ülke" placeholder="Seçiniz" required>
+            <select-box style="max-width: 300px" field-id="country" value="tr" label="Ülke" placeholder="Seçiniz" required>
+                <span slot="no-options">Kayıtsız</span>
                 <option value="tr">Türkiye</option>
                 <option value="de">Almanya</option>
                 <option value="us">ABD</option>
@@ -100,7 +102,9 @@
             </select-box>
             <br />
             <br />
-            <select-box id="sb-dynamic" placeholder="Dinamik Seçiniz"></select-box>
+            <select-box id="sb-dynamic" label="Dinamik" placeholder="Dinamik Seçiniz">
+                <span slot="no-options">Kayıtsız</span>
+            </select-box>
             <br />
             <br />
             <select placeholder="Seçiniz" id="native">
