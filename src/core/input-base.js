@@ -14,6 +14,7 @@ export default class InputBase extends LightComponentBase {
      * @type {import('lit').PropertyDeclarations}
      */
     static properties = {
+        ...super.properties,
         fieldId: { type: String, attribute: 'field-id' },
         fieldName: { type: String, attribute: 'field-name' },
         inputClass: { type: String, attribute: 'input-class' },
@@ -22,7 +23,7 @@ export default class InputBase extends LightComponentBase {
         hideLabel: { type: Boolean, attribute: 'hide-label' },
         placeholder: { type: String, reflect: true },
         required: { type: Boolean, reflect: true },
-        ariaInvalid: { type: String, attribute: 'aria-invalid' },
+        invalid: { type: Boolean, state: true },
         disabled: { type: Boolean, reflect: true },
     };
 
@@ -89,8 +90,8 @@ export default class InputBase extends LightComponentBase {
         this.placeholder = '';
         /** @property {boolean} Whether the input is required */
         this.required = false;
-        /** @property {string} ARIA invalid state for accessibility */
-        this.ariaInvalid = '';
+        /** @property {boolean} ARIA invalid state for accessibility */
+        this.invalid = false;
         /** @property {boolean} Whether the input is disabled */
         this.disabled = false;
 
@@ -108,7 +109,7 @@ export default class InputBase extends LightComponentBase {
 
     /**
      * Abstract handler for the nearest <form> submit. Must be overridden.
-     * Typical flow: e.preventDefault(); validate; set validationMessage / ariaInvalid;
+     * Typical flow: e.preventDefault(); validate; set validationMessage / invalid;
      * dispatch a custom event with current value. Make async if server-side validation is needed.
      * @abstract @protected
      * @param {SubmitEvent | Event} _event

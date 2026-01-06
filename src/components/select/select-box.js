@@ -54,7 +54,9 @@ export default class SelectBox extends SelectBase {
         const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
 
         if (!hasOptions && isAllowedType) {
-            this.#optionList.push(new SelectBoxOption(node));
+            const option = new SelectBoxOption(node);
+            this.#optionList.push(option);
+            option.selected && (this.value = option.value);
         }
 
         return false;
@@ -124,7 +126,7 @@ export default class SelectBox extends SelectBase {
         const v = el.validity;
 
         el.setCustomValidity('');
-        this.ariaInvalid = String(!v?.valid);
+        this.invalid = !v?.valid;
         this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
         el.setCustomValidity(this.validationMessage);
 
@@ -178,7 +180,7 @@ export default class SelectBox extends SelectBase {
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
                     aria-required=${this.required ? 'true' : 'false'}
-                    ?aria-invalid=${this.ariaInvalid}
+                    ?aria-invalid=${this.invalid}
                     @input=${this.onInput}
                     @mousedown=${this.onMousedown}
                     @mouseup=${this.onMouseup}
@@ -205,10 +207,28 @@ export default class SelectBox extends SelectBase {
 
 class SelectBoxOption {
     label = '';
-    value = '';
-    selected = false;
+    #value = '';
+    #selected = false;
     disabled = false;
     options = []; // alt seçenekler (optgroup için)
+
+    get value() {
+        return this.isOptGroup ? this.options.find(opt => opt.selected)?.value || '' : this.#value;
+    }
+
+    set value(value) {
+        if (this.isOptGroup) return;
+        this.#value = value;
+    }
+
+    get selected() {
+        return this.isOptGroup ? this.options.some(opt => opt.selected) : this.#selected;
+    }
+
+    set selected(value) {
+        if (this.isOptGroup) return;
+        this.#selected = value;
+    }
 
     get isOptGroup() {
         return this.options?.length > 0;

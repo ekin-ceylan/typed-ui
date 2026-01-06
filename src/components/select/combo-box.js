@@ -237,7 +237,7 @@ export default class ComboBox extends SelectBase {
         const v = el.validity;
 
         el.setCustomValidity('');
-        this.ariaInvalid = String(!v?.valid);
+        this.invalid = !v?.valid;
         this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
         el.setCustomValidity(this.validationMessage);
 
@@ -409,7 +409,7 @@ export default class ComboBox extends SelectBase {
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
                     aria-required=${this.required ? 'true' : 'false'}
-                    ?aria-invalid=${this.ariaInvalid}
+                    ?aria-invalid=${this.invalid}
                     aria-readonly="true"
                     @invalid=${this.onInvalid}
                     @focus=${this.onFocusValue}

@@ -10,7 +10,6 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         label: { type: String, reflect: false },
         placeholder: { type: String, reflect: true },
         required: { type: Boolean, reflect: true },
-        ariaInvalid: { type: Boolean, attribute: 'aria-invalid', reflect: false },
     };
 
     get inputLabel() {
@@ -31,7 +30,7 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         const v = el.validity;
 
         el.setCustomValidity('');
-        this.ariaInvalid = String(!v?.valid);
+        this.invalid = !v?.valid;
         this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
         el.setCustomValidity(this.validationMessage);
     }
@@ -56,7 +55,7 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
                     aria-label=${ifDefined(this.inputLabel)}
                     aria-errormessage=${ifDefined(this.errorId)}
                     aria-required=${this.required ? 'true' : 'false'}
-                    ?aria-invalid=${this.ariaInvalid}
+                    ?aria-invalid=${this.invalid}
                     ?required=${this.required}
                     @input=${this.onInput}
                     @invalid=${this.#checkValidity}

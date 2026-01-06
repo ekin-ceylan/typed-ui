@@ -45,7 +45,7 @@ export default class RangeSelect extends InputBase {
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
                     aria-required=${this.required ? 'true' : 'false'}
-                    ?aria-invalid=${this.ariaInvalid}
+                    ?aria-invalid=${this.invalid}
                     @input=${this.onInput}
                     @invalid=${this.onInvalid}
                     type="range"

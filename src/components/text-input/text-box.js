@@ -273,13 +273,13 @@ export default class TextBox extends InputBase {
         const v = el.validity;
 
         // invalid ise her inputta tekrar kontrol et, valid ise blur olana kadar bekle
-        if (!force && !this.ariaInvalid && !v?.valueMissing) {
+        if (!force && !this.invalid && !v?.valueMissing) {
             return true;
         }
 
         el.setCustomValidity('');
         this.validationMessage = this.validate(el.value, this.unmaskedValue);
-        this.ariaInvalid = String(!!this.validationMessage);
+        this.invalid = !!this.validationMessage;
         el.setCustomValidity(this.validationMessage || '');
 
         return !this.validationMessage;
@@ -320,7 +320,7 @@ export default class TextBox extends InputBase {
                 aria-labelledby=${ifDefined(this.labelId)}
                 aria-errormessage=${ifDefined(this.errorId)}
                 aria-required=${this.required ? 'true' : 'false'}
-                ?aria-invalid=${this.ariaInvalid}
+                ?aria-invalid=${this.invalid}
                 .placeholder=${this.placeholder}
                 autocomplete=${ifDefined(this.autocomplete)}
                 ?required=${this.required}

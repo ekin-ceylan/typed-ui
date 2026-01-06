@@ -25,7 +25,12 @@
     display: block;
 } */
 
-:is(base-input, check-box, text-box, plate-box, phone-box, email-box, integer-box, select-box) :is(input, select)[aria-invalid] {
+:is(base-input, check-box, text-box, plate-box, phone-box, email-box, integer-box, password-box, confirm-password-box, new-password-box, select-box)
+    :is(input, select)[aria-invalid] {
+    border: 1px solid red;
+}
+
+combo-box [aria-invalid] ~ input {
     border: 1px solid red;
 }
 
