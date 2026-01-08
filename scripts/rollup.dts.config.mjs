@@ -16,7 +16,7 @@ export default entryFiles.map(file => {
     return {
         input: path.join(entriesDir, file),
         output: {
-            file: path.join(outDir, `${name}.d.ts`),
+            file: path.join(outDir, `typed-ui.${name}.d.ts`),
             format: 'es',
         },
         plugins: [dts()],
