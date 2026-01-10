@@ -15,9 +15,11 @@ export default class ComboBox extends SelectBase {
         directionUp: { type: Boolean, attribute: false, reflect: false }, // açılır kutu yönü
     };
 
-    /** @type {ComboBoxOption[]} */ #optionList = [];
+    /** @type {ComboBoxOption[]} */
+    #optionList = [];
+    /** @type {ComboBoxOption | null} */
+    #selectedOption = null;
     #options = [];
-    /** @type {ComboBoxOption | null} */ #selectedOption = null;
 
     get filteredOptions() {
         if (!this.filter) {
@@ -96,17 +98,24 @@ export default class ComboBox extends SelectBase {
      * @returns {Boolean}
      */
     validateNode(node, slotName) {
-        if (slotName != 'default') {
-            return true;
-        }
+        if (slotName != 'default') return true;
 
         const hasOptions = this.options?.length > 0;
+        const isAllowedType = node instanceof HTMLOptionElement;
 
-        if (!hasOptions && node instanceof HTMLOptionElement) {
-            const option = this.#parseOption(node);
-            this.#optionList.push(option);
-            option.selected && this.#onSelect(option);
+        if (hasOptions) {
+            console.warn('Options are already set via property. Ignoring slotted nodes.');
+            return false;
         }
+
+        if (!isAllowedType) {
+            console.error('Only <option> elements are allowed as children of <combo-box>.');
+            return false;
+        }
+
+        const option = this.#parseOption(node);
+        this.#optionList.push(option);
+        option.selected && this.#onSelect(option);
 
         return false;
     }

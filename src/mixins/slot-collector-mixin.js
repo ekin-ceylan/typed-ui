@@ -61,7 +61,7 @@ export default function SlotCollectorMixin(Base) {
                 }
 
                 if (node instanceof HTMLTemplateElement) {
-                    const nodes = this.#extractTemplateContent(node);
+                    const nodes = this.#extractTemplateContent(node, nodeSlotName);
                     this.#pushToMapArray(bySlot, nodeSlotName, ...nodes);
                     node.remove();
                     continue;
@@ -113,9 +113,11 @@ export default function SlotCollectorMixin(Base) {
             map.get(key).push(...value);
         }
 
-        #extractTemplateContent(template) {
+        #extractTemplateContent(template, slotName) {
             return template.content
                 ? Array.from(template.content.childNodes).filter(node => {
+                      if (!this.validateNode(node, slotName)) return false;
+
                       if (node.nodeType === Node.ELEMENT_NODE) {
                           node.removeAttribute('slot');
                           return true;

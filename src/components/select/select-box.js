@@ -7,7 +7,7 @@ export default class SelectBox extends SelectBase {
     // #region STATICS, FIELDS, GETTERS
 
     /** @type {SelectBoxOption[]} */
-    #optionList = [];
+    #optionList = []; // işlenmiş seçenek listesi
     #options = [];
     #mouseFlag = false;
 
@@ -21,6 +21,10 @@ export default class SelectBox extends SelectBase {
         this.#options = val;
         this.#optionList = val.map(o => this.#toOptionElement(o));
         this.#completeOptionUpdate();
+    }
+
+    get hasOptions() {
+        return this.#optionList?.length > 0;
     }
 
     // #endregion STATICS, FIELDS, GETTERS
@@ -46,18 +50,24 @@ export default class SelectBox extends SelectBase {
      * @returns {Boolean}
      */
     validateNode(node, slotName) {
-        if (slotName != 'default') {
-            return true;
-        }
+        if (slotName != 'default') return true;
 
         const hasOptions = this.options?.length > 0;
         const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
 
-        if (!hasOptions && isAllowedType) {
-            const option = new SelectBoxOption(node);
-            this.#optionList.push(option);
-            option.selected && (this.value = option.value);
+        if (hasOptions) {
+            console.warn('Options are already set via property. Ignoring slotted nodes.');
+            return false;
         }
+
+        if (!isAllowedType) {
+            console.error('Only <option> and <optgroup> elements are allowed as children of <select-box>.');
+            return false;
+        }
+
+        const option = new SelectBoxOption(node);
+        this.#optionList.push(option);
+        option.selected && (this.value = option.value);
 
         return false;
     }
@@ -192,7 +202,7 @@ export default class SelectBox extends SelectBase {
                     ?data-open=${this.isOpen}
                 >
                     <option value="" disabled selected hidden>${this.placeholder}</option>
-                    <option disabled ?hidden=${this.#optionList?.length > 0}>${this.noOptionsLabel}</option>
+                    <option disabled ?hidden=${this.hasOptions || !this.noOptionsLabel}>${this.noOptionsLabel}</option>
                     ${this.#optionList.map(option => option.htmlElement)}
                 </select>
 
