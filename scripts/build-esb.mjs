@@ -1,5 +1,4 @@
 import esbuild from 'esbuild';
-import { globSync } from 'glob';
 import { readFileSync } from 'node:fs';
 import { minifyHTMLLiteralsPlugin } from 'esbuild-plugin-minify-html-literals';
 
@@ -12,14 +11,11 @@ const bannerText = `/*!
  * Released under the ${pkg.license} License
  */`;
 
-const entryFiles = globSync('src/entries/**/*.js', { nodir: true });
-const iifeEntry = 'src/entries/all.js';
-
 const esmOptions = {
-    entryPoints: entryFiles,
+    entryPoints: ['src/index.js'],
 
     outdir: 'dist',
-    entryNames: '[dir]/typed-ui.[name]', // klasör yapısını korur
+    entryNames: 'typed-ui', // klasör yapısını korur
 
     bundle: true,
     splitting: false,
@@ -41,13 +37,12 @@ const esmOptions = {
 
 const esmWithLit = {
     ...esmOptions,
-    entryNames: '[dir]/typed-ui-with-lit.[name]', // klasör yapısını korur
+    entryNames: 'typed-ui-with-lit', // klasör yapısını korur
     external: [],
 };
 
 const iifeOptions = {
     ...esmOptions,
-    entryPoints: [iifeEntry],
     entryNames: 'typed-ui.iife',
     external: [],
     format: 'iife',

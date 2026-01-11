@@ -6,25 +6,24 @@
     "author": "Ekin Ceylan <ekinceylan@gmail.com> (https://github.com/ekin-ceylan)",
     "license": "MIT",
     "type": "module",
-    "main": "dist/typed-ui.all.js",
-    "module": "dist/typed-ui.all.js",
+    "main": "dist/typed-ui.js",
+    "module": "dist/typed-ui.js",
     "exports": {
         ".": {
-            "import": "./dist/typed-ui.all.js",
-            "types": "./dist/typed-ui.all.d.ts"
+            "import": "./dist/typed-ui.js",
+            "types": "./dist/typed-ui.d.ts"
         },
-        "./base": {
-            "import": "./dist/typed-ui.base.js",
-            "types": "./dist/typed-ui.base.d.ts"
+        "./with-lit": {
+            "import": "./dist/typed-ui-with-lit.js",
+            "types": "./dist/typed-ui.d.ts"
         },
         "./iife": {
             "import": "./dist/typed-ui.iife.js"
         }
     },
-    "types": "dist/typed-ui.all.d.ts",
+    "types": "dist/typed-ui.d.ts",
     "files": [
         "dist",
-        "types",
         "README.md",
         "LICENSE"
     ],
