@@ -67,7 +67,7 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
                 <span id=${ifDefined(this.descriptionId)}><slot></slot></span>
                 <span class="checkmark"></span>
             </label>
-            <span class="error" id=${ifDefined(this.errorId)} aria-live="assertive">${this.validationMessage}</span>
+            <span data-role="error-message" id=${ifDefined(this.errorId)} aria-live="assertive">${this.validationMessage}</span>
         `;
     }
 

@@ -1,5 +1,6 @@
 check-box {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
 }
 
 check-box > label {
@@ -52,12 +53,12 @@ check-box > label > input:focus ~ .checkmark {
     box-shadow: 0 0 var(--shadow-blur) var(--shadow-size) var(--shadow-hover-color);
 }
 
-check-box > label > input ~ .error {
+check-box > label:has(> input) ~ [data-role='error-message'] {
     display: none;
     flex-basis: 100%;
 }
 
-check-box > label > input:user-invalid ~ .error {
+check-box > label:has(> input:user-invalid) ~ [data-role='error-message'] {
     display: block;
 }
 

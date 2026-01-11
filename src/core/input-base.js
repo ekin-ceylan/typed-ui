@@ -70,9 +70,7 @@ export default class InputBase extends LightComponentBase {
      * @returns {import('lit').TemplateResult} Lit HTML template with validation message
      */
     get validationMessageHtml() {
-        return html` <span id=${ifDefined(this.errorId)} class="${this.validationMessage ? 'error' : ''}" ?hidden=${!this.validationMessage} aria-live="assertive">
-            ${this.validationMessage}
-        </span>`;
+        return html` <span id=${ifDefined(this.errorId)} data-role="error-message" ?hidden=${!this.validationMessage} aria-live="assertive"> ${this.validationMessage} </span>`;
     }
     get labelHtml() {
         return this.hideLabel ? null : html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
