@@ -318,6 +318,7 @@ export default class TextBox extends InputBase {
                 .value=${this.value ?? ''}
                 ?disabled=${this.disabled}
                 aria-labelledby=${ifDefined(this.labelId)}
+                aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
                 aria-errormessage=${ifDefined(this.errorId)}
                 aria-required=${this.required ? 'true' : 'false'}
                 aria-invalid=${ifDefined(this.ariaInvalid)}

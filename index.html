@@ -62,19 +62,19 @@
             </combo-box>
             <br />
             <br />
-            <text-box field-id="firstname" maxlength="100" label="İsim" minlength="2" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ \-]+" value="tr" placeholder="Yaz..."></text-box>
+            <text-box field-id="name" hide-label maxlength="100" label="İsim" minlength="2" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ \-]+" value="tr" placeholder="Yaz..."></text-box>
             <br />
             <br />
-            <text-box placeholder="Type something..." minlength="20" onchange="test(event)" value="5" required label="First Name"></text-box>
+            <text-box field-id="first-name" placeholder="Type something..." minlength="20" onchange="test(event)" value="5" required label="First Name"></text-box>
             <br />
             <br />
-            <phone-box label="Phone Number" value="(0212)" required></phone-box>
+            <phone-box field-id="phone-number" label="Phone Number" value="(0212)" required></phone-box>
             <br />
             <br />
-            <email-box label="E-Posta Adresi" minlength="20" required></email-box>
+            <email-box field-id="email" label="E-Posta Adresi" minlength="20" required></email-box>
             <br />
             <br />
-            <integer-box label="Yaş" placeholder="Yaşınızı giriniz" required></integer-box>
+            <integer-box field-id="age" label="Yaş" placeholder="Yaşınızı giriniz" required></integer-box>
             <br />
             <br />
             <new-password-box field-id="new-password" label="Yeni Şifre" placeholder="Şifrenizi giriniz" minlength="8" required></new-password-box>
@@ -111,7 +111,7 @@
             </select-box>
             <br />
             <br />
-            <select-box id="sb-dynamic" label="Dinamik" no-options-label="Kayıtsız" placeholder="Dinamik Seçiniz"> </select-box>
+            <select-box field-id="select-dynamic" id="sb-dynamic" label="Dinamik" no-options-label="Kayıtsız" placeholder="Dinamik Seçiniz"> </select-box>
             <br />
             <br />
             <label for="native">Native Select</label><br />

@@ -1,3 +1,5 @@
+import { nothing } from 'lit';
+
 export function injectStyles(styleId, styleText) {
     if (!styleId || !styleText || document.getElementById(styleId)) {
         return;
@@ -31,10 +33,10 @@ export function cleanupStyles(styleText) {
  *
  * @template T
  * @param {T|null|undefined} val - The value to check.
- * @returns {T|undefined} The original value or `undefined`.
+ * @returns {T|typeof nothing} The original value or `undefined`.
  */
 export function ifDefined(val) {
-    return val === null || val === undefined ? undefined : val;
+    return val === null || val === undefined ? nothing : val;
 }
 
 /**

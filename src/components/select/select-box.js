@@ -188,6 +188,7 @@ export default class SelectBox extends SelectBase {
                     ?required=${this.required}
                     ?disabled=${this.disabled}
                     aria-labelledby=${ifDefined(this.labelId)}
+                    aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
                     aria-required=${this.required ? 'true' : 'false'}
                     aria-invalid=${ifDefined(this.ariaInvalid)}

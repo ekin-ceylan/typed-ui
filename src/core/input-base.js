@@ -59,7 +59,7 @@ export default class InputBase extends LightComponentBase {
         return this.label && this.label + (this.required ? '*' : '');
     }
     get labelId() {
-        return this.fieldId ? `${this.fieldId}-label` : null;
+        return this.fieldId && !this.hideLabel ? `${this.fieldId}-label` : null;
     }
     get errorId() {
         return this.fieldId ? `${this.fieldId}-error` : null;
@@ -129,6 +129,7 @@ export default class InputBase extends LightComponentBase {
     /** @override */
     connectedCallback() {
         super.connectedCallback();
+        this.#validateRequiredFields(['fieldId', 'label']);
         this.#firstUpdateCompleted();
     }
 
@@ -144,6 +145,14 @@ export default class InputBase extends LightComponentBase {
         for (const name of ['onFormSubmit']) {
             if (this[name] === baseProto[name]) {
                 throw new Error(`${this.constructor.name}: ${name}() metodunu override etmelisiniz.`);
+            }
+        }
+    }
+
+    #validateRequiredFields(fieldNames) {
+        for (const fieldName of fieldNames) {
+            if (!this[fieldName]) {
+                throw new Error(`${this.constructor.name}: '${fieldName}' alanı zorunludur.`);
             }
         }
     }

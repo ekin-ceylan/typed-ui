@@ -20,6 +20,10 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         return this.fieldId ? `${this.fieldId}-label` : null;
     }
 
+    get descriptionId() {
+        return this.fieldId ? `${this.fieldId}-description` : null;
+    }
+
     onInput(e) {
         this.value = e.target.checked;
         this.#checkValidity();
@@ -52,7 +56,7 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
                     name=${ifDefined(this.fieldName || this.fieldId)}
                     type="checkbox"
                     .value=${this.value}
-                    aria-label=${ifDefined(this.inputLabel)}
+                    aria-describedby=${ifDefined(this.descriptionId)}
                     aria-errormessage=${ifDefined(this.errorId)}
                     aria-required=${this.required ? 'true' : 'false'}
                     aria-invalid=${ifDefined(this.ariaInvalid)}
@@ -60,7 +64,7 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
                     @input=${this.onInput}
                     @invalid=${this.#checkValidity}
                 />
-                <span><slot></slot></span>
+                <span id=${ifDefined(this.descriptionId)}><slot></slot></span>
                 <span class="checkmark"></span>
             </label>
             <span class="error" id=${ifDefined(this.errorId)} aria-live="assertive">${this.validationMessage}</span>
