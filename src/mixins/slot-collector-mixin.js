@@ -1,5 +1,5 @@
 /**
- * @typedef {import('lit').LitElement} LitElement
+ * @typedef {import('../core/light-component-base.js').default} LightComponentBase
  */
 
 /**
@@ -16,9 +16,14 @@
  */
 
 /**
- * @template {Constructor<LitElement>} TBase
+ * Slot collector mixin.
+ *
+ * **Constraint:** Can only be applied to classes extending `LightComponentBase`
+ * (ensures LitElement APIs like `updateComplete` / `requestUpdate` exist).
+ *
+ * @template {Constructor<LightComponentBase>} TBase
  * @param {TBase} Base
- * @returns {Constructor<LitElement & SlotCollectorApi> & TBase}
+ * @returns {Constructor<LightComponentBase & SlotCollectorApi> & TBase}
  */
 export default function SlotCollectorMixin(Base) {
     return class SlotCollector extends Base {
