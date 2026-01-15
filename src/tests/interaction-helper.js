@@ -33,10 +33,16 @@ function backspace(el) {
     el.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
+function pressTab(el) {
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', code: 'Tab', bubbles: true }));
+    // Eğer odak değişimini de simüle etmek istersen:
+    if (typeof el.blur === 'function') el.blur();
+}
+
 function paste(el, text) {
     el.value = text;
     el.selectionStart = el.selectionEnd = el.value.length;
     el.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-export { fireKeyAndInput, typeSequence, backspace, paste };
+export { fireKeyAndInput, typeSequence, backspace, paste, pressTab };
