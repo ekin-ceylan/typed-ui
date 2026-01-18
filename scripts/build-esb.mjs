@@ -11,6 +11,7 @@ const bannerText = `/*!
  * Released under the ${pkg.license} License
  */`;
 
+/** @type {esbuild.BuildOptions} */
 const esmOptions = {
     entryPoints: ['src/index.js'],
 
@@ -32,6 +33,9 @@ const esmOptions = {
     external: ['lit', 'lit/*'],
     banner: {
         js: bannerText,
+    },
+    define: {
+        'process.env.NODE_ENV': '"production"',
     },
 };
 
