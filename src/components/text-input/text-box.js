@@ -120,11 +120,7 @@ export default class TextBox extends InputBase {
      * @returns {String} The masked value in uppercase
      */
     mask(value) {
-        const masked = this.globalRegexPattern //
-            ? value?.match(this.globalRegexPattern)?.join('') || '' //
-            : value;
-
-        return masked.toUpperCase();
+        return value;
     }
 
     unmask(maskedValue) {
@@ -154,7 +150,8 @@ export default class TextBox extends InputBase {
      * @returns {Boolean} Whether the last character is valid or not.
      */
     validateLastChar(keyDownEvent) {
-        return this.regexPattern ? this.regexPattern.test(keyDownEvent.key) : true;
+        // mask pattern ile yapılacak
+        return true; //  this.regexPattern ? this.regexPattern.test(keyDownEvent.key) : true;
     }
 
     // #endregion PUBLIC API
@@ -253,7 +250,7 @@ export default class TextBox extends InputBase {
      */
     #formatValueAndReplaceCaret(element) {
         const value = element.value;
-        if (!this.pattern || !value) return value;
+        if (value === '' || value === undefined || value === null) return value;
 
         const caret = element.selectionStart;
         const formatted = this.mask(value);
