@@ -62,3 +62,12 @@ export function classMap(...args) {
         )
         .join(' ');
 }
+
+/**
+ * Checks if a string is empty, undefined, or null.
+ * @param {string|null|undefined} str - The string to check.
+ * @returns {boolean} True if the string is empty, undefined, or null; otherwise false.
+ */
+export function isEmpty(str) {
+    return str === '' || str === undefined || str === null;
+}

@@ -1,5 +1,5 @@
 import { html, nothing } from 'lit';
-import { ifDefined } from '../../modules/utilities.js';
+import { ifDefined, isEmpty } from '../../modules/utilities.js';
 import InputBase from '../../core/input-base.js';
 
 /**
@@ -10,6 +10,7 @@ export default class TextBox extends InputBase {
         ...super.properties,
         type: { type: String, reflect: true },
         inputmode: { type: String, reflect: true },
+        allowPattern: { type: String, attribute: 'allow-pattern' },
         pattern: { type: String, reflect: true },
         maxlength: { type: Number, reflect: true },
         minlength: { type: Number, reflect: true },
@@ -25,6 +26,12 @@ export default class TextBox extends InputBase {
 
     /** @type {RegExp|null} The compiled regex pattern with global flag for masking operations */
     globalRegexPattern = null;
+
+    /** @type {RegExp|null} The compiled allow-pattern regex for single character filtering */
+    allowRegexPattern = null;
+
+    /** @type {RegExp|null} The compiled allow-pattern regex with global flag for filtering operations */
+    globalAllowRegexPattern = null;
 
     /** @type {String|null} The last key pressed during keydown event */
     #lastKey = null;
@@ -67,6 +74,9 @@ export default class TextBox extends InputBase {
         /** @type {String} The inputmode attribute for the input element (e.g., 'numeric', 'decimal', 'tel') */
         this.inputmode = undefined;
 
+        /** @type {String} Regex source to allow/filter characters during masking */
+        this.allowPattern = undefined; //'[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ ]';
+
         /** @type {String} The regex pattern for input validation */
         this.pattern = undefined;
 
@@ -94,11 +104,7 @@ export default class TextBox extends InputBase {
 
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('input');
-
-        if (this.pattern) {
-            this.regexPattern = new RegExp(this.pattern);
-            this.globalRegexPattern = new RegExp(this.pattern, 'g');
-        }
+        this.#createRegexPatterns();
 
         if (this.inputElement && this.value != null) {
             this.inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
@@ -120,7 +126,12 @@ export default class TextBox extends InputBase {
      * @returns {String} The masked value in uppercase
      */
     mask(value) {
-        return value;
+        if (isEmpty(value)) return value;
+
+        const re = this.globalAllowRegexPattern;
+        const filtered = re ? (value.match(re) ?? []).join('') : value;
+
+        return filtered;
     }
 
     unmask(maskedValue) {
@@ -150,8 +161,7 @@ export default class TextBox extends InputBase {
      * @returns {Boolean} Whether the last character is valid or not.
      */
     validateLastChar(keyDownEvent) {
-        // mask pattern ile yapılacak
-        return true; //  this.regexPattern ? this.regexPattern.test(keyDownEvent.key) : true;
+        return this.allowRegexPattern ? this.allowRegexPattern.test(keyDownEvent.key) : true;
     }
 
     // #endregion PUBLIC API
@@ -186,7 +196,8 @@ export default class TextBox extends InputBase {
      * @returns {void}
      */
     onKeydown(e) {
-        if (!this.pattern) return;
+        if (!this.allowPattern) return;
+
         this.#lastKey = e.key;
         const keyCode = e.code;
         const allowedKeys = ['Backspace', 'Tab', 'Escape', 'Enter', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
@@ -249,9 +260,9 @@ export default class TextBox extends InputBase {
      * @returns {String} The formatted value after applying the mask pattern
      */
     #formatValueAndReplaceCaret(element) {
-        const value = element.value;
-        if (value === '' || value === undefined || value === null) return value;
+        if (isEmpty(element.value)) return element.value;
 
+        const value = element.value;
         const caret = element.selectionStart;
         const formatted = this.mask(value);
 
@@ -301,6 +312,18 @@ export default class TextBox extends InputBase {
                 synthetic: !(originalEvent && originalEvent instanceof Event),
             },
         };
+    }
+
+    #createRegexPatterns() {
+        if (this.allowPattern) {
+            this.allowRegexPattern = new RegExp(this.allowPattern);
+            this.globalAllowRegexPattern = new RegExp(this.allowPattern, 'g');
+        }
+
+        if (this.pattern) {
+            this.regexPattern = new RegExp(this.pattern);
+            this.globalRegexPattern = new RegExp(this.pattern, 'g');
+        }
     }
 
     /** @override @protected @returns {import('lit').TemplateResult} */

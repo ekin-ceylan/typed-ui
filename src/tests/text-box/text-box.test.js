@@ -5,7 +5,7 @@ if (!customElements.get('text-box')) {
     customElements.define('text-box', TextBox);
 }
 
-describe('TextBox: Validasyon Testleri', () => {
+describe('Validation Tests', () => {
     /** @type {HTMLInputElement} */
     let input;
     /** @type {HTMLElement} */
@@ -76,7 +76,7 @@ describe('TextBox: Validasyon Testleri', () => {
     // pattern attr göre validasyon ve hata mesajı
 });
 
-describe('TextBox: Accessibility (A11y)', () => {
+describe('Accessibility (A11y) tests', () => {
     it('associates <label> with <input> via for/id and aria-labelledby', async () => {
         const [input, host] = await init('<text-box field-id="email" label="Email"></text-box>');
 
@@ -207,26 +207,79 @@ describe('TextBox: Accessibility (A11y)', () => {
 });
 
 // mask pattern ekle
-describe.skip('TextBox: Maskeleme Testleri', () => {
-    let input, host, user;
+describe('Allow Pattern Tests', () => {
+    it('does not filter when allow-pattern is empty', async () => {
+        const [input, , user] = await init('<text-box field-id="name" label="Name" allow-pattern=""></text-box>');
 
-    beforeEach(async () => {
-        [input, host, user] = await init('<text-box field-id="name" label="Name"></text-box>');
+        await user.type(input, 'a1b2');
+
+        expect(input.value).toBe('a1b2');
     });
 
-    it('mask fonksiyonu büyük harfe çevirir', async () => {
-        await user.type(input, 'abc');
+    it('filters disallowed characters on typing', async () => {
+        const [input, , user] = await init('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+
+        await user.type(input, 'a1b2');
+
+        expect(input.value).toBe('12');
+    });
+
+    it('filters disallowed characters on programmatic input (paste-like)', async () => {
+        const [input, host] = await init('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+
+        input.value = 'a1b2';
+        input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
         await host.updateComplete;
-        expect(input.value).toBe('ABC');
+
+        expect(input.value).toBe('12');
     });
 
-    it.skip('pattern dışı karakterleri engeller', async () => {
-        await user.type(input, 'ab1');
-        await host.updateComplete;
-        expect(input.value).toBe('AB');
+    it('prevents invalid keydown when allow-pattern is set', async () => {
+        const [input] = await init('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+
+        const e = new KeyboardEvent('keydown', {
+            key: 'a',
+            code: 'KeyA',
+            bubbles: true,
+            cancelable: true,
+        });
+
+        const dispatched = input.dispatchEvent(e);
+
+        expect(e.defaultPrevented).toBe(true);
+        expect(dispatched).toBe(false);
     });
 
-    // pattern attr göre maskeleme
+    it('does not prevent navigation keys (e.g. Backspace) even when allow-pattern is set', async () => {
+        const [input] = await init('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+
+        const e = new KeyboardEvent('keydown', {
+            key: 'Backspace',
+            code: 'Backspace',
+            bubbles: true,
+            cancelable: true,
+        });
+
+        const dispatched = input.dispatchEvent(e);
+
+        expect(e.defaultPrevented).toBe(false);
+        expect(dispatched).toBe(true);
+    });
+
+    it('throws when allow-pattern is invalid', async () => {
+        let message = '';
+        const handler = event => {
+            message = event.reason.message;
+            event.preventDefault(); // prevent Vitest from failing the test
+        };
+
+        globalThis.addEventListener('unhandledrejection', handler);
+        document.body.innerHTML = '<text-box field-id="name" label="Name" allow-pattern="["></text-box>';
+        await new Promise(resolve => setTimeout(resolve, 0));
+        globalThis.removeEventListener('unhandledrejection', handler);
+
+        expect(message).toMatch(/Invalid regular expression/);
+    });
 });
 
 async function init(elementStr) {

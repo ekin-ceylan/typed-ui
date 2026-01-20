@@ -1,6 +1,6 @@
 {
     "name": "typed-ui",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "title": "Typed UI",
     "description": "Typed UI: Field/data-type specific, accessible, extensible Web Components.",
     "author": "Ekin Ceylan <ekinceylan@gmail.com> (https://github.com/ekin-ceylan)",
@@ -59,7 +59,7 @@
         "format": "prettier --write \"src/**/*.{ts,js,html,css}\"",
         "lint": "prettier --check \"src/**/*.{ts,js,html,css}\"",
         "test": "vitest run",
-        "test:watch": "vitest",
+        "test:watch": "vitest --coverage",
         "prepublishOnly": "npm run test && npm run build"
     },
     "devDependencies": {
