@@ -152,8 +152,24 @@
                 ];
             }, 1500);
         </script>
-        <script type="text/javascript" src="./dist/typed-ui.iife.min.js"></script>
-        <script>
+
+        <script type="text/javascript" src="./dist/typed-ui.iife.js"></script>
+        <script type="text/javascript">
+            customElements.define('text-box', TypedUI.TextBox);
+            customElements.define('phone-box', TypedUI.PhoneBox);
+            customElements.define('email-box', TypedUI.EmailBox);
+            customElements.define('plate-box', TypedUI.PlateBox);
+            customElements.define('integer-box', TypedUI.IntegerBox);
+            customElements.define('new-password-box', TypedUI.NewPasswordBox);
+            customElements.define('password-box', TypedUI.PasswordBox);
+            customElements.define('confirm-password-box', TypedUI.ConfirmPasswordBox);
+            customElements.define('url-link', TypedUI.UrlLink);
+            customElements.define('check-box', TypedUI.CheckBox);
+            customElements.define('select-box', TypedUI.SelectBox);
+            customElements.define('combo-box', TypedUI.ComboBox);
+            customElements.define('range-select', TypedUI.RangeSelect);
+            customElements.define('modal-dialog', TypedUI.ModalDialog);
+
             // const userInput = document.getElementById('userText');
             // const logElement = document.getElementById('log');
 

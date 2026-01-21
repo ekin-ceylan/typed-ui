@@ -50,6 +50,7 @@ const iifeOptions = {
     entryNames: 'typed-ui.iife',
     external: [],
     format: 'iife',
+    globalName: 'TypedUI',
 };
 
 await esbuild.build(esmOptions);

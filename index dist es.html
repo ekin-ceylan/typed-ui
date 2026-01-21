@@ -100,7 +100,7 @@
             </select-box>
             <br />
             <br />
-            <select-box id="sb-dynamic" placeholder="Dinamik Seçiniz"></select-box>
+            <select-box id="sb-dynamic" field-id="dynamic" placeholder="Dinamik Seçiniz" label="Dinamik Seç"></select-box>
             <br />
             <br />
             <select placeholder="Seçiniz" id="native">
@@ -146,7 +146,22 @@
             }
         </script>
         <script type="module">
-            import './dist/typed-ui.all.min.js';
+            import * as TypedUI from './dist/typed-ui.js';
+
+            customElements.define('text-box', TypedUI.TextBox);
+            customElements.define('phone-box', TypedUI.PhoneBox);
+            customElements.define('email-box', TypedUI.EmailBox);
+            customElements.define('plate-box', TypedUI.PlateBox);
+            customElements.define('integer-box', TypedUI.IntegerBox);
+            customElements.define('new-password-box', TypedUI.NewPasswordBox);
+            customElements.define('password-box', TypedUI.PasswordBox);
+            customElements.define('confirm-password-box', TypedUI.ConfirmPasswordBox);
+            customElements.define('url-link', TypedUI.UrlLink);
+            customElements.define('check-box', TypedUI.CheckBox);
+            customElements.define('select-box', TypedUI.SelectBox);
+            customElements.define('combo-box', TypedUI.ComboBox);
+            customElements.define('range-select', TypedUI.RangeSelect);
+            customElements.define('modal-dialog', TypedUI.ModalDialog);
         </script>
         <!-- <pre id="log">Validation logged here...</pre>
         <input type="text" id="userText" minlength="4" /> -->

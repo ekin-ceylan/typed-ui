@@ -13,6 +13,16 @@ import { LitElement } from 'lit';
  * @extends {LitElement}
  */
 export default class LightComponentBase extends LitElement {
+    /**
+     * Stable component identifier for logs/errors (minify-safe).
+     * Falls back to constructor.name when not connected/upgraded.
+     * @protected
+     * @returns {string}
+     */
+    get componentName() {
+        return this.localName || (this.tagName ? this.tagName.toLowerCase() : '') || this.constructor.name;
+    }
+
     dispatchCustomEvent(eventName, originalEvent = null) {
         this.dispatchEvent(new CustomEvent(eventName, this.#eventInitDict(originalEvent)));
     }

@@ -1,5 +1,6 @@
 import TextBox from './text-box';
 
+/** @extends TextBox */
 export default class IntegerBox extends TextBox {
     constructor() {
         super();
@@ -12,10 +13,11 @@ export default class IntegerBox extends TextBox {
         return value.replace(/\D/g, ''); // Sadece rakamları kabul et
     }
 
+    /** @override */
     unmask(maskedValue) {
         const value = maskedValue?.replace(/\D/g, '');
 
-        return value ? parseInt(value, 10) : null;
+        return value ? Number(value).toFixed(2) : null;
     }
 
     // validate(element) {

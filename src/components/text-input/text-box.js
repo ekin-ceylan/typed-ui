@@ -35,6 +35,19 @@ export default class TextBox extends InputBase {
 
     /** @type {String|null} The last key pressed during keydown event */
     #lastKey = null;
+    #autocomplete = null;
+
+    get autocomplete() {
+        return this.#autocomplete || this.name;
+    }
+    set autocomplete(value) {
+        this.#autocomplete = value;
+    }
+
+    /** @returns {String} The name attribute for the input element */
+    get name() {
+        return this.fieldName || this.fieldId;
+    }
 
     // #region VALIDATION MESSAGES
 
@@ -57,6 +70,7 @@ export default class TextBox extends InputBase {
     get patternValidationMessage() {
         return `Lütfen geçerli bir ${this.label} giriniz.`;
     }
+
     // #endregion VALIDATION MESSAGES
 
     // #region LIFECYCLE
@@ -105,14 +119,7 @@ export default class TextBox extends InputBase {
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('input');
         this.#createRegexPatterns();
-
-        if (this.inputElement && this.value != null) {
-            this.inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-        }
-
-        if (!this.autocomplete && this.name) {
-            this.autocomplete = this.name;
-        }
+        this.#handleInitValue();
     }
 
     /** @override */
@@ -333,6 +340,14 @@ export default class TextBox extends InputBase {
         };
     }
 
+    async #handleInitValue() {
+        await this.updateComplete;
+
+        if (this.inputElement && this.value != null) {
+            this.inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        }
+    }
+
     #createRegexPatterns() {
         this.allowRegexPattern = this.allowPattern ? new RegExp(this.allowPattern) : null;
         this.globalAllowRegexPattern = this.allowPattern ? new RegExp(this.allowPattern, 'g') : null;
@@ -347,7 +362,7 @@ export default class TextBox extends InputBase {
             ${this.label && !this.hideLabel ? html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}>${this.inputLabel}</label>` : ``}
             <input
                 id=${ifDefined(this.fieldId)}
-                name=${ifDefined(this.fieldName || this.fieldId)}
+                name=${ifDefined(this.name)}
                 class=${ifDefined(this.inputClass)}
                 type=${this.type || 'text'}
                 .value=${this.value ?? ''}

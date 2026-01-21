@@ -142,7 +142,7 @@ export default class InputBase extends LightComponentBase {
 
         for (const name of ['onFormSubmit']) {
             if (this[name] === baseProto[name]) {
-                throw new Error(`${this.constructor.name}: ${name}() metodunu override etmelisiniz.`);
+                throw new Error(`${this.componentName}: ${name}() method must be overridden.`);
             }
         }
     }
@@ -150,7 +150,7 @@ export default class InputBase extends LightComponentBase {
     #validateRequiredFields(fieldNames) {
         for (const fieldName of fieldNames) {
             if (!this[fieldName]) {
-                throw new Error(`${this.constructor.name}: '${fieldName}' alanı zorunludur.`);
+                throw new Error(`${this.componentName}: '${fieldName}' attribute must be set.`);
             }
         }
     }
