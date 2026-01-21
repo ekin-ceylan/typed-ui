@@ -109,6 +109,10 @@ export default class TextBox extends InputBase {
         if (this.inputElement && this.value != null) {
             this.inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
         }
+
+        if (!this.autocomplete && this.name) {
+            this.autocomplete = this.name;
+        }
     }
 
     /** @override */

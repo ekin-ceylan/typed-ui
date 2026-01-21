@@ -2,7 +2,7 @@ import PlateBox from '../../components/text-input/plate-box.js';
 
 defineElement('plate-box', PlateBox);
 
-describe('PlateBox masking tests', () => {
+describe('Masking tests', () => {
     /** @type {HTMLInputElement} */
     let input;
     /** @type {import('@testing-library/user-event').UserEvent} */
@@ -59,23 +59,26 @@ describe('PlateBox masking tests', () => {
     // Unmask fonksiyonunun doğru çalışması (maskesiz değer)
 });
 
-describe('PlateBox validating tests', () => {
+describe('Validating tests', () => {
     /** @type {HTMLInputElement} */
     let input;
     /** @type {HTMLElement} */
     let host;
     /** @type {import('@testing-library/user-event').UserEvent} */
     let user;
+    let errorElement;
 
     beforeEach(async () => {
         const el = '<plate-box field-id="plate-no" label="Plaka Numarası" required></plate-box>';
-        [input, , user] = await init(el);
+        [input, host, user] = await init(el);
+        errorElement = host.querySelector('[data-role="error-message"]');
     });
 
     it('validates required', async () => {
         await user.tab(); // focus'tan çık
 
         expect(input.validity.valueMissing).toBe(true);
+        expect(errorElement.hidden).toBe(false);
     });
 
     it('enforces maxlength', async () => {
