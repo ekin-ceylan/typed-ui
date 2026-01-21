@@ -33,15 +33,13 @@ Now you can use them in HTML:
 <select-box label="City"></select-box>
 ```
 
-### Build variants (optional)
-
-Typed UI ships 3 browser-ready builds in the dist folder:
+**Build variants (optional):** Typed UI ships 3 browser-ready builds in the dist folder:
 
 - ESM (external Lit): [dist/typed-ui.js](dist/typed-ui.js) (default export at `typed-ui`)
 - ESM (bundled Lit): [dist/typed-ui-with-lit.js](dist/typed-ui-with-lit.js) (export at `typed-ui/with-lit`)
 - IIFE (global): [dist/typed-ui.iife.js](dist/typed-ui.iife.js) (export at `typed-ui/iife`, global `window.TypedUI`)
 
-#### 1) ESM (recommended for bundlers) — `typed-ui`
+### ESM (Lit external) — recommended for bundlers
 
 This build treats `lit` as external (peer dependency). Use the install/import steps above.
 
@@ -82,7 +80,7 @@ If you’re serving the build from your own app (for example from `./dist`), a n
 </script>
 ```
 
-#### 2) ESM (no import map needed) — `typed-ui-with-lit`
+### ESM (Lit bundled) — no import map needed
 
 This build bundles `lit` inside, so you can use it directly in the browser without configuring an import map.
 
@@ -107,7 +105,7 @@ Or directly from a CDN:
 <select-box label="Country"></select-box>
 ```
 
-#### 3) IIFE (global build) — `typed-ui/iife`
+### Global Install (IIFE)
 
 Use this when you prefer a classic script include and a global namespace.
 
@@ -126,6 +124,11 @@ Use this when you prefer a classic script include and a global namespace.
 
 ## Development
 
+Prerequisites:
+
+- Node.js 18+ (Vite 6)
+- npm
+
 ```bash
 # Install dependencies
 npm install
@@ -133,6 +136,31 @@ npm install
 # Start development server
 npm run dev
 ```
+
+Common commands:
+
+```bash
+# Run tests once (headless browser via Playwright)
+npm test
+
+# Watch tests (with coverage)
+npm run test:watch
+
+# Check formatting / auto-format
+npm run lint
+npm run format
+
+# Build all distributables into ./dist
+npm run build
+
+# Preview the dev server build
+npm run preview
+```
+
+Notes:
+
+- `npm run build` generates the browser-ready bundles under `dist/` and type declarations at `dist/typed-ui.d.ts`.
+- Tests run in a real browser (Vitest Browser Mode + Playwright). If this is your first time running tests, you may need to install browsers: `npx playwright install`.
 
 ## License
 
