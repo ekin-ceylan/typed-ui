@@ -1,9 +1,6 @@
 import TextBox from '../../components/text-input/text-box';
-import userEvent from '@testing-library/user-event';
 
-if (!customElements.get('text-box')) {
-    customElements.define('text-box', TextBox);
-}
+defineElement('text-box', TextBox);
 
 describe('Validation Tests', () => {
     /** @type {HTMLInputElement} */
@@ -224,46 +221,30 @@ describe('Allow Pattern Tests', () => {
         expect(input.value).toBe('12');
     });
 
-    it('filters disallowed characters on programmatic input (paste-like)', async () => {
-        const [input, host] = await init('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+    it('filters disallowed characters on paste', async () => {
+        const [input, , user] = await init('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
 
-        input.value = 'a1b2';
-        input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-        await host.updateComplete;
+        await user.paste('a1b2');
 
         expect(input.value).toBe('12');
     });
 
-    it('prevents invalid keydown when allow-pattern is set', async () => {
-        const [input] = await init('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+    it('starts filtering when allow-pattern is set after connect', async () => {
+        const [input, host, user] = await init('<text-box field-id="name" label="Name"></text-box>');
 
-        const e = new KeyboardEvent('keydown', {
-            key: 'a',
-            code: 'KeyA',
-            bubbles: true,
-            cancelable: true,
-        });
+        host.setAttribute('allow-pattern', '[0-9]');
+        await user.type(input, 'a1b2');
 
-        const dispatched = input.dispatchEvent(e);
-
-        expect(e.defaultPrevented).toBe(true);
-        expect(dispatched).toBe(false);
+        expect(input.value).toBe('12');
     });
 
-    it('does not prevent navigation keys (e.g. Backspace) even when allow-pattern is set', async () => {
-        const [input] = await init('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+    it('stops filtering when allow-pattern is removed after connect', async () => {
+        const [input, host, user] = await init('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+        host.removeAttribute('allow-pattern');
 
-        const e = new KeyboardEvent('keydown', {
-            key: 'Backspace',
-            code: 'Backspace',
-            bubbles: true,
-            cancelable: true,
-        });
+        await user.type(input, 'a1');
 
-        const dispatched = input.dispatchEvent(e);
-
-        expect(e.defaultPrevented).toBe(false);
-        expect(dispatched).toBe(true);
+        expect(input.value).toBe('a1');
     });
 
     it('throws when allow-pattern is invalid', async () => {
@@ -281,17 +262,3 @@ describe('Allow Pattern Tests', () => {
         expect(message).toMatch(/Invalid regular expression/);
     });
 });
-
-async function init(elementStr) {
-    document.body.innerHTML = elementStr;
-
-    const host = document.querySelector('text-box');
-    await host.updateComplete;
-
-    const input = host.inputElement;
-    input.focus();
-
-    const user = userEvent.setup();
-
-    return [input, host, user];
-}

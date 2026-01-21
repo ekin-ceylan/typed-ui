@@ -111,6 +111,16 @@ export default class TextBox extends InputBase {
         }
     }
 
+    /** @override */
+    updated(changedProperties) {
+        super.updated?.(changedProperties);
+
+        // Recompile patterns when they change at runtime (attribute or property update).
+        if (changedProperties.has('allowPattern') || changedProperties.has('pattern')) {
+            this.#createRegexPatterns();
+        }
+    }
+
     handleValueUpdate() {
         this.#handleInput(/** @type {HTMLInputElement} */ (this.inputElement));
         this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
@@ -121,9 +131,9 @@ export default class TextBox extends InputBase {
     // #region PUBLIC API
 
     /**
-     * Masks the input value by applying the global regex pattern and converting to uppercase.
+     * Masks the input value by applying the global regex pattern.
      * @param {String} value - The value to be masked
-     * @returns {String} The masked value in uppercase
+     * @returns {String} The masked value
      */
     mask(value) {
         if (isEmpty(value)) return value;
@@ -134,6 +144,11 @@ export default class TextBox extends InputBase {
         return filtered;
     }
 
+    /**
+     * Unmasks the input value by reversing the masking process.
+     * @param {String} maskedValue - The masked value to be unmasked
+     * @returns {String} The unmasked value
+     */
     unmask(maskedValue) {
         return maskedValue;
     }
@@ -196,11 +211,11 @@ export default class TextBox extends InputBase {
      * @returns {void}
      */
     onKeydown(e) {
-        if (!this.allowPattern) return;
+        if (e.isComposing || !this.allowPattern) return;
 
         this.#lastKey = e.key;
         const keyCode = e.code;
-        const allowedKeys = ['Backspace', 'Tab', 'Escape', 'Enter', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+        const allowedKeys = ['Backspace', 'Tab', 'Escape', 'Enter', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Process'];
 
         // değer bir karakter değilse
         if (allowedKeys.includes(keyCode) || e.ctrlKey || e.altKey || e.metaKey) {
@@ -315,15 +330,11 @@ export default class TextBox extends InputBase {
     }
 
     #createRegexPatterns() {
-        if (this.allowPattern) {
-            this.allowRegexPattern = new RegExp(this.allowPattern);
-            this.globalAllowRegexPattern = new RegExp(this.allowPattern, 'g');
-        }
+        this.allowRegexPattern = this.allowPattern ? new RegExp(this.allowPattern) : null;
+        this.globalAllowRegexPattern = this.allowPattern ? new RegExp(this.allowPattern, 'g') : null;
 
-        if (this.pattern) {
-            this.regexPattern = new RegExp(this.pattern);
-            this.globalRegexPattern = new RegExp(this.pattern, 'g');
-        }
+        this.regexPattern = this.pattern ? new RegExp(this.pattern) : null;
+        this.globalRegexPattern = this.pattern ? new RegExp(this.pattern, 'g') : null;
     }
 
     /** @override @protected @returns {import('lit').TemplateResult} */
