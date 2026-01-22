@@ -92,6 +92,9 @@
             <check-box field-id="cekbaks" label="Kvkk Onayı" required>Okudum, onaylıyorum <span>!</span></check-box>
             <br />
             <br />
+            <lit-checkbox-host></lit-checkbox-host>
+            <br />
+            <br />
             <url-link href="https://www.test.com" target="_blank" aria-label="Example Link">Example Link</url-link>
             <br />
             <br />
@@ -166,6 +169,37 @@
                     { value: 'z', label: 'Z' },
                 ];
             }, 1500);
+
+            import { LitElement, html } from 'lit';
+
+            export class LitCheckboxHost extends LitElement {
+                static properties = {
+                    required: { type: Boolean },
+                    checked: { type: Boolean },
+                    description: { type: String },
+                };
+
+                constructor() {
+                    super();
+                    this.required = true;
+                    this.checked = false;
+                    this.description = 'Okudum, onaylıyorum';
+
+                    setTimeout(() => {
+                        this.description = 'Onaylandı';
+                    }, 2000);
+                }
+
+                render() {
+                    return html`
+                        <check-box field-id="subscribe" label="Kvkk Onayı" ?required=${this.required} ?checked=${this.checked}>
+                            <span>${this.description}</span>
+                        </check-box>
+                    `;
+                }
+            }
+
+            customElements.define('lit-checkbox-host', LitCheckboxHost);
         </script>
         <script type="module" src="./src/main.js"></script>
         <script>
