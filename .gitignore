@@ -5,3 +5,6 @@ coverage/
 # Sistem dosyaları
 .DS_Store
 Thumbs.db
+
+*storybook.log
+storybook-static
