@@ -89,7 +89,7 @@
             <password-box field-id="password" label="Şifre" placeholder="Şifrenizi giriniz" minlength="8" required></password-box>
             <br />
             <br />
-            <check-box field-id="cekbaks" label="Kvkk Onayı" required>Okudum, onaylıyorum <span>!</span></check-box>
+            <check-box field-id="cekbaks" label="Kvkk Onayı" readonly required>Okudum, onaylıyorum <span>!</span> </check-box>
             <br />
             <br />
             <lit-checkbox-host></lit-checkbox-host>
@@ -171,7 +171,11 @@
             }, 1500);
 
             import { LitElement, html } from 'lit';
+            import Checkbox from '/src/components/check-box.js';
 
+            if (!customElements.get('check-box')) {
+                customElements.define('check-box', Checkbox);
+            }
             export class LitCheckboxHost extends LitElement {
                 static properties = {
                     required: { type: Boolean },
@@ -189,10 +193,13 @@
                         this.description = 'Onaylandı';
                     }, 2000);
                 }
+                createRenderRoot() {
+                    return this; // Shadow DOM'u kapat
+                }
 
                 render() {
                     return html`
-                        <check-box field-id="subscribe" label="Kvkk Onayı" ?required=${this.required} ?checked=${this.checked}>
+                        <check-box field-id="subscribe-dyn" label="Kvkk Onayı" ?required=${this.required} ?checked=${this.checked}>
                             <span>${this.description}</span>
                         </check-box>
                     `;

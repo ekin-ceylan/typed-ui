@@ -5,11 +5,15 @@ import InputBase from '../core/input-base.js';
 
 export default class CheckBox extends SlotCollectorMixin(InputBase) {
     static properties = {
+        ...super.properties,
         fieldId: { type: String, attribute: 'field-id' },
         fieldName: { type: String, attribute: 'field-name' },
-        label: { type: String, reflect: false },
-        placeholder: { type: String, reflect: true },
+        label: { type: String },
         required: { type: Boolean, reflect: true },
+        checked: { type: Boolean },
+        checkedValue: { type: String, attribute: 'checked-value' },
+        uncheckedValue: { type: String, attribute: 'unchecked-value' },
+        indeterminate: { type: Boolean, reflect: true },
     };
 
     get inputLabel() {
@@ -24,9 +28,24 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         return this.fieldId ? `${this.fieldId}-description` : null;
     }
 
+    /**
+     *
+     * @param {InputEvent} e
+     */
     onInput(e) {
-        this.value = e.target.checked;
+        const input = /** @type {HTMLInputElement} */ (e.target);
+        this.value = input.checked ? this.checkedValue : this.uncheckedValue;
         this.#checkValidity();
+    }
+
+    /**
+     * @param {MouseEvent} e
+     */
+    onClick(e) {
+        if (this.readonly) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
     }
 
     #checkValidity() {
@@ -39,8 +58,21 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         el.setCustomValidity(this.validationMessage);
     }
 
+    #syncIndeterminate() {
+        if (this.inputElement) {
+            this.inputElement.indeterminate = !!this.indeterminate;
+        }
+    }
+
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('input');
+        this.#syncIndeterminate();
+    }
+
+    updated(changed) {
+        if (changed.has('indeterminate')) {
+            this.#syncIndeterminate();
+        }
     }
 
     onFormSubmit(_event) {
@@ -55,17 +87,20 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
                     id=${ifDefined(this.fieldId)}
                     name=${ifDefined(this.fieldName || this.fieldId)}
                     type="checkbox"
-                    .value=${this.value}
+                    value=${ifDefined(this.checkedValue)}
+                    ?checked=${ifDefined(this.checked)}
                     aria-describedby=${ifDefined(this.descriptionId)}
                     aria-errormessage=${ifDefined(this.errorId)}
                     aria-required=${this.required ? 'true' : 'false'}
                     aria-invalid=${ifDefined(this.ariaInvalid)}
+                    ?aria-readonly=${this.readonly}
                     ?required=${this.required}
+                    ?disabled=${this.disabled}
                     @input=${this.onInput}
+                    @click=${this.onClick}
                     @invalid=${this.#checkValidity}
                 />
                 <span id=${ifDefined(this.descriptionId)}><slot></slot></span>
-                <span class="checkmark"></span>
             </label>
             <span data-role="error-message" id=${ifDefined(this.errorId)} aria-live="assertive">${this.validationMessage}</span>
         `;
@@ -75,5 +110,17 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         super();
         this.value = null;
         this.required = false;
+
+        /** @type {boolean} */
+        this.checked = undefined;
+
+        /** @type {boolean} */
+        this.indeterminate = false;
+
+        /** @type {string|boolean|number} */
+        this.checkedValue = 'on';
+
+        /** @type {string|boolean|number} */
+        this.uncheckedValue = null;
     }
 }
