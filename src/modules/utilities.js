@@ -71,3 +71,14 @@ export function classMap(...args) {
 export function isEmpty(str) {
     return str === '' || str === undefined || str === null;
 }
+
+/**
+ * Defines a custom element if it is not already defined.
+ * @param {string} name The name of the custom element.
+ * @param {CustomElementConstructor} constructor The constructor of the custom element.
+ */
+export function defineComponent(name, constructor) {
+    if (!customElements.get(name)) {
+        customElements.define(name, constructor);
+    }
+}

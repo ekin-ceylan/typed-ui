@@ -25,6 +25,7 @@ export default class InputBase extends LightComponentBase {
         required: { type: Boolean, reflect: true },
         ariaInvalid: { type: String, attribute: false, reflect: false },
         disabled: { type: Boolean, reflect: true },
+        readonly: { type: Boolean, reflect: true },
     };
 
     get invalid() {
@@ -35,7 +36,7 @@ export default class InputBase extends LightComponentBase {
         this.ariaInvalid = value ? 'true' : undefined;
     }
 
-    /** @type {string} */
+    /** @type {string|boolean|number|null} */
     #value = null;
 
     /** @type {TElement | null} */
@@ -100,6 +101,8 @@ export default class InputBase extends LightComponentBase {
         this.invalid = false;
         /** @property {boolean} Whether the input is disabled */
         this.disabled = false;
+        /** @property {boolean} Whether the input is readonly */
+        this.readonly = false;
 
         this.#validateAbstracts();
     }
