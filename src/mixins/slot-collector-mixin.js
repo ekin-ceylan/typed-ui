@@ -30,18 +30,19 @@ export default function SlotCollectorMixin(Base) {
         #slotNodes = [];
         #isCollected = false;
 
+        /** @type {WeakSet<Element>} */
+        #hiddenByCollector = new WeakSet();
+
         constructor(...args) {
             super(...args);
-            this.#slotNodes = this.#collectSlots(); // başlangıçta DOM'a bağlıysa çalışır
-            queueMicrotask(() => this.toggleAttribute('data-not-ready', true));
+            this.#collectSlots(); // başlangıçta DOM'a bağlıysa çalışır
         }
 
         connectedCallback() {
             super.connectedCallback?.();
-
             if (!this.#isCollected) {
                 this.#isCollected = true;
-                this.#slotNodes.push(...this.#collectSlots()); // sonradan DOM'a bağlandıysa çalışır
+                this.#collectSlots(); // sonradan DOM'a bağlandıysa çalışır
                 this.#firstUpdateCompleted();
             }
         }
@@ -63,6 +64,11 @@ export default function SlotCollectorMixin(Base) {
                 if (!this.validateNode(node, nodeSlotName)) {
                     node.remove();
                     continue;
+                }
+
+                if (node instanceof Element && this.#hiddenByCollector.has(node)) {
+                    node.removeAttribute('hidden');
+                    this.#hiddenByCollector.delete(node);
                 }
 
                 if (node instanceof HTMLTemplateElement) {
@@ -136,15 +142,33 @@ export default function SlotCollectorMixin(Base) {
         async #firstUpdateCompleted() {
             await this.updateComplete;
             this.bindSlots(this.#slotNodes); // Tüm slot placeholder'larını bul
-            this.toggleAttribute('data-not-ready', false);
             this.afterSlotsBinded();
         }
 
         #collectSlots() {
-            return Array.from(this.childNodes).filter(node => {
-                node.remove(); // detach nodes
-                return node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+            if (this.#slotNodes.length > 0) return;
+
+            const slots = Array.from(this.childNodes).filter(node => {
+                const isTextNode = node.nodeType === Node.TEXT_NODE;
+
+                if (isTextNode)
+                    node.remove(); // detach nodes
+                else if (node instanceof Element && !node.hasAttribute('hidden')) {
+                    node.setAttribute('hidden', '');
+                    this.#hiddenByCollector.add(node);
+                }
+
+                return node.nodeType === Node.ELEMENT_NODE || (isTextNode && node.textContent.trim());
             });
+
+            this.#slotNodes = slots;
         }
     };
 }
+
+// template testleri
+// new testleri
+// DOM üzerinde başlama testleri
+// validateNode override testleri
+// lit component ile entegrasyon testleri
+// dinamik slot testleri
