@@ -1,4 +1,4 @@
-import { Checkbox } from './register.js';
+import { Checkbox } from '../register.js';
 
 export default {
     component: 'check-box',
@@ -70,6 +70,7 @@ export default {
             table: {
                 defaultValue: { summary: 'undefined' },
                 type: { summary: 'string|number' },
+                description: 'Seçili olmadığında gönderilecek değer. Atanmazsa attribute görünmez ve undefined kabul edilir.',
             },
         },
         required: {
@@ -115,6 +116,30 @@ export const Default = {
         slotHtml: 'Okudum, Anladım',
         fieldId: 'subscribe',
         label: 'Abone Ol',
+    },
+    parameters: {
+        controls: { expanded: true },
+        docs: {
+            canvas: { sourceState: 'shown' }, // Canvas altında code otomatik açık gelir
+            codePanel: true,
+        },
+    },
+};
+
+export const Playground = {
+    render: args => Checkbox(args),
+    tags: ['!dev'],
+    args: {
+        slotHtml: 'Okudum, Anladım',
+        fieldId: 'subscribe',
+        label: 'Abone Ol',
+    },
+    parameters: {
+        controls: { expanded: true },
+        docs: {
+            canvas: { sourceState: 'shown' }, // Canvas altında code otomatik açık gelir
+            codePanel: true,
+        },
     },
 };
 

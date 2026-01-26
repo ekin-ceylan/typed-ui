@@ -29,6 +29,23 @@ export const Checkbox = ({ slotHtml, fieldId, fieldName, label, checkedValue, re
     return elementFromTemplate(temp);
 };
 
+export const Combobox = ({ defaultSlotHtml, noOptionsSlotHtml, fieldId, fieldName, label, value, placeholder, required, disabled, nativeBehavior }) => {
+    const temp = html`<combo-box
+        field-id=${ifDefined(fieldId)}
+        field-name=${ifDefined(fieldName)}
+        label=${ifDefined(label)}
+        ?required=${required}
+        ?disabled=${disabled}
+        ?native-behavior=${nativeBehavior}
+        placeholder=${ifDefined(placeholder)}
+        value=${ifDefined(value)}
+    >
+        ${unsafeHTML(noOptionsSlotHtml ?? '')} ${unsafeHTML(defaultSlotHtml ?? '')}
+    </combo-box>`;
+    // readonly
+    return elementFromTemplate(temp);
+};
+
 function defineComponent(name, constructor) {
     if (!customElements.get(name)) {
         customElements.define(name, constructor);

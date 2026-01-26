@@ -14,6 +14,22 @@ const preview = {
             // 'off' - skip a11y checks entirely
             test: 'todo',
         },
+
+        docs: {
+            source: {
+                transform: async source => {
+                    const prettier = await import('prettier/standalone');
+                    const prettierPluginHtml = await import('prettier/plugins/html');
+
+                    return prettier.format(source, {
+                        parser: 'html',
+                        plugins: [prettierPluginHtml],
+                        printWidth: 180,
+                        htmlWhitespaceSensitivity: 'ignore',
+                    });
+                },
+            },
+        },
     },
 };
 
