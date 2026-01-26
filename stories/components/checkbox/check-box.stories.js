@@ -1,4 +1,4 @@
-import { Checkbox } from '../register.js';
+import { Checkbox } from '../../utilities/register.js';
 
 export default {
     component: 'check-box',
@@ -107,8 +107,14 @@ export default {
 // native davranış
 // lit component içinde value okuyan davranış
 // indeterminate senaryosu: değeri etkilemez.
+// required ve validation
 // disabled senaryosu
 // readonly senaryosu
+// checked
+// Indeterminate
+// Events
+// Props
+// Attr
 
 export const Default = {
     render: args => Checkbox(args),
@@ -119,14 +125,10 @@ export const Default = {
     },
     parameters: {
         controls: { expanded: true },
-        docs: {
-            canvas: { sourceState: 'shown' }, // Canvas altında code otomatik açık gelir
-            codePanel: true,
-        },
     },
 };
 
-export const Playground = {
+export const PlaygroundStory = {
     render: args => Checkbox(args),
     tags: ['!dev'],
     args: {
@@ -135,43 +137,8 @@ export const Playground = {
         label: 'Abone Ol',
     },
     parameters: {
-        controls: { expanded: true },
         docs: {
             canvas: { sourceState: 'shown' }, // Canvas altında code otomatik açık gelir
-            codePanel: true,
         },
     },
 };
-
-// export const Checked = {
-//     render: args => Checkbox(args),
-//     args: {
-//         slotHtml: 'Seçiniz',
-//         checked: true,
-//         required: false,
-//         disabled: false,
-//         indeterminate: false,
-//     },
-// };
-
-// export const Indeterminate = {
-//     render: args => Checkbox(args),
-//     args: {
-//         slotHtml: 'Seçiniz',
-//         checked: false,
-//         required: false,
-//         disabled: false,
-//         indeterminate: true,
-//     },
-// };
-
-// export const Disabled = {
-//     render: args => Checkbox(args),
-//     args: {
-//         slotHtml: 'Seçiniz',
-//         checked: false,
-//         required: false,
-//         disabled: true,
-//         indeterminate: false,
-//     },
-// };

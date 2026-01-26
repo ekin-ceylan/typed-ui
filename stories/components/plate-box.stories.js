@@ -1,4 +1,4 @@
-import './register.js';
+import '../utilities/register.js';
 
 import '../../src/styles/input.css';
 

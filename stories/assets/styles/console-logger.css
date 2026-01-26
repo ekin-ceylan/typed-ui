@@ -1,0 +1,35 @@
+.sb-console-root {
+    position: relative;
+    background-color: #2b2b2b;
+    box-sizing: border-box;
+    min-height: 50px;
+}
+
+.sb-console-body {
+    color: #ff6b6b;
+    padding: 12px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.sb-console-clear {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 8px;
+    background: inherit;
+    border: 1px solid #555;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 10px;
+    border-radius: 3px;
+}
+
+.sb-console-log {
+    padding: 2px 0;
+    font-size: 13px !important;
+    font-family: Consolas, Monaco, 'Andale Mono', monospace !important;
+    white-space: pre-wrap;
+    word-break: break-all;
+}

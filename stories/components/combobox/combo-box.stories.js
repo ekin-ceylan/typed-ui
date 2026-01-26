@@ -1,4 +1,4 @@
-import { Combobox } from '../register.js';
+import { Combobox } from '../../utilities/register.js';
 import './combo-box.css';
 
 export default {
@@ -105,11 +105,7 @@ export const Default = {
 </option>
 <option value="us">
     <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />ABD
-</option>
-<option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
-<option value="kp">Kuzey Kore</option>
-<option value="jp">Japonya</option>
-<option value="it">İtalya</option>`,
+</option>`,
         noOptionsSlotHtml: `<template slot="no-options">Kayıt Bulunamadı</template>`,
         fieldId: 'country',
         label: 'Ülke',
@@ -123,7 +119,7 @@ export const Default = {
     },
 };
 
-export const Playground = {
+export const PlaygroundStory = {
     render: args => Combobox(args),
     tags: ['!dev'],
     args: {
@@ -135,11 +131,7 @@ export const Playground = {
 </option>
 <option value="us">
     <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" />ABD
-</option>
-<option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
-<option value="kp">Kuzey Kore</option>
-<option value="jp">Japonya</option>
-<option value="it">İtalya</option>`,
+</option>`,
         noOptionsSlotHtml: `<template slot="no-options">Kayıt Bulunamadı</template>`,
         fieldId: 'country',
         label: 'Ülke',
@@ -148,7 +140,6 @@ export const Playground = {
     parameters: {
         docs: {
             canvas: { sourceState: 'shown' }, // Canvas altında code otomatik açık gelir
-            codePanel: true,
         },
     },
 };
