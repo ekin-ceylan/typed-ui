@@ -18,7 +18,7 @@ combo-box {
 
     --cbx-chevron-right-distance: 12px;
 
-    --cbx-listbox-max-height: 200px;
+    --cbx-listbox-max-height: 150px;
     --cbx-listbox-bg-color: #f3f3f3;
     --cbx-listbox-border-color: #bebebe;
 
@@ -94,26 +94,31 @@ combo-box > div[data-open] > [data-chevron] {
     transform: translateY(-50%) rotate(180deg);
 }
 
-combo-box > div > div[role='listbox'] {
-    display: none;
-    position: absolute;
+combo-box > div > div[role='listbox'][popover] {
+    margin: 0;
+    position: fixed;
+    inset: unset; /* Tarayıcının ortalamasını engelle */
+
     scroll-behavior: auto;
     border-radius: 10px;
     padding: 4px;
-    top: 100%;
-    bottom: auto;
-    left: 0;
-    right: 0;
     z-index: 10;
     max-height: var(--cbx-listbox-max-height);
     overflow-y: auto;
     background: var(--cbx-listbox-bg-color);
     border: 1px solid var(--cbx-listbox-border-color);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    overscroll-behavior: contain;
 }
 
-combo-box > div[data-open] > div[role='listbox'] {
-    display: block;
+combo-box > div > div[role='listbox'][popover]::backdrop {
+    background-color: transparent;
+}
+
+combo-box > div > div[role='listbox']:popover-open {
+    /* display: block; */
+    /* margin-top: 4px; */
 }
 
 combo-box > div[data-up] > div[role='listbox'] {

@@ -72,8 +72,8 @@ export default class ComboBox extends SelectBase {
         this.inputElement = this.renderRoot.querySelector('input[data-role="value"]');
         /** @type {HTMLInputElement} */
         this.searchElement = this.renderRoot.querySelector('input[data-role="search"]');
+        /** @type {HTMLDivElement} */
         this.displayElement = this.renderRoot.querySelector('div[data-role="display"]');
-
         /** @type {HTMLDivElement} */
         this.comboboxDiv = this.renderRoot.querySelector('div[role="combobox"]');
         /** @type {HTMLDivElement} */
@@ -81,12 +81,22 @@ export default class ComboBox extends SelectBase {
         this.clearButton = this.renderRoot.querySelector('button[data-role="clear"]');
 
         this.#setInputAndDisplay(this.#selectedOption);
+
+        if (globalThis.getComputedStyle(this.listboxDiv).overscrollBehavior != 'contain') this.listboxDiv.style.overscrollBehavior = 'contain';
     }
 
     handleValueUpdate() {
         const matchedOption = this.#optionList.find(o => o.value === this.value) || null;
         matchedOption && this.#onSelect(matchedOption);
         this.dispatchCustomEvent('update');
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+
+        if (this.isOpen) {
+            this.#unlockBodyScroll();
+        }
     }
 
     // #endregion LIFECYCLE METHODS
@@ -195,6 +205,8 @@ export default class ComboBox extends SelectBase {
             e.preventDefault();
             this.searchElement.focus();
         }
+
+        // yazmaya başladığımızda arama yapılır
     }
 
     onInvalid(_e) {
@@ -299,36 +311,99 @@ export default class ComboBox extends SelectBase {
 
     #openList() {
         this.isOpen = true;
+        this.listboxDiv?.showPopover();
+        this.#lockBodyScroll();
         this.#calcListSizeAndDirection();
         this.dispatchCustomEvent('open');
         this.activeIndex = this.filteredOptions.indexOf(this.#selectedOption);
         this.#scrollToActive(true);
     }
 
-    #calcListSizeAndDirection() {
-        requestAnimationFrame(() => {
-            const rect = this.comboboxDiv.getBoundingClientRect();
-            const topMargin = Number.parseInt(globalThis.getComputedStyle(document.body).marginTop, 10) + 4;
-            const bottomMargin = Number.parseInt(globalThis.getComputedStyle(document.body).marginBottom, 10) + 4;
-            const spaceBelow = window.innerHeight - rect.bottom - bottomMargin;
-            const spaceAbove = rect.top - topMargin;
-            const listHeight = this.listboxDiv.scrollHeight;
-
-            this.directionUp = spaceBelow < listHeight && spaceAbove > spaceBelow;
-            const maxHeight = this.directionUp ? spaceAbove : spaceBelow;
-            this.listboxDiv.style.maxHeight = `${Math.min(listHeight, maxHeight)}px`;
-            this.requestUpdate();
-        });
-    }
-
     #closeList() {
         this.isOpen = false;
+        this.listboxDiv?.hidePopover();
+        this.#unlockBodyScroll();
         this.searchElement.blur();
         this.filter = '';
         this.activeIndex = -1;
         this.#checkValidity();
         this.dispatchCustomEvent('close');
     }
+
+    #calcListSizeAndDirection() {
+        requestAnimationFrame(() => {
+            const rect = this.comboboxDiv.getBoundingClientRect();
+            const listbox = this.listboxDiv;
+            const style = globalThis.getComputedStyle(listbox);
+
+            const maxHeight = Number.parseFloat(style.maxHeight) || window.innerHeight;
+            const borderTop = Number.parseFloat(style.borderTopWidth) || 0;
+            const borderBottom = Number.parseFloat(style.borderBottomWidth) || 0;
+
+            const topEdge = rect.top;
+            const bottomEdge = rect.bottom;
+            const borderY = borderTop + borderBottom;
+            const spaceBelow = window.innerHeight - bottomEdge;
+            const spaceAbove = topEdge;
+            const listHeight = Math.min(listbox.scrollHeight + borderY, maxHeight);
+
+            this.directionUp = spaceBelow < listHeight && spaceAbove > spaceBelow;
+
+            if (this.directionUp) {
+                const effectiveHeight = Math.min(listHeight, spaceAbove);
+                listbox.style.height = `${effectiveHeight}px`;
+                listbox.style.top = `${topEdge - effectiveHeight}px`;
+            } else {
+                const effectiveHeight = Math.min(listHeight, spaceBelow);
+                listbox.style.height = `${effectiveHeight}px`;
+                listbox.style.top = `${bottomEdge}px`;
+            }
+
+            listbox.style.minWidth = `${rect.width}px`;
+            this.requestUpdate();
+        });
+    }
+
+    #lockBodyScroll() {
+        globalThis.addEventListener('scroll', this.#preventDefault, { passive: true, capture: true });
+        globalThis.addEventListener('wheel', this.#preventDefault, { passive: false });
+        globalThis.addEventListener('touchmove', this.#preventDefault, { passive: false });
+    }
+
+    #unlockBodyScroll() {
+        globalThis.removeEventListener('scroll', this.#preventDefault, { capture: true });
+        globalThis.removeEventListener('wheel', this.#preventDefault);
+        globalThis.removeEventListener('touchmove', this.#preventDefault);
+    }
+
+    #preventDefault = e => {
+        const el = this.listboxDiv;
+        const path = e.composedPath();
+        const isInside = path.includes(el);
+
+        if (e.type === 'scroll') {
+            if (!isInside) this.#closeList();
+            return;
+        }
+
+        if (!isInside) {
+            e.preventDefault();
+            return;
+        }
+
+        const delta = e.deltaY;
+        const scrollTop = el.scrollTop;
+        const scrollHeight = el.scrollHeight;
+        const height = el.clientHeight;
+
+        const noScroll = scrollHeight <= height;
+        const cannotScrollUp = delta < 0 && scrollTop <= 0;
+        const cannotScrollDown = delta > 0 && scrollTop + height >= scrollHeight - 1;
+
+        if (noScroll || cannotScrollUp || cannotScrollDown) {
+            e.preventDefault();
+        }
+    };
 
     /**
      * @typedef {Object} ComboBoxOption
@@ -440,7 +515,7 @@ export default class ComboBox extends SelectBase {
                     tabindex="-1"
                 />
                 ${this.required ? null : this.btnClear} ${this.chevron}
-                <div id=${this.fieldId + '-list'} role="listbox" aria-expanded=${this.isOpen ? 'true' : 'false'}>
+                <div id=${this.fieldId + '-list'} role="listbox" popover="manual" aria-expanded=${this.isOpen ? 'true' : 'false'}>
                     <div aria-disabled ?hidden=${this.filteredOptions?.length > 0}>
                         <slot name="no-options">${this.noOptionsLabel}</slot>
                     </div>
@@ -451,6 +526,8 @@ export default class ComboBox extends SelectBase {
         `;
     }
 }
+
+// clear butonunu klavyeden tetikle
 // search forma dahil edilmemeli
 // aria-activedescendant="opt-3"
 // aria-controls

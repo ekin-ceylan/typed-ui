@@ -23,7 +23,7 @@
 
 .sb-title {
     padding: 8px 20px;
-    border-top: solid 1px #d7dfe7;
+    background: #d7dfe7;
 }
 
 .sb-title :is(h3, h4) {
