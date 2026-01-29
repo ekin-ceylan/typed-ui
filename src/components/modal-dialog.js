@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
 import LightComponentBase from '../core/light-component-base.js';
+import { hideBodyScroll, showBodyScroll } from '../modules/scroll-lock-helper.js';
 
 /**
  * Modal dialog web component built with Lit.
@@ -20,8 +21,12 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
         escClose: { type: Boolean, attribute: 'esc-close' },
     };
 
+    // #region FIELDS
+
     #dialog = null;
     #timeout = undefined;
+
+    // #endregion FIELDS
 
     constructor() {
         super();
@@ -76,14 +81,14 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
         clearTimeout(this.#timeout);
 
         this.#timeout = setTimeout(() => {
-            document.body.classList.add('overflow-hidden');
+            hideBodyScroll();
             this.#dialog?.classList.add('active');
         }, 20);
     }
     /** Hide with small delay for CSS transitions. */
     #hide() {
         this.#dialog?.classList.remove('active');
-        document.body.classList.remove('overflow-hidden');
+        showBodyScroll();
         clearTimeout(this.#timeout);
 
         this.#timeout = setTimeout(() => {
