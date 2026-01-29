@@ -1,25 +1,7 @@
-import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as CheckboxStories from './check-box.stories.js';
-import ConsoleLogger from '../../utilities/consoleLogger.jsx';
-import '../../assets/styles/playground.css';
+import Playground from '../../utilities/playground.jsx';
 
 <Meta of={CheckboxStories} name="Playground" />
 
-<div className="sb-container">
-    <div className="sb-title">
-        <h4>Preview</h4>
-    </div>
-    <div className="sb-canvas">
-        <Canvas of={CheckboxStories.PlaygroundStory} />
-    </div>
-    <div className="sb-title">
-        <h4>Controls</h4>
-    </div>
-    <div className="sb-panel">
-        <Controls of={CheckboxStories.PlaygroundStory} />
-    </div>
-    <div className="sb-title">
-        <h4>Error Console</h4>
-    </div>
-    <ConsoleLogger height="100px" />
-</div>
+<Playground playgroundStory={CheckboxStories.PlaygroundStory} />

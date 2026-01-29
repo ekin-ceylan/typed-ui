@@ -1,12 +1,35 @@
-.sb-container {
+.sb-page {
     position: absolute;
     display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
     left: 0;
     bottom: 0;
     box-sizing: border-box;
+}
+
+.sb-page .sb-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 50%;
+    flex-grow: 1;
+    box-sizing: border-box;
+}
+
+.sb-page .sb-container:last-child {
+    display: none;
+}
+
+.sb-page.sb-side-control .sb-container:first-child {
+    border-right: solid 1px #bfc5cc;
+}
+.sb-page.sb-side-control .sb-container:last-child {
+    display: flex;
+}
+
+.sb-page.sb-side-control .sb-container:first-child .sb-panel-title,
+.sb-page.sb-side-control .sb-container:first-child .sb-panel {
+    display: none;
 }
 
 .sb-canvas {
@@ -24,6 +47,9 @@
 .sb-title {
     padding: 8px 20px;
     background: #d7dfe7;
+    display: flex;
+    align-items: center;
+    margin-top: auto;
 }
 
 .sb-title :is(h3, h4) {
@@ -31,10 +57,27 @@
     color: rgb(0, 109, 235);
 }
 
+.sb-title button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    border: none;
+    background: none;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #006deb;
+}
+
+.sb-title button:hover {
+    background: #dbeafc;
+    color: #2e3338;
+}
+
 .sb-panel {
     border-top: solid 1px #dfe4ea !important;
     overflow: auto;
-    overflow-x: hidden;
     flex-grow: 1;
 }
 
@@ -69,4 +112,26 @@
 .sb-panel table thead tr > :last-of-type {
     border-top-right-radius: 0 !important;
     border-inline-end: none !important;
+}
+
+.sb-console-root {
+    flex-grow: 1;
+}
+
+@media screen and (max-width: 768px) {
+    .sb-page.sb-side-control .sb-container:first-child {
+        border-right: none;
+    }
+    .sb-page.sb-side-control .sb-container:last-child {
+        display: none;
+    }
+
+    .sb-page.sb-side-control .sb-container:first-child .sb-panel-title,
+    .sb-page.sb-side-control .sb-container:first-child .sb-panel {
+        display: block;
+    }
+
+    .sb-title button {
+        display: none;
+    }
 }

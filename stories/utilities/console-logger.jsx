@@ -36,7 +36,7 @@ const ConsoleLogger = ({ height = '200px' }) => {
     return (
         <div className="sb-console-root" style={{ height }}>
             <button className="sb-console-clear" onClick={() => setLogs([])}>
-                TEMİZLE
+                Clear
             </button>
             <div className="sb-console-body">
                 {logs.map((log, index) => (
