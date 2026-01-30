@@ -176,7 +176,7 @@ export default class TextBox extends InputBase {
         if (value.length > this.maxlength) return this.maxLengthValidationMessage;
         if (Number(value) > this.max) return this.maxValueValidationMessage;
         if (Number(value) < this.min) return this.minValueValidationMessage;
-        if (this.regexPattern && !this.regexPattern.test(value)) return this.patternValidationMessage;
+        if (!isEmpty(value) && this.regexPattern && !this.regexPattern.test(value)) return this.patternValidationMessage;
 
         return '';
     }

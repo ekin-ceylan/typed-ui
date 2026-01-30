@@ -1,0 +1,101 @@
+select-box {
+    --sbx-bg-color: #e9e9ed;
+    --sbx-hover-bg-color: #d0d0d7;
+
+    --sbx-placeholder-color: #757575;
+    --sbx-placeholder-focus-color: #111;
+
+    --sbx-indicator-size: 16px;
+
+    --sbx-clear-color: #6c6c6c;
+    --sbx-clear-hover: #3e3e3e;
+    --sbx-clear-active: #222;
+    --sbx-clear-bg-hover: rgba(0, 0, 0, 0.05);
+    --sbx-clear-bg-active: rgba(0, 0, 0, 0.1);
+    --sbx-clear-right-distance: 28px;
+
+    --sbx-chevron-right-distance: 12px;
+}
+
+select-box > div {
+    position: relative;
+    display: inline-block;
+    background: var(--sbx-bg-color);
+}
+
+select-box > div:hover {
+    background-color: var(--sbx-hover-bg-color);
+}
+
+select-box > div > select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    box-sizing: border-box;
+    padding-right: calc(var(--sbx-clear-right-distance) + var(--sbx-indicator-size));
+    text-overflow: ellipsis;
+    width: 100%;
+    background: transparent;
+}
+
+select-box > div > select:not([data-has-value]) {
+    color: var(--sbx-placeholder-color);
+}
+select-box > div > select:not([data-has-value]):focus {
+    color: var(--sbx-placeholder-focus-color);
+}
+
+select-box > div > select ~ :is([data-clear], [data-chevron]) {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: var(--sbx-indicator-size);
+    height: var(--sbx-indicator-size);
+    transition: all 0.2s;
+}
+
+select-box > div > select ~ [data-clear] {
+    color: var(--sbx-clear-color);
+    border: none;
+    background: none;
+    line-height: 0px;
+    padding: 4px;
+    right: var(--sbx-clear-right-distance);
+    border-radius: 2px;
+}
+
+select-box > div > select ~ [data-clear]:not(:disabled) {
+    cursor: pointer;
+}
+
+select-box > div > select ~ [data-clear]:not(:disabled):hover {
+    background: var(--sbx-clear-bg-hover);
+    color: var(--sbx-clear-hover);
+}
+
+select-box > div > select ~ [data-clear]:not(:disabled):active {
+    background: var(--sbx-clear-bg-active);
+    transform: translateY(-50%) scale(0.85);
+    color: var(--sbx-clear-active);
+}
+
+select-box > div > select ~ [data-clear]:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+select-box > div > select ~ [data-clear] > svg {
+    color: inherit;
+    fill: currentColor;
+}
+
+select-box > div > select ~ [data-chevron] {
+    right: var(--sbx-chevron-right-distance);
+    pointer-events: none;
+}
+
+select-box > div > select[data-open] ~ [data-chevron] {
+    transform: translateY(-50%) rotate(180deg);
+}

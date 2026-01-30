@@ -10,6 +10,7 @@ defineComponent('check-box', TypedUI.CheckBox);
 defineComponent('plate-box', TypedUI.PlateBox);
 defineComponent('select-box', TypedUI.SelectBox);
 defineComponent('combo-box', TypedUI.ComboBox);
+defineComponent('modal-dialog', TypedUI.ModalDialog);
 
 export const Checkbox = ({ slotHtml, fieldId, fieldName, label, checkedValue, required, checked, disabled, readonly, indeterminate }) => {
     const temp = html`<check-box
@@ -43,6 +44,44 @@ export const Combobox = ({ defaultSlotHtml, noOptionsSlotHtml, fieldId, fieldNam
         ${unsafeHTML(noOptionsSlotHtml ?? '')} ${unsafeHTML(defaultSlotHtml ?? '')}
     </combo-box>`;
     // readonly
+    return elementFromTemplate(temp);
+};
+
+export const Platebox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
+    const temp = html`<plate-box
+        field-id=${ifDefined(fieldId)}
+        field-name=${ifDefined(fieldName)}
+        label=${ifDefined(label)}
+        ?required=${required}
+        ?disabled=${disabled}
+        placeholder=${ifDefined(placeholder)}
+        value=${ifDefined(value)}
+    >
+    </plate-box>`;
+    // readonly
+    return elementFromTemplate(temp);
+};
+
+export const Selectbox = ({ defaultSlotHtml, fieldId, fieldName, label, value, placeholder, noOptionsLabel, required, disabled }) => {
+    const temp = html`<select-box
+        field-id=${ifDefined(fieldId)}
+        field-name=${ifDefined(fieldName)}
+        label=${ifDefined(label)}
+        ?required=${required}
+        ?disabled=${disabled}
+        placeholder=${ifDefined(placeholder)}
+        no-options-label=${ifDefined(noOptionsLabel)}
+        value=${ifDefined(value)}
+    >
+        ${unsafeHTML(defaultSlotHtml ?? '')}
+    </select-box>`;
+    // readonly
+    return elementFromTemplate(temp);
+};
+
+export const ModalDialog = ({ defaultSlotHtml, backdropClose, escClose }) => {
+    const temp = html`<modal-dialog id="my-modal" ?backdrop-close=${backdropClose} ?esc-close=${escClose}> ${unsafeHTML(defaultSlotHtml ?? '')} </modal-dialog>`;
+
     return elementFromTemplate(temp);
 };
 
