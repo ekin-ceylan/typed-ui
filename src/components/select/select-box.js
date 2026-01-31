@@ -72,6 +72,10 @@ export default class SelectBox extends SelectBase {
         return false;
     }
 
+    afterSlotsBinded() {
+        this.inputElement.value = this.value || '';
+    }
+
     // #region EVENT LISTENERS
     onInput(e) {
         e.stopPropagation();

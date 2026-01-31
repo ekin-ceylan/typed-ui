@@ -110,9 +110,7 @@ export default function SlotCollectorMixin(Base) {
         }
 
         /** Called after slots have been bound. */
-        afterSlotsBinded() {
-            this.requestUpdate();
-        }
+        afterSlotsBinded() {}
 
         /**
          * @param {Map<string, (Element|Text)[]>} map
@@ -142,6 +140,8 @@ export default function SlotCollectorMixin(Base) {
         async #firstUpdateCompleted() {
             await this.updateComplete;
             this.bindSlots(this.#slotNodes); // Tüm slot placeholder'larını bul
+            this.requestUpdate();
+            await this.updateComplete;
             this.afterSlotsBinded();
         }
 

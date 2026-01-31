@@ -37,7 +37,7 @@ export default class InputBase extends LightComponentBase {
     }
 
     /** @type {string|boolean|number|null} */
-    #value = null;
+    // #value = null;
 
     /** @type {TElement | null} */
     inputElement = null; // DOM input elementi
@@ -46,15 +46,22 @@ export default class InputBase extends LightComponentBase {
     /** @type {string | null } */
     unmaskedValue = null;
 
-    get value() {
-        return this.#value;
-    }
-    set value(val) {
-        this.#value = val;
-        if (val === this.inputElement?.value) return;
-        this.requestUpdate('value');
-        this.updateComplete.then(this.handleValueUpdate.bind(this));
-    }
+    // get value() {
+    //     return this.#value;
+    // }
+    // set value(val) {
+    //     console.log('InputBase set value:', val);
+    //     this.#value = val;
+    //     if (val === this.inputElement?.value) return;
+    //     this.requestUpdate('value');
+    //     this.updateComplete.then(this.handleValueUpdate.bind(this));
+    // }
+
+    // updated(changed) {
+    //     if (changed.has('value')) {
+    //         console.log('InputBase updated value:', this.value);
+    //     }
+    // }
 
     get inputLabel() {
         return this.label && this.label + (this.required ? '*' : '');
