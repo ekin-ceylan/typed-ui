@@ -58,8 +58,8 @@
         "preview": "vite preview",
         "format": "prettier --write \"src/**/*.{ts,js,html,css}\"",
         "lint": "prettier --check \"src/**/*.{ts,js,html,css}\"",
-        "test": "vitest run",
-        "test:watch": "vitest --coverage",
+        "test": "vitest run -c vitest.config.js",
+        "test:watch": "vitest --coverage -c vitest.config.js",
         "prepublishOnly": "npm run test && npm run build",
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build"

@@ -4,4 +4,7 @@
     "material-icon-theme.folders.associations": {
         "mixins": "Functions",
     },
+    "material-icon-theme.files.associations": {
+        "vitest.storybook.config.js": "Vitest"
+    }
 }
