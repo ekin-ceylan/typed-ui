@@ -1,8 +1,8 @@
-import { Platebox } from '../../utilities/register.js';
-import '../textbox/text-box.css';
+import { Textbox } from '../../utilities/register.js';
+import './text-box.css';
 
 export default {
-    title: 'Textbox/PlateBox',
+    title: 'Textbox/TextBox',
     argTypes: {
         fieldId: {
             type: { name: 'string', required: true },
@@ -66,11 +66,11 @@ export default {
 // Mirrors index.html:
 // <plate-box field-id="plate-no" label="Plaka Numarası" value="55  ty" required></plate-box>
 export const Default = {
-    render: args => Platebox(args),
+    render: args => Textbox(args),
     args: {
-        fieldId: 'plate-no',
-        label: 'Plaka Numarası',
-        placeholder: '34 ABC 123',
+        fieldId: 'first-name',
+        label: 'Adınız',
+        placeholder: 'Adınızı giriniz',
     },
     parameters: {
         docs: {
@@ -81,12 +81,12 @@ export const Default = {
 };
 
 export const PlaygroundStory = {
-    render: args => Platebox(args),
+    render: args => Textbox(args),
     tags: ['!dev'],
     args: {
-        fieldId: 'plate-no',
-        label: 'Plaka Numarası',
-        placeholder: '34 ABC 123',
+        fieldId: 'first-name',
+        label: 'Adınız',
+        placeholder: 'Adınızı giriniz',
     },
     parameters: {
         docs: {
@@ -94,26 +94,3 @@ export const PlaygroundStory = {
         },
     },
 };
-
-// export const RequiredWithValue = {
-//     render: () => `
-//         <plate-box field-id="plate-no" label="Plaka Numarası" value="55  ty" required></plate-box>
-//     `,
-// };
-
-// export const InAForm = {
-//     render: () => `
-//         <form>
-//             <plate-box field-id="plate-no" label="Plaka Numarası" required></plate-box>
-//             <div style="margin-top: 12px;">
-//                 <button type="submit">Submit</button>
-//             </div>
-//         </form>
-//     `,
-// };
-
-// export const MinLengthExample = {
-//     render: () => `
-//         <plate-box field-id="plate-no" label="Plaka Numarası" value="34A" required></plate-box>
-//     `,
-// };

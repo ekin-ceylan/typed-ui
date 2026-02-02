@@ -55,6 +55,14 @@ export default {
                 type: { summary: 'string|number' },
             },
         },
+        hideLabel: {
+            control: 'boolean',
+            description: 'Label etiketinin render edilmez. aria-label olarak kullanılır.',
+            table: {
+                defaultValue: { summary: 'false' },
+                type: { summary: 'boolean' },
+            },
+        },
         required: {
             control: 'boolean',
             table: {
@@ -124,14 +132,24 @@ export const PlaygroundStory = {
     tags: ['!dev'],
     args: {
         defaultSlotHtml: `<option value="tr">
-    <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" />Türkiye
+    <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="margin-right: 5px" />Türkiye
 </option>
 <option value="de">
-    <img src="https://flagcdn.com/de.svg" alt="Germany Flag" width="20" height="15" />Almanya
+    <img src="https://flagcdn.com/de.svg" alt="Germany Flag" width="20" height="15" style="margin-right: 5px" />Almanya
 </option>
 <option value="us">
-    <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" />ABD
-</option>`,
+    <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" style="margin-right: 5px" />ABD
+</option>
+<option value="ch" disabled>
+    <img src="https://flagcdn.com/cn.svg" alt="China Flag" width="20" height="15" style="margin-right: 5px" />Çin Halk Cumhuriyeti
+</option>
+<option value="kp">
+    <img src="https://flagcdn.com/kp.svg" alt="North Korea Flag" width="20" height="15" style="margin-right: 5px" />Kuzey Kore
+</option>
+<option value="it">
+    <img src="https://flagcdn.com/it.svg" alt="Italy Flag" width="20" height="15" style="margin-right: 5px" />İtalya
+</option>
+`,
         noOptionsSlotHtml: `<template slot="no-options">Kayıt Bulunamadı</template>`,
         fieldId: 'country',
         label: 'Ülke',

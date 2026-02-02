@@ -1,0 +1,79 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as ComboboxStories from './combo-box.stories.js';
+
+<Meta of={ComboboxStories} name="Overview" />
+
+# ComboBox
+
+Bu sayfa, `combo-box` bileşeninin kısa kullanımını ve Storybook kontrollerini gösteren minimal bir MDX örneği.
+
+## HTML kullanımı (örnek)
+
+<Canvas of={ComboboxStories.Default} />
+
+## Design Token
+
+```css
+--cbx-bg-color: #ffffff;
+--cbx-bg-hover-color: #ffffff;
+--cbx-bg-disabled: #eef2f7;
+
+--cbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+--cbx-font-size: 14px;
+--cbx-text-color: #111827;
+--cbx-text-disabled: #6c757d;
+--cbx-text-invalid: #ef4444;
+--cbx-placeholder-color: #6b7280;
+--cbx-placeholder-focus-color: #111827;
+
+--cbx-border-color: #d2d6de;
+--cbx-border-hover-color: #9ca3af;
+--cbx-border-focus-color: #3b82f6; /* #3b82f6 */
+--cbx-border-invalid-color: #ef4444;
+--cbx-border-disabled: #cbd5e1;
+--cbx-border-radius: 0px;
+
+--cbx-outline-width: 1px;
+--cbx-outline-color: #3c8dbc;
+--cbx-outline-invalid-color: #ef4444;
+
+--cbx-height: 40px;
+--cbx-padding-x: 12px;
+
+--cbx-focus-ring: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
+--cbx-focus-ring-invalid: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
+
+/* Listbox & Option */
+--cbx-listbox-max-height: 150px;
+--cbx-listbox-bg-color: #ffffff;
+--cbx-listbox-padding: 4px;
+--cbx-listbox-border-color: #3b82f6;
+--cbx-listbox-border-radius: 0px;
+
+--cbx-option-bg-color: transparent;
+--cbx-option-bg-hover-color: #3a85ff;
+--cbx-option-bg-selected-color: #3b82f6;
+--cbx-option-bg-disabled-color: #e9e9ed;
+--cbx-option-color: inherit;
+--cbx-option-selected-color: #ffffff;
+--cbx-option-disabled-color: #6e6e6f;
+--cbx-option-padding: 9px 8px;
+
+/* Chevron */
+--cbx-chevron-size: 16px;
+--cbx-chevron-right-distance: 12px;
+
+/* Clear button */
+--cbx-clear-size: 17px;
+--cbx-clear-right-distance: 32px;
+--cbx-clear-padding: 4px;
+--cbx-clear-color: #6b7280;
+--cbx-clear-hover: #111827;
+--cbx-clear-active: #111827;
+--cbx-clear-bg-hover: rgba(17, 24, 39, 0.06);
+--cbx-clear-bg-active: rgba(17, 24, 39, 0.1);
+--cbx-clear-border-radius: 0px;
+--cbx-clear-outline-color: #3c8dbc;
+--cbx-clear-outline-width: 1px;
+--cbx-clear-outline-style: solid;
+```

@@ -7,6 +7,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { ifDefined } from '../../src/modules/utilities.js';
 
 defineComponent('check-box', TypedUI.CheckBox);
+defineComponent('text-box', TypedUI.TextBox);
 defineComponent('plate-box', TypedUI.PlateBox);
 defineComponent('select-box', TypedUI.SelectBox);
 defineComponent('combo-box', TypedUI.ComboBox);
@@ -30,11 +31,12 @@ export const Checkbox = ({ slotHtml, fieldId, fieldName, label, checkedValue, re
     return elementFromTemplate(temp);
 };
 
-export const Combobox = ({ defaultSlotHtml, noOptionsSlotHtml, fieldId, fieldName, label, value, placeholder, required, disabled, nativeBehavior }) => {
+export const Combobox = ({ defaultSlotHtml, noOptionsSlotHtml, fieldId, fieldName, label, value, hideLabel, placeholder, required, disabled, nativeBehavior }) => {
     const temp = html`<combo-box
         field-id=${ifDefined(fieldId)}
         field-name=${ifDefined(fieldName)}
         label=${ifDefined(label)}
+        ?hide-label=${hideLabel}
         ?required=${required}
         ?disabled=${disabled}
         ?native-behavior=${nativeBehavior}
@@ -58,6 +60,21 @@ export const Platebox = ({ fieldId, fieldName, label, value, placeholder, requir
         value=${ifDefined(value)}
     >
     </plate-box>`;
+    // readonly
+    return elementFromTemplate(temp);
+};
+
+export const Textbox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
+    const temp = html`<text-box
+        field-id=${ifDefined(fieldId)}
+        field-name=${ifDefined(fieldName)}
+        label=${ifDefined(label)}
+        ?required=${required}
+        ?disabled=${disabled}
+        placeholder=${ifDefined(placeholder)}
+        value=${ifDefined(value)}
+    >
+    </text-box>`;
     // readonly
     return elementFromTemplate(temp);
 };
