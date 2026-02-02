@@ -469,6 +469,7 @@ export default class ComboBox extends SelectBase {
             <div
                 role="combobox"
                 aria-activedescendant=${ifDefined(activeDescendantId)}
+                aria-disabled=${this.disabled ? 'true' : 'false'}
                 ?data-open=${this.isOpen}
                 ?data-filtered=${!!this.filter}
                 ?data-has-value=${this.inputElement?.value}
@@ -482,6 +483,7 @@ export default class ComboBox extends SelectBase {
                     name=${ifDefined(this.fieldName || this.fieldId)}
                     type="text"
                     ?required=${this.required}
+                    ?disabled=${this.disabled}
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
@@ -497,6 +499,7 @@ export default class ComboBox extends SelectBase {
                 <input
                     type="search"
                     .value=${this.filter || ''}
+                    ?disabled=${this.disabled}
                     autocomplete="off"
                     spellcheck="false"
                     aria-expanded=${this.isOpen}
