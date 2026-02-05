@@ -9,6 +9,8 @@ import { ifDefined } from '../../src/modules/utilities.js';
 defineComponent('check-box', TypedUI.CheckBox);
 defineComponent('text-box', TypedUI.TextBox);
 defineComponent('plate-box', TypedUI.PlateBox);
+defineComponent('email-box', TypedUI.EmailBox);
+defineComponent('password-box', TypedUI.PasswordBox);
 defineComponent('select-box', TypedUI.SelectBox);
 defineComponent('combo-box', TypedUI.ComboBox);
 defineComponent('modal-dialog', TypedUI.ModalDialog);
@@ -79,6 +81,36 @@ export const Textbox = ({ fieldId, fieldName, label, value, placeholder, require
     return elementFromTemplate(temp);
 };
 
+export const Emailbox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
+    const temp = html`<email-box
+        field-id=${ifDefined(fieldId)}
+        field-name=${ifDefined(fieldName)}
+        label=${ifDefined(label)}
+        ?required=${required}
+        ?disabled=${disabled}
+        placeholder=${ifDefined(placeholder)}
+        value=${ifDefined(value)}
+    >
+    </email-box>`;
+    // readonly
+    return elementFromTemplate(temp);
+};
+
+export const Passwordbox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
+    const temp = html`<password-box
+        field-id=${ifDefined(fieldId)}
+        field-name=${ifDefined(fieldName)}
+        label=${ifDefined(label)}
+        ?required=${required}
+        ?disabled=${disabled}
+        placeholder=${ifDefined(placeholder)}
+        value=${ifDefined(value)}
+    >
+    </password-box>`;
+    // readonly
+    return elementFromTemplate(temp);
+};
+
 export const Selectbox = ({ defaultSlotHtml, fieldId, fieldName, label, value, placeholder, noOptionsLabel, required, disabled }) => {
     const temp = html`<select-box
         field-id=${ifDefined(fieldId)}
@@ -99,7 +131,7 @@ export const Selectbox = ({ defaultSlotHtml, fieldId, fieldName, label, value, p
 export const ModalDialog = ({ defaultSlot, closeButtonIconSlot, backdropClose, escClose }) => {
     const temp = html`<modal-dialog id="my-modal" ?backdrop-close=${backdropClose} ?esc-close=${escClose}>
         ${unsafeHTML(closeButtonIconSlot ?? '')} ${unsafeHTML(defaultSlot ?? '')}
-</modal-dialog>`;
+    </modal-dialog>`;
 
     return elementFromTemplate(temp);
 };

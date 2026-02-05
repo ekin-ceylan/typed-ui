@@ -50,6 +50,8 @@ select-box {
 
     font-family: var(--sbx-font-family);
     font-size: var(--sbx-font-size);
+    max-width: 300px;
+    display: block;
 }
 
 /* #endregion DESIGN TOKENS */

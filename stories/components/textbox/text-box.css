@@ -1,6 +1,6 @@
 /* #region DESIGN TOKENS */
 
-:is(text-box, plate-box) {
+:is(text-box, plate-box, email-box, password-box) {
     --tbx-bg-color: #ffffff;
     --tbx-bg-hover-color: #ffffff;
     --tbx-bg-disabled: #eef2f7;
@@ -11,7 +11,7 @@
     --tbx-text-disabled: #6c757d;
     --tbx-text-invalid: #ef4444;
     --tbx-placeholder-color: #6b7280;
-    --tbx-placeholder-focus-color: #111827;
+    --tbx-placeholder-focus-color: #6b7280;
 
     --tbx-border-color: #d2d6de;
     --tbx-border-hover-color: #9ca3af;
@@ -29,11 +29,13 @@
     --tbx-padding-x: 12px;
 
     font-family: var(--tbx-font-family);
+    max-width: 300px;
+    display: block;
 }
 
 /* #endregion DESIGN TOKENS */
 
-:is(text-box, plate-box) > label {
+:is(text-box, plate-box, email-box, password-box) > label {
     display: block;
     margin: 0 0 6px 0;
     font-size: var(--tbx-font-size);
@@ -42,7 +44,7 @@
     color: var(--tbx-text-color);
 }
 
-:is(text-box, plate-box) > input {
+:is(text-box, plate-box, email-box, password-box) > input {
     width: 100%;
     box-sizing: border-box;
     height: var(--tbx-height);
@@ -62,32 +64,32 @@
         background-color 0.15s ease;
 }
 
-:is(text-box, plate-box) > input::placeholder {
+:is(text-box, plate-box, email-box, password-box) > input::placeholder {
     color: var(--tbx-placeholder-color);
     opacity: 1;
 }
 
-:is(text-box, plate-box) > input:focus::placeholder {
+:is(text-box, plate-box, email-box, password-box) > input:focus::placeholder {
     color: var(--tbx-placeholder-focus-color);
 }
 
-:is(text-box, plate-box) > input:hover {
+:is(text-box, plate-box, email-box, password-box) > input:hover {
     border-color: var(--tbx-border-hover-color);
     background: var(--tbx-bg-hover-color);
 }
 
-:is(text-box, plate-box) > input:focus-visible {
+:is(text-box, plate-box, email-box, password-box) > input:focus-visible {
     border-color: var(--tbx-border-focus-color);
     box-shadow: none;
     outline: var(--tbx-outline-width) solid var(--tbx-outline-color);
     outline-offset: var(--tbx-outline-offset);
 }
 
-:is(text-box, plate-box)[disabled] > label {
+:is(text-box, plate-box, email-box, password-box)[disabled] > label {
     color: var(--tbx-text-disabled);
 }
 
-:is(text-box, plate-box) > input:disabled {
+:is(text-box, plate-box, email-box, password-box) > input:disabled {
     color: var(--tbx-text-disabled);
     background: var(--tbx-bg-disabled);
     border-color: var(--tbx-border-disabled);
@@ -95,12 +97,12 @@
     opacity: 0.7;
 }
 
-:is(text-box, plate-box) > input[aria-invalid='true'] {
+:is(text-box, plate-box, email-box, password-box) > input[aria-invalid='true'] {
     border-color: var(--tbx-border-invalid-color);
     outline-color: var(--tbx-outline-invalid-color);
 }
 
-:is(text-box, plate-box) > [data-role='error-message'] {
+:is(text-box, plate-box, email-box, password-box) > [data-role='error-message'] {
     color: var(--tbx-text-invalid);
     margin-top: 4px;
     font-size: 13px;
@@ -108,7 +110,7 @@
 }
 
 /* Optional: Hide label visually but keep for screen readers */
-:is(text-box, plate-box) > label[hidden] {
+:is(text-box, plate-box, email-box, password-box) > label[hidden] {
     position: absolute !important;
     width: 1px;
     height: 1px;

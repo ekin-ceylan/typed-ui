@@ -66,6 +66,8 @@ combo-box {
     --cbx-clear-outline-style: solid;
 
     font-family: var(--cbx-font-family);
+    max-width: 300px;
+    display: block;
 }
 
 /* #endregion DESIGN TOKENS */
@@ -256,7 +258,7 @@ combo-box > div[role='combobox'] > div[role='listbox'] > div[aria-selected] {
     color: var(--cbx-option-selected-color);
 }
 
-combo-box > div[role='combobox'] > div[role='listbox'] > [data-value][aria-disabled] {
+combo-box > div[role='combobox'] > div[role='listbox'] > div[aria-disabled] {
     background: var(--cbx-option-bg-disabled-color);
     color: var(--cbx-option-disabled-color);
     cursor: default;
