@@ -32,11 +32,10 @@ export default class EmailBox extends TextBox {
 
         this.#pattern = this.#createRegexPattern();
 
-        this.type = 'email';
         this.inputmode = 'email';
+        this.autocomplete = 'email';
         this.placeholder = '____@____.___';
         this.maxlength = 254;
         this.pattern = null;
-        this.autocomplete = 'email';
     }
 }
