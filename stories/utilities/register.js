@@ -96,8 +96,10 @@ export const Selectbox = ({ defaultSlotHtml, fieldId, fieldName, label, value, p
     return elementFromTemplate(temp);
 };
 
-export const ModalDialog = ({ defaultSlotHtml, backdropClose, escClose }) => {
-    const temp = html`<modal-dialog id="my-modal" ?backdrop-close=${backdropClose} ?esc-close=${escClose}> ${unsafeHTML(defaultSlotHtml ?? '')} </modal-dialog>`;
+export const ModalDialog = ({ defaultSlot, closeButtonIconSlot, backdropClose, escClose }) => {
+    const temp = html`<modal-dialog id="my-modal" ?backdrop-close=${backdropClose} ?esc-close=${escClose}>
+        ${unsafeHTML(closeButtonIconSlot ?? '')} ${unsafeHTML(defaultSlot ?? '')}
+</modal-dialog>`;
 
     return elementFromTemplate(temp);
 };

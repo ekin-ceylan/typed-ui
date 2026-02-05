@@ -1,27 +1,42 @@
 modal-dialog {
-    --modal-close-size: 16px;
-    --modal-close-location: 10px;
-    --modal-close-bg-hover: rgba(0, 0, 0, 0.05);
-    --modal-close-bg-active: rgba(0, 0, 0, 0.1);
-    --modal-close-color: #6c6c6c;
-    --modal-close-hover: #3e3e3e;
-    --modal-close-active: #222;
+    --modal-bg: white;
+    --modal-border: none;
+    --modal-border-radius: 0;
+    --modal-padding: 0px;
 
     --modal-backdrop-color: black;
+
+    --modal-close-size: 20px;
+    --modal-close-top: 16px;
+    --modal-close-right: 16px;
+    --modal-close-padding: 0px;
+    --modal-close-border: none;
+    --modal-close-border-radius: calc(var(--modal-close-size) / 8);
+    --modal-close-font-size: 16px;
+    --modal-close-outline-color: #3c8dbc;
+    --modal-close-outline-width: 2px;
+    --modal-close-outline-style: solid;
+    --modal-close-color: #6c6c6c;
+    --modal-close-color-hover: #3e3e3e;
+    --modal-close-color-active: #222;
+    --modal-close-bg: none;
+    --modal-close-bg-hover: rgba(0, 0, 0, 0.05);
+    --modal-close-bg-active: rgba(0, 0, 0, 0.1);
 }
 
-modal-dialog[data-not-ready] * {
-    display: none;
-    pointer-events: none;
-}
+/* @starting-style yeterince yaygınlaşırsa */
 
 modal-dialog > dialog {
+    background: var(--modal-bg);
+    border: var(--modal-border);
+    border-radius: var(--modal-border-radius);
+    padding: var(--modal-padding);
     opacity: 0;
     transform: translateY(100vh) scale(0, 0);
     transition: all 0.3s ease;
 }
 
-modal-dialog > dialog[open].active {
+modal-dialog > dialog[open][data-active] {
     opacity: 1;
     transform: translateY(0) scale(1, 1);
 }
@@ -32,37 +47,76 @@ modal-dialog > dialog::backdrop {
     transition: all 0.3s ease;
 }
 
-modal-dialog > dialog.active::backdrop {
+modal-dialog > dialog[data-active]::backdrop {
     opacity: 0.5;
 }
 
-modal-dialog > dialog > .btn-close {
+/* #region CLOSE BUTTON */
+
+modal-dialog > dialog > [data-role='close'] {
     position: absolute;
-    top: var(--modal-close-location);
-    right: var(--modal-close-location);
+    top: var(--modal-close-top);
+    right: var(--modal-close-right);
     width: var(--modal-close-size);
     height: var(--modal-close-size);
     color: var(--modal-close-color);
+    padding: var(--modal-close-padding);
+    border: var(--modal-close-border);
+    border-radius: var(--modal-close-border-radius);
+    background: var(--modal-close-bg);
+    outline-width: var(--modal-close-outline-width);
+    outline-color: var(--modal-close-outline-color);
     transition: all 0.2s;
-    background: none;
-    border: none;
-    border-radius: calc(var(--modal-close-size) / 8);
     cursor: pointer;
-    padding: 2px;
 }
 
-modal-dialog > dialog > .btn-close:hover {
+modal-dialog > dialog > [data-role='close']:hover {
     background: var(--modal-close-bg-hover);
-    color: var(--modal-close-hover);
+    color: var(--modal-close-color-hover);
 }
 
-modal-dialog > dialog > .btn-close:active {
+modal-dialog > dialog > [data-role='close']:focus,
+modal-dialog > dialog > [data-role='close']:focus-visible {
+    outline-style: var(--modal-close-outline-style);
+}
+
+modal-dialog > dialog > [data-role='close']:active {
     background: var(--modal-close-bg-active);
-    color: var(--modal-close-active);
+    color: var(--modal-close-color-active);
     transform: scale(0.85);
+    outline: none;
 }
 
-modal-dialog > dialog > .btn-close > svg {
-    color: inherit;
-    fill: currentColor;
+/* #endregion CLOSE BUTTON */
+
+/* #region DEMO STYLES */
+modal-dialog h4 {
+    margin: 0;
+    padding: 16px;
+    background-color: #eeeeee;
 }
+
+modal-dialog [data-role='close'] {
+    --modal-close-padding: 2px;
+    --modal-close-size: auto;
+    font-weight: bold;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+modal-dialog .modal-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px;
+    min-width: 500px;
+    min-height: 200px;
+}
+
+modal-dialog .modal-body p {
+    margin-top: 0;
+}
+/* #endregion DEMO STYLES */
