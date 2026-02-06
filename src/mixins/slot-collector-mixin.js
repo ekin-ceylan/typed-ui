@@ -132,7 +132,7 @@ export default function SlotCollectorMixin(Base) {
                           return true;
                       }
 
-                      return node.nodeType === Node.TEXT_NODE && node.textContent.trim();
+                      return node.nodeType === Node.TEXT_NODE;
                   })
                 : [];
         }

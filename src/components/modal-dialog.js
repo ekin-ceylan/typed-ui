@@ -2,6 +2,7 @@ import { html } from 'lit';
 import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
 import LightComponentBase from '../core/light-component-base.js';
 import { hideBodyScroll, showBodyScroll } from '../modules/scroll-lock-helper.js';
+import { ifDefined } from '../modules/utilities.js';
 
 /**
  * Modal dialog web component built with Lit.
@@ -17,6 +18,7 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
      */
     static properties = {
         open: { type: Boolean },
+        closeButtonClass: { type: String, attribute: 'close-button-class' },
         backdropClose: { type: Boolean, attribute: 'backdrop-close' },
         escClose: { type: Boolean, attribute: 'esc-close' },
     };
@@ -39,6 +41,9 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
 
         /** @type {boolean} Close when pressing the Escape key. */
         this.escClose = false;
+
+        /** @type {string} CSS class for the close button. */
+        this.closeButtonClass = '';
     }
 
     /** @override @protected */
@@ -109,8 +114,8 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
 
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
-        return html` <dialog role="dialog" aria-modal="true" tabindex="-1">
-            <button type="button" @click=${this.hide} data-role="close" aria-label="Close">
+        return html`<dialog role="dialog" aria-modal="true" tabindex="-1">
+            <button type="button" class=${ifDefined(this.closeButtonClass)} @click=${this.hide} data-role="close" aria-label="Close">
                 <slot name="close-button-icon">&times;</slot>
             </button>
             <slot></slot>
