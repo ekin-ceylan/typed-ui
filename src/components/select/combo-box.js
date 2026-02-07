@@ -131,14 +131,6 @@ export default class ComboBox extends SelectBase {
         return false;
     }
 
-    /**
-     * @override Clears the current selection.
-     */
-    clear() {
-        super.clear();
-        this.#onSelect(null);
-    }
-
     // #region EVENT LISTENERS
 
     /**
@@ -193,12 +185,12 @@ export default class ComboBox extends SelectBase {
         } else if (this.isOpen && (key === 'Tab' || key === 'Enter')) {
             e.preventDefault();
 
-            if (this.nativeBehavior) {
+            if (this.nativeBehavior || key === 'Tab') {
                 this.#closeList();
             } else {
                 /** @type {HTMLDivElement} */
                 const opt = this.renderRoot.querySelector('div[role="option"][data-active]');
-                opt.click();
+                opt ? opt.click() : this.#closeList();
             }
 
             this.comboboxDiv.focus();
@@ -208,6 +200,21 @@ export default class ComboBox extends SelectBase {
         }
 
         // yazmaya başladığımızda arama yapılır
+    }
+
+    /** @override Clears the current selection. */
+    onClearClick(event) {
+        super.onClearClick(event);
+        this.#onSelect(null);
+    }
+
+    /** @override Handles keydown events on the clear button */
+    onClearKeyDown(event) {
+        super.onClearKeyDown(event);
+
+        setTimeout(() => {
+            this.comboboxDiv.focus();
+        }, 200);
     }
 
     onInvalid(_e) {
@@ -522,8 +529,6 @@ export default class ComboBox extends SelectBase {
     }
 }
 
-// scrollLockHelperEkle
-// clear butonunu klavyeden tetikle
 // search forma dahil edilmemeli
 // aria-activedescendant="opt-3"
 // aria-controls

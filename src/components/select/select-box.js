@@ -129,8 +129,9 @@ export default class SelectBox extends SelectBase {
 
     // #region PRIVATE METHODS
 
-    clear() {
-        super.clear();
+    /** @override Clears the input value and dispatches a 'clear' custom event. */
+    onClearClick(event) {
+        super.onClearClick(event);
         this.dispatchCustomEvent('input');
         this.dispatchCustomEvent('change');
     }
