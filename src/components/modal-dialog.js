@@ -52,7 +52,6 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
 
         this.#dialog?.addEventListener('cancel', e => {
             e.preventDefault(); // prevent browser to close modal immediately
-
             if (this.escClose) this.hide();
         });
 
@@ -106,6 +105,8 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
      * @param {MouseEvent} e
      */
     #clickedOnBackdrop = e => {
+        if (this.#dialog.contains(e.target) && this.#dialog != e.target) return false;
+
         const r = this.#dialog.getBoundingClientRect();
         const [x, y] = [e.clientX, e.clientY];
 

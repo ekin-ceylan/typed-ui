@@ -5,34 +5,41 @@ export default {
     component: 'modal-dialog',
     title: 'Components/ModalDialog',
     argTypes: {
-        defaultSlot: {
+        default: {
             control: 'text',
             description: 'Dialog içeriği.',
             table: {
+                category: 'Slots',
                 type: { summary: 'html' },
                 defaultValue: { summary: '' },
             },
         },
-        closeButtonIconSlot: {
+        closeButtonIcon: {
+            name: 'close-button-icon',
             control: 'text',
             description: 'Kapatma butonunun ikonu içeriği (opsiyonel).',
             table: {
+                category: 'Slots',
                 type: { summary: 'html' },
                 defaultValue: { summary: '&times;' },
             },
         },
         backdropClose: {
+            name: 'backdrop-close',
             control: 'boolean',
             description: 'Backdrop tıklaması ile kapanır',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'false' },
                 type: { summary: 'boolean' },
             },
         },
         escClose: {
+            name: 'esc-close',
             control: 'boolean',
             description: 'ESC tuşu ile kapanır',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'false' },
                 type: { summary: 'boolean' },
             },
@@ -43,7 +50,7 @@ export default {
 export const Default = {
     render: args => ModalDialog(args),
     args: {
-        defaultSlot: `<p>This is the content of the modal dialog.</p>
+        default: `<p>This is the content of the modal dialog.</p>
 <button type="button" onclick="document.getElementById('my-modal').hide()">Close</button>`,
         backdropClose: true,
         escClose: true,
@@ -76,12 +83,12 @@ export const PlaygroundStory = {
     },
     tags: ['!dev'],
     args: {
-        defaultSlot: `<h4>This is a modal dialog!</h4>
+        default: `<h4>This is a modal dialog!</h4>
 <div class="modal-body">
     <p>Your awesome modal dialog content goes here.</p>
     <button type="button" onclick="document.getElementById('my-modal').hide()">Kapat</button>
 </div>`,
-        closeButtonIconSlot: `<svg width="16" height="16" slot="close-button-icon" aria-hidden="true" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        closeButtonIcon: `<svg width="16" height="16" slot="close-button-icon" aria-hidden="true" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
     <line x1="4" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="2"/>
     <line x1="12" y1="4" x2="4" y2="12" stroke="currentColor" stroke-width="2"/>
 </svg>`,
