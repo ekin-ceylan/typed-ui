@@ -30,6 +30,9 @@ select-box {
     --sbx-focus-ring: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
     --sbx-focus-ring-invalid: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
 
+    --sbx-option-bg-disabled: #f1f2f3;
+    --sbx-option-text-disabled: #6c757d;
+
     /* Chevron */
     --sbx-chevron-size: 16px;
     --sbx-chevron-right-distance: 12px;
@@ -134,10 +137,16 @@ select-box > div > select[aria-invalid='true'] {
 }
 
 select-box:has(select[aria-invalid='true']) [data-role='error-message'] {
+    display: inline-block;
     color: var(--sbx-text-invalid);
     margin-top: 4px;
     font-size: 13px;
     line-height: 16px;
+}
+
+select-box > div > select option:disabled {
+    background: var(--sbx-option-bg-disabled);
+    color: var(--sbx-option-text-disabled);
 }
 
 /* #region CLEAR & CHEVRON */

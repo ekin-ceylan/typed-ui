@@ -111,8 +111,9 @@ export const Passwordbox = ({ fieldId, fieldName, label, value, placeholder, req
     return elementFromTemplate(temp);
 };
 
-export const Selectbox = ({ defaultSlotHtml, fieldId, fieldName, label, value, placeholder, noOptionsLabel, required, disabled }) => {
+export const Selectbox = ({ default: defaultSlot, id, fieldId, fieldName, label, value, placeholder, noOptionsLabel, required, disabled }) => {
     const temp = html`<select-box
+        id=${ifDefined(id)}
         field-id=${ifDefined(fieldId)}
         field-name=${ifDefined(fieldName)}
         label=${ifDefined(label)}
@@ -122,7 +123,7 @@ export const Selectbox = ({ defaultSlotHtml, fieldId, fieldName, label, value, p
         no-options-label=${ifDefined(noOptionsLabel)}
         value=${ifDefined(value)}
     >
-        ${unsafeHTML(defaultSlotHtml ?? '')}
+        ${unsafeHTML(defaultSlot ?? '')}
     </select-box>`;
     // readonly
     return elementFromTemplate(temp);
@@ -134,6 +135,33 @@ export const ModalDialog = ({ defaultSlot, closeButtonIconSlot, backdropClose, e
     </modal-dialog>`;
 
     return elementFromTemplate(temp);
+};
+
+export const createForm = (mainElement, elementComment) => {
+    const button = document.createElement('button');
+    button.type = 'submit';
+    button.style.margin = '22px 10px 0 0';
+    button.textContent = 'Gönder';
+
+    const span = document.createElement('span');
+
+    const form = document.createElement('form');
+    form.appendChild(document.createComment(` ${elementComment} `));
+    form.appendChild(mainElement);
+    form.appendChild(document.createComment(` ${elementComment} `));
+    form.appendChild(button);
+    form.appendChild(span);
+
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const entries = Array.from(formData.entries())
+            .map(([key, value]) => `${key}: ${value}`)
+            .join('\n');
+        span.textContent = `Form submitted with data:\n${entries}`;
+    });
+
+    return form;
 };
 
 function defineComponent(name, constructor) {

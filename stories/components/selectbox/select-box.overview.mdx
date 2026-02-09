@@ -1,0 +1,203 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks';
+import * as SelectboxStories from './select-box.stories.js';
+
+<Meta of={SelectboxStories} name="Overview" />
+
+# SelectBox
+
+`select-box`, formlarda veya kullanıcı arayüzlerinde seçenekler arasından seçim yapılmasını sağlayan, erişilebilir ve özelleştirilebilir bir seçim kutusu bileşenidir. Hem klasik `<select>`/`<option>` slot kullanımıyla hem de programatik olarak seçenek eklemeye olanak tanır. Doğrulama, hata mesajı, klavye ve ekran okuyucu desteği gibi modern form ihtiyaçlarını karşılamak üzere tasarlanmıştır. Tasarım token’ları sayesinde kolayca özelleştirilebilir ve farklı temalarla uyumlu çalışır.
+
+Seçenek sayısı çok fazla değilse tercih edilebilir. Seçenek sayısı sayfa boyunu aşıyorsa `ComboBox` tercih edilmelidir.
+
+## Kurulum ve Temel Kullanım
+
+### Kurulum
+
+`select-box` bir **Web Component (Custom Element)** olduğu için kullanılmadan önce _register_ edilmelidir. Bunun için, `typed-ui` paketini projenize ekledikten sonra uygulamanızın veya sayfanızın giriş noktasında (ör. `main.js`, `page.js`), `-` içeren uygun bir bileşen ismi kullanarak, aşağıdaki kodlardan birini çalıştırın:
+
+```js
+import { SelectBox } from 'typed-ui';
+
+customElements.define('select-box', SelectBox);
+```
+
+veya
+
+```js
+import * as TypedUI, { defineComponent } from 'typed-ui';
+
+defineComponent('do-select', TypedUI.SelectBox);
+```
+
+ESM build yerine IIFE build kullanıyorsanız.
+
+```js
+TypedUI.defineComponent('do-select', TypedUI.SelectBox);
+```
+
+### Temel Kullanım (slot ile)
+
+En basit kullanımda seçenekler `<option>` (veya `<optgroup>`) olarak component’in içine yazılır:
+
+> Not: `select-box` çalışması için `field-id` ve `label` zorunludur. Bu attributelar verilmezse bileşen _runtime_'da hata fırlatır.
+
+<Canvas of={SelectboxStories.BasicSlotUsage} />
+
+`<optgroup>` desteği:
+
+<Canvas of={SelectboxStories.OptGroupSlotUsage} />
+
+## Başlangıç Seçimi
+
+Başlangıç seçimi için `value` verebilirsiniz (`value`, `option` değerlerinden biriyle eşleşmelidir).
+
+<Canvas of={SelectboxStories.BasicSelectedUsage} />
+
+Diğer yöntem ise `option` elementlerinden birine `selected` özniteliği eklemektir. İki öyntem aynı anda kullanılırsa `selected` baskın olur.
+
+## Doğrulama (_Validation_)
+
+`required` verildiğinde seçim yapılmadıysa bileşen kendi hata mesajını üretir ve form submit’ini engeller:
+
+<Canvas of={SelectboxStories.ValidationUsage} />
+
+`required` olduğunda temizleme (_clear_) butonu gösterilmez.
+
+## Programatik Kullanım
+
+Seçenekleri JS üzerinden de verebilirsiniz. Bu durumda **slot içeriği yok sayılır**.
+
+Öncelikle sayfada var olan `SelectBox` elementini seçmeniz
+
+```js
+const el = document.getElementById('#basic-slot');
+```
+
+veya yeni bir `SelectBox` oluşturmanız gerekir.
+
+```js
+const el = new SelectBox();
+body.appendChild(el);
+```
+
+daha sonra seçeneklerinizi, aşağıdaki kod örneklerinde görüldüğü gibi ekleyebilirsiniz.
+
+```js
+el.options = [
+    { value: 'tr', label: 'Türkiye' },
+    { value: 'de', label: 'Almanya', selected: true },
+    { value: 'us', label: 'ABD', disabled: true },
+];
+```
+
+`<optgroup>` desteği:
+
+```js
+el.options = [
+    {
+        label: 'Avrupa',
+        options: [
+            { value: 'de', label: 'Almanya' },
+            { value: 'fr', label: 'Fransa' },
+        ],
+    },
+    {
+        label: 'Asya',
+        options: [
+            { value: 'tr', label: 'Türkiye', selected: true },
+            { value: 'jp', label: 'Japonya' },
+        ],
+    },
+];
+```
+
+## Öznitelikler (_Attributes_)
+
+`select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
+
+> Zorunlu: `field-id` ve `label` mutlaka verilmelidir. Bu iki öznitelik set edilmezse bileşen bağlanırken hata fırlatır.
+
+<ArgTypes of={SelectboxStories.PropAttrEventLists} />
+
+### JS Property notu
+
+`options` **attribute değildir**; sadece JavaScript üzerinden property olarak set edilir. `options` set edildiğinde, slot ile verilen `<option>/<optgroup>` içerikleri yok sayılır.
+
+```js
+document.querySelector('select-box[field-id="country"]').options = [
+    { value: 'tr', label: 'Türkiye' },
+    { value: 'de', label: 'Almanya', selected: true },
+];
+```
+
+## Olay Dinleyiciler (_Events_)
+
+`select-box` aşağıdaki event’leri bubble edecek şekilde dispatch eder:
+
+- `input`: seçim değiştiğinde
+- `change`: özellikle temizleme (clear) sonrası da tetiklenir
+- `clear`: temizleme butonuna basıldığında
+- `update`: `value` programatik değiştiğinde
+
+```js
+const el = document.querySelector('select-box[field-id="country"]');
+
+el.addEventListener('input', e => {
+    console.log('value:', el.value, 'detail:', e.detail);
+});
+
+el.addEventListener('clear', () => {
+    console.log('cleared');
+});
+```
+
+## Design Token
+
+```css
+--sbx-bg-color: #ffffff;
+--sbx-bg-hover-color: #ffffff;
+--sbx-bg-disabled: #eef2f7;
+
+--sbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+--sbx-font-size: 14px;
+--sbx-text-color: #111827;
+--sbx-text-disabled: #6c757d;
+--sbx-text-invalid: #ef4444;
+--sbx-placeholder-color: #6b7280;
+--sbx-placeholder-focus-color: #111827;
+
+--sbx-border-color: #d2d6de;
+--sbx-border-hover-color: #9ca3af;
+--sbx-border-focus-color: #9ca3af; /* #3b82f6 */
+--sbx-border-invalid-color: #ef4444;
+--sbx-border-disabled: #cbd5e1;
+--sbx-border-radius: 0px;
+
+--sbx-outline-width: 1px;
+--sbx-outline-color: #3c8dbc;
+--sbx-outline-invalid-color: #ef4444;
+
+--sbx-height: 40px;
+--sbx-padding-x: 12px;
+
+--sbx-focus-ring: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
+--sbx-focus-ring-invalid: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
+
+/* Chevron */
+--sbx-chevron-size: 16px;
+--sbx-chevron-right-distance: 12px;
+
+/* Clear button */
+--sbx-clear-size: 17px;
+--sbx-clear-right-distance: 32px;
+--sbx-clear-padding: 4px;
+--sbx-clear-color: #6b7280;
+--sbx-clear-hover: #111827;
+--sbx-clear-active: #111827;
+--sbx-clear-bg-hover: rgba(17, 24, 39, 0.06);
+--sbx-clear-bg-active: rgba(17, 24, 39, 0.1);
+--sbx-clear-border-radius: 0px;
+--sbx-clear-outline-color: #3c8dbc;
+--sbx-clear-outline-width: 1px;
+--sbx-clear-outline-style: solid;
+```

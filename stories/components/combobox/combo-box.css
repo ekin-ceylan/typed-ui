@@ -91,7 +91,7 @@ combo-box > div[role='combobox']:hover {
     background: var(--cbx-bg-hover-color);
 }
 
-combo-box > div[role='combobox']:focus-visible {
+combo-box > div[role='combobox']:focus {
     outline: var(--cbx-outline-width) solid var(--cbx-outline-color);
 }
 
