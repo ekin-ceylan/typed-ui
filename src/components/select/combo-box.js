@@ -206,15 +206,7 @@ export default class ComboBox extends SelectBase {
     onClearClick(event) {
         super.onClearClick(event);
         this.#onSelect(null);
-    }
-
-    /** @override Handles keydown events on the clear button */
-    onClearKeyDown(event) {
-        super.onClearKeyDown(event);
-
-        setTimeout(() => {
-            this.comboboxDiv.focus();
-        }, 200);
+        this.comboboxDiv.focus();
     }
 
     onInvalid(_e) {

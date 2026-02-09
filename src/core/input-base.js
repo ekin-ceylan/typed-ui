@@ -56,7 +56,7 @@ export default class InputBase extends LightComponentBase {
     //     this.requestUpdate('value');
     //     this.updateComplete.then(this.handleValueUpdate.bind(this));
     // }
-
+    // value değiştiğinde bir event fırlatmayı sağlıyor olabilir
     // updated(changed) {
     //     if (changed.has('value')) {
     //         console.log('InputBase updated value:', this.value);
@@ -144,7 +144,7 @@ export default class InputBase extends LightComponentBase {
      * @param {KeyboardEvent} event The keyboard event triggered on the clear button.
      */
     onClearKeyDown(event) {
-        event.stopPropagation();
+        if (['Enter', 'Space'].includes(event.code)) event.stopPropagation();
     }
 
     /**
