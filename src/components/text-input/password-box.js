@@ -39,7 +39,7 @@ export default class PasswordBox extends TextBox {
                 @click=${this.#toggleVisibility}
                 aria-label=${this.revealed ? 'Şifreyi gizle' : 'Şifreyi göster'}
                 aria-pressed=${this.revealed}
-                class="btn-toggle"
+                data-role="toggle-visibility"
             >
                 <!-- açık ikon -->
                 <svg viewBox="0 0 16 16" aria-hidden="true">
