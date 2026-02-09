@@ -222,7 +222,7 @@ export default class TextBox extends InputBase {
      * @returns {void}
      */
     onKeydown(e) {
-        if (e.isComposing || !this.allowPattern) return;
+        if (e.isComposing) return;
 
         this.#lastKey = e.key;
         const keyCode = e.code;
