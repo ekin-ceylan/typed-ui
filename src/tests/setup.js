@@ -3,13 +3,14 @@
 
 // import { describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
+import InputBase from '../core/input-base';
 
 /**
- * Initializes a TextBox component for testing.
+ * Initializes a InputBase component for testing.
  * @param {string} elementStr
- * @returns {Promise<[HTMLInputElement, HTMLElement, import('@testing-library/user-event').UserEvent]>}
+ * @returns {Promise<[HTMLInputElement|HTMLSelectElement, InputBase, import('@testing-library/user-event').UserEvent]>}
  */
-async function init(elementStr) {
+async function initInputBase(elementStr) {
     document.body.innerHTML = elementStr;
 
     const host = document.body.firstChild;
@@ -34,5 +35,5 @@ function defineElement(elementName, ElementClass) {
     }
 }
 
-globalThis.init = init;
+globalThis.initInputBase = initInputBase;
 globalThis.defineElement = defineElement;

@@ -12,7 +12,7 @@ describe('Masking tests', () => {
 
     beforeEach(async () => {
         const el = '<plate-box field-id="plate-no" label="Plaka Numarası"></plate-box>';
-        [input, , user] = await init(el);
+        [input, , user] = await initInputBase(el);
     });
 
     it('formats while typing full plate', async () => {
@@ -62,7 +62,7 @@ describe('Masking tests', () => {
 describe('Validating tests', () => {
     /** @type {HTMLInputElement} */
     let input;
-    /** @type {HTMLElement} */
+    /** @type {PlateBox} */
     let host;
     /** @type {import('@testing-library/user-event').UserEvent} */
     let user;
@@ -70,7 +70,7 @@ describe('Validating tests', () => {
 
     beforeEach(async () => {
         const el = '<plate-box field-id="plate-no" label="Plaka Numarası" required></plate-box>';
-        [input, host, user] = await init(el);
+        [input, host, user] = await initInputBase(el);
         errorElement = host.querySelector('[data-role="error-message"]');
     });
 
@@ -102,12 +102,12 @@ describe('Validating tests', () => {
     // Pattern (regex) validasyonu ve hata mesajı)
 });
 
-// input, change, blur, invalid event’lerinin doğru tetiklenmesi ve state güncellenmesi
-// Otomatik tamamlama (autocomplete), spellcheck, inputmode gibi attribute’ların doğru aktarılması
-// Değer güncellenince update event’inin tetiklenmesi
+// input, change, blur, invalid event'lerinin doğru tetiklenmesi ve state güncellenmesi
+// Otomatik tamamlama (autocomplete), spellcheck, inputmode gibi attribute'ların doğru aktarılması
+// Değer güncellenince update event'inin tetiklenmesi
 // field-id yoksa hata
 // label yoksa hata
-// Erişilebilirlik (accessibility) attribute’larının doğru ayarlanması (aria-labelledby, aria-describedby vb.)
-// Disabled state’in doğru uygulanması ve stil değişiklikleri
-// Placeholder’ın doğru gösterilmesi
-// Label’ın gizlenmesi (hide-label) durumunda erişilebilirliğin korunması
+// Erişilebilirlik (accessibility) attribute'larının doğru ayarlanması (aria-labelledby, aria-describedby vb.)
+// Disabled state'in doğru uygulanması ve stil değişiklikleri
+// Placeholder'ın doğru gösterilmesi
+// Label'ın gizlenmesi (hide-label) durumunda erişilebilirliğin korunması
