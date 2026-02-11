@@ -3,7 +3,7 @@ import './modal-dialog.css';
 
 export default {
     component: 'modal-dialog',
-    title: 'Components/ModalDialog',
+    title: 'Components/Modal Dialog',
     argTypes: {
         default: {
             control: 'text',
@@ -101,36 +101,3 @@ export const PlaygroundStory = {
         },
     },
 };
-
-// export const NativeBehavior = {
-//     render: () => `
-//         <combo-box label="Kombo Native" field-id="combo-country-native" native-behavior placeholder="Seçiniz" value="de">
-//             <option value="tr">Türkiye</option>
-//             <option value="de">Almanya</option>
-//             <option value="us">ABD</option>
-//             <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
-//             <option value="kp">Kuzey Kore</option>
-//             <option value="jp">Japonya</option>
-//             <option value="it">İtalya</option>
-//         </combo-box>
-//     `,
-// };
-
-// export const DynamicOptionsProperty = {
-//     render: () => {
-//         const el = document.createElement('combo-box');
-//         el.setAttribute('field-id', 'combo-dynamic');
-//         el.setAttribute('label', 'Kombo Dinamik');
-//         el.setAttribute('placeholder', 'Seçiniz');
-
-//         // Property-driven options (alternative to slotted <option> children)
-//         el.options = [
-//             { value: 'tr', label: 'Türkiye' },
-//             { value: 'de', label: 'Almanya', selected: true },
-//             { value: 'us', label: 'ABD' },
-//             { value: 'ch', label: 'Çin Halk Cumhuriyeti', disabled: true },
-//         ];
-
-//         return el;
-//     },
-// };

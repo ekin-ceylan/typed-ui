@@ -3,7 +3,7 @@ import * as SelectboxStories from './select-box.stories.js';
 
 <Meta of={SelectboxStories} name="Overview" />
 
-# SelectBox
+# Select
 
 `select-box`, formlarda veya kullanıcı arayüzlerinde seçenekler arasından seçim yapılmasını sağlayan, erişilebilir ve özelleştirilebilir bir seçim kutusu bileşenidir. Hem klasik `<select>`/`<option>` slot kullanımıyla hem de programatik olarak seçenek eklemeye olanak tanır. Doğrulama, hata mesajı, klavye ve ekran okuyucu desteği gibi modern form ihtiyaçlarını karşılamak üzere tasarlanmıştır. Tasarım token’ları sayesinde kolayca özelleştirilebilir ve farklı temalarla uyumlu çalışır.
 
@@ -122,7 +122,7 @@ document.querySelector('select-box[field-id="country"]').options = [
 ];
 ```
 
-## Öznitelikler (_Attributes_)
+## Öznitelikler, Özellikler ve Olaylar
 
 `select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
 
@@ -130,9 +130,11 @@ document.querySelector('select-box[field-id="country"]').options = [
 
 <ArgTypes of={SelectboxStories.PropAttrEventLists} />
 
-## Olay Dinleyiciler (_Events_)
+### Öznitelikler (_Attributes_)
 
-`select-box` aşağıdaki event’leri bubble edecek şekilde dispatch eder:
+### Olay Dinleyiciler (_Events_)
+
+`select-box` aşağıdaki event'leri bubble edecek şekilde dispatch eder:
 
 - `input`: seçim değiştiğinde
 - `change`: özellikle temizleme (clear) sonrası da tetiklenir

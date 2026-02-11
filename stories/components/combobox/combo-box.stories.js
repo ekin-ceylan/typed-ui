@@ -3,37 +3,45 @@ import './combo-box.css';
 
 export default {
     component: 'combo-box',
-    title: 'Components/ComboBox',
+    title: 'Components/Combobox',
     argTypes: {
-        defaultSlotHtml: {
+        defaultSlot: {
+            name: 'default',
             control: 'text',
             description: 'options için slot içeriği.',
             table: {
+                category: 'Slots',
                 type: { summary: 'html' },
                 defaultValue: { summary: '' },
             },
         },
-        noOptionsSlotHtml: {
+        noOptionsSlot: {
+            name: 'no-options',
             control: 'text',
             description: 'options olmadığında gösterilecek option için slot içeriği.',
             table: {
+                category: 'Slots',
                 type: { summary: 'html' },
                 defaultValue: { summary: '' },
             },
         },
         fieldId: {
+            name: 'field-id',
             type: { name: 'string', required: true },
             control: 'text',
             description: 'Input elementinin id attribute değeri.',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: '' },
             },
         },
         fieldName: {
+            name: 'field-name',
             type: { name: 'string' },
             control: 'text',
             description: 'Input elementinin name attribute değeri. Atanmazsa field-id değeri kullanılır.',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'field-id' },
             },
         },
@@ -42,6 +50,7 @@ export default {
             control: 'text',
             description: 'Input etiketi',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: '' },
             },
         },
@@ -51,14 +60,17 @@ export default {
             description: 'Kombo kutusunun tuttuğu değer.\n\n Başlangıçta yazılan değer optionlar arasında bulunuyorsa o seçenek seçili olarak gelir.',
             control: 'text',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'null' },
                 type: { summary: 'string|number' },
             },
         },
         hideLabel: {
+            name: 'hide-label',
             control: 'boolean',
-            description: 'Label etiketinin render edilmez. aria-label olarak kullanılır.',
+            description: 'Label etiketinin render edilmez. `aria-label` olarak kullanılır.',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'false' },
                 type: { summary: 'boolean' },
             },
@@ -66,6 +78,7 @@ export default {
         required: {
             control: 'boolean',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'false' },
                 type: { summary: 'boolean' },
             },
@@ -73,22 +86,27 @@ export default {
         disabled: {
             control: 'boolean',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'false' },
                 type: { summary: 'boolean' },
             },
         },
         nativeBehavior: {
+            name: 'native-behavior',
             control: 'boolean',
+            description: 'Klavye ile gezinirken tarayıcının *native* `<select>` davranışını kullanır.',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'false' },
                 type: { summary: 'boolean' },
             },
         },
         placeholder: {
-            type: { name: 'string', required: true },
+            type: { name: 'string' },
             control: 'text',
             description: 'Seçim yapılmamışken gösterilecek yer tutucu metin.',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: '' },
             },
         },
@@ -105,7 +123,7 @@ export default {
 export const Default = {
     render: args => Combobox(args),
     args: {
-        defaultSlotHtml: `<option value="tr">
+        defaultSlot: `<option value="tr">
     <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />Türkiye
 </option>
 <option value="de">
@@ -114,7 +132,7 @@ export const Default = {
 <option value="us">
     <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />ABD
 </option>`,
-        noOptionsSlotHtml: `<template slot="no-options">Kayıt Bulunamadı</template>`,
+        noOptionsSlot: `<template slot="no-options">Kayıt Bulunamadı</template>`,
         fieldId: 'country',
         label: 'Ülke',
         placeholder: 'Lütfen seçiniz',
@@ -131,7 +149,7 @@ export const PlaygroundStory = {
     render: args => Combobox(args),
     tags: ['!dev'],
     args: {
-        defaultSlotHtml: `<option value="tr">
+        defaultSlot: `<option value="tr">
     <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="margin-right: 5px" />Türkiye
 </option>
 <option value="de">
@@ -150,7 +168,7 @@ export const PlaygroundStory = {
     <img src="https://flagcdn.com/it.svg" alt="Italy Flag" width="20" height="15" style="margin-right: 5px" />İtalya
 </option>
 `,
-        noOptionsSlotHtml: `<template slot="no-options">Kayıt Bulunamadı</template>`,
+        noOptionsSlot: `<template slot="no-options">Kayıt Bulunamadı</template>`,
         fieldId: 'country',
         label: 'Ülke',
         placeholder: 'Lütfen seçiniz',
@@ -162,35 +180,73 @@ export const PlaygroundStory = {
     },
 };
 
-// export const NativeBehavior = {
-//     render: () => `
-//         <combo-box label="Kombo Native" field-id="combo-country-native" native-behavior placeholder="Seçiniz" value="de">
-//             <option value="tr">Türkiye</option>
-//             <option value="de">Almanya</option>
-//             <option value="us">ABD</option>
-//             <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
-//             <option value="kp">Kuzey Kore</option>
-//             <option value="jp">Japonya</option>
-//             <option value="it">İtalya</option>
-//         </combo-box>
-//     `,
-// };
+export const NativeStory = {
+    render: args => Combobox(args),
+    tags: ['!dev'],
+    args: {
+        defaultSlot: `<option value="tr">
+    <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="margin-right: 5px" />Türkiye
+</option>
+<option value="de">
+    <img src="https://flagcdn.com/de.svg" alt="Germany Flag" width="20" height="15" style="margin-right: 5px" />Almanya
+</option>
+<option value="us">
+    <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" style="margin-right: 5px" />ABD
+</option>
+<option value="ch" disabled>
+    <img src="https://flagcdn.com/cn.svg" alt="China Flag" width="20" height="15" style="margin-right: 5px" />Çin Halk Cumhuriyeti
+</option>
+<option value="kp">
+    <img src="https://flagcdn.com/kp.svg" alt="North Korea Flag" width="20" height="15" style="margin-right: 5px" />Kuzey Kore
+</option>
+<option value="it">
+    <img src="https://flagcdn.com/it.svg" alt="Italy Flag" width="20" height="15" style="margin-right: 5px" />İtalya
+</option>
+`,
+        noOptionsSlot: `<template slot="no-options">Kayıt Bulunamadı</template>`,
+        fieldId: 'country-native',
+        label: 'Ülke (native)',
+        placeholder: 'Lütfen seçiniz',
+        nativeBehavior: true,
+    },
+};
 
-// export const DynamicOptionsProperty = {
-//     render: () => {
-//         const el = document.createElement('combo-box');
-//         el.setAttribute('field-id', 'combo-dynamic');
-//         el.setAttribute('label', 'Kombo Dinamik');
-//         el.setAttribute('placeholder', 'Seçiniz');
-
-//         // Property-driven options (alternative to slotted <option> children)
-//         el.options = [
-//             { value: 'tr', label: 'Türkiye' },
-//             { value: 'de', label: 'Almanya', selected: true },
-//             { value: 'us', label: 'ABD' },
-//             { value: 'ch', label: 'Çin Halk Cumhuriyeti', disabled: true },
-//         ];
-
-//         return el;
-//     },
-// };
+export const PropAttrEventLists = {
+    tags: ['!dev'],
+    argTypes: {
+        // 3. Events (İstersen bunları da elle ekleyebilirsin)
+        input: {
+            action: 'input', // Actions panelinde 'input' ismiyle loglar
+            description: 'Kullanıcı listeden bir seçim yaptığında (anlık) tetiklenir.',
+            table: {
+                category: 'Events',
+                type: { summary: 'CustomEvent' }, // Tip sütununda görünür
+            },
+        },
+        change: {
+            action: 'change',
+            description: 'Değer commit edildiğinde (Seçim tamamlandığında veya temizlendiğinde) tetiklenir.',
+            table: {
+                category: 'Events',
+                type: { summary: 'CustomEvent' },
+            },
+        },
+        clear: {
+            action: 'clear',
+            description: 'Temizleme (X) butonuna tıklandığında tetiklenir.',
+            table: {
+                category: 'Events',
+                type: { summary: 'CustomEvent' },
+            },
+        },
+        update: {
+            action: 'update',
+            description: 'Değer programatik olarak (JS ile .value set edilerek) değiştirildiğinde tetiklenir.',
+            control: false, // Bu bir event olduğu için kontrol edilemez
+            table: {
+                category: 'Events',
+                type: { summary: 'CustomEvent' },
+            },
+        },
+    },
+};

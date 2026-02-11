@@ -1,15 +1,48 @@
-import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks';
 import * as ComboboxStories from './combo-box.stories.js';
 
 <Meta of={ComboboxStories} name="Overview" />
 
-# ComboBox
+# Combobox
 
 Bu sayfa, `combo-box` bileşeninin kısa kullanımını ve Storybook kontrollerini gösteren minimal bir MDX örneği.
 
 ## HTML kullanımı (örnek)
 
 <Canvas of={ComboboxStories.Default} />
+
+## Erişilebilirlik
+
+### Klavye ile Kontrol
+
+`combo-box`, odaklanabilir bir kapsayıcı (`role="combobox"`) ve açılır liste (`role="listbox"`) ile çalışır. Aşağıdaki davranışlar mevcut implementasyona göre özetlenmiştir.
+
+#### Normal Davranış (varsayılan)
+
+1. **Bileşene odaklan:** `Tab` ile odak bileşen kapsayıcısına gelir.
+2. **Listeyi aç:** Liste kapalıyken `Enter` veya `Space` tuşlarına basıldığında arama alanına odaklanır ve liste açılır.
+3. **Arama yap / filtrele:** Yazdıkça filtre güncellenir ve seçenekler filtrelenir. Filtre değişince aktif seçenek en başa alınır.
+4. **Seçenekler arasında gezin:** Liste açıkken ok tuşlarıyla (`ArrowDown` / `ArrowUp`) odaktaki (_focus_) seçeneği değiştirir. Odaklanan seçeneğe `data-active` özniteliği eklenir.
+5. **Seçim yap ve kapat:** Liste açıkken `Enter`, aktif seçeneği seçer ve listeyi kapatır.
+6. **Seçim yapmadan kapat:** `Escape` veya `Tab`, seçim yapmadan listeyi kapatır ve odak kapsayıcıya döner.
+7. **Temizle:** `Tab` ile Clear butonuna odaklandıktan sonra `Enter` veya `Space` tuşlarına basınca seçim temizlenir ve odak tekrar kapsayıcıya alınır.
+
+#### _Native_ `<select>` Davranışı
+
+`native-behavior` özniteliği eklendiğinde, klavye davranışını _native_ `<select>` elementine benzetir:
+
+- Liste kapalıyken ok tuşlarıyla (`ArrowDown` / `ArrowUp`) seçenekler arasında gezinmek mümkün olur. Gezinme sırasında aktif olan seçenek hemen seçilir.
+- Liste kapanırken aktif olan (_highlighted_) seçenek seçilir. Hangi yöntemle kapatıldığı (`Escape`, dışarı tıklama vs.) önemli değildir.
+
+<Canvas of={ComboboxStories.NativeStory} />
+
+## Component API
+
+`select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
+
+> Zorunlu: `field-id` ve `label` mutlaka verilmelidir. Bu iki öznitelik set edilmezse bileşen bağlanırken hata fırlatır.
+
+<ArgTypes of={ComboboxStories.PropAttrEventLists} />
 
 ## Design Token
 

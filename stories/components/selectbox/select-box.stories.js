@@ -2,7 +2,7 @@ import { createForm, Selectbox } from '../../utilities/register.js';
 import './select-box.css';
 
 export default {
-    title: 'Components/SelectBox',
+    title: 'Components/Select',
     argTypes: {
         default: {
             control: 'text',
