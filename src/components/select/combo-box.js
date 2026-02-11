@@ -162,41 +162,15 @@ export default class ComboBox extends SelectBase {
 
     onKeydown(e) {
         if (e.target === this.clearButton) return;
-
-        const isArrowKey = e.key === 'ArrowDown' || e.key === 'ArrowUp';
         const key = e.key;
 
         if (key === 'Escape') {
             this.#closeList();
             this.comboboxDiv.focus();
-        } else if (this.nativeBehavior && isArrowKey) {
-            e.preventDefault();
-            const [option, idx] = this.#getAdjacentOption(key === 'ArrowDown');
-
-            if (option) {
-                this.activeIndex = idx;
-                this.#onSelect(option);
-                this.#scrollToActive();
-            }
-        } else if (isArrowKey && this.isOpen) {
-            e.preventDefault();
-            this.activeIndex = this.#getAdjacentIndex(key === 'ArrowDown');
-            this.#scrollToActive();
-        } else if (this.isOpen && (key === 'Tab' || key === 'Enter')) {
-            e.preventDefault();
-
-            if (this.nativeBehavior || key === 'Tab') {
-                this.#closeList();
-            } else {
-                /** @type {HTMLDivElement} */
-                const opt = this.renderRoot.querySelector('div[role="option"][data-active]');
-                opt ? opt.click() : this.#closeList();
-            }
-
-            this.comboboxDiv.focus();
-        } else if (!this.isOpen && (key === ' ' || key === 'Enter')) {
-            e.preventDefault();
-            this.searchElement.focus();
+        } else if (!this.isOpen) {
+            this.#closedKeyboardBehavior(e, key);
+        } else if (this.isOpen) {
+            this.#openKeyboardBehavior(e, key);
         }
 
         // yazmaya başladığımızda arama yapılır
@@ -233,8 +207,6 @@ export default class ComboBox extends SelectBase {
      * @param {ComboBoxOption} selectedOption
      */
     #onSelect(selectedOption) {
-        this.dispatchCustomEvent('input');
-
         if (this.#selectedOption === selectedOption) return;
 
         this.#selectedOption && (this.#selectedOption.selected = false);
@@ -243,6 +215,7 @@ export default class ComboBox extends SelectBase {
         this.selectedOption = { value: selectedOption?.value, label: selectedOption?.label };
         this.#setInputAndDisplay(selectedOption);
         this.value = selectedOption?.value || null;
+        this.dispatchCustomEvent('input');
         this.dispatchCustomEvent('change');
     }
 
@@ -263,6 +236,48 @@ export default class ComboBox extends SelectBase {
         el.setCustomValidity(this.validationMessage);
 
         return !this.validationMessage;
+    }
+
+    #openKeyboardBehavior(e, key) {
+        const isArrowKey = key === 'ArrowDown' || key === 'ArrowUp';
+
+        if (isArrowKey) {
+            e.preventDefault();
+            this.activeIndex = this.#getAdjacentIndex(key === 'ArrowDown');
+            this.#scrollToActive();
+        } else if (key === 'Tab' || key === 'Enter') {
+            e.preventDefault();
+
+            if (!this.nativeBehavior && key === 'Enter') {
+                this.#selectActiveOption();
+            }
+
+            this.#closeList();
+            this.comboboxDiv.focus();
+        }
+    }
+
+    #closedKeyboardBehavior(e, key) {
+        const isArrowKey = key === 'ArrowDown' || key === 'ArrowUp';
+
+        // Seçim yap
+        if (this.nativeBehavior && isArrowKey) {
+            e.preventDefault();
+            const [option, idx] = this.#getAdjacentOption(key === 'ArrowDown');
+
+            if (option) {
+                this.activeIndex = idx;
+                this.#onSelect(option);
+            }
+        } else if (key === ' ' || key === 'Enter') {
+            e.preventDefault();
+            this.searchElement.focus();
+        }
+    }
+
+    #selectActiveOption() {
+        const option = this.filteredOptions[this.activeIndex];
+        if (option) this.#onSelect(option);
     }
 
     /**
@@ -320,6 +335,7 @@ export default class ComboBox extends SelectBase {
     }
 
     #closeList() {
+        if (this.nativeBehavior) this.#selectActiveOption();
         this.isOpen = false;
         this.listboxDiv?.hidePopover();
         this.#unlockBody();
