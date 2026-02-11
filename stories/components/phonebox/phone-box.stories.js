@@ -1,9 +1,8 @@
-import { Passwordbox } from '../../utilities/register.js';
+import { Phonebox } from '../../utilities/register.js';
 import '../textbox/text-box.css';
-import './password-box.css';
 
 export default {
-    title: 'Textbox/PasswordBox',
+    title: 'Textbox/PhoneBox',
     argTypes: {
         fieldId: {
             type: { name: 'string', required: true },
@@ -65,13 +64,13 @@ export default {
 };
 
 // Mirrors index.html:
-// <plate-box field-id="plate-no" label="Plaka Numarası" value="55  ty" required></plate-box>
+// <phone-box field-id="phone-no" label="Telefon Numarası" value="0555 555 5555" required></phone-box>
 export const Default = {
-    render: args => Passwordbox(args),
+    render: args => Phonebox(args),
     args: {
-        fieldId: 'password',
-        label: 'Şifre',
-        placeholder: 'Şifrenizi giriniz',
+        fieldId: 'phone-no',
+        label: 'Telefon Numarası',
+        placeholder: '0555 555 5555',
     },
     parameters: {
         docs: {
@@ -82,12 +81,12 @@ export const Default = {
 };
 
 export const PlaygroundStory = {
-    render: args => Passwordbox(args),
+    render: args => Phonebox(args),
     tags: ['!dev'],
     args: {
-        fieldId: 'password',
-        label: 'Şifre',
-        placeholder: 'Şifrenizi giriniz',
+        fieldId: 'phone-no',
+        label: 'Telefon Numarası',
+        placeholder: '0555 555 5555',
     },
     parameters: {
         docs: {

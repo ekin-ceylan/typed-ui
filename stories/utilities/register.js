@@ -9,6 +9,7 @@ import { ifDefined } from '../../src/modules/utilities.js';
 defineComponent('check-box', TypedUI.CheckBox);
 defineComponent('text-box', TypedUI.TextBox);
 defineComponent('plate-box', TypedUI.PlateBox);
+defineComponent('phone-box', TypedUI.PhoneBox);
 defineComponent('email-box', TypedUI.EmailBox);
 defineComponent('password-box', TypedUI.PasswordBox);
 defineComponent('select-box', TypedUI.SelectBox);
@@ -62,6 +63,21 @@ export const Platebox = ({ fieldId, fieldName, label, value, placeholder, requir
         value=${ifDefined(value)}
     >
     </plate-box>`;
+    // readonly
+    return elementFromTemplate(temp);
+};
+
+export const Phonebox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
+    const temp = html`<phone-box
+        field-id=${ifDefined(fieldId)}
+        field-name=${ifDefined(fieldName)}
+        label=${ifDefined(label)}
+        ?required=${required}
+        ?disabled=${disabled}
+        placeholder=${ifDefined(placeholder)}
+        value=${ifDefined(value)}
+    >
+    </phone-box>`;
     // readonly
     return elementFromTemplate(temp);
 };

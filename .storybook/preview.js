@@ -1,6 +1,11 @@
 /** @type { import('@storybook/web-components-vite').Preview } */
 const preview = {
     parameters: {
+        options: {
+            storySort: {
+                order: ['Guides', ['Getting Started'], 'Components', 'Textbox', ['TextBox', 'PhoneBox', 'PlateBox', 'PasswordBox']],
+            },
+        },
         controls: {
             matchers: {
                 color: /(background|color)$/i,

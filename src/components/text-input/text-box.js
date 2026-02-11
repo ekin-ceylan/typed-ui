@@ -35,14 +35,6 @@ export default class TextBox extends InputBase {
 
     /** @type {String|null} The last key pressed during keydown event */
     #lastKey = null;
-    #autocomplete = null;
-
-    get autocomplete() {
-        return this.#autocomplete || this.name;
-    }
-    set autocomplete(value) {
-        this.#autocomplete = value;
-    }
 
     /** @returns {String} The name attribute for the input element */
     get name() {

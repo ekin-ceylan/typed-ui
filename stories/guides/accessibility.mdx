@@ -1,0 +1,55 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Accessibility" />
+
+# Erişebilirlik (_Accessibility_)
+
+Erişilebilirlik (a11y), web uygulamalarının herkes tarafından — engelli, yaşlı, farklı cihaz kullanan veya geçici kısıtlı durumda olan kullanıcılar dahil — rahatça kullanılabilmesini sağlamayı amaçlar. Doğru erişilebilirlik, hem etik hem de yasal gereklilikleri karşılar; daha geniş kullanıcı kitlesine ulaşmayı ve daha iyi kullanıcı deneyimi sunmayı mümkün kılar.
+
+**SEO ve site trafiği açısından da erişilebilirlik kritiktir:** Arama motorları erişilebilir siteleri daha yüksek puanlar, daha fazla kullanıcıya ulaşılır ve _bounce rate_ düşer. Yasal uyumluluk da erişimin engellenmemesini sağlar.
+
+## `autocomplete`
+
+`autocomplete`, tarayıcının ve şifre yöneticilerinin form alanlarını doğru tahmin edip doldurabilmesi için kullanılan standart bir ipucudur. Doğru kullanıldığında form doldurma süresini kısaltır, hata oranını düşürür ve özellikle mobil + klavye/autofill akışlarında erişilebilirliği belirgin şekilde iyileştirir.
+
+Bu kütüphanede bazı “alan tipi belli” bileşenler `autocomplete` değerini **otomatik** yönetir (ör. e-posta/telefon gibi). Daha genel bileşenlerde (örn. `TextBox`) ise alanın neyi temsil ettiğini en iyi sayfayı yazan kişi bildiği için `autocomplete`’i **yazarın belirtmesi** beklenir.
+
+Aşağıdaki bileşenler `autocomplete` değerini otomatik olarak doğru şekilde ayarlar:
+
+- `EmailBox` → `autocomplete="email"`
+- `PhoneBox` → `autocomplete="tel"`
+- `PlateBox` → `autocomplete="off"`
+- `IntegerBox` → `autocomplete="off"`
+- `UrlLink` → `autocomplete="url"`
+- `CheckBox` → `autocomplete="off"`
+
+**Diğer genel bileşenlerde** (örn. `TextBox`) alanın neyi temsil ettiğini en iyi siz bilirsiniz; uygun `autocomplete` değerini elle belirtmeniz gerekir. Alan semantiği belliyse uygun `autocomplete` token'ını kullan:
+
+<Markdown>
+    {`
+| Token                | Açıklama                 | Token                | Açıklama                 |
+| -------------------- | ------------------------ | -------------------- | ------------------------ |
+| \`name\`             | Tam ad                   | \`tel\`              | Telefon numarası         |
+| \`given-name\`       | Ad                       | \`postal-code\`      | Posta kodu               |
+| \`family-name\`      | Soyad                    | \`country\`          | Ülke                     |
+| \`username\`         | Kullanıcı adı            | \`organization\`     | Şirket/kurum             |
+| \`one-time-code\`    | Tek seferlik kod (OTP)   | \`cc-number\`        | Kredi kartı numarası     |
+| \`address-line1\`    | Adres satırı 1           | \`cc-exp\`           | Kart son kullanma tarihi |
+| \`address-line2\`    | Adres satırı 2           | \`cc-csc\`           | Kart güvenlik kodu       |
+`}
+</Markdown>
+
+> **Öneri:** `field-id` / `field-name` değerlerini anlamlı tutun; tarayıcılar çoğu zaman `name` + `autocomplete` birlikteyken daha iyi tahmin yapar.
+
+### Neden önemli?
+
+- Doğru otomatik doldurma → daha hızlı form tamamlama, daha az yazım hatası
+- Şifre yöneticileriyle uyum → kullanıcıların güvenli/benzersiz şifre kullanmasını kolaylaştırır
+- Mobilde uygun klavye + öneriler → daha az sürtünme
+
+### Ne zaman kapatılmalı?
+
+- Çok nadir. Kiosk/ortak cihaz gibi senaryolarda veya “tek seferlik / geçici” alanlarda `autocomplete="off"` düşünülebilir.
+- Login / signup / ödeme gibi kritik akışlarda genelde kapatmak yerine doğru token’ı seçmek daha iyi sonuç verir.
+
+> **Uyarı:** `off` her zaman garanti değildir; bazı tarayıcılar/şifre yöneticileri yine de doldurabilir.

@@ -111,14 +111,6 @@ el.options = [
 ];
 ```
 
-## Öznitelikler (_Attributes_)
-
-`select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
-
-> Zorunlu: `field-id` ve `label` mutlaka verilmelidir. Bu iki öznitelik set edilmezse bileşen bağlanırken hata fırlatır.
-
-<ArgTypes of={SelectboxStories.PropAttrEventLists} />
-
 ### JS Property notu
 
 `options` **attribute değildir**; sadece JavaScript üzerinden property olarak set edilir. `options` set edildiğinde, slot ile verilen `<option>/<optgroup>` içerikleri yok sayılır.
@@ -129,6 +121,14 @@ document.querySelector('select-box[field-id="country"]').options = [
     { value: 'de', label: 'Almanya', selected: true },
 ];
 ```
+
+## Öznitelikler (_Attributes_)
+
+`select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
+
+> Zorunlu: `field-id` ve `label` mutlaka verilmelidir. Bu iki öznitelik set edilmezse bileşen bağlanırken hata fırlatır.
+
+<ArgTypes of={SelectboxStories.PropAttrEventLists} />
 
 ## Olay Dinleyiciler (_Events_)
 

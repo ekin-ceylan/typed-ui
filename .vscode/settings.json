@@ -3,6 +3,7 @@
     "editor.formatOnSave": true,
     "material-icon-theme.folders.associations": {
         "mixins": "Functions",
+        "guides": "Meta",
     },
     "material-icon-theme.files.associations": {
         "vitest.storybook.config.js": "Vitest"
