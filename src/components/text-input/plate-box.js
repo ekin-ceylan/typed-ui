@@ -46,6 +46,7 @@ export default class PlateBox extends TextBox {
         super();
         this.inputmode = 'text';
         this.placeholder = '34 ABC 123';
+        this.autocomplete = 'off';
         this.pattern = this.#validationPattern;
         this.maxlength = 10;
         this.minlength = 9;
