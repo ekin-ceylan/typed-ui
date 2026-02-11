@@ -3,7 +3,7 @@ import './combo-box.css';
 
 export default {
     component: 'combo-box',
-    title: 'Components/Combobox',
+    title: 'Select/Combobox',
     argTypes: {
         defaultSlot: {
             name: 'default',

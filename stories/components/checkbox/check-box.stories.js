@@ -2,7 +2,7 @@ import { Checkbox } from '../../utilities/register.js';
 
 export default {
     component: 'check-box',
-    title: 'Components/Checkbox',
+    title: 'Select/Checkbox',
     argTypes: {
         slotHtml: {
             control: 'text',
