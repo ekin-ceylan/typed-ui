@@ -1,5 +1,6 @@
 export { html, LitElement, nothing } from 'lit';
 export { defineComponent } from './modules/utilities.js';
+export { hideBodyScroll, showBodyScroll, lockAllScrolls, unlockAllScrolls } from './modules/scroll-lock-helper.js';
 
 // Base components and mixins
 export { default as InputBase } from './core/input-base.js';

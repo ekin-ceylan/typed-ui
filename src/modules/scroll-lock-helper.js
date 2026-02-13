@@ -1,7 +1,4 @@
 const allowedElements = new Set();
-let isBodyScrollLocked = false;
-let originalBodyOverflow = '';
-let originalBodyPaddingRight = '';
 
 function preventDefault(e) {
     const path = e.composedPath();
@@ -56,26 +53,41 @@ export function unlockAllScrolls(element) {
     }
 }
 
-export function hideBodyScroll() {
-    if (isBodyScrollLocked) return;
+const lockerElements = new Set();
+let originalBodyOverflow = '';
+let originalBodyPaddingRight = '';
 
-    originalBodyOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+/**
+ * Hides body scroll and adds padding to prevent layout shift when scrollbar disappears
+ * @param {HTMLElement} element
+ * @returns void
+ */
+export function hideBodyScroll(element) {
+    if (!element) return;
+    lockerElements.add(element);
+    if (lockerElements.size != 1) return;
 
     const style = globalThis.getComputedStyle(document.body);
     const paddingRight = Number.parseInt(style.paddingRight) || 0;
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    originalBodyPaddingRight = document.body.style.paddingRight;
-    document.body.style.paddingRight = `${paddingRight + scrollbarWidth}px`;
 
-    isBodyScrollLocked = true;
+    originalBodyPaddingRight = document.body.style.paddingRight;
+    originalBodyOverflow = document.body.style.overflow;
+
+    document.body.style.paddingRight = `${paddingRight + scrollbarWidth}px`;
+    document.body.style.overflow = 'hidden';
 }
 
-export function showBodyScroll() {
-    if (!isBodyScrollLocked) return;
+/**
+ * Shows body scroll and removes padding added to prevent layout shift when scrollbar disappears
+ * @param {HTMLElement} element
+ * @returns void
+ */
+export function showBodyScroll(element) {
+    if (!element) return;
+    lockerElements.delete(element);
+    if (lockerElements.size > 0) return;
 
     document.body.style.overflow = originalBodyOverflow || '';
     document.body.style.paddingRight = originalBodyPaddingRight || '';
-
-    isBodyScrollLocked = false;
 }

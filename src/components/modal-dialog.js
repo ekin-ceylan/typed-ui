@@ -63,6 +63,14 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
         });
     }
 
+    disconnectedCallback() {
+        super.disconnectedCallback();
+
+        if (this.open) {
+            showBodyScroll(this.#dialog);
+        }
+    }
+
     /** @override @protected */
     updated() {
         if (this.#dialog) {
@@ -85,14 +93,14 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
         clearTimeout(this.#timeout);
 
         this.#timeout = setTimeout(() => {
-            hideBodyScroll();
+            hideBodyScroll(this.#dialog);
             this.#dialog?.setAttribute('data-active', '');
         }, 20);
     }
     /** Hide with small delay for CSS transitions. */
     #hide() {
         this.#dialog?.removeAttribute('data-active');
-        showBodyScroll();
+        showBodyScroll(this.#dialog);
         clearTimeout(this.#timeout);
 
         this.#timeout = setTimeout(() => {
