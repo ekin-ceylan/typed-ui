@@ -3,10 +3,12 @@ import PasswordBox from './password-box.js';
 export default class ConfirmPasswordBox extends PasswordBox {
     #matchTarget = null;
 
-    static properties = {
-        ...super.properties,
-        match: { type: String }, // CSS selector (confirm)
-    };
+    static get properties() {
+        return {
+            ...super.properties,
+            match: { type: String }, // CSS selector (confirm)
+        };
+    }
 
     validate(value) {
         const base = super.validate(value);

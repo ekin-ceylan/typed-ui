@@ -23,7 +23,7 @@ const esmOptions = {
     treeShaking: true,
     format: 'esm',
     platform: 'browser',
-    target: 'es2020',
+    target: 'es2022',
 
     minify: true,
     legalComments: 'inline', // none | linked | inline | eof

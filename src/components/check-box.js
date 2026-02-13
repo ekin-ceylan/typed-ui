@@ -4,17 +4,19 @@ import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
 import InputBase from '../core/input-base.js';
 
 export default class CheckBox extends SlotCollectorMixin(InputBase) {
-    static properties = {
-        ...super.properties,
-        fieldId: { type: String, attribute: 'field-id' },
-        fieldName: { type: String, attribute: 'field-name' },
-        label: { type: String },
-        required: { type: Boolean, reflect: true },
-        checked: { type: Boolean },
-        checkedValue: { type: String, attribute: 'checked-value' },
-        uncheckedValue: { type: String, attribute: 'unchecked-value' },
-        indeterminate: { type: Boolean, reflect: true },
-    };
+    static get properties() {
+        return {
+            ...super.properties,
+            fieldId: { type: String, attribute: 'field-id' },
+            fieldName: { type: String, attribute: 'field-name' },
+            label: { type: String },
+            required: { type: Boolean, reflect: true },
+            checked: { type: Boolean },
+            checkedValue: { type: String, attribute: 'checked-value' },
+            uncheckedValue: { type: String, attribute: 'unchecked-value' },
+            indeterminate: { type: Boolean, reflect: true },
+        };
+    }
 
     get inputLabel() {
         return this.label || '';

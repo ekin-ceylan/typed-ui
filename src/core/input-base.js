@@ -13,20 +13,22 @@ export default class InputBase extends LightComponentBase {
      * Component reactive properties
      * @type {import('lit').PropertyDeclarations}
      */
-    static properties = {
-        ...super.properties,
-        fieldId: { type: String, attribute: 'field-id' },
-        fieldName: { type: String, attribute: 'field-name' },
-        inputClass: { type: String, attribute: 'input-class' },
-        value: { type: String },
-        label: { type: String },
-        hideLabel: { type: Boolean, attribute: 'hide-label' },
-        placeholder: { type: String, reflect: true },
-        required: { type: Boolean, reflect: true },
-        ariaInvalid: { type: String, attribute: false, reflect: false },
-        disabled: { type: Boolean, reflect: true },
-        readonly: { type: Boolean, reflect: true },
-    };
+    static get properties() {
+        return {
+            ...super.properties,
+            fieldId: { type: String, attribute: 'field-id' },
+            fieldName: { type: String, attribute: 'field-name' },
+            inputClass: { type: String, attribute: 'input-class' },
+            value: { type: String },
+            label: { type: String },
+            hideLabel: { type: Boolean, attribute: 'hide-label' },
+            placeholder: { type: String, reflect: true },
+            required: { type: Boolean, reflect: true },
+            ariaInvalid: { type: String, attribute: false, reflect: false },
+            disabled: { type: Boolean, reflect: true },
+            readonly: { type: Boolean, reflect: true },
+        };
+    }
 
     get invalid() {
         return this.ariaInvalid === 'true' || this.ariaInvalid === 'grammar' || this.ariaInvalid === 'spelling';

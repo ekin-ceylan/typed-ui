@@ -2,10 +2,12 @@ import TextBox from './text-box.js';
 import { html } from 'lit';
 
 export default class PasswordBox extends TextBox {
-    static properties = {
-        ...super.properties,
-        revealed: { type: Boolean, reflect: true }, // şifrenin görünür olup olmadığını tutar
-    };
+    static get properties() {
+        return {
+            ...super.properties,
+            revealed: { type: Boolean, reflect: true }, // şifrenin görünür olup olmadığını tutar
+        };
+    }
 
     validate(value, unmaskedValue) {
         const base = super.validate(value, unmaskedValue);

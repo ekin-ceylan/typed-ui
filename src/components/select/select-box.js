@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
-import SelectBase from './select-base.js';
+import SelectBase from '../../core/select-base.js';
 
 /** @extends {SelectBase<HTMLSelectElement>} */
 export default class SelectBox extends SelectBase {
@@ -61,7 +61,7 @@ export default class SelectBox extends SelectBase {
         }
 
         if (!isAllowedType) {
-            console.error('Only <option> and <optgroup> elements are allowed as children of <select-box>.');
+            console.error(`Only <option> and <optgroup> elements are allowed as children of ${this.tagName.toLowerCase()}.`);
             return false;
         }
 

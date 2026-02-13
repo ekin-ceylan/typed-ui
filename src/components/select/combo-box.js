@@ -1,20 +1,22 @@
 import { html } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
-import SelectBase from './select-base.js';
+import SelectBase from '../../core/select-base.js';
 import { lockAllScrolls, unlockAllScrolls } from '../../modules/scroll-lock-helper.js';
 
 /** @extends {SelectBase<HTMLInputElement>} */
 export default class ComboBox extends SelectBase {
     // #region STATICS, FIELDS, GETTERS
 
-    static properties = {
-        ...super.properties,
-        selectedOption: { type: Object, state: true, attribute: false }, // internal
-        filter: { type: String, state: false }, // Filtre metni
-        nativeBehavior: { type: Boolean, attribute: 'native-behavior' }, // native select gibi davranır
-        activeIndex: { type: Number, state: true, attribute: false },
-        directionUp: { type: Boolean, attribute: false, reflect: false }, // açılır kutu yönü
-    };
+    static get properties() {
+        return {
+            ...super.properties,
+            selectedOption: { type: Object, state: true, attribute: false }, // internal
+            filter: { type: String, state: false }, // Filtre metni
+            nativeBehavior: { type: Boolean, attribute: 'native-behavior' }, // native select gibi davranır
+            activeIndex: { type: Number, state: true, attribute: false },
+            directionUp: { type: Boolean, attribute: false, reflect: false }, // açılır kutu yönü
+        };
+    }
 
     /** @type {ComboBoxOption[]} */
     #optionList = [];

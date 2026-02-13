@@ -5,10 +5,12 @@ export default class NewPasswordBox extends PasswordBox {
     #strengthLabels = ['Şifre çok zayıf', 'Şifre çok zayıf', 'Şifre zayıf', 'Şifre orta', 'Şifre güçlü'];
     #strengthClasses = ['red', 'red', 'orange', 'gold', 'green'];
 
-    static properties = {
-        ...super.properties,
-        strength: { type: Number, state: true }, // şifre gücü (0-4)
-    };
+    static get properties() {
+        return {
+            ...super.properties,
+            strength: { type: Number, state: true }, // şifre gücü (0-4)
+        };
+    }
 
     get #strengthLabel() {
         return this.#strengthLabels[this.strength] || 'Şifre yok';

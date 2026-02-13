@@ -3,11 +3,13 @@ import { ifDefined } from '../../modules/utilities.js';
 import InputBase from '../../core/input-base.js';
 
 export default class RangeSelect extends InputBase {
-    static properties = {
-        min: { type: Number },
-        max: { type: Number },
-        step: { type: Number },
-    };
+    static get properties() {
+        return {
+            min: { type: Number },
+            max: { type: Number },
+            step: { type: Number },
+        };
+    }
 
     onInput(e) {
         this.value = e.target.value;

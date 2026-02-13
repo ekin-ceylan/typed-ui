@@ -1,6 +1,6 @@
 import { html } from 'lit';
-import InputBase from '../../core/input-base.js';
-import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
+import InputBase from './input-base.js';
+import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
 
 /**
  * Base class for select components providing common functionality for select inputs.
@@ -10,12 +10,14 @@ import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
  */
 export default class SelectBase extends SlotCollectorMixin(InputBase) {
     // #region STATICS, FIELDS, GETTERS
-    static properties = {
-        ...super.properties,
-        noOptionsLabel: { type: String, attribute: 'no-options-label' },
-        isOpen: { type: Boolean, attribute: false }, // Açık / kapalı
-        // options: { type: Array, attribute: false },
-    };
+    static get properties() {
+        return {
+            ...super.properties,
+            noOptionsLabel: { type: String, attribute: 'no-options-label' },
+            isOpen: { type: Boolean, attribute: false }, // Açık / kapalı
+            // options: { type: Array, attribute: false },
+        };
+    }
 
     /** @override @type {TElement | null} */
     inputElement = null;

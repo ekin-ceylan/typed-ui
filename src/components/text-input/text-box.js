@@ -6,20 +6,22 @@ import InputBase from '../../core/input-base.js';
  * @extends {InputBase<HTMLInputElement>}
  */
 export default class TextBox extends InputBase {
-    static properties = {
-        ...super.properties,
-        type: { type: String, reflect: true },
-        inputmode: { type: String, reflect: true },
-        allowPattern: { type: String, attribute: 'allow-pattern' },
-        pattern: { type: String, reflect: true },
-        maxlength: { type: Number, reflect: true },
-        minlength: { type: Number, reflect: true },
-        max: { type: Number, reflect: true },
-        min: { type: Number, reflect: true },
-        autounmask: { type: Boolean },
-        autocomplete: { type: String, reflect: true },
-        spellcheck: { type: Boolean, reflect: true },
-    };
+    static get properties() {
+        return {
+            ...super.properties,
+            type: { type: String, reflect: true },
+            inputmode: { type: String, reflect: true },
+            allowPattern: { type: String, attribute: 'allow-pattern' },
+            pattern: { type: String, reflect: true },
+            maxlength: { type: Number, reflect: true },
+            minlength: { type: Number, reflect: true },
+            max: { type: Number, reflect: true },
+            min: { type: Number, reflect: true },
+            autounmask: { type: Boolean },
+            autocomplete: { type: String, reflect: true },
+            spellcheck: { type: Boolean, reflect: true },
+        };
+    }
 
     /** @type {RegExp|null} The compiled regex pattern for single character validation */
     regexPattern = null;

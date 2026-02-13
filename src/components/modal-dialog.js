@@ -12,18 +12,20 @@ import { ifDefined } from '../modules/utilities.js';
  * @slot default - Dialog content.
  */
 export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) {
+    // #region FIELDS
+
     /**
      * Component reactive properties
      * @type {import('lit').PropertyDeclarations}
      */
-    static properties = {
-        open: { type: Boolean },
-        closeButtonClass: { type: String, attribute: 'close-button-class' },
-        backdropClose: { type: Boolean, attribute: 'backdrop-close' },
-        escClose: { type: Boolean, attribute: 'esc-close' },
-    };
-
-    // #region FIELDS
+    static get properties() {
+        return {
+            open: { type: Boolean },
+            closeButtonClass: { type: String, attribute: 'close-button-class' },
+            backdropClose: { type: Boolean, attribute: 'backdrop-close' },
+            escClose: { type: Boolean, attribute: 'esc-close' },
+        };
+    }
 
     #dialog = null;
     #timeout = undefined;
