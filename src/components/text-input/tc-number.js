@@ -68,7 +68,7 @@ export default class TcNumber extends TextBox {
         const caretEnd = element.selectionEnd;
         const caretStart = element.selectionStart;
 
-        if (e.type === 'keydown' && ['ArrowRight', 'End'].includes(this.lastKey) && direction === 'forward' && unmaskedLength <= caretEnd) {
+        if (e instanceof KeyboardEvent && ['ArrowRight', 'End'].includes(this.lastKey) && direction === 'forward' && unmaskedLength <= caretEnd) {
             e.preventDefault();
 
             if (!e.shiftKey && caretStart !== caretEnd) {
