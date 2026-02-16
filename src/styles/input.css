@@ -68,3 +68,7 @@ combo-box {
     flex-grow: 1;
     width: 300px;
 }
+
+tc-number > input {
+    letter-spacing: 1.5px;
+}

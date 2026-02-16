@@ -1,3 +1,4 @@
+import { isEmpty } from '../../modules/utilities';
 import TextBox from './text-box';
 
 /** @extends TextBox */
@@ -10,7 +11,7 @@ export default class IntegerBox extends TextBox {
     }
 
     mask(value) {
-        return value.replace(/\D/g, ''); // Sadece rakamları kabul et
+        return isEmpty(value) ? value : value.replace(/\D/g, ''); // Sadece rakamları kabul et
     }
 
     /** @override */

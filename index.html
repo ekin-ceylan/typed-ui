@@ -62,6 +62,10 @@
             </combo-box>
             <br />
             <br />
+            <tc-number field-id="tc-number" label="Kimlik Numarası" placeholder="Kimlik Numaranızı giriniz"></tc-number>
+
+            <br />
+            <br />
             <text-box field-id="name" hide-label maxlength="100" label="İsim" minlength="2" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ \-]+" value="tr" placeholder="Yaz..."></text-box>
             <br />
             <br />
@@ -103,7 +107,6 @@
                 <option value="de">Almanya</option>
                 <option value="us">ABD</option>
                 <option value="ch">Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
-                <div value="chi">ÇinÇin</div>
             </select-box>
             <br />
             <br />
@@ -112,7 +115,6 @@
                 <option value="de">Almanya</option>
                 <option value="us">ABD</option>
                 <option value="ch" selected>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
-                <div value="chi">ÇinÇin</div>
             </select-box>
             <br />
             <br />
@@ -150,8 +152,29 @@
 
             <button type="submit">Submit</button>
         </form>
-        <modal-dialog id="my-modal" backdrop-close>
+        <modal-dialog id="my-modal" esc-close backdrop-close>
+            <template slot="close-button-icon"></template>
             <p>This is the content of the modal dialog.</p>
+            <select placeholder="Seçiniz" id="native-modal" value="tr">
+                <option value="tr">Türkiye</option>
+                <option value="de">Almanya</option>
+                <option value="us" selected>ABD</option>
+                <option value="ch" disabled>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <option value="kp">Kuzey Kore</option>
+                <option value="jp">Japonya</option>
+                <option value="it">İtalya</option>
+            </select>
+            <br />
+            <br />
+            <select-box field-id="country-selected-modal" label="Ülke Selected" value="tr" placeholder="Seçiniz" required>
+                <option value="tr">Türkiye</option>
+                <option value="de">Almanya</option>
+                <option value="us">ABD</option>
+                <option value="ch" selected>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
+                <!-- <div value="chi">ÇinÇin</div> -->
+            </select-box>
+            <br />
+            <br />
             <button type="button" onclick="document.getElementById('my-modal').hide()">Close</button>
         </modal-dialog>
         <button type="button" onclick="document.getElementById('my-modal').show()">Show Modal</button>

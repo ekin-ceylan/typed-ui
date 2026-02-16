@@ -1,3 +1,4 @@
+import { isEmpty } from '../../modules/utilities';
 import TextBox from './text-box';
 
 export default class EmailBox extends TextBox {
@@ -15,7 +16,7 @@ export default class EmailBox extends TextBox {
     }
 
     mask(value) {
-        return value.toLowerCase();
+        return isEmpty(value) ? value : value.toLowerCase();
     }
 
     #createRegexPattern() {

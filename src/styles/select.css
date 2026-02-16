@@ -1,3 +1,5 @@
+/* https://developer.chrome.com/blog/rfc-customizable-select */
+
 select-box {
     --sbx-bg-color: #e9e9ed;
     --sbx-hover-bg-color: #d0d0d7;

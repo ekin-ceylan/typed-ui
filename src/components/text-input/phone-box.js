@@ -1,7 +1,9 @@
+import { isEmpty } from '../../modules/utilities';
 import TextBox from './text-box';
 
 export default class PhoneBox extends TextBox {
     mask(value) {
+        if (isEmpty(value)) return value;
         value = value.replaceAll(/\D/g, ''); // Sayı olmayan karakterleri kaldır
         value = value.slice(0, 11); // İlk 11 karakteri al
 

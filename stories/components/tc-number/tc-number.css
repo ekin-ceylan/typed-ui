@@ -1,0 +1,7 @@
+tc-number input {
+    letter-spacing: 1.5px;
+}
+
+tc-number input::placeholder {
+    letter-spacing: normal;
+}

@@ -30,40 +30,26 @@ export default class InputBase extends LightComponentBase {
         };
     }
 
-    get invalid() {
-        return this.ariaInvalid === 'true' || this.ariaInvalid === 'grammar' || this.ariaInvalid === 'spelling';
-    }
-
-    set invalid(value) {
-        this.ariaInvalid = value ? 'true' : undefined;
-    }
-
-    /** @type {string|boolean|number|null} */
-    // #value = null;
-
+    /** @type {string | number | boolean | null } */
+    #value = null;
     /** @type {TElement | null} */
     inputElement = null; // DOM input elementi
     /** @type {string | null } */
     validationMessage = '';
-    /** @type {string | null } */
-    unmaskedValue = null;
 
-    // get value() {
-    //     return this.#value;
-    // }
-    // set value(val) {
-    //     console.log('InputBase set value:', val);
-    //     this.#value = val;
-    //     if (val === this.inputElement?.value) return;
-    //     this.requestUpdate('value');
-    //     this.updateComplete.then(this.handleValueUpdate.bind(this));
-    // }
-    // value değiştiğinde bir event fırlatmayı sağlıyor olabilir
-    // updated(changed) {
-    //     if (changed.has('value')) {
-    //         console.log('InputBase updated value:', this.value);
-    //     }
-    // }
+    get value() {
+        return this.#value;
+    }
+    set value(newValue) {
+        this.#value = newValue;
+    }
+
+    get invalid() {
+        return this.ariaInvalid === 'true' || this.ariaInvalid === 'grammar' || this.ariaInvalid === 'spelling';
+    }
+    set invalid(value) {
+        this.ariaInvalid = value ? 'true' : undefined;
+    }
 
     get inputLabel() {
         return this.label && this.label + (this.required ? '*' : '');
@@ -128,6 +114,12 @@ export default class InputBase extends LightComponentBase {
         this.#validateAbstracts();
     }
 
+    updated(changed) {
+        if (changed.has('value')) {
+            this.handleValueUpdate();
+        }
+    }
+
     handleValueUpdate() {
         this.dispatchCustomEvent('update');
     }
@@ -169,7 +161,7 @@ export default class InputBase extends LightComponentBase {
 
     async #firstUpdateCompleted() {
         await this.updateComplete;
-        const form = this.closest('form');
+        const form = this.inputElement?.form;
         form?.addEventListener('submit', this.onFormSubmit.bind(this));
     }
 

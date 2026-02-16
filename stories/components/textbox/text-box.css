@@ -1,6 +1,6 @@
 /* #region DESIGN TOKENS */
 
-:is(text-box, plate-box, phone-box, email-box, password-box) {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) {
     --tbx-bg-color: #ffffff;
     --tbx-bg-hover-color: #ffffff;
     --tbx-bg-disabled: #eef2f7;
@@ -35,7 +35,7 @@
 
 /* #endregion DESIGN TOKENS */
 
-:is(text-box, plate-box, phone-box, email-box, password-box) > label {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > label {
     display: block;
     margin: 0 0 6px 0;
     font-size: var(--tbx-font-size);
@@ -44,7 +44,7 @@
     color: var(--tbx-text-color);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box) > input {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > input {
     width: 100%;
     box-sizing: border-box;
     height: var(--tbx-height);
@@ -64,32 +64,32 @@
         background-color 0.15s ease;
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box) > input::placeholder {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > input::placeholder {
     color: var(--tbx-placeholder-color);
     opacity: 1;
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box) > input:focus::placeholder {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > input:focus::placeholder {
     color: var(--tbx-placeholder-focus-color);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box) > input:hover {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > input:hover {
     border-color: var(--tbx-border-hover-color);
     background: var(--tbx-bg-hover-color);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box) > input:focus-visible {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > input:focus-visible {
     border-color: var(--tbx-border-focus-color);
     box-shadow: none;
     outline: var(--tbx-outline-width) solid var(--tbx-outline-color);
     outline-offset: var(--tbx-outline-offset);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box)[disabled] > label {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number)[disabled] > label {
     color: var(--tbx-text-disabled);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box) > input:disabled {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > input:disabled {
     color: var(--tbx-text-disabled);
     background: var(--tbx-bg-disabled);
     border-color: var(--tbx-border-disabled);
@@ -97,12 +97,12 @@
     opacity: 0.7;
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box) > input[aria-invalid='true'] {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > input[aria-invalid='true'] {
     border-color: var(--tbx-border-invalid-color);
     outline-color: var(--tbx-outline-invalid-color);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box) > [data-role='error-message'] {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > [data-role='error-message'] {
     color: var(--tbx-text-invalid);
     margin-top: 4px;
     font-size: 13px;
@@ -110,7 +110,7 @@
 }
 
 /* Optional: Hide label visually but keep for screen readers */
-:is(text-box, plate-box, phone-box, email-box, password-box) > label[hidden] {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-number) > label[hidden] {
     position: absolute !important;
     width: 1px;
     height: 1px;

@@ -38,9 +38,29 @@ export default class TextBox extends InputBase {
     /** @type {String|null} The last key pressed during keydown event */
     #lastKey = null;
 
+    /** @type {string | null } */
+    #maskedValue = null;
+
     /** @returns {String} The name attribute for the input element */
     get name() {
         return this.fieldName || this.fieldId;
+    }
+
+    /** @returns {String|null} The last key pressed during keydown event */
+    get lastKey() {
+        return this.#lastKey;
+    }
+
+    /** @type {string | null } */
+    get unmaskedValue() {
+        return this.unmask(this.#maskedValue);
+    }
+
+    get value() {
+        return this.autounmask ? this.unmaskedValue : this.#maskedValue;
+    }
+    set value(val) {
+        this.#maskedValue = this.mask(val);
     }
 
     // #region VALIDATION MESSAGES
@@ -112,8 +132,9 @@ export default class TextBox extends InputBase {
 
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('input');
+        this.inputElement?.form?.addEventListener('formdata', this.handleFormData.bind(this));
         this.#createRegexPatterns();
-        this.#handleInitValue();
+        // this.#handleInitValue();
     }
 
     /** @override */
@@ -126,14 +147,33 @@ export default class TextBox extends InputBase {
         }
     }
 
-    handleValueUpdate() {
-        this.#handleInput(/** @type {HTMLInputElement} */ (this.inputElement));
-        this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
-    }
-
     // #endregion LIFECYCLE
 
     // #region PUBLIC API
+
+    handleFormData(event) {
+        const inputName = this.inputElement?.name;
+
+        if (!inputName || !this.autounmask) return;
+        if (event.formData.get(inputName) === undefined) return;
+
+        event.formData.set(inputName, this.unmaskedValue);
+    }
+
+    /** @override */
+    handleValueUpdate() {
+        if (this.#maskedValue === this.inputElement?.value) return;
+        this.inputElement.value = this.#maskedValue;
+        this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
+    }
+
+    /**
+     * Checks if the input value is complete based on the defined constraints.
+     * @returns {boolean} True if the input value is complete, otherwise false.
+     */
+    isComplete() {
+        return false;
+    }
 
     /**
      * Masks the input value by applying the global regex pattern.
@@ -166,8 +206,8 @@ export default class TextBox extends InputBase {
      */
     validate(value, unmaskedValue) {
         if (this.required && !value) return this.requiredValidationMessage;
-        if (value?.length > 0 && value.length < this.minlength) return this.minLengthValidationMessage;
-        if (value.length > this.maxlength) return this.maxLengthValidationMessage;
+        if (value?.length > 0 && value?.length < this.minlength) return this.minLengthValidationMessage;
+        if (value?.length > this.maxlength) return this.maxLengthValidationMessage;
         if (Number(value) > this.max) return this.maxValueValidationMessage;
         if (Number(value) < this.min) return this.minValueValidationMessage;
         if (!isEmpty(value) && this.regexPattern && !this.regexPattern.test(value)) return this.patternValidationMessage;
@@ -182,6 +222,22 @@ export default class TextBox extends InputBase {
      */
     validateLastChar(keyDownEvent) {
         return this.allowRegexPattern ? this.allowRegexPattern.test(keyDownEvent.key) : true;
+    }
+
+    /**
+     * Calculates the new caret position after formatting the input value.
+     * @param {number} caretPostition - The current position of the caret in the input value
+     * @param {string} snapshotValue - The snapshot value of the input at the time of input event
+     * @param {string} maskedValue - The masked value of the input
+     * @returns {number} The new caret position after formatting
+     */
+    replaceCaret(caretPostition, snapshotValue, maskedValue) {
+        const maskedLength = maskedValue.length;
+        const valueLength = snapshotValue.length;
+
+        if (caretPostition === valueLength) return maskedLength; // imleç sona
+        if (this.lastKey == 'Delete') return caretPostition - valueLength + maskedLength;
+        return this.mask(snapshotValue.slice(0, caretPostition)).length; // imleci eski konumuna
     }
 
     // #endregion PUBLIC API
@@ -267,33 +323,20 @@ export default class TextBox extends InputBase {
      * @returns {void}
      */
     #handleInput(element) {
-        const formattedValue = this.#formatValueAndReplaceCaret(element); // Maskelenmiş değer
-        this.unmaskedValue = this.unmask(formattedValue);
-        this.value = this.autounmask ? this.unmaskedValue : formattedValue;
-        element.value = formattedValue;
-        // element.unmaskedValue = this.unmaskedValue;
-    }
-
-    /**
-     * Formats the input value using the mask and adjusts the caret position accordingly.
-     * @param {HTMLInputElement} element - The input element whose value needs to be formatted
-     * @returns {String} The formatted value after applying the mask pattern
-     */
-    #formatValueAndReplaceCaret(element) {
-        if (isEmpty(element.value)) return element.value;
-
         const value = element.value;
+
+        if (isEmpty(value)) {
+            this.#maskedValue = value;
+            this.inputElement.value = value;
+            return;
+        }
+
         const caret = element.selectionStart;
-        const formatted = this.mask(value);
+        this.#maskedValue = this.mask(value);
+        const newCaretPosition = this.replaceCaret(caret, value, this.#maskedValue);
 
-        setTimeout(() => {
-            if (caret === value.length) return;
-            const isDel = this.#lastKey == 'Delete';
-            const caretPosition = isDel ? caret - value.length + formatted.length : this.mask(value.slice(0, caret)).length;
-            element.setSelectionRange(caretPosition, caretPosition); // İmleci eski konumuna getir
-        }, 0);
-
-        return formatted;
+        element.value = this.#maskedValue;
+        element.setSelectionRange(newCaretPosition, newCaretPosition);
     }
 
     #checkValidity(force = false) {
@@ -301,7 +344,7 @@ export default class TextBox extends InputBase {
         const v = el.validity;
 
         // invalid ise her inputta tekrar kontrol et, valid ise blur olana kadar bekle
-        if (!force && !this.invalid && !v?.valueMissing) {
+        if (!force && !this.invalid && !v?.valueMissing && !this.isComplete()) {
             return true;
         }
 
@@ -309,6 +352,7 @@ export default class TextBox extends InputBase {
         this.validationMessage = this.validate(el.value, this.unmaskedValue);
         this.invalid = !!this.validationMessage;
         el.setCustomValidity(this.validationMessage || '');
+        this.requestUpdate('validationMessage');
 
         return !this.validationMessage;
     }
@@ -334,13 +378,15 @@ export default class TextBox extends InputBase {
         };
     }
 
-    async #handleInitValue() {
-        await this.updateComplete;
+    // async #handleInitValue() {
+    //     return;
+    //     await this.updateComplete;
 
-        if (this.inputElement && this.value != null) {
-            this.inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-        }
-    }
+    //     if (this.inputElement && this.value != null) {
+    //         this.inputElement.value = this.value;
+    //         this.inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    //     }
+    // }
 
     #createRegexPatterns() {
         this.allowRegexPattern = this.allowPattern ? new RegExp(this.allowPattern) : null;
@@ -359,7 +405,6 @@ export default class TextBox extends InputBase {
                 name=${ifDefined(this.name)}
                 class=${ifDefined(this.inputClass)}
                 type=${this.type || 'text'}
-                .value=${this.value ?? ''}
                 ?disabled=${this.disabled}
                 aria-labelledby=${ifDefined(this.labelId)}
                 aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
