@@ -87,7 +87,7 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
             <label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}>
                 <input
                     id=${ifDefined(this.fieldId)}
-                    name=${ifDefined(this.fieldName || this.fieldId)}
+                    name=${ifDefined(this.fieldName)}
                     type="checkbox"
                     value=${ifDefined(this.checkedValue)}
                     ?checked=${ifDefined(this.checked)}

@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { ifDefined } from '../modules/utilities.js';
 import LightComponentBase from './light-component-base';
+import { generateId } from '../modules/id-generator.js';
 
 /**
  * Base class for input components providing common functionality for form inputs.
@@ -155,7 +156,8 @@ export default class InputBase extends LightComponentBase {
     /** @override */
     connectedCallback() {
         super.connectedCallback();
-        this.#validateRequiredFields(['fieldId', 'label']);
+        if (!this.fieldId) this.fieldId = generateId(this.tagName.toLowerCase());
+        this.#validateRequiredFields(['label']);
         this.#firstUpdateCompleted();
     }
 

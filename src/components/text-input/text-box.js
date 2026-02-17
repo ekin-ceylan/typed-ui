@@ -41,11 +41,6 @@ export default class TextBox extends InputBase {
     /** @type {string | null } */
     #maskedValue = null;
 
-    /** @returns {String} The name attribute for the input element */
-    get name() {
-        return this.fieldName || this.fieldId;
-    }
-
     /** @returns {String|null} The last key pressed during keydown event */
     get lastKey() {
         return this.#lastKey;
@@ -402,7 +397,7 @@ export default class TextBox extends InputBase {
             ${this.label && !this.hideLabel ? html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}>${this.inputLabel}</label>` : ``}
             <input
                 id=${ifDefined(this.fieldId)}
-                name=${ifDefined(this.name)}
+                name=${ifDefined(this.fieldName)}
                 class=${ifDefined(this.inputClass)}
                 type=${this.type || 'text'}
                 ?disabled=${this.disabled}

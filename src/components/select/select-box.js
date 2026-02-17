@@ -187,7 +187,7 @@ export default class SelectBox extends SelectBase {
             <div>
                 <select
                     id=${ifDefined(this.fieldId)}
-                    name=${ifDefined(this.fieldName || this.fieldId)}
+                    name=${ifDefined(this.fieldName)}
                     class=${ifDefined(this.inputClass)}
                     .value=${this.value ?? ''}
                     ?required=${this.required}

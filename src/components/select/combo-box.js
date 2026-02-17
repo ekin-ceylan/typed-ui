@@ -497,7 +497,7 @@ export default class ComboBox extends SelectBase {
             >
                 <input
                     id=${ifDefined(this.fieldId)}
-                    name=${ifDefined(this.fieldName || this.fieldId)}
+                    name=${ifDefined(this.fieldName)}
                     type="text"
                     ?required=${this.required}
                     ?disabled=${this.disabled}

@@ -40,7 +40,7 @@ export default class RangeSelect extends InputBase {
                 <data value=${this.min} aria-hidden="true">${this.min}</data>
                 <input
                     id=${ifDefined(this.fieldId)}
-                    name=${ifDefined(this.fieldName || this.fieldId)}
+                    name=${ifDefined(this.fieldName)}
                     .value=${this.value ?? ''}
                     ?required=${this.required}
                     ?disabled=${this.disabled}
