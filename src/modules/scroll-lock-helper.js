@@ -68,13 +68,13 @@ export function hideBodyScroll(element) {
     if (lockerElements.size != 1) return;
 
     const style = globalThis.getComputedStyle(document.body);
-    const paddingRight = Number.parseInt(style.paddingRight) || 0;
+    const paddingInlineEnd = Number.parseInt(style.paddingInlineEnd) || 0;
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
-    originalBodyPaddingRight = document.body.style.paddingRight;
+    originalBodyPaddingRight = document.body.style.paddingInlineEnd;
     originalBodyOverflow = document.body.style.overflow;
 
-    document.body.style.paddingRight = `${paddingRight + scrollbarWidth}px`;
+    document.body.style.paddingInlineEnd = `${paddingInlineEnd + scrollbarWidth}px`;
     document.body.style.overflow = 'hidden';
 }
 
@@ -89,5 +89,5 @@ export function showBodyScroll(element) {
     if (lockerElements.size > 0) return;
 
     document.body.style.overflow = originalBodyOverflow || '';
-    document.body.style.paddingRight = originalBodyPaddingRight || '';
+    document.body.style.paddingInlineEnd = originalBodyPaddingRight || '';
 }
