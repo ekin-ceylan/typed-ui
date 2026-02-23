@@ -9,7 +9,8 @@ export { default as SlotCollectorMixin } from './mixins/slot-collector-mixin.js'
 
 // Text input components
 export { default as TextBox } from './components/text-input/text-box.js';
-export { default as TcNumber } from './components/text-input/tc-number.js';
+export { default as TcBox } from './components/text-input/tc-box.js';
+export { default as CodeBox } from './components/text-input/code-box.js';
 export { default as PlateBox } from './components/text-input/plate-box.js';
 export { default as PhoneBox } from './components/text-input/phone-box.js';
 export { default as EmailBox } from './components/text-input/email-box.js';

@@ -69,6 +69,14 @@ combo-box {
     width: 300px;
 }
 
-tc-number > input {
+:is(tc-box, code-box) > input {
     letter-spacing: 1.5px;
+}
+
+tc-box > input::placeholder {
+    letter-spacing: normal;
+}
+
+code-box > input {
+    text-align: center;
 }

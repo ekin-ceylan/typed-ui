@@ -88,10 +88,14 @@ export default class ComboBox extends SelectBase {
         if (globalThis.getComputedStyle(this.listboxDiv).overscrollBehavior != 'contain') this.listboxDiv.style.overscrollBehavior = 'contain';
     }
 
-    handleValueUpdate() {
-        const matchedOption = this.#optionList.find(o => o.value === this.value) || null;
-        matchedOption && this.#onSelect(matchedOption);
-        this.dispatchCustomEvent('update');
+    updated(changed) {
+        if (changed.has('value') && this.inputElement?.value !== this.value) {
+            const matchedOption = this.#optionList.find(o => o.value === this.value) || null;
+            //TODO bulunamazsa!! console.log('handleValueUpdate', { value: this.value, matchedOption });
+            this.#onSelect(matchedOption);
+            this.#checkValidity();
+            this.dispatchCustomEvent('update');
+        }
     }
 
     disconnectedCallback() {
@@ -229,6 +233,8 @@ export default class ComboBox extends SelectBase {
     }
 
     #checkValidity() {
+        if (!this.focused) return true; // etkileşime girilmediyse
+
         const el = this.inputElement;
         const v = el.validity;
 

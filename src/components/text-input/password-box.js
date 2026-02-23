@@ -9,8 +9,8 @@ export default class PasswordBox extends TextBox {
         };
     }
 
-    validate(value, unmaskedValue) {
-        const base = super.validate(value, unmaskedValue);
+    validate(value) {
+        const base = super.validate(value);
 
         if (base) return base;
         if (/\s/.test(value)) return `${this.label} alanı boşluk içermemelidir.`;

@@ -72,6 +72,8 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
     }
 
     updated(changed) {
+        super.updated(changed);
+
         if (changed.has('indeterminate')) {
             this.#syncIndeterminate();
         }

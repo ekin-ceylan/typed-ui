@@ -146,11 +146,13 @@ export default class SelectBox extends SelectBase {
     }
 
     #checkValidity() {
+        if (!this.focused) return true; // etkileşime girilmediyse
+
         const el = this.inputElement;
         const v = el.validity;
 
         el.setCustomValidity('');
-        this.invalid = !v?.valid;
+        this.invalid = !v?.valid; // TODO custom validasyon ekle
         this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
         el.setCustomValidity(this.validationMessage);
 
@@ -198,7 +200,6 @@ export default class SelectBox extends SelectBase {
                     id=${ifDefined(this.fieldId)}
                     name=${ifDefined(this.fieldName)}
                     class=${ifDefined(this.inputClass)}
-                    .value=${this.value ?? ''}
                     ?required=${this.required}
                     ?disabled=${this.disabled}
                     aria-labelledby=${ifDefined(this.labelId)}

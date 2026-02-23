@@ -13,15 +13,25 @@ export default class TextBox extends InputBase {
             inputmode: { type: String, reflect: true },
             allowPattern: { type: String, attribute: 'allow-pattern' },
             pattern: { type: String, reflect: true },
-            maxlength: { type: Number, reflect: true },
-            minlength: { type: Number, reflect: true },
+            maxlength: { type: Number },
+            minlength: { type: Number },
             max: { type: Number, reflect: true },
             min: { type: Number, reflect: true },
             autounmask: { type: Boolean },
-            autocomplete: { type: String, reflect: true },
+            autocomplete: { type: String },
             spellcheck: { type: Boolean, reflect: true },
         };
     }
+
+    #isComplete = false;
+
+    /** @type {String|null} The last key pressed during keydown event */
+    #lastKey = null;
+
+    /** @type {string | null } */
+    #maskedVal = '';
+    /** @type {string | null } */
+    #unmaskedValue = '';
 
     /** @type {RegExp|null} The compiled regex pattern for single character validation */
     regexPattern = null;
@@ -35,27 +45,22 @@ export default class TextBox extends InputBase {
     /** @type {RegExp|null} The compiled allow-pattern regex with global flag for filtering operations */
     globalAllowRegexPattern = null;
 
-    /** @type {String|null} The last key pressed during keydown event */
-    #lastKey = null;
-
-    /** @type {string | null } */
-    #maskedValue = null;
-
-    /** @returns {String|null} The last key pressed during keydown event */
-    get lastKey() {
-        return this.#lastKey;
+    get maskedValue() {
+        return this.#maskedVal;
+    }
+    set #maskedValue(val) {
+        this.#maskedVal = val;
+        this.#unmaskedValue = this.unmask(val);
     }
 
     /** @type {string | null } */
     get unmaskedValue() {
-        return this.unmask(this.#maskedValue);
+        return this.#unmaskedValue;
     }
 
-    get value() {
-        return this.autounmask ? this.unmaskedValue : this.#maskedValue;
-    }
-    set value(val) {
-        this.#maskedValue = this.mask(val);
+    /** @returns {String|null} The last key pressed during keydown event */
+    get lastKey() {
+        return this.#lastKey;
     }
 
     // #region VALIDATION MESSAGES
@@ -86,15 +91,16 @@ export default class TextBox extends InputBase {
 
     constructor() {
         super();
-        this.value = null;
+
         this.label = '';
         this.placeholder = '';
         this.required = false;
+        this.value = '';
 
         /** @type {String} The type attribute for the input element (e.g., 'text', 'email', 'tel') */
         this.type = 'text';
 
-        /** @type {String} The inputmode attribute for the input element (e.g., 'numeric', 'decimal', 'tel') */
+        /** @type {String} The inputmode attribute for the input element (e.g., 'numeric', 'decimal', 'tel'). Will be 'text' if not specified */
         this.inputmode = undefined;
 
         /** @type {String} Regex source to allow/filter characters during masking */
@@ -129,15 +135,30 @@ export default class TextBox extends InputBase {
         this.inputElement = this.renderRoot.querySelector('input');
         this.inputElement?.form?.addEventListener('formdata', this.handleFormData.bind(this));
         this.#createRegexPatterns();
-        // this.#handleInitValue();
     }
 
     /** @override */
-    updated(changedProperties) {
-        super.updated?.(changedProperties);
+    willUpdate(changed) {
+        super.willUpdate(changed);
+
+        if (changed.has('value')) {
+            const valStr = this.value?.toString() || this.value;
+            this.#maskedValue = this.mask(valStr);
+            this.value = this.autounmask ? this.unmaskedValue : this.maskedValue;
+        }
+    }
+
+    /** @override */
+    updated(changed) {
+        if (changed.has('value') && this.inputElement?.value !== this.maskedValue) {
+            this.inputElement.value = this.maskedValue;
+            this.#checkCompletion();
+            this.#checkValidity(false);
+            this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
+        }
 
         // Recompile patterns when they change at runtime (attribute or property update).
-        if (changedProperties.has('allowPattern') || changedProperties.has('pattern')) {
+        if (changed.has('allowPattern') || changed.has('pattern')) {
             this.#createRegexPatterns();
         }
     }
@@ -153,13 +174,6 @@ export default class TextBox extends InputBase {
         if (event.formData.get(inputName) === undefined) return;
 
         event.formData.set(inputName, this.unmaskedValue);
-    }
-
-    /** @override */
-    handleValueUpdate() {
-        if (this.#maskedValue === this.inputElement?.value) return;
-        this.inputElement.value = this.#maskedValue;
-        this.dispatchEvent(new CustomEvent('update', this.#eventInitDict()));
     }
 
     /**
@@ -195,11 +209,10 @@ export default class TextBox extends InputBase {
 
     /**
      * Validates the input value against defined constraints (required, length, numeric range, pattern).
-     * @param {String} value - The value to validate
-     * @param {String} unmaskedValue - The unmasked value (currently unused)
+     * @param {String} value - The value to validate. Can be overridden to provide the unmasked or masked value if needed.
      * @returns {String} Empty string if valid, otherwise returns the appropriate validation error message
      */
-    validate(value, unmaskedValue) {
+    validate(value) {
         if (this.required && !value) return this.requiredValidationMessage;
         if (value?.length > 0 && value?.length < this.minlength) return this.minLengthValidationMessage;
         if (value?.length > this.maxlength) return this.maxLengthValidationMessage;
@@ -246,6 +259,7 @@ export default class TextBox extends InputBase {
     onInput(e) {
         e.stopPropagation();
         this.#handleInput(e.target);
+        this.#checkCompletion();
         this.#checkValidity(false);
         this.dispatchEvent(new CustomEvent('input', this.#eventInitDict(e)));
     }
@@ -257,7 +271,6 @@ export default class TextBox extends InputBase {
      */
     onChange(e) {
         e.stopPropagation();
-        if (this.autounmask) this.value = this.unmaskedValue;
         this.dispatchEvent(new CustomEvent('change', this.#eventInitDict(e)));
     }
 
@@ -297,7 +310,7 @@ export default class TextBox extends InputBase {
      * @param {Event & { target: HTMLInputElement }} event
      */
     onInvalid(event) {
-        // e.preventDefault(); // mesaj baloncuğu çıkmaz
+        //event.preventDefault(); // mesaj baloncuğu çıkmaz
         this.#checkValidity(true);
     }
 
@@ -322,34 +335,44 @@ export default class TextBox extends InputBase {
 
         if (isEmpty(value)) {
             this.#maskedValue = value;
-            this.inputElement.value = value;
+            element.value = value;
             return;
         }
 
         const caret = element.selectionStart;
         this.#maskedValue = this.mask(value);
-        const newCaretPosition = this.replaceCaret(caret, value, this.#maskedValue);
+        const newCaretPosition = this.replaceCaret(caret, value, this.maskedValue);
 
-        element.value = this.#maskedValue;
+        element.value = this.maskedValue;
         element.setSelectionRange(newCaretPosition, newCaretPosition);
+        this.value = this.autounmask ? this.unmaskedValue : this.maskedValue;
     }
 
     #checkValidity(force = false) {
-        const el = this.inputElement;
-        const v = el.validity;
+        const valueMissing = this.required && !(this.maskedValue && this.unmaskedValue);
 
-        // invalid ise her inputta tekrar kontrol et, valid ise blur olana kadar bekle
-        if (!force && !this.invalid && !v?.valueMissing && !this.isComplete()) {
+        // invalid ise her inputta tekrar kontrol et, valid ise force (blur veya submit) olana kadar bekle
+        if (!force && !this.invalid && !this.#isComplete && !(this.focused && valueMissing)) {
             return true;
         }
 
-        el.setCustomValidity('');
-        this.validationMessage = this.validate(el.value, this.unmaskedValue);
+        this.inputElement.setCustomValidity('');
+        this.validationMessage = this.validate(this.maskedValue);
         this.invalid = !!this.validationMessage;
-        el.setCustomValidity(this.validationMessage || '');
+        this.inputElement.setCustomValidity(this.validationMessage || '');
         this.requestUpdate('validationMessage');
 
         return !this.validationMessage;
+    }
+
+    #checkCompletion() {
+        const complete = this.isComplete();
+        if (complete === this.#isComplete) return;
+        if (complete && !this.#isComplete) {
+            this.dispatchEvent(new CustomEvent('complete', this.#eventInitDict()));
+        }
+
+        this.#isComplete = complete;
     }
 
     /**
@@ -372,16 +395,6 @@ export default class TextBox extends InputBase {
             },
         };
     }
-
-    // async #handleInitValue() {
-    //     return;
-    //     await this.updateComplete;
-
-    //     if (this.inputElement && this.value != null) {
-    //         this.inputElement.value = this.value;
-    //         this.inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-    //     }
-    // }
 
     #createRegexPatterns() {
         this.allowRegexPattern = this.allowPattern ? new RegExp(this.allowPattern) : null;

@@ -8,8 +8,8 @@ export default class EmailBox extends TextBox {
         return e.key !== ' '; // Boşluğa izin verme
     }
 
-    validate(value, unmaskedValue) {
-        const base = super.validate(value, unmaskedValue);
+    validate(value) {
+        const base = super.validate(value);
 
         if (base) return base;
         if (!this.#pattern.test(value)) return this.patternValidationMessage;

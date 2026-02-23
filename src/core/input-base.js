@@ -25,24 +25,22 @@ export default class InputBase extends LightComponentBase {
             hideLabel: { type: Boolean, attribute: 'hide-label' },
             placeholder: { type: String, reflect: true },
             required: { type: Boolean, reflect: true },
+            requiredSign: { type: String, attribute: 'required-sign' },
             ariaInvalid: { type: String, attribute: false, reflect: false },
             disabled: { type: Boolean, reflect: true },
             readonly: { type: Boolean, reflect: true },
         };
     }
 
-    /** @type {string | number | boolean | null } */
-    #value = null;
+    #focused = false; // Inputun odaklanıp odaklanmadığını takip eder
+
     /** @type {TElement | null} */
     inputElement = null; // DOM input elementi
     /** @type {string | null } */
     validationMessage = '';
 
-    get value() {
-        return this.#value;
-    }
-    set value(newValue) {
-        this.#value = newValue;
+    get focused() {
+        return this.#focused;
     }
 
     get invalid() {
@@ -53,7 +51,7 @@ export default class InputBase extends LightComponentBase {
     }
 
     get inputLabel() {
-        return this.label && this.label + (this.required ? '*' : '');
+        return this.label && this.label + (this.required ? this.requiredSign : '');
     }
     get labelId() {
         return this.fieldId && !this.hideLabel ? `${this.fieldId}-label` : null;
@@ -91,6 +89,8 @@ export default class InputBase extends LightComponentBase {
     constructor() {
         super();
 
+        /** @type {string | number | boolean | null } */
+        this.value = null;
         /** @property {string} Unique identifier for the input field */
         this.fieldId = '';
         /** @property {string} Name attribute for the input field */
@@ -105,6 +105,8 @@ export default class InputBase extends LightComponentBase {
         this.placeholder = '';
         /** @property {boolean} Whether the input is required */
         this.required = false;
+        /** @property {string} The sign to indicate a required field */
+        this.requiredSign = '';
         /** @property {boolean} ARIA invalid state for accessibility */
         this.invalid = false;
         /** @property {boolean} Whether the input is disabled */
@@ -116,13 +118,12 @@ export default class InputBase extends LightComponentBase {
     }
 
     updated(changed) {
-        if (changed.has('value')) {
-            this.handleValueUpdate();
-        }
-    }
+        super.updated(changed);
 
-    handleValueUpdate() {
-        this.dispatchCustomEvent('update');
+        if (changed.has('value') && this.inputElement?.value !== this.value) {
+            this.inputElement.value = /** @type {string} */ (this.value);
+            this.dispatchCustomEvent('update');
+        }
     }
 
     /**
@@ -163,6 +164,7 @@ export default class InputBase extends LightComponentBase {
 
     async #firstUpdateCompleted() {
         await this.updateComplete;
+        this.inputElement.addEventListener('focus', () => (this.#focused = true), { once: true, capture: false });
         const form = this.inputElement?.form;
         form?.addEventListener('submit', this.onFormSubmit.bind(this));
     }
@@ -185,3 +187,5 @@ export default class InputBase extends LightComponentBase {
         }
     }
 }
+
+// updated eventini test et her biri için

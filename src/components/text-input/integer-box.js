@@ -11,12 +11,12 @@ export default class IntegerBox extends TextBox {
     }
 
     mask(value) {
-        return isEmpty(value) ? value : value.replace(/\D/g, ''); // Sadece rakamları kabul et
+        return isEmpty(value) ? value : value.replaceAll(/\D/g, ''); // Sadece rakamları kabul et
     }
 
     /** @override */
     unmask(maskedValue) {
-        const value = maskedValue?.replace(/\D/g, '');
+        const value = maskedValue?.replaceAll(/\D/g, '');
 
         return value ? Number(value).toFixed(2) : null;
     }
