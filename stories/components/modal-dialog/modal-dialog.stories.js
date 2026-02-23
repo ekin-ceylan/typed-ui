@@ -3,7 +3,7 @@ import './modal-dialog.css';
 
 export default {
     component: 'modal-dialog',
-    title: 'Components/Modal Dialog',
+    title: 'Bileşenler/Modal Dialog',
     argTypes: {
         default: {
             control: 'text',

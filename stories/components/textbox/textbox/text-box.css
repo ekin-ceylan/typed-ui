@@ -1,0 +1,122 @@
+/* #region DESIGN TOKENS */
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) {
+    --tbx-bg-color: #ffffff;
+    --tbx-bg-hover-color: #ffffff;
+    --tbx-bg-disabled: #eef2f7;
+
+    --tbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --tbx-font-size: 14px;
+    --tbx-text-color: #111827;
+    --tbx-text-disabled: #6c757d;
+    --tbx-text-invalid: #ef4444;
+    --tbx-placeholder-color: #6b7280;
+    --tbx-placeholder-focus-color: #6b7280;
+
+    --tbx-border-color: #d2d6de;
+    --tbx-border-hover-color: #9ca3af;
+    --tbx-border-focus-color: #3b82f6;
+    --tbx-border-invalid-color: #ef4444;
+    --tbx-border-disabled: #cbd5e1;
+    --tbx-border-radius: 0px;
+
+    --tbx-outline-width: 1px;
+    --tbx-outline-offset: 0px;
+    --tbx-outline-color: #3c8dbc;
+    --tbx-outline-invalid-color: #ef4444;
+
+    --tbx-height: 40px;
+    --tbx-padding-x: 12px;
+
+    font-family: var(--tbx-font-family);
+    max-width: 300px;
+    display: block;
+}
+
+/* #endregion DESIGN TOKENS */
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > label {
+    display: block;
+    margin: 0 0 6px 0;
+    font-size: var(--tbx-font-size);
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--tbx-text-color);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input {
+    width: 100%;
+    box-sizing: border-box;
+    height: var(--tbx-height);
+    padding-left: var(--tbx-padding-x);
+    padding-right: var(--tbx-padding-x);
+    background: var(--tbx-bg-color);
+    border: 1px solid var(--tbx-border-color);
+    border-radius: var(--tbx-border-radius);
+
+    font-size: var(--tbx-font-size);
+    color: var(--tbx-text-color);
+    line-height: 20px;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input::placeholder {
+    color: var(--tbx-placeholder-color);
+    opacity: 1;
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input:focus::placeholder {
+    color: var(--tbx-placeholder-focus-color);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input:hover {
+    border-color: var(--tbx-border-hover-color);
+    background: var(--tbx-bg-hover-color);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input:focus-visible {
+    border-color: var(--tbx-border-focus-color);
+    box-shadow: none;
+    outline: var(--tbx-outline-width) solid var(--tbx-outline-color);
+    outline-offset: var(--tbx-outline-offset);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box)[disabled] > label {
+    color: var(--tbx-text-disabled);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input:disabled {
+    color: var(--tbx-text-disabled);
+    background: var(--tbx-bg-disabled);
+    border-color: var(--tbx-border-disabled);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input[aria-invalid='true'] {
+    border-color: var(--tbx-border-invalid-color);
+    outline-color: var(--tbx-outline-invalid-color);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='error-message'] {
+    color: var(--tbx-text-invalid);
+    margin-top: 4px;
+    font-size: 13px;
+    line-height: 16px;
+}
+
+/* Optional: Hide label visually but keep for screen readers */
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > label[hidden] {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}

@@ -3,7 +3,7 @@ const preview = {
     parameters: {
         options: {
             storySort: {
-                order: ['Guides', ['Getting Started'], 'Components', 'Textbox', ['TextBox', 'PhoneBox', 'PlateBox', 'PasswordBox']],
+                order: [['Başlangıç'], 'Kavramlar', 'Kılavuzlar', 'YZ Araçları', 'Bileşenler', 'Textbox', ['TextBox', 'PhoneBox', 'PlateBox', 'PasswordBox']],
             },
         },
         controls: {

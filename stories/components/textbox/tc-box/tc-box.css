@@ -1,0 +1,7 @@
+tc-box input {
+    letter-spacing: 1.5px;
+}
+
+tc-box input::placeholder {
+    letter-spacing: normal;
+}
