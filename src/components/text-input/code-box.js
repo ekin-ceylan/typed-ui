@@ -24,6 +24,10 @@ export default class CodeBox extends TextBox {
     #matchRegex = null;
     #testRegex = null;
 
+    get matchRegex() {
+        return this.#matchRegex;
+    }
+
     constructor() {
         super();
 
@@ -51,10 +55,10 @@ export default class CodeBox extends TextBox {
     firstUpdated() {
         super.firstUpdated();
 
-        this.placeholder = isEmpty(this.placeholder) ? '_'.repeat(this.digits) : this.placeholder;
+        this.placeholder = isEmpty(this.placeholder) ? this.mask('') : this.placeholder;
 
         this.inputElement.addEventListener('focus', e => {
-            if (this.value === '') this.inputElement.value = '_'.repeat(this.digits);
+            if (this.value === '') this.inputElement.value = this.mask('');
         });
 
         this.inputElement.addEventListener('blur', e => {
@@ -64,7 +68,7 @@ export default class CodeBox extends TextBox {
         this.inputElement.addEventListener('click', this.#fixCaret.bind(this));
         this.inputElement.addEventListener('focus', this.#fixCaret.bind(this));
         this.inputElement.addEventListener('keydown', e => {
-            if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+            if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
             this.#fixCaret(e);
         });
     }
@@ -72,12 +76,12 @@ export default class CodeBox extends TextBox {
     // #region masking
     mask(value) {
         value = String(value || '');
-        return value.match(this.#matchRegex)?.join('').padEnd(this.digits, '_').slice(0, this.digits) || '';
+        return value.match(this.matchRegex)?.join('').padEnd(this.digits, '_').slice(0, this.digits) || '';
     }
 
     unmask(value) {
         if (isEmpty(value)) return value;
-        return value.match(this.#matchRegex)?.join('') || '';
+        return value.match(this.matchRegex)?.join('') || '';
     }
 
     validateLastChar(e) {
@@ -91,8 +95,8 @@ export default class CodeBox extends TextBox {
         return this.#testRegex.test(newValue); // Yeni karakter eklendiğinde değer paternle uyumlu mu?
     }
 
-    replaceCaret(caret, _value, maskedValue) {
-        const unmaskedLength = this.unmask(maskedValue).length;
+    replaceCaret(caret, _value) {
+        const unmaskedLength = this.unmaskedValue.length;
 
         if (caret <= unmaskedLength) return caret;
         return unmaskedLength;
@@ -104,22 +108,25 @@ export default class CodeBox extends TextBox {
      */
     #fixCaret(e) {
         const element = /** @type {HTMLInputElement} */ (e.target);
-        const unmaskedLength = this.unmaskedValue.length;
+        const lastDigit = this.unmaskedValue.slice(-1);
+        const limit = lastDigit ? this.maskedValue.lastIndexOf(lastDigit) + 1 : 0;
         const direction = element.selectionDirection;
         const caretEnd = element.selectionEnd;
         const caretStart = element.selectionStart;
+        const isKeyboardEvent = e instanceof KeyboardEvent;
+        const endKeys = new Set(['ArrowDown', 'End']);
 
-        if (e instanceof KeyboardEvent && ['ArrowRight', 'End'].includes(this.lastKey) && direction === 'forward' && unmaskedLength <= caretEnd) {
+        if (isKeyboardEvent && (endKeys.has(this.lastKey) || ('ArrowRight' === this.lastKey && direction === 'forward' && limit <= caretEnd))) {
             e.preventDefault();
 
-            if (!e.shiftKey && caretStart !== caretEnd) {
-                element.setSelectionRange(unmaskedLength, unmaskedLength);
+            if (endKeys.has(this.lastKey) || (!e.shiftKey && caretStart !== caretEnd)) {
+                element.setSelectionRange(limit, limit);
                 return;
             }
         }
 
-        const newCaretStart = Math.min(caretStart, unmaskedLength);
-        const newCaretEnd = Math.min(caretEnd, unmaskedLength);
+        const newCaretStart = Math.min(caretStart, limit);
+        const newCaretEnd = Math.min(caretEnd, limit);
 
         if (caretStart !== newCaretStart || caretEnd !== newCaretEnd) {
             element.setSelectionRange(newCaretStart, newCaretEnd, direction);

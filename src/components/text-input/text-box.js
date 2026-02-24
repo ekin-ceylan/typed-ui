@@ -234,18 +234,17 @@ export default class TextBox extends InputBase {
 
     /**
      * Calculates the new caret position after formatting the input value.
-     * @param {number} caretPostition - The current position of the caret in the input value
+     * @param {number} caretPosition - The current position of the caret in the input value
      * @param {string} snapshotValue - The snapshot value of the input at the time of input event
-     * @param {string} maskedValue - The masked value of the input
      * @returns {number} The new caret position after formatting
      */
-    replaceCaret(caretPostition, snapshotValue, maskedValue) {
-        const maskedLength = maskedValue.length;
+    replaceCaret(caretPosition, snapshotValue) {
+        const maskedLength = this.maskedValue.length;
         const valueLength = snapshotValue.length;
 
-        if (caretPostition === valueLength) return maskedLength; // imleç sona
-        if (this.lastKey == 'Delete') return caretPostition - valueLength + maskedLength;
-        return this.mask(snapshotValue.slice(0, caretPostition)).length; // imleci eski konumuna
+        if (caretPosition === valueLength) return maskedLength; // imleç sona
+        if (this.lastKey == 'Delete') return caretPosition - valueLength + maskedLength;
+        return this.mask(snapshotValue.slice(0, caretPosition)).length; // imleci eski konumuna
     }
 
     // #endregion PUBLIC API
@@ -332,17 +331,9 @@ export default class TextBox extends InputBase {
      */
     #handleInput(element) {
         const value = element.value;
-
-        if (isEmpty(value)) {
-            this.#maskedValue = value;
-            element.value = value;
-            return;
-        }
-
         const caret = element.selectionStart;
-        this.#maskedValue = this.mask(value);
-        const newCaretPosition = this.replaceCaret(caret, value, this.maskedValue);
-
+        this.#maskedValue = this.mask(value); // saving the value!
+        const newCaretPosition = this.replaceCaret(caret, value);
         element.value = this.maskedValue;
         element.setSelectionRange(newCaretPosition, newCaretPosition);
         this.value = this.autounmask ? this.unmaskedValue : this.maskedValue;
@@ -437,3 +428,5 @@ export default class TextBox extends InputBase {
         `;
     }
 }
+
+// TODO: masking bg ve
