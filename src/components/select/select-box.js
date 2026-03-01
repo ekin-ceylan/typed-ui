@@ -38,13 +38,13 @@ export default class SelectBox extends SelectBase {
 
     // #endregion STATICS, FIELDS, GETTERS
 
+    // #region LIFECYCLE METHODS
+
     constructor() {
         super();
         /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | SelectBoxOption[] | []} */
         this.options = [];
     }
-
-    // #region LIFECYCLE METHODS
 
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('select');
@@ -134,9 +134,6 @@ export default class SelectBox extends SelectBase {
             e.preventDefault();
         }
     }
-    // #endregion EVENT LISTENERS
-
-    // #region PRIVATE METHODS
 
     /** @override Clears the input value and dispatches a 'clear' custom event. */
     onClearClick(event) {
@@ -144,6 +141,10 @@ export default class SelectBox extends SelectBase {
         this.dispatchCustomEvent('input');
         this.dispatchCustomEvent('change');
     }
+
+    // #endregion EVENT LISTENERS
+
+    // #region PRIVATE METHODS
 
     #checkValidity() {
         if (!this.focused) return true; // etkileşime girilmediyse
@@ -221,7 +222,7 @@ export default class SelectBox extends SelectBase {
                     ${this.noOptionHtml} ${this.#optionList.map(option => option.htmlElement)}
                 </select>
 
-                ${this.required ? null : this.btnClear} ${this.chevron}
+                ${this.btnClear} ${this.chevron}
             </div>
             ${this.required ? this.validationMessageHtml : null}
         `;

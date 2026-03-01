@@ -36,6 +36,10 @@ export const PlaygroundStory = {
         label: 'Kimlik Numaranız',
         value: undefined,
         placeholder: 'Kimlik numaranızı giriniz',
+        required: undefined,
+        disabled: undefined,
+        clearable: true,
+        requiredSign: '*',
     },
     parameters: {
         docs: {

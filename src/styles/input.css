@@ -69,14 +69,117 @@ combo-box {
     width: 300px;
 }
 
-:is(tc-box, code-box) > input {
+:is(tc-box, code-box) :is(input, [data-role='underlay'] pre) {
     letter-spacing: 1.5px;
 }
 
-tc-box > input::placeholder {
+tc-box input::placeholder {
     letter-spacing: normal;
 }
 
-code-box > input {
+code-box :is(input, [data-role='overlay']) {
     text-align: center;
+}
+
+[data-role='container'] {
+    position: relative;
+    display: inline-block;
+
+    --txt-clear-color: #6c6c6c;
+    --txt-clear-hover: #3e3e3e;
+    --txt-clear-active: #222;
+    --txt-clear-bg-hover: rgba(0, 0, 0, 0.05);
+    --txt-clear-bg-active: rgba(0, 0, 0, 0.1);
+    --txt-clear-right-distance: 14px;
+    --txt-indicator-size: 16px;
+}
+
+[data-clear] {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: var(--txt-indicator-size);
+    height: var(--txt-indicator-size);
+    transition: all 0.2s;
+    color: var(--txt-clear-color);
+    border: none;
+    background: none;
+    line-height: 0px;
+    padding: 4px;
+    right: var(--txt-clear-right-distance);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+input:not([data-has-value]):not(:focus) ~ [data-role='underlay'] {
+    display: none;
+}
+
+tc-box input:focus::placeholder {
+    color: transparent;
+}
+
+[data-role='underlay'] {
+    font-size: inherit;
+    font-family: inherit;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    padding: 1px 2px;
+    box-sizing: content-box;
+    border: solid 1px transparent;
+}
+[data-role='underlay'] pre {
+    font-size: inherit;
+    font-family: inherit;
+    display: inline-block;
+    margin: 0;
+    color: gray;
+}
+
+[data-role='underlay'] pre:first-child {
+    color: transparent;
+}
+
+[data-role='overlay'] {
+    font-size: inherit;
+    font-family: inherit;
+    position: absolute;
+    inset: 0;
+    /* pointer-events: none; */
+    padding: 1px 2px;
+    box-sizing: content-box;
+    border: solid 1px transparent;
+}
+[data-role='overlay'] pre {
+    font-size: inherit;
+    font-family: inherit;
+    display: inline-block;
+    margin: 0;
+    color: gray;
+    letter-spacing: 1.5px;
+}
+
+[data-role='overlay'] pre:first-child {
+    color: inherit;
+}
+
+[data-role='fake-caret'] {
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    background-color: black;
+    animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+input {
+    font-size: inherit;
+    font-family: inherit;
+    border-width: 1px;
 }

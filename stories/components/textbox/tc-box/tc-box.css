@@ -1,7 +1,12 @@
-tc-box input {
-    letter-spacing: 1.5px;
+tc-box {
+    --tbx-letter-spacing: 1.5px;
+    --tbx-placeholder-color-focus: transparent;
 }
 
 tc-box input::placeholder {
     letter-spacing: normal;
+}
+
+tc-box > [data-role='container'] > input:not([data-has-value]):not(:focus) ~ [data-role='underlay'] {
+    display: none;
 }

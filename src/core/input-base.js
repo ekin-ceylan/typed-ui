@@ -10,6 +10,8 @@ import { generateId } from '../modules/id-generator.js';
  * @abstract @extends LightComponentBase
  */
 export default class InputBase extends LightComponentBase {
+    // #region STATICS, FIELDS, GETTERS
+
     /**
      * Component reactive properties
      * @type {import('lit').PropertyDeclarations}
@@ -23,6 +25,7 @@ export default class InputBase extends LightComponentBase {
             value: { type: String },
             label: { type: String },
             hideLabel: { type: Boolean, attribute: 'hide-label' },
+            clearable: { type: Boolean, attribute: 'clearable' },
             placeholder: { type: String, reflect: true },
             required: { type: Boolean, reflect: true },
             requiredSign: { type: String, attribute: 'required-sign' },
@@ -75,6 +78,7 @@ export default class InputBase extends LightComponentBase {
     }
     /** @protected @type {import('lit').TemplateResult} */
     get btnClear() {
+        if (!this.clearable) return html``;
         return html`
             <button type="button" data-clear ?disabled=${!this.value} @click=${this.onClearClick} @keydown=${this.onClearKeyDown} aria-label="Değeri temizle">
                 <svg fill="currentColor" viewBox="0 0 460.775 460.775" xml:space="preserve">
@@ -86,6 +90,9 @@ export default class InputBase extends LightComponentBase {
         `;
     }
 
+    // #endregion STATICS, FIELDS, GETTERS
+
+    // #region LIFECYCLE METHODS
     constructor() {
         super();
 
@@ -113,8 +120,18 @@ export default class InputBase extends LightComponentBase {
         this.disabled = false;
         /** @property {boolean} Whether the input is readonly */
         this.readonly = false;
+        /** @property {boolean} Show clear button */
+        this.clearable = false;
 
         this.#validateAbstracts();
+    }
+
+    /** @override */
+    connectedCallback() {
+        super.connectedCallback();
+        if (!this.fieldId) this.fieldId = generateId(this.tagName.toLowerCase());
+        this.#validateRequiredFields(['label']);
+        this.#firstUpdateCompleted();
     }
 
     updated(changed) {
@@ -126,13 +143,26 @@ export default class InputBase extends LightComponentBase {
         }
     }
 
+    // #endregion LIFECYCLE METHODS
+
+    // #region PUBLIC API
+
+    clear() {
+        this.value = null;
+        this.dispatchCustomEvent('clear');
+    }
+
+    // #endregion PUBLIC API
+
+    // #region EVENT LISTENERS
+
     /**
      * Clears the input value and dispatches a 'clear' custom event.
      * @param {Event} event The event that triggered the clear action.
      */
     onClearClick(event) {
-        this.value = null;
-        this.dispatchCustomEvent('clear');
+        this.clear();
+        this.inputElement.focus();
     }
 
     /**
@@ -154,14 +184,9 @@ export default class InputBase extends LightComponentBase {
         throw new Error(`${this.constructor.name}: onFormSubmit(submitEvent) override edilmek zorunda.`);
     }
 
-    /** @override */
-    connectedCallback() {
-        super.connectedCallback();
-        if (!this.fieldId) this.fieldId = generateId(this.tagName.toLowerCase());
-        this.#validateRequiredFields(['label']);
-        this.#firstUpdateCompleted();
-    }
+    // #endregion EVENT LISTENERS
 
+    // #region PRIVATE METHODS
     async #firstUpdateCompleted() {
         await this.updateComplete;
         this.inputElement.addEventListener('focus', () => (this.#focused = true), { once: true, capture: false });
@@ -186,6 +211,7 @@ export default class InputBase extends LightComponentBase {
             }
         }
     }
+    // #endregion PRIVATE METHODS
 }
 
 // updated eventini test et her biri için

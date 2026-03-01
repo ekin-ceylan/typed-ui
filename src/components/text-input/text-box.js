@@ -6,6 +6,8 @@ import InputBase from '../../core/input-base.js';
  * @extends {InputBase<HTMLInputElement>}
  */
 export default class TextBox extends InputBase {
+    // #region STATICS, FIELDS, GETTERS
+
     static get properties() {
         return {
             ...super.properties,
@@ -36,9 +38,6 @@ export default class TextBox extends InputBase {
     /** @type {RegExp|null} The compiled regex pattern for single character validation */
     regexPattern = null;
 
-    /** @type {RegExp|null} The compiled regex pattern with global flag for masking operations */
-    globalRegexPattern = null;
-
     /** @type {RegExp|null} The compiled allow-pattern regex for single character filtering */
     allowRegexPattern = null;
 
@@ -62,6 +61,18 @@ export default class TextBox extends InputBase {
     get lastKey() {
         return this.#lastKey;
     }
+
+    /** @protected @type {import('lit').TemplateResult} */
+    get overlayDiv() {
+        return html``;
+    }
+
+    // #endregion STATICS, FIELDS, GETTERS
+
+    // sağdaki ilişkilenmez tıklanınca imleç en sona gider.
+    // focus sonrası imleç gezinme soldakine yansıtılır
+    // soldakinde tıklama veya seçim inputa aktarılır.
+    // soldakine fake-caret eklenir.
 
     // #region VALIDATION MESSAGES
 
@@ -324,18 +335,23 @@ export default class TextBox extends InputBase {
     }
     // #endregion EVENT LISTENERS
 
+    // #region PRIVATE METHODS
     /**
      * Handles input processing by formatting the value, updating unmasked value, and setting the final value.
      * @param {HTMLInputElement} element - The input element to process
      * @returns {void}
      */
     #handleInput(element) {
-        const value = element.value;
+        const snapshotValue = element.value;
         const caret = element.selectionStart;
-        this.#maskedValue = this.mask(value); // saving the value!
-        const newCaretPosition = this.replaceCaret(caret, value);
-        element.value = this.maskedValue;
-        element.setSelectionRange(newCaretPosition, newCaretPosition);
+        this.#maskedValue = this.mask(snapshotValue); // saving the value!
+
+        if (this.maskedValue !== snapshotValue) {
+            const newCaretPosition = this.replaceCaret(caret, snapshotValue);
+            element.value = this.maskedValue;
+            element.setSelectionRange(newCaretPosition, newCaretPosition);
+        }
+
         this.value = this.autounmask ? this.unmaskedValue : this.maskedValue;
     }
 
@@ -392,41 +408,44 @@ export default class TextBox extends InputBase {
         this.globalAllowRegexPattern = this.allowPattern ? new RegExp(this.allowPattern, 'g') : null;
 
         this.regexPattern = this.pattern ? new RegExp(this.pattern) : null;
-        this.globalRegexPattern = this.pattern ? new RegExp(this.pattern, 'g') : null;
     }
+
+    // #endregion PRIVATE METHODS
 
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         return html`
             ${this.label && !this.hideLabel ? html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}>${this.inputLabel}</label>` : ``}
-            <input
-                id=${ifDefined(this.fieldId)}
-                name=${ifDefined(this.fieldName)}
-                class=${ifDefined(this.inputClass)}
-                type=${this.type || 'text'}
-                ?disabled=${this.disabled}
-                aria-labelledby=${ifDefined(this.labelId)}
-                aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
-                aria-errormessage=${ifDefined(this.errorId)}
-                aria-required=${this.required ? 'true' : 'false'}
-                aria-invalid=${ifDefined(this.ariaInvalid)}
-                .placeholder=${this.placeholder}
-                autocomplete=${ifDefined(this.autocomplete)}
-                ?required=${this.required}
-                .spellcheck=${this.spellcheck}
-                inputmode=${ifDefined(this.inputmode)}
-                pattern=${this.pattern || nothing}
-                maxlength=${ifDefined(this.maxlength)}
-                minlength=${ifDefined(this.minlength)}
-                @input=${this.onInput}
-                @change=${this.onChange}
-                @keydown=${this.onKeydown}
-                @blur=${this.onBlur}
-                @invalid=${this.onInvalid}
-            />
+            <div data-role="container">
+                <input
+                    id=${ifDefined(this.fieldId)}
+                    name=${ifDefined(this.fieldName)}
+                    class=${ifDefined(this.inputClass)}
+                    type=${this.type || 'text'}
+                    ?disabled=${this.disabled}
+                    aria-labelledby=${ifDefined(this.labelId)}
+                    aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
+                    aria-errormessage=${ifDefined(this.errorId)}
+                    aria-required=${this.required ? 'true' : 'false'}
+                    aria-invalid=${ifDefined(this.ariaInvalid)}
+                    .placeholder=${this.placeholder}
+                    autocomplete=${ifDefined(this.autocomplete)}
+                    ?required=${this.required}
+                    .spellcheck=${this.spellcheck}
+                    inputmode=${ifDefined(this.inputmode)}
+                    pattern=${this.pattern || nothing}
+                    maxlength=${ifDefined(this.maxlength)}
+                    minlength=${ifDefined(this.minlength)}
+                    ?data-has-value=${this.value}
+                    @input=${this.onInput}
+                    @change=${this.onChange}
+                    @keydown=${this.onKeydown}
+                    @blur=${this.onBlur}
+                    @invalid=${this.onInvalid}
+                />
+                ${this.overlayDiv} ${this.btnClear}
+            </div>
             ${this.validationMessageHtml}
         `;
     }
 }
-
-// TODO: masking bg ve

@@ -33,6 +33,10 @@ export const PlaygroundStory = {
         label: 'Adınız',
         value: undefined,
         placeholder: 'Adınızı giriniz',
+        required: undefined,
+        requiredSign: '*',
+        disabled: undefined,
+        clearable: true,
     },
     parameters: {
         docs: {

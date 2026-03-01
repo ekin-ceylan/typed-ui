@@ -160,9 +160,9 @@ select-box > div > select ~ :is([data-clear], [data-chevron]) {
 
 /* Clear button */
 select-box > div > select ~ [data-clear] {
-    right: var(--sbx-clear-right-distance);
     width: var(--sbx-clear-size);
     height: var(--sbx-clear-size);
+    right: var(--sbx-clear-right-distance);
     color: var(--sbx-clear-color);
     padding: var(--sbx-clear-padding);
     outline-width: var(--sbx-clear-outline-width);

@@ -2,31 +2,48 @@
 
 :is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) {
     --tbx-bg-color: #ffffff;
-    --tbx-bg-hover-color: #ffffff;
-    --tbx-bg-disabled: #eef2f7;
+    --tbx-bg-color-hover: #ffffff;
+    --tbx-bg-color-disabled: #eef2f7;
 
     --tbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --tbx-font-size: 14px;
     --tbx-text-color: #111827;
-    --tbx-text-disabled: #6c757d;
-    --tbx-text-invalid: #ef4444;
+    --tbx-text-color-disabled: #6c757d;
+    --tbx-letter-spacing: unset;
     --tbx-placeholder-color: #6b7280;
-    --tbx-placeholder-focus-color: #6b7280;
+    --tbx-placeholder-color-focus: #6b7280;
+
+    --tbx-error-color: #ef4444;
 
     --tbx-border-color: #d2d6de;
-    --tbx-border-hover-color: #9ca3af;
-    --tbx-border-focus-color: #3b82f6;
-    --tbx-border-invalid-color: #ef4444;
-    --tbx-border-disabled: #cbd5e1;
+    --tbx-border-color-hover: #9ca3af;
+    --tbx-border-color-focus: #3b82f6;
+    --tbx-border-color-invalid: #ef4444;
+    --tbx-border-color-disabled: #cbd5e1;
+    --tbx-border-width: 1px;
     --tbx-border-radius: 0px;
 
     --tbx-outline-width: 1px;
     --tbx-outline-offset: 0px;
     --tbx-outline-color: #3c8dbc;
-    --tbx-outline-invalid-color: #ef4444;
+    --tbx-outline-color-invalid: #ef4444;
 
     --tbx-height: 40px;
-    --tbx-padding-x: 12px;
+    --tbx-padding: 8px;
+
+    --tbx-clear-size: 17px;
+    --tbx-clear-right-distance: 14px;
+    --tbx-clear-padding: 4px;
+    --tbx-clear-color: #6b7280;
+    --tbx-clear-color-hover: #111827;
+    --tbx-clear-color-active: #111827;
+    --tbx-clear-bg-color: transparent;
+    --tbx-clear-bg-color-hover: rgba(17, 24, 39, 0.06);
+    --tbx-clear-bg-color-active: rgba(17, 24, 39, 0.1);
+    --tbx-clear-border-radius: 0px;
+    --tbx-clear-outline-color: #3c8dbc;
+    --tbx-clear-outline-width: 1px;
+    --tbx-clear-outline-style: solid;
 
     font-family: var(--tbx-font-family);
     max-width: 300px;
@@ -44,19 +61,24 @@
     color: var(--tbx-text-color);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] {
+    position: relative;
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > input {
     width: 100%;
     box-sizing: border-box;
     height: var(--tbx-height);
-    padding-left: var(--tbx-padding-x);
-    padding-right: var(--tbx-padding-x);
+    padding: var(--tbx-padding);
     background: var(--tbx-bg-color);
-    border: 1px solid var(--tbx-border-color);
+    border: var(--tbx-border-width) solid var(--tbx-border-color);
     border-radius: var(--tbx-border-radius);
 
     font-size: var(--tbx-font-size);
+    font-family: var(--tbx-font-family);
     color: var(--tbx-text-color);
     line-height: 20px;
+    letter-spacing: var(--tbx-letter-spacing);
 
     transition:
         border-color 0.15s ease,
@@ -64,59 +86,113 @@
         background-color 0.15s ease;
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input::placeholder {
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > input::placeholder {
     color: var(--tbx-placeholder-color);
     opacity: 1;
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input:focus::placeholder {
-    color: var(--tbx-placeholder-focus-color);
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > input:focus::placeholder {
+    color: var(--tbx-placeholder-color-focus);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input:hover {
-    border-color: var(--tbx-border-hover-color);
-    background: var(--tbx-bg-hover-color);
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > input:hover {
+    border-color: var(--tbx-border-color-hover);
+    background: var(--tbx-bg-color-hover);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input:focus-visible {
-    border-color: var(--tbx-border-focus-color);
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > input:focus-visible {
+    border-color: var(--tbx-border-color-focus);
     box-shadow: none;
     outline: var(--tbx-outline-width) solid var(--tbx-outline-color);
     outline-offset: var(--tbx-outline-offset);
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box)[disabled] > label {
-    color: var(--tbx-text-disabled);
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > [data-role='underlay'] {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-sizing: content-box;
+    padding: var(--tbx-padding);
+    border: solid var(--tbx-border-width) transparent;
+}
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > [data-role='underlay'] > pre {
+    font-size: var(--tbx-font-size);
+    font-family: var(--tbx-font-family);
+    letter-spacing: var(--tbx-letter-spacing);
+    color: var(--tbx-placeholder-color);
+    display: inline-block;
+    margin: 0;
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input:disabled {
-    color: var(--tbx-text-disabled);
-    background: var(--tbx-bg-disabled);
-    border-color: var(--tbx-border-disabled);
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > [data-role='underlay'] > pre:first-child {
+    color: transparent;
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > [data-clear] {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.2s;
+
+    width: var(--tbx-clear-size);
+    height: var(--tbx-clear-size);
+    right: var(--tbx-clear-right-distance);
+    color: var(--tbx-clear-color);
+    padding: var(--tbx-clear-padding);
+    outline-width: var(--tbx-clear-outline-width);
+    outline-color: var(--tbx-clear-outline-color);
+    border: none;
+    border-radius: var(--tbx-clear-border-radius);
+    background: var(--tbx-clear-bg-color);
+    cursor: pointer;
+    line-height: 0px;
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > [data-clear]:hover {
+    background: var(--tbx-clear-bg-color-hover);
+    color: var(--tbx-clear-color-hover);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > [data-clear]:focus-visible {
+    outline-style: var(--tbx-clear-outline-style);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > [data-clear]:active {
+    background: var(--tbx-clear-bg-color-active);
+    transform: translateY(-50%) scale(0.85);
+    color: var(--tbx-clear-color-active);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > [data-clear]:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > [data-clear] > svg {
+    color: inherit;
+    fill: currentColor;
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box)[disabled] > label {
+    color: var(--tbx-text-color-disabled);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > input:disabled {
+    color: var(--tbx-text-color-disabled);
+    background: var(--tbx-bg-color-disabled);
+    border-color: var(--tbx-border-color-disabled);
     cursor: not-allowed;
     opacity: 0.7;
 }
 
-:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > input[aria-invalid='true'] {
-    border-color: var(--tbx-border-invalid-color);
-    outline-color: var(--tbx-outline-invalid-color);
+:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > input[aria-invalid='true'] {
+    border-color: var(--tbx-border-color-invalid);
+    outline-color: var(--tbx-outline-color-invalid);
 }
 
 :is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='error-message'] {
-    color: var(--tbx-text-invalid);
+    color: var(--tbx-error-color);
     margin-top: 4px;
     font-size: 13px;
     line-height: 16px;
-}
-
-/* Optional: Hide label visually but keep for screen readers */
-:is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > label[hidden] {
-    position: absolute !important;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
 }

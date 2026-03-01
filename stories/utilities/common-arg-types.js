@@ -66,6 +66,25 @@ export const textBoxArgTypes = {
             defaultValue: { summary: '' },
         },
     },
+    requiredSign: {
+        name: 'required-sign',
+        type: { name: 'string' },
+        control: 'text',
+        description: 'Zorunlu alanlar için input etiketine eklenecek işaret.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: '' },
+        },
+    },
+    clearable: {
+        control: 'boolean',
+        description: 'Açıksa, "İçeriği Temizle" butonu gösterilir.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'false' },
+            type: { summary: 'boolean' },
+        },
+    },
 };
 
 export const codeBoxArgTypes = {

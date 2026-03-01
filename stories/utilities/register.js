@@ -4,7 +4,7 @@
 import { html, render } from 'lit';
 import * as TypedUI from '../../dist/typed-ui.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { ifDefined } from '../../src/modules/utilities.js';
+import { ifDefined, isEmpty } from '../../src/modules/utilities.js';
 
 defineComponent('check-box', TypedUI.CheckBox);
 defineComponent('text-box', TypedUI.TextBox);
@@ -54,64 +54,25 @@ export const Combobox = ({ defaultSlot, noOptionsSlot, fieldId, fieldName, label
     return elementFromTemplate(temp);
 };
 
-export const Platebox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
-    const temp = html`<plate-box
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
-        label=${ifDefined(label)}
-        ?required=${required}
-        ?disabled=${disabled}
-        placeholder=${ifDefined(placeholder)}
-        value=${ifDefined(value)}
-    >
-    </plate-box>`;
-    // readonly
-    return elementFromTemplate(temp);
+export const Platebox = args => {
+    const temp = `<plate-box ${getAttrs(args)}> </plate-box>`;
+    return elementFromText(temp);
 };
 
-export const Phonebox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
-    const temp = html`<phone-box
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
-        label=${ifDefined(label)}
-        ?required=${required}
-        ?disabled=${disabled}
-        placeholder=${ifDefined(placeholder)}
-        value=${ifDefined(value)}
-    >
-    </phone-box>`;
-    // readonly
-    return elementFromTemplate(temp);
+export const Phonebox = args => {
+    const temp = `<phone-box ${getAttrs(args)}> </phone-box>`;
+    return elementFromText(temp);
 };
 
-export const Textbox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
-    const temp = html`<text-box
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
-        label=${ifDefined(label)}
-        ?required=${required}
-        ?disabled=${disabled}
-        placeholder=${ifDefined(placeholder)}
-        value=${ifDefined(value)}
-    >
-    </text-box>`;
+export const Textbox = args => {
+    const temp = `<text-box ${getAttrs(args)}> </text-box>`;
     // readonly
-    return elementFromTemplate(temp);
+    return elementFromText(temp);
 };
 
-export const TcBox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
-    const temp = html`<tc-box
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
-        label=${ifDefined(label)}
-        ?required=${required}
-        ?disabled=${disabled}
-        placeholder=${ifDefined(placeholder)}
-        value=${ifDefined(value)}
-    >
-    </tc-box>`;
-    // readonly
-    return elementFromTemplate(temp);
+export const TcBox = args => {
+    const temp = `<tc-box ${getAttrs(args)}> </tc-box>`;
+    return elementFromText(temp);
 };
 
 export const CodeBox = ({ fieldId, fieldName, label, value, placeholder, digits, required, disabled }) => {
@@ -130,34 +91,14 @@ export const CodeBox = ({ fieldId, fieldName, label, value, placeholder, digits,
     return elementFromTemplate(temp);
 };
 
-export const Emailbox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
-    const temp = html`<email-box
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
-        label=${ifDefined(label)}
-        ?required=${required}
-        ?disabled=${disabled}
-        placeholder=${ifDefined(placeholder)}
-        value=${ifDefined(value)}
-    >
-    </email-box>`;
-    // readonly
-    return elementFromTemplate(temp);
+export const Emailbox = args => {
+    const temp = `<email-box ${getAttrs(args)}> </email-box>`;
+    return elementFromText(temp);
 };
 
-export const Passwordbox = ({ fieldId, fieldName, label, value, placeholder, required, disabled }) => {
-    const temp = html`<password-box
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
-        label=${ifDefined(label)}
-        ?required=${required}
-        ?disabled=${disabled}
-        placeholder=${ifDefined(placeholder)}
-        value=${ifDefined(value)}
-    >
-    </password-box>`;
-    // readonly
-    return elementFromTemplate(temp);
+export const Passwordbox = args => {
+    const temp = `<password-box ${getAttrs(args)}> </password-box>`;
+    return elementFromText(temp);
 };
 
 export const Selectbox = ({ default: defaultSlot, id, fieldId, fieldName, label, value, placeholder, noOptionsLabel, required, disabled }) => {
@@ -232,4 +173,29 @@ function elementFromTemplate(tpl) {
     } catch (error) {
         return error;
     }
+}
+
+function elementFromText(htmlString) {
+    const template = document.createElement('template');
+    template.innerHTML = htmlString.trim();
+    return template.content.firstElementChild;
+}
+
+function pascalToKebab(str) {
+    return str.replaceAll(/([A-Z])/g, '-$1').toLowerCase();
+}
+
+function getAttrs(args) {
+    return Object.entries(args)
+        .filter(([_, v]) => v !== undefined)
+        .map(([k, v]) => {
+            const attr = pascalToKebab(k);
+            return addIfDefined(attr, v);
+        })
+        .join(' ');
+}
+
+function addIfDefined(name, value) {
+    if (value === true) return name;
+    return isEmpty(value) || value === false ? '' : `${name}="${value}"`;
 }
