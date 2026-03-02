@@ -532,7 +532,7 @@ export default class ComboBox extends SelectBase {
                     data-role="search"
                     tabindex="-1"
                 />
-                ${this.required ? null : this.btnClear} ${this.chevron}
+                ${this.btnClear} ${this.chevron}
                 <div id=${this.fieldId + '-list'} role="listbox" popover="manual" aria-expanded=${this.isOpen ? 'true' : 'false'}>
                     <div aria-disabled ?hidden=${this.filteredOptions?.length > 0}>
                         <slot name="no-options">${this.noOptionsLabel}</slot>
