@@ -78,7 +78,7 @@ export default class InputBase extends LightComponentBase {
     }
     /** @protected @type {import('lit').TemplateResult} */
     get btnClear() {
-        if (!this.clearable) return html``;
+        if (!this.clearable || this.readonly || this.disabled) return html``;
         return html`
             <button type="button" data-clear ?disabled=${!this.value} @click=${this.onClearClick} @keydown=${this.onClearKeyDown} aria-label="Değeri temizle">
                 <svg fill="currentColor" viewBox="0 0 460.775 460.775" xml:space="preserve">
