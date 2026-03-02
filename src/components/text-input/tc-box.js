@@ -1,13 +1,19 @@
 import { html } from 'lit';
 import { checkTcNo, isEmpty } from '../../modules/utilities';
-import TextBox from './text-box';
+import TextBase from '../../core/text-base';
 
-/** @extends TextBox */
-export default class TcBox extends TextBox {
+/** @extends TextBase */
+export default class TcBox extends TextBase {
+    static get properties() {
+        return {
+            ...super.properties,
+            autocomplete: { type: String },
+        };
+    }
+
     #ghostMask1 = '';
     #ghostMask2 = '';
     #digits = 11;
-    #allowPattern = `[0-9]{1,${this.#digits}}`;
 
     /** @override @type {import('lit').TemplateResult} */
     get overlayDiv() {
@@ -25,17 +31,11 @@ export default class TcBox extends TextBox {
         this.inputmode = 'numeric';
         this.minlength = this.#digits;
         this.maxlength = this.#digits;
-        this.allowPattern = this.#allowPattern;
-        this.type = 'text';
+        this.allowPattern = `[0-9]{1,${this.#digits}}`;
+        this.pattern = `\\d{${this.#digits}}`;
     }
 
     willUpdate(changed) {
-        if (changed.has('minlength')) this.minlength = this.#digits;
-        if (changed.has('maxlength')) this.maxlength = this.#digits;
-        if (changed.has('inputmode')) this.inputmode = 'numeric';
-        if (changed.has('type')) this.type = 'text';
-        if (changed.has('allowPattern')) this.allowPattern = this.#allowPattern;
-
         super.willUpdate(changed);
 
         if (changed.has('value')) {

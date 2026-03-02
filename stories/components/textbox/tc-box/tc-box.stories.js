@@ -1,16 +1,12 @@
-import { textBoxArgTypes } from '../../../utilities/common-arg-types.js';
+import { inputBaseArgTypes, textBoxArgTypes } from '../../../utilities/common-arg-types.js';
 import { TcBox } from '../../../utilities/register.js';
 import '../textbox/text-box.css';
 import './tc-box.css';
 
-const argTypes = structuredClone(textBoxArgTypes);
-
-delete argTypes.type;
-delete argTypes.inputmode;
-delete argTypes.allowPattern;
-delete argTypes.minlength;
-delete argTypes.maxlength;
-delete argTypes.pattern;
+const argTypes = {
+    ...structuredClone(inputBaseArgTypes),
+    autocomplete: textBoxArgTypes.autocomplete,
+};
 
 export default {
     title: 'Bileşenler/Textbox/TcBox',

@@ -1,6 +1,14 @@
-import TextBox from './text-box';
+import TextBase from '../../core/text-base';
 
-export default class PlateBox extends TextBox {
+export default class PlateBox extends TextBase {
+    static get properties() {
+        return {
+            ...super.properties,
+            autounmask: { type: Boolean },
+            autocomplete: { type: String },
+        };
+    }
+
     #validationPattern = String.raw`\d{2} [A-PR-VYZa-hj-pr-vyzı]{1,3} \d{2,5}`;
     #lazySelectionPattern = String.raw`\d(?:\d(?:[A-PR-VYZa-hj-pr-vyzı]{1,3}(?:\d{1,5})?)?)?`;
     #testRegex = new RegExp(`^${this.#lazySelectionPattern}$`);
@@ -51,17 +59,6 @@ export default class PlateBox extends TextBox {
         this.pattern = this.#validationPattern;
         this.maxlength = 10;
         this.minlength = 7;
-        this.type = 'text';
-    }
-
-    willUpdate(changed) {
-        super.willUpdate(changed);
-
-        if (changed.has('pattern')) this.pattern = this.#validationPattern;
-        if (changed.has('maxlength')) this.maxlength = 10;
-        if (changed.has('minlength')) this.minlength = 7; // minlength must be always 7
-        if (changed.has('type')) this.type = 'text';
-        if (changed.has('allowPattern')) this.allowPattern = null;
     }
 }
 

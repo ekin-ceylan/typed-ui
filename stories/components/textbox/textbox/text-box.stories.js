@@ -2,7 +2,10 @@ import { textBoxArgTypes } from '../../../utilities/common-arg-types.js';
 import { Textbox } from '../../../utilities/register.js';
 import './text-box.css';
 
-const argTypes = { ...textBoxArgTypes };
+const argTypes = structuredClone(textBoxArgTypes);
+
+argTypes.spellcheck.defaultValue = true;
+argTypes.spellcheck.table.defaultValue.summary = 'true';
 
 export default {
     title: 'Bileşenler/Textbox/TextBox',

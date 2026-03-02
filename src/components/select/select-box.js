@@ -82,7 +82,7 @@ export default class SelectBox extends SelectBase {
     }
 
     afterSlotsBinded() {
-        this.inputElement.value = this.value || '';
+        this.inputElement.value = /** @type {string} */ (this.value || '');
     }
 
     // #region EVENT LISTENERS

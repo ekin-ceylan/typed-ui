@@ -4,6 +4,7 @@ export { hideBodyScroll, showBodyScroll, lockAllScrolls, unlockAllScrolls } from
 
 // Base components and mixins
 export { default as InputBase } from './core/input-base.js';
+export { default as TextBase } from './core/text-base.js';
 export { default as LightComponentBase } from './core/light-component-base.js';
 export { default as SlotCollectorMixin } from './mixins/slot-collector-mixin.js';
 

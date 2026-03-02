@@ -1,38 +1,27 @@
+import { inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { Checkbox } from '../../../utilities/register.js';
 
 export default {
     component: 'check-box',
     title: 'Bileşenler/Select/Checkbox',
     argTypes: {
-        slotHtml: {
+        defaultSlot: {
+            name: 'default',
             control: 'text',
             description: 'Checkbox etiket içeriği.',
             table: {
+                category: 'Slots',
                 type: { summary: 'html' },
                 defaultValue: { summary: '' },
             },
         },
-        fieldId: {
-            type: { name: 'string', required: true },
-            control: 'text',
-            description: 'Input elementinin id attribute değeri.',
-            table: {
-                defaultValue: { summary: '' },
-            },
-        },
-        fieldName: {
-            type: { name: 'string' },
-            control: 'text',
-            description: 'Input elementinin name attribute değeri. Atanmazsa field-id değeri kullanılır.',
-            table: {
-                defaultValue: { summary: 'field-id' },
-            },
-        },
+        ...structuredClone(inputBaseArgTypes),
         label: {
             type: { name: 'string', required: true },
             control: 'text',
             description: 'Checkbox açıklaması',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: '' },
             },
         },
@@ -43,6 +32,7 @@ export default {
                 "Checkbox'ın tuttuğu değer.\n\nSeçili olduğunda `checked-value`, seçili olmadığında `unchecked-value` değerini tutar.\n\n Başlangıçta yazılan değer `checked-value` ile eşleşiyorsa checkbox işaretli olur.",
             control: 'text',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'null' },
                 type: { summary: 'string|number' },
             },
@@ -50,6 +40,7 @@ export default {
         checked: {
             control: 'boolean',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'false' },
                 type: { summary: 'boolean' },
             },
@@ -59,6 +50,7 @@ export default {
             description: "Seçili olduğunda gönderilecek değer. Atanmazsa attribute görünmez ve 'on' kabul edilir.",
             control: 'text',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: '"on"' },
                 type: { summary: 'string|number' },
             },
@@ -68,35 +60,15 @@ export default {
             description: 'Seçili olmadığında gönderilecek değer. Atanmazsa attribute görünmez ve undefined kabul edilir.',
             control: 'text',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'undefined' },
                 type: { summary: 'string|number' },
-                description: 'Seçili olmadığında gönderilecek değer. Atanmazsa attribute görünmez ve undefined kabul edilir.',
-            },
-        },
-        required: {
-            control: 'boolean',
-            table: {
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
-        disabled: {
-            control: 'boolean',
-            table: {
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
-        readonly: {
-            control: 'boolean',
-            table: {
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
             },
         },
         indeterminate: {
             control: 'boolean',
             table: {
+                category: 'Attributes',
                 defaultValue: { summary: 'false' },
                 type: { summary: 'boolean' },
             },
@@ -119,7 +91,7 @@ export default {
 export const Default = {
     render: args => Checkbox(args),
     args: {
-        slotHtml: 'Okudum, Anladım',
+        defaultSlot: 'Okudum, Anladım',
         fieldId: 'subscribe',
         label: 'Abone Ol',
     },
@@ -132,7 +104,7 @@ export const PlaygroundStory = {
     render: args => Checkbox(args),
     tags: ['!dev'],
     args: {
-        slotHtml: 'Okudum, Anladım',
+        defaultSlot: 'Okudum, Anladım',
         fieldId: 'subscribe',
         label: 'Abone Ol',
     },

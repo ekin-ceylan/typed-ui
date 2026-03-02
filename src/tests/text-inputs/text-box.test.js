@@ -101,7 +101,7 @@ describe('Accessibility (A11y) tests', () => {
     });
 
     it('sets required semantics (required + aria-required) and updates label text', async () => {
-        const [input, host] = await initInputBase('<text-box field-id="name" label="Name" required></text-box>');
+        const [input, host] = await initInputBase('<text-box field-id="name" label="Name" required-sign="*" required></text-box>');
 
         // Native required behavior and ARIA hint should both be present.
         expect(input.required).toBe(true);

@@ -18,7 +18,7 @@ defineComponent('select-box', TypedUI.SelectBox);
 defineComponent('combo-box', TypedUI.ComboBox);
 defineComponent('modal-dialog', TypedUI.ModalDialog);
 
-export const Checkbox = ({ slotHtml, fieldId, fieldName, label, checkedValue, required, checked, disabled, readonly, indeterminate }) => {
+export const Checkbox = ({ defaultSlot, fieldId, fieldName, label, checkedValue, required, checked, disabled, readonly, indeterminate }) => {
     const temp = html`<check-box
         field-id=${ifDefined(fieldId)}
         field-name=${ifDefined(fieldName)}
@@ -30,7 +30,7 @@ export const Checkbox = ({ slotHtml, fieldId, fieldName, label, checkedValue, re
         ?readonly=${readonly}
         ?indeterminate=${indeterminate}
     >
-        ${unsafeHTML(slotHtml ?? '')}
+        ${unsafeHTML(defaultSlot ?? '')}
     </check-box>`;
 
     return elementFromTemplate(temp);

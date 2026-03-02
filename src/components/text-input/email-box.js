@@ -1,8 +1,25 @@
+import TextBase from '../../core/text-base';
 import { isEmpty } from '../../modules/utilities';
-import TextBox from './text-box';
 
-export default class EmailBox extends TextBox {
+export default class EmailBox extends TextBase {
+    static get properties() {
+        return {
+            ...super.properties,
+            minlength: { type: Number },
+        };
+    }
+
     #pattern = null;
+
+    constructor() {
+        super();
+
+        this.#pattern = this.#createRegexPattern();
+
+        this.inputmode = 'email';
+        this.autocomplete = 'email';
+        this.maxlength = 254;
+    }
 
     validateLastChar(e) {
         return e.key !== ' '; // Boşluğa izin verme
@@ -26,17 +43,5 @@ export default class EmailBox extends TextBox {
         const pattern = `^${l}+(${l}+\\.${l}+)*@${d2}(?:${d}{0,61}${d2})?(\\.${d2}(?:${d}{0,61}${d2})?)*$`;
 
         return new RegExp(pattern);
-    }
-
-    constructor() {
-        super();
-
-        this.#pattern = this.#createRegexPattern();
-
-        this.inputmode = 'email';
-        this.autocomplete = 'email';
-        this.placeholder = '____@____.___';
-        this.maxlength = 254;
-        this.pattern = null;
     }
 }

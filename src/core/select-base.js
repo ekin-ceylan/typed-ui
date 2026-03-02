@@ -30,9 +30,6 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
 
     constructor() {
         super();
-        this.value = null;
-        this.label = '';
-        this.required = false;
 
         /** @type {Boolean} */
         this.isOpen = false;

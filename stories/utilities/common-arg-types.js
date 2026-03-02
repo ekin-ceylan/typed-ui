@@ -63,7 +63,7 @@ export const inputBaseArgTypes = {
     },
     required: {
         control: 'boolean',
-        description: 'Inputun doldurulmasının zorunlu olup olmadığını belirler ve `valueMissing` durumunu etkiler. Açıksa, label metninin sonuna otomatik olarak `*` eklenir.',
+        description: 'Inputun doldurulmasının zorunlu olup olmadığını belirler ve `valueMissing` durumunu etkiler.',
         table: {
             category: 'Attributes',
             defaultValue: { summary: 'false' },
@@ -168,11 +168,22 @@ export const textBoxArgTypes = {
     },
     autounmask: {
         control: 'boolean',
-        description: '',
+        description:
+            'Bileşenin değerinin maskeli şekilde tutulup tutulmayacağını belirler. Açıksa, inputun görünen değeri maskelenirken bileşenin tuttuğu değer maskesiz olur. `unmask()` fonksiyonu tanımlanmış olmalıdır.',
         defaultValue: false,
         table: {
             category: 'Attributes',
             defaultValue: { summary: 'false' },
+            type: { summary: 'boolean' },
+        },
+    },
+    spellcheck: {
+        control: 'boolean',
+        description: 'Tarayıcının inputun değeri için yazım denetimi yapıp yapmayacağını belirler.',
+        defaultValue: undefined,
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'undefined' },
             type: { summary: 'boolean' },
         },
     },

@@ -1,7 +1,26 @@
+import TextBase from '../../core/text-base';
 import { isEmpty } from '../../modules/utilities';
-import TextBox from './text-box';
 
-export default class PhoneBox extends TextBox {
+/** @extends {TextBase} */
+export default class PhoneBox extends TextBase {
+    static get properties() {
+        return {
+            ...super.properties,
+            // maxlength: { type: Number },
+            // minlength: { type: Number },
+            autounmask: { type: Boolean },
+        };
+    }
+
+    constructor() {
+        super();
+
+        this.type = 'tel';
+        this.inputmode = 'tel';
+        this.pattern = String.raw`0 \d{3} \d{3} \d{2} \d{2}`;
+        this.autocomplete = 'tel';
+    }
+
     mask(value) {
         if (isEmpty(value)) return value;
         value = value.replaceAll(/\D/g, ''); // Sayı olmayan karakterleri kaldır
@@ -30,16 +49,6 @@ export default class PhoneBox extends TextBox {
         if (newValue.length > 11) return false; // Maksimum uzunluk 11 olmalı
 
         return /\d/.test(keyDownEvent.key);
-    }
-
-    constructor() {
-        super();
-
-        this.type = 'tel';
-        this.placeholder = '0 ___ ___ __ __';
-        this.pattern = `0 \\d{3} \\d{3} \\d{2} \\d{2}`;
-        this.inputmode = 'tel';
-        this.autocomplete = 'tel';
     }
 }
 

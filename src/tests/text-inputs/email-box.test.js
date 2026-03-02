@@ -185,12 +185,6 @@ describe('EmailBox: Attribute Forwarding', () => {
         expect(input.getAttribute('autocomplete')).toBe('email');
     });
 
-    it('sets placeholder by default', async () => {
-        const [input] = await initInputBase('<email-box field-id="email" label="Email"></email-box>');
-
-        expect(input.getAttribute('placeholder')).toBe('____@____.___');
-    });
-
     it('sets maxlength=254 by default', async () => {
         const [input] = await initInputBase('<email-box field-id="email" label="Email"></email-box>');
 
