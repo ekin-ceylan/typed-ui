@@ -3,11 +3,18 @@ import { TcBox } from '../../../utilities/register.js';
 import '../textbox/text-box.css';
 import './tc-box.css';
 
+const argTypes = structuredClone(textBoxArgTypes);
+
+delete argTypes.type;
+delete argTypes.inputmode;
+delete argTypes.allowPattern;
+delete argTypes.minlength;
+delete argTypes.maxlength;
+delete argTypes.pattern;
+
 export default {
     title: 'Bileşenler/Textbox/TcBox',
-    argTypes: {
-        ...textBoxArgTypes,
-    },
+    argTypes,
 };
 
 export const Default = {
@@ -38,7 +45,10 @@ export const PlaygroundStory = {
         placeholder: 'Kimlik numaranızı giriniz',
         required: undefined,
         disabled: undefined,
+        readonly: undefined,
         clearable: true,
+        hideLabel: undefined,
+        autocomplete: undefined,
         requiredSign: '*',
     },
     parameters: {

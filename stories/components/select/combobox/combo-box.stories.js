@@ -1,3 +1,4 @@
+import { inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { Combobox } from '../../../utilities/register.js';
 import './combo-box.css';
 
@@ -25,72 +26,7 @@ export default {
                 defaultValue: { summary: '' },
             },
         },
-        fieldId: {
-            name: 'field-id',
-            type: { name: 'string', required: true },
-            control: 'text',
-            description: 'Input elementinin id attribute değeri.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: '' },
-            },
-        },
-        fieldName: {
-            name: 'field-name',
-            type: { name: 'string' },
-            control: 'text',
-            description: 'Input elementinin name attribute değeri. Atanmazsa field-id değeri kullanılır.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'field-id' },
-            },
-        },
-        label: {
-            type: { name: 'string', required: true },
-            control: 'text',
-            description: 'Input etiketi',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: '' },
-            },
-        },
-        value: {
-            type: { name: 'string' },
-            defaultValue: undefined,
-            description: 'Kombo kutusunun tuttuğu değer.\n\n Başlangıçta yazılan değer optionlar arasında bulunuyorsa o seçenek seçili olarak gelir.',
-            control: 'text',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'null' },
-                type: { summary: 'string|number' },
-            },
-        },
-        hideLabel: {
-            name: 'hide-label',
-            control: 'boolean',
-            description: 'Label etiketinin render edilmez. `aria-label` olarak kullanılır.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
-        required: {
-            control: 'boolean',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
-        disabled: {
-            control: 'boolean',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
+        ...inputBaseArgTypes,
         nativeBehavior: {
             name: 'native-behavior',
             control: 'boolean',
@@ -101,22 +37,6 @@ export default {
                 type: { summary: 'boolean' },
             },
         },
-        placeholder: {
-            type: { name: 'string' },
-            control: 'text',
-            description: 'Seçim yapılmamışken gösterilecek yer tutucu metin.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: '' },
-            },
-        },
-        // readonly: {
-        //     control: 'boolean',
-        //     table: {
-        //         defaultValue: { summary: 'false' },
-        //         type: { summary: 'boolean' },
-        //     },
-        // },
     },
 };
 
@@ -169,9 +89,16 @@ export const PlaygroundStory = {
 </option>
 `,
         noOptionsSlot: `<template slot="no-options">Kayıt Bulunamadı</template>`,
-        fieldId: 'country',
+        fieldId: undefined,
+        fieldName: 'country',
         label: 'Ülke',
+        value: undefined,
         placeholder: 'Lütfen seçiniz',
+        required: true,
+        disabled: undefined,
+        readonly: undefined,
+        clearable: true,
+        requiredSign: '*',
     },
     parameters: {
         docs: {

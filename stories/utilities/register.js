@@ -36,21 +36,23 @@ export const Checkbox = ({ slotHtml, fieldId, fieldName, label, checkedValue, re
     return elementFromTemplate(temp);
 };
 
-export const Combobox = ({ defaultSlot, noOptionsSlot, fieldId, fieldName, label, value, hideLabel, placeholder, required, disabled, nativeBehavior }) => {
+export const Combobox = args => {
     const temp = html`<combo-box
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
-        label=${ifDefined(label)}
-        ?hide-label=${hideLabel}
-        ?required=${required}
-        ?disabled=${disabled}
-        ?native-behavior=${nativeBehavior}
-        placeholder=${ifDefined(placeholder)}
-        value=${ifDefined(value)}
+        field-id=${ifDefined(args.fieldId)}
+        field-name=${ifDefined(args.fieldName)}
+        label=${ifDefined(args.label)}
+        ?hide-label=${args.hideLabel}
+        ?required=${args.required}
+        ?clearable=${args.clearable}
+        ?disabled=${args.disabled}
+        ?native-behavior=${args.nativeBehavior}
+        placeholder=${ifDefined(args.placeholder)}
+        value=${ifDefined(args.value)}
+        required-sign=${ifDefined(args.requiredSign)}
     >
-        ${unsafeHTML(noOptionsSlot ?? '')} ${unsafeHTML(defaultSlot ?? '')}
+        ${unsafeHTML(args.noOptionsSlot ?? '')} ${unsafeHTML(args.defaultSlot ?? '')}
     </combo-box>`;
-    // readonly
+
     return elementFromTemplate(temp);
 };
 
@@ -66,7 +68,6 @@ export const Phonebox = args => {
 
 export const Textbox = args => {
     const temp = `<text-box ${getAttrs(args)}> </text-box>`;
-    // readonly
     return elementFromText(temp);
 };
 
@@ -87,7 +88,7 @@ export const CodeBox = ({ fieldId, fieldName, label, value, placeholder, digits,
         digits=${ifDefined(digits)}
     >
     </code-box>`;
-    // readonly
+
     return elementFromTemplate(temp);
 };
 
@@ -101,21 +102,23 @@ export const Passwordbox = args => {
     return elementFromText(temp);
 };
 
-export const Selectbox = ({ default: defaultSlot, id, fieldId, fieldName, label, value, placeholder, noOptionsLabel, required, disabled }) => {
+export const Selectbox = args => {
     const temp = html`<select-box
-        id=${ifDefined(id)}
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
-        label=${ifDefined(label)}
-        ?required=${required}
-        ?disabled=${disabled}
-        placeholder=${ifDefined(placeholder)}
-        no-options-label=${ifDefined(noOptionsLabel)}
-        value=${ifDefined(value)}
+        id=${ifDefined(args.id)}
+        field-id=${ifDefined(args.fieldId)}
+        field-name=${ifDefined(args.fieldName)}
+        label=${ifDefined(args.label)}
+        ?required=${args.required}
+        ?disabled=${args.disabled}
+        ?clearable=${args.clearable}
+        placeholder=${ifDefined(args.placeholder)}
+        no-options-label=${ifDefined(args.noOptionsLabel)}
+        value=${ifDefined(args.value)}
+        required-sign=${ifDefined(args.requiredSign)}
     >
-        ${unsafeHTML(defaultSlot ?? '')}
+        ${unsafeHTML(args.defaultSlot ?? '')}
     </select-box>`;
-    // readonly
+
     return elementFromTemplate(temp);
 };
 

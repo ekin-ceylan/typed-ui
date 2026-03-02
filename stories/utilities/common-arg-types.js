@@ -1,4 +1,4 @@
-export const textBoxArgTypes = {
+export const inputBaseArgTypes = {
     fieldId: {
         name: 'field-id',
         type: { name: 'string' },
@@ -19,13 +19,16 @@ export const textBoxArgTypes = {
             defaultValue: { summary: 'field-id' },
         },
     },
-    label: {
-        type: { name: 'string', required: true },
+    inputClass: {
+        name: 'input-class',
+        type: { name: 'string' },
+        defaultValue: undefined,
+        description: 'İçteki `<input>` veya `<select>` elementine uygulanacak CSS sınıfı.',
         control: 'text',
-        description: 'Input etiketi',
         table: {
             category: 'Attributes',
-            defaultValue: { summary: '' },
+            defaultValue: { summary: 'null' },
+            type: { summary: 'string' },
         },
     },
     value: {
@@ -37,6 +40,25 @@ export const textBoxArgTypes = {
             category: 'Attributes',
             defaultValue: { summary: 'null' },
             type: { summary: 'string' },
+        },
+    },
+    label: {
+        type: { name: 'string', required: true },
+        control: 'text',
+        description: 'Input etiketi',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: '' },
+        },
+    },
+    hideLabel: {
+        name: 'hide-label',
+        control: 'boolean',
+        description: 'Label etiketinin render edilmez. `aria-label` olarak kullanılır.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'false' },
+            type: { summary: 'boolean' },
         },
     },
     required: {
@@ -60,7 +82,7 @@ export const textBoxArgTypes = {
     placeholder: {
         type: { name: 'string' },
         control: 'text',
-        description: 'Seçim yapılmamışken gösterilecek yer tutucu metin.',
+        description: 'Değer boşken gösterilecek yer tutucu metin.',
         table: {
             category: 'Attributes',
             defaultValue: { summary: '' },
@@ -79,6 +101,75 @@ export const textBoxArgTypes = {
     clearable: {
         control: 'boolean',
         description: 'Açıksa, "İçeriği Temizle" butonu gösterilir.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'false' },
+            type: { summary: 'boolean' },
+        },
+    },
+    readonly: {
+        control: 'boolean',
+        description: 'Inputun salt okunur olup olmadığını belirler. Salt okunursa, input etkileşime kapatılır ancak form ile gönderilir.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'false' },
+            type: { summary: 'boolean' },
+        },
+    },
+};
+
+export const textBoxArgTypes = {
+    ...inputBaseArgTypes,
+    type: {
+        control: 'text',
+        description: 'Inputun türünü belirler. Örneğin, `text`, `email`, `password` gibi.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'text' },
+            type: { summary: 'string' },
+        },
+    },
+    inputmode: {
+        control: 'text',
+        description: 'Inputun beklediği veri türünü belirtir ve mobil cihazlarda uygun klavyenin gösterilmesini sağlar. Örneğin, `text`, `numeric`, `decimal`, `email` gibi.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'text' },
+            type: { summary: 'string' },
+        },
+    },
+    minlength: {
+        control: 'number',
+        description: 'Inputun içermesi gereken en az karakter sayısını belirtir. Koşul sağlanmazsa, `tooShort` validasyon durumunu tetikler.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'undefined' },
+            type: { summary: 'number' },
+        },
+    },
+    maxlength: {
+        control: 'number',
+        description: 'Inputun içerebileceği karakter sayısını belirtir. Fazla karakter girişi engellenir.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'undefined' },
+            type: { summary: 'number' },
+        },
+    },
+    autocomplete: {
+        control: 'text',
+        description: 'Inputun otomatik tamamlama özelliğini belirler. Örneğin, `on`, `off` gibi.',
+        defaultValue: undefined,
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'undefined' },
+            type: { summary: 'string' },
+        },
+    },
+    autounmask: {
+        control: 'boolean',
+        description: '',
+        defaultValue: false,
         table: {
             category: 'Attributes',
             defaultValue: { summary: 'false' },

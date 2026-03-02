@@ -1,10 +1,12 @@
+import { inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { createForm, Selectbox } from '../../../utilities/register.js';
 import './select-box.css';
 
 export default {
     title: 'Bileşenler/Select/Select',
     argTypes: {
-        default: {
+        defaultSlot: {
+            name: 'default',
             control: 'text',
             description: 'options için slot içeriği.',
             table: {
@@ -13,93 +15,7 @@ export default {
                 defaultValue: { summary: '' },
             },
         },
-        fieldId: {
-            name: 'field-id',
-            type: { name: 'string', required: true },
-            control: 'text',
-            description: 'İçteki `<select>` elementinin `id` değeri. Label ilişkilendirmesi ve hata mesajı id’leri için kullanılır.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: '' },
-            },
-        },
-        fieldName: {
-            name: 'field-name',
-            type: { name: 'string' },
-            control: 'text',
-            description: "`<select>` elementinin `name` değeri. Form submit'inde gönderilecek alan adı. Atanmazsa `field-id` değeri kullanılır.",
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'field-id' },
-            },
-        },
-        label: {
-            type: { name: 'string', required: true },
-            control: 'text',
-            description: 'Görsel label metni. `required` ise otomatik `*` eklenir.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: '' },
-            },
-        },
-        hideLabel: {
-            name: 'hide-label',
-            type: { name: 'boolean' },
-            control: 'boolean',
-            description: "Label'ı görsel olarak gizler; erişilebilirlik için `aria-label` kullanılır.",
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: false },
-            },
-        },
-        inputClass: {
-            name: 'input-class',
-            type: { name: 'string' },
-            control: 'text',
-            description: 'İçteki `<select>` elementine uygulanacak CSS sınıfı.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: '' },
-            },
-        },
-        value: {
-            type: { name: 'string' },
-            defaultValue: undefined,
-            description: 'Seçili değeri kontrol eder. Başlangıçta verilen değer option’lar arasında varsa seçili gelir.',
-            control: 'text',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'null' },
-                type: { summary: 'string|number' },
-            },
-        },
-        required: {
-            control: 'boolean',
-            description: 'Seçim zorunlu hale gelir; seçim yoksa doğrulama mesajı gösterir ve form submit’ini engeller.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
-        disabled: {
-            control: 'boolean',
-            description: 'Bileşeni devre dışı bırakır ve kullanıcı etkileşimini engeller. Submit edildiğinde değeri göndermez.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
-        placeholder: {
-            type: { name: 'string' },
-            control: 'text',
-            description: 'Seçim yapılmamışken görünen metin (ilk *hidden* ve *disabled* option olarak render edilir).',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: '' },
-            },
-        },
+        ...inputBaseArgTypes,
         noOptionsLabel: {
             name: 'no-options-label',
             type: { name: 'string' },
@@ -124,16 +40,23 @@ export const PlaygroundStory = {
     render: args => Selectbox(args),
     tags: ['!dev'],
     args: {
-        default: `<option value="tr">Türkiye</option>
+        defaultSlot: `<option value="tr">Türkiye</option>
 <option value="de">Almanya</option>
 <option value="us" selected>ABD</option>
 <option value="ch" disabled>Çin Halk Cumhuriyeti</option>
 <option value="kp">Kuzey Kore</option>
 <option value="jp">Japonya</option>
 <option value="it">İtalya</option>`,
-        fieldId: 'country',
+        fieldId: undefined,
+        fieldName: 'country',
         label: 'Ülke',
+        value: undefined,
         placeholder: 'Lütfen seçiniz',
+        required: true,
+        disabled: undefined,
+        readonly: undefined,
+        clearable: true,
+        requiredSign: '*',
     },
     parameters: {
         docs: {
@@ -146,7 +69,7 @@ export const BasicSlotUsage = {
     render: args => Selectbox(args),
     tags: ['!dev'],
     args: {
-        default: `<option value="tr">Türkiye</option>
+        defaultSlot: `<option value="tr">Türkiye</option>
 <option value="de">Almanya</option>
 <option value="us">ABD</option>
 <option value="kp" disabled>Kuzey Kore</option>
@@ -168,7 +91,7 @@ export const OptGroupSlotUsage = {
     render: args => Selectbox(args),
     tags: ['!dev'],
     args: {
-        default: `<optgroup label="German Cars">
+        defaultSlot: `<optgroup label="German Cars">
     <option value="audi">Audi</option>
     <option value="bmw">BMW</option>
 </optgroup>
@@ -187,7 +110,7 @@ export const BasicSelectedUsage = {
     render: args => Selectbox(args),
     tags: ['!dev'],
     args: {
-        default: `<option value="tr">Türkiye</option>
+        defaultSlot: `<option value="tr">Türkiye</option>
 <option value="de">Almanya</option>
 <option value="us">ABD</option>
 <option value="jp">Japonya</option>`,
@@ -205,7 +128,7 @@ export const ValidationUsage = {
     },
     tags: ['!dev'],
     args: {
-        default: `<option value="tr">Türkiye</option>
+        defaultSlot: `<option value="tr">Türkiye</option>
 <option value="de">Almanya</option>
 <option value="us">ABD</option>`,
         fieldId: 'country',

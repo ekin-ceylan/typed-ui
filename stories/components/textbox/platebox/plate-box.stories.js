@@ -2,11 +2,22 @@ import { textBoxArgTypes } from '../../../utilities/common-arg-types.js';
 import { Platebox } from '../../../utilities/register.js';
 import '../textbox/text-box.css';
 
+const argTypes = structuredClone(textBoxArgTypes);
+
+delete argTypes.type;
+delete argTypes.allowPattern;
+delete argTypes.pattern;
+delete argTypes.minlength;
+delete argTypes.maxlength;
+
+argTypes.autocomplete.defaultValue = 'off';
+argTypes.autocomplete.table.defaultValue.summary = 'off';
+argTypes.autounmask.defaultValue = true;
+argTypes.autounmask.table.defaultValue.summary = 'true';
+
 export default {
     title: 'Bileşenler/Textbox/PlateBox',
-    argTypes: {
-        ...textBoxArgTypes,
-    },
+    argTypes,
 };
 
 // Mirrors index.html:

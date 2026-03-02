@@ -2,9 +2,11 @@ import { textBoxArgTypes } from '../../../utilities/common-arg-types.js';
 import { Textbox } from '../../../utilities/register.js';
 import './text-box.css';
 
+const argTypes = { ...textBoxArgTypes };
+
 export default {
     title: 'Bileşenler/Textbox/TextBox',
-    argTypes: textBoxArgTypes,
+    argTypes,
 };
 
 // Mirrors index.html:

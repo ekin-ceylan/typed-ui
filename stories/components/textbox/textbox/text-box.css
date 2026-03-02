@@ -3,7 +3,7 @@
 :is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) {
     --tbx-bg-color: #ffffff;
     --tbx-bg-color-hover: #ffffff;
-    --tbx-bg-color-disabled: #eef2f7;
+    --tbx-bg-color-disabled: #f2f2f2; /* #eef2f7; */
 
     --tbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --tbx-font-size: 14px;
@@ -181,8 +181,8 @@
     color: var(--tbx-text-color-disabled);
     background: var(--tbx-bg-color-disabled);
     border-color: var(--tbx-border-color-disabled);
-    cursor: not-allowed;
-    opacity: 0.7;
+    /* cursor: not-allowed; */
+    /* opacity: 0.7; */
 }
 
 :is(text-box, plate-box, phone-box, email-box, password-box, tc-box, code-box) > [data-role='container'] > input[aria-invalid='true'] {
