@@ -26,12 +26,14 @@ export default class TcBox extends TextBox {
         this.minlength = this.#digits;
         this.maxlength = this.#digits;
         this.allowPattern = this.#allowPattern;
+        this.type = 'text';
     }
 
     willUpdate(changed) {
         if (changed.has('minlength')) this.minlength = this.#digits;
         if (changed.has('maxlength')) this.maxlength = this.#digits;
         if (changed.has('inputmode')) this.inputmode = 'numeric';
+        if (changed.has('type')) this.type = 'text';
         if (changed.has('allowPattern')) this.allowPattern = this.#allowPattern;
 
         super.willUpdate(changed);

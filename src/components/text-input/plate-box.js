@@ -45,19 +45,23 @@ export default class PlateBox extends TextBox {
     constructor() {
         super();
 
-        this.placeholder = '34 ABC 123';
+        this.autounmask = true;
         this.autocomplete = 'off';
+
         this.pattern = this.#validationPattern;
         this.maxlength = 10;
         this.minlength = 7;
-        this.autounmask = true;
+        this.type = 'text';
     }
 
     willUpdate(changed) {
         super.willUpdate(changed);
-        if (changed.has('maxlength')) this.maxlength = 10; // maxlength her zaman 10 olmalı
-        if (changed.has('minlength')) this.minlength = 7; // minlength her zaman 7 olmalı
-        if (changed.has('pattern')) this.pattern = this.#validationPattern; // pattern her zaman #validationPattern olmalı
+
+        if (changed.has('pattern')) this.pattern = this.#validationPattern;
+        if (changed.has('maxlength')) this.maxlength = 10;
+        if (changed.has('minlength')) this.minlength = 7; // minlength must be always 7
+        if (changed.has('type')) this.type = 'text';
+        if (changed.has('allowPattern')) this.allowPattern = null;
     }
 }
 

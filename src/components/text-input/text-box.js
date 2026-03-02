@@ -11,10 +11,10 @@ export default class TextBox extends InputBase {
     static get properties() {
         return {
             ...super.properties,
-            type: { type: String, reflect: true },
+            type: { type: String },
             inputmode: { type: String, reflect: true },
-            allowPattern: { type: String, attribute: 'allow-pattern' },
             pattern: { type: String, reflect: true },
+            allowPattern: { type: String, attribute: 'allow-pattern' },
             maxlength: { type: Number },
             minlength: { type: Number },
             max: { type: Number, reflect: true },
@@ -423,6 +423,7 @@ export default class TextBox extends InputBase {
                     class=${ifDefined(this.inputClass)}
                     type=${this.type || 'text'}
                     ?disabled=${this.disabled}
+                    ?readonly=${this.readonly}
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
                     aria-errormessage=${ifDefined(this.errorId)}
