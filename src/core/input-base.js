@@ -97,7 +97,7 @@ export default class InputBase extends LightComponentBase {
         super();
 
         /** @type {string | number | boolean | null } */
-        this.value = null;
+        this.value = '';
         /** @property {string} Unique identifier for the input field */
         this.fieldId = '';
         /** @property {string} Name attribute for the input field */
@@ -148,7 +148,7 @@ export default class InputBase extends LightComponentBase {
     // #region PUBLIC API
 
     clear() {
-        this.value = null;
+        this.value = '';
         this.dispatchCustomEvent('clear');
     }
 

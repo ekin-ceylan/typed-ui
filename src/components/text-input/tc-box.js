@@ -32,7 +32,7 @@ export default class TcBox extends TextBase {
         this.minlength = this.#digits;
         this.maxlength = this.#digits;
         this.allowPattern = `[0-9]{1,${this.#digits}}`;
-        this.pattern = `\\d{${this.#digits}}`;
+        this.pattern = String.raw`\d{${this.#digits}}`;
     }
 
     willUpdate(changed) {
