@@ -13,7 +13,10 @@ import InputBase from '../core/input-base';
 async function initInputBase(elementStr) {
     document.body.innerHTML = elementStr;
 
-    const host = document.body.firstChild;
+    const host = document.body.firstElementChild;
+    if (!host) {
+        throw new Error('initInputBase: no host element found in document.body');
+    }
     await host.updateComplete;
 
     const input = host.inputElement;

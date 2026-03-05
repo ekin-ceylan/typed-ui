@@ -41,7 +41,7 @@
             </combo-box>
             <br />
             <br />
-            <combo-box label="Kombo" field-id="combo-country" placeholder="Seçiniz" value="xx" required>
+            <combo-box label="Kombo" field-id="combo-country" placeholder="Seçiniz" value="xx" clearable required>
                 <template slot="no-options">Kayıtsız</template>
                 <option value="tr">
                     <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />
@@ -104,7 +104,7 @@
             <url-link href="https://www.test.com" target="_blank" aria-label="Example Link">Example Link</url-link>
             <br />
             <br />
-            <select-box field-id="country" label="Ülke" placeholder="Seçiniz" required>
+            <select-box field-id="country" label="Ülke" placeholder="Seçiniz" clearable required>
                 <option value="tr">Türkiye</option>
                 <option value="de">Almanya</option>
                 <option value="us">ABD</option>
@@ -150,6 +150,9 @@
             <br />
             <br />
             <range-select field-id="range" label="Range" min="0" max="100" step="20" required></range-select>
+            <br />
+            <br />
+            <input type="text" id="normal-input" required />
             <br />
             <br />
             <button type="submit">Submit</button>

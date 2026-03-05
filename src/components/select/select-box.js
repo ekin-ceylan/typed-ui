@@ -50,6 +50,14 @@ export default class SelectBox extends SelectBase {
         this.inputElement = this.renderRoot.querySelector('select');
     }
 
+    updated(changed) {
+        super.updated(changed);
+
+        if (changed.has('value')) {
+            this.#checkValidity();
+        }
+    }
+
     // #endregion LIFECYCLE METHODS
 
     /**
@@ -140,6 +148,7 @@ export default class SelectBox extends SelectBase {
         super.onClearClick(event);
         this.dispatchCustomEvent('input');
         this.dispatchCustomEvent('change');
+        this.#checkValidity();
     }
 
     // #endregion EVENT LISTENERS

@@ -24,6 +24,12 @@ export default class ComboBox extends SelectBase {
     #selectedOption = null;
     #options = [];
 
+    #focused = false; // Inputun odaklanıp odaklanmadığını takip eder
+
+    get focused() {
+        return this.#focused;
+    }
+
     get filteredOptions() {
         if (!this.filter) {
             return this.#optionList;
@@ -84,8 +90,11 @@ export default class ComboBox extends SelectBase {
         this.clearButton = this.renderRoot.querySelector('button[data-role="clear"]');
 
         this.#setInputAndDisplay(this.#selectedOption);
+        this.searchElement.addEventListener('focus', () => (this.#focused = true), { once: true, capture: false });
 
-        if (globalThis.getComputedStyle(this.listboxDiv).overscrollBehavior != 'contain') this.listboxDiv.style.overscrollBehavior = 'contain';
+        if (globalThis.getComputedStyle(this.listboxDiv).overscrollBehavior != 'contain') {
+            this.listboxDiv.style.overscrollBehavior = 'contain';
+        }
     }
 
     updated(changed) {
