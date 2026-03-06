@@ -2,27 +2,27 @@
 
 select-box {
     --sbx-bg-color: #ffffff;
-    --sbx-bg-hover-color: #ffffff;
-    --sbx-bg-disabled: #eef2f7;
+    --sbx-bg-color-hover: #ffffff;
+    --sbx-bg-color-disabled: #eef2f7;
 
     --sbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --sbx-font-size: 14px;
     --sbx-text-color: #111827;
-    --sbx-text-disabled: #6c757d;
-    --sbx-text-invalid: #ef4444;
+    --sbx-text-color-disabled: #6c757d;
+    --sbx-text-color-invalid: #ef4444;
     --sbx-placeholder-color: #6b7280;
-    --sbx-placeholder-focus-color: #111827;
+    --sbx-placeholder-color-focus: #111827;
 
     --sbx-border-color: #d2d6de;
-    --sbx-border-hover-color: #9ca3af;
-    --sbx-border-focus-color: #9ca3af; /* #3b82f6 */
-    --sbx-border-invalid-color: #ef4444;
-    --sbx-border-disabled: #cbd5e1;
+    --sbx-border-color-hover: #9ca3af;
+    --sbx-border-color-focus: #9ca3af; /* #3b82f6 */
+    --sbx-border-color-invalid: #ef4444;
+    --sbx-border-color-disabled: #cbd5e1;
     --sbx-border-radius: 0px;
 
     --sbx-outline-width: 1px;
     --sbx-outline-color: #3c8dbc;
-    --sbx-outline-invalid-color: #ef4444;
+    --sbx-outline-color-invalid: #ef4444;
 
     --sbx-height: 40px;
     --sbx-padding-x: 12px;
@@ -42,8 +42,8 @@ select-box {
     --sbx-clear-right-distance: 32px;
     --sbx-clear-padding: 4px;
     --sbx-clear-color: #6b7280;
-    --sbx-clear-hover: #111827;
-    --sbx-clear-active: #111827;
+    --sbx-clear-color-hover: #111827;
+    --sbx-clear-color-active: #111827;
     --sbx-clear-bg-hover: rgba(17, 24, 39, 0.06);
     --sbx-clear-bg-active: rgba(17, 24, 39, 0.1);
     --sbx-clear-border-radius: 0px;
@@ -101,12 +101,12 @@ select-box > div > select {
 }
 
 select-box > div > select:hover {
-    background-color: var(--sbx-bg-hover-color);
-    border-color: var(--sbx-border-hover-color);
+    background-color: var(--sbx-bg-color-hover);
+    border-color: var(--sbx-border-color-hover);
 }
 
 select-box > div > select:focus-visible {
-    border-color: var(--sbx-border-focus-color);
+    border-color: var(--sbx-border-color-focus);
     box-shadow: var(--sbx-focus-ring);
     outline: var(--sbx-outline-width) solid var(--sbx-outline-color);
 }
@@ -115,30 +115,30 @@ select-box > div > select:not([data-has-value]) {
     color: var(--sbx-placeholder-color);
 }
 select-box > div > select:not([data-has-value]):focus {
-    color: var(--sbx-placeholder-focus-color);
+    color: var(--sbx-placeholder-color-focus);
 }
 
 select-box:has(> div > select:disabled) > label {
-    color: var(--sbx-text-disabled);
+    color: var(--sbx-text-color-disabled);
 }
 
 select-box > div > select:disabled {
-    border-color: var(--sbx-border-disabled);
-    background: var(--sbx-bg-disabled);
-    color: var(--sbx-text-disabled);
+    border-color: var(--sbx-border-color-disabled);
+    background: var(--sbx-bg-color-disabled);
+    color: var(--sbx-text-color-disabled);
     box-shadow: none;
     cursor: not-allowed;
 }
 
 select-box > div > select[aria-invalid='true'] {
-    border-color: var(--sbx-border-invalid-color);
-    outline-color: var(--sbx-outline-invalid-color);
+    border-color: var(--sbx-border-color-invalid);
+    outline-color: var(--sbx-outline-color-invalid);
     box-shadow: var(--sbx-focus-ring-invalid);
 }
 
 select-box:has(select[aria-invalid='true']) [data-role='error-message'] {
     display: inline-block;
-    color: var(--sbx-text-invalid);
+    color: var(--sbx-text-color-invalid);
     margin-top: 4px;
     font-size: 13px;
     line-height: 16px;
@@ -176,7 +176,7 @@ select-box > div > select ~ [data-clear] {
 
 select-box > div > select ~ [data-clear]:hover {
     background: var(--sbx-clear-bg-hover);
-    color: var(--sbx-clear-hover);
+    color: var(--sbx-clear-color-hover);
 }
 
 select-box > div > select ~ [data-clear]:focus-visible {
@@ -186,7 +186,7 @@ select-box > div > select ~ [data-clear]:focus-visible {
 select-box > div > select ~ [data-clear]:active {
     background: var(--sbx-clear-bg-active);
     transform: translateY(-50%) scale(0.85);
-    color: var(--sbx-clear-active);
+    color: var(--sbx-clear-color-active);
 }
 
 select-box > div > select ~ [data-clear]:disabled {
