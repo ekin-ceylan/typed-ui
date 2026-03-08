@@ -48,27 +48,28 @@ Bu sayfa, `combo-box` bileşeninin kısa kullanımını ve Storybook kontrolleri
 
 ```css
 --cbx-bg-color: #ffffff;
---cbx-bg-hover-color: #ffffff;
---cbx-bg-disabled: #eef2f7;
+--cbx-bg-color-hover: #ffffff;
+--cbx-bg-color-disabled: #eef2f7;
 
 --cbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 --cbx-font-size: 14px;
 --cbx-text-color: #111827;
---cbx-text-disabled: #6c757d;
---cbx-text-invalid: #ef4444;
+--cbx-text-color-disabled: #6c757d;
+--cbx-text-color-invalid: #ef4444;
 --cbx-placeholder-color: #6b7280;
---cbx-placeholder-focus-color: #111827;
+--cbx-placeholder-color-focus: #111827;
 
 --cbx-border-color: #d2d6de;
---cbx-border-hover-color: #9ca3af;
---cbx-border-focus-color: #3b82f6; /* #3b82f6 */
---cbx-border-invalid-color: #ef4444;
---cbx-border-disabled: #cbd5e1;
+--cbx-border-color-hover: #9ca3af;
+--cbx-border-color-focus: #3b82f6; /* #3b82f6 */
+--cbx-border-color-invalid: #ef4444;
+--cbx-border-color-disabled: #cbd5e1;
 --cbx-border-radius: 0px;
 
 --cbx-outline-width: 1px;
+--cbx-outline-offset: -1px;
 --cbx-outline-color: #3c8dbc;
---cbx-outline-invalid-color: #ef4444;
+--cbx-outline-color-invalid: #ef4444;
 
 --cbx-height: 40px;
 --cbx-padding-x: 12px;
@@ -77,19 +78,19 @@ Bu sayfa, `combo-box` bileşeninin kısa kullanımını ve Storybook kontrolleri
 --cbx-focus-ring-invalid: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
 
 /* Listbox & Option */
---cbx-listbox-max-height: 150px;
+--cbx-listbox-max-height: 165px;
 --cbx-listbox-bg-color: #ffffff;
 --cbx-listbox-padding: 4px;
 --cbx-listbox-border-color: #3b82f6;
 --cbx-listbox-border-radius: 0px;
 
---cbx-option-bg-color: transparent;
---cbx-option-bg-hover-color: #3a85ff;
---cbx-option-bg-selected-color: #3b82f6;
---cbx-option-bg-disabled-color: #e9e9ed;
 --cbx-option-color: inherit;
---cbx-option-selected-color: #ffffff;
---cbx-option-disabled-color: #6e6e6f;
+--cbx-option-color-selected: #000;
+--cbx-option-color-disabled: #6e6e6f;
+--cbx-option-bg-color: transparent;
+--cbx-option-bg-color-hover: #c8dffd;
+--cbx-option-bg-color-selected: #a1c4ec;
+--cbx-option-bg-color-disabled: #e9e9ed;
 --cbx-option-padding: 9px 8px;
 
 /* Chevron */
@@ -100,12 +101,12 @@ Bu sayfa, `combo-box` bileşeninin kısa kullanımını ve Storybook kontrolleri
 --cbx-clear-size: 17px;
 --cbx-clear-right-distance: 32px;
 --cbx-clear-padding: 4px;
---cbx-clear-color: #6b7280;
---cbx-clear-hover: #111827;
---cbx-clear-active: #111827;
---cbx-clear-bg-hover: rgba(17, 24, 39, 0.06);
---cbx-clear-bg-active: rgba(17, 24, 39, 0.1);
 --cbx-clear-border-radius: 0px;
+--cbx-clear-color: #6b7280;
+--cbx-clear-color-hover: #111827;
+--cbx-clear-color-active: #111827;
+--cbx-clear-bg-color-hover: rgba(17, 24, 39, 0.06);
+--cbx-clear-bg-color-active: rgba(17, 24, 39, 0.1);
 --cbx-clear-outline-color: #3c8dbc;
 --cbx-clear-outline-width: 1px;
 --cbx-clear-outline-style: solid;
