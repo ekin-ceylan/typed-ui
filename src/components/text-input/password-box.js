@@ -1,5 +1,5 @@
 import TextBox from './text-box.js';
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 export default class PasswordBox extends TextBox {
     static get properties() {
@@ -32,7 +32,7 @@ export default class PasswordBox extends TextBox {
     }
 
     render() {
-        const base = super.render ? super.render() : html``;
+        const base = super.render ? super.render() : nothing;
 
         return html`
             ${base}

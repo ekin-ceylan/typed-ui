@@ -44,11 +44,6 @@ export default class TextBase extends InputBase {
         return this.#lastKey;
     }
 
-    /** @protected @type {import('lit').TemplateResult} */
-    get overlayDiv() {
-        return html``;
-    }
-
     // #endregion STATICS, FIELDS, GETTERS
 
     // #region VALIDATION MESSAGES
@@ -224,6 +219,11 @@ export default class TextBase extends InputBase {
         if (caretPosition === valueLength) return maskedLength; // imleç sona
         if (this.lastKey == 'Delete') return caretPosition - valueLength + maskedLength;
         return this.mask(snapshotValue.slice(0, caretPosition)).length; // imleci eski konumuna
+    }
+
+    /** @protected @return {import('lit').TemplateResult} */
+    renderAdornment() {
+        return nothing;
     }
 
     // #endregion PUBLIC API
@@ -412,7 +412,7 @@ export default class TextBase extends InputBase {
                     @blur=${this.onBlur}
                     @invalid=${this.onInvalid}
                 />
-                ${this.overlayDiv} ${this.btnClear}
+                ${this.renderAdornment()} ${this.btnClear}
             </div>
             ${this.validationMessageHtml}
         `;

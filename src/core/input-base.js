@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { ifDefined } from '../modules/utilities.js';
 import LightComponentBase from './light-component-base';
 import { generateId } from '../modules/id-generator.js';
@@ -68,17 +68,18 @@ export default class InputBase extends LightComponentBase {
      * @returns {import('lit').TemplateResult} Lit HTML template with validation message
      */
     get validationMessageHtml() {
-        return html` <span id=${ifDefined(this.errorId)} data-role="error-message" ?hidden=${!this.validationMessage} aria-live="assertive"> ${this.validationMessage} </span>`;
+        return html`<span id=${ifDefined(this.errorId)} data-role="error-message" ?hidden=${!this.validationMessage} aria-live="assertive"> ${this.validationMessage} </span>`;
     }
+    /** @protected @type {import('lit').TemplateResult} */
     get labelHtml() {
-        return this.hideLabel ? null : html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
+        return this.hideLabel ? nothing : html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
     }
     get requiredValidationMessage() {
         return `${this.label} alanı gereklidir.`;
     }
     /** @protected @type {import('lit').TemplateResult} */
     get btnClear() {
-        if (!this.clearable || this.readonly || this.disabled) return html``;
+        if (!this.clearable || this.readonly || this.disabled) return nothing;
         return html`
             <button type="button" data-clear ?disabled=${!this.value} @click=${this.onClearClick} @keydown=${this.onClearKeyDown} aria-label="Değeri temizle">
                 <svg fill="currentColor" viewBox="0 0 460.775 460.775" xml:space="preserve">

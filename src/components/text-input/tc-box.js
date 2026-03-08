@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { checkTcNo, isEmpty } from '../../modules/utilities';
 import TextBase from '../../core/text-base';
 
@@ -14,16 +14,6 @@ export default class TcBox extends TextBase {
     #ghostMask1 = '';
     #ghostMask2 = '';
     #digits = 11;
-
-    /** @override @type {import('lit').TemplateResult} */
-    get overlayDiv() {
-        if (isEmpty(this.#ghostMask1) && isEmpty(this.#ghostMask2)) return html``;
-
-        // prettier-ignore
-        return html` <div aria-hidden="true" data-role="underlay">
-            <pre>${this.#ghostMask1}</pre><pre>${this.#ghostMask2}</pre>
-        </div> `;
-    }
 
     constructor() {
         super();
@@ -59,5 +49,15 @@ export default class TcBox extends TextBase {
         if (value && !checkTcNo(value)) {
             return this.patternValidationMessage || 'Geçersiz TC Kimlik Numarası';
         }
+    }
+
+    /** @override @return {import('lit').TemplateResult} */
+    renderAdornment() {
+        if (isEmpty(this.#ghostMask1) && isEmpty(this.#ghostMask2)) return nothing;
+
+        // prettier-ignore
+        return html` <div aria-hidden="true" data-role="underlay">
+            <pre>${this.#ghostMask1}</pre><pre>${this.#ghostMask2}</pre>
+        </div> `;
     }
 }

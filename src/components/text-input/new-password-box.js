@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import PasswordBox from './password-box.js';
 
 export default class NewPasswordBox extends PasswordBox {
@@ -43,7 +43,7 @@ export default class NewPasswordBox extends PasswordBox {
     }
 
     render() {
-        const base = super.render ? super.render() : html``;
+        const base = super.render ? super.render() : nothing;
 
         return html`
             ${base}

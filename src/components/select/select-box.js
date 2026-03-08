@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
 import SelectBase from '../../core/select-base.js';
 
@@ -33,7 +33,7 @@ export default class SelectBox extends SelectBase {
      */
     get noOptionHtml() {
         const isHidden = this.hasOptions || !this.noOptionsLabel;
-        return isHidden ? html`` : html`<option disabled>${this.noOptionsLabel}</option>`;
+        return isHidden ? nothing : html`<option disabled>${this.noOptionsLabel}</option>`;
     }
 
     // #endregion STATICS, FIELDS, GETTERS
