@@ -103,7 +103,7 @@ describe('ComboBox - Options & selection', () => {
 
         const selected = optionDivs.find(el => el.hasAttribute('aria-selected'));
         expect(selected).toBeTruthy();
-        expect(selected.getAttribute('data-value')).toBe('g');
+        expect(selected.dataset.value).toBe('g');
     });
 
     it('opens with keyboard and selects active option with Enter', async () => {
@@ -114,12 +114,12 @@ describe('ComboBox - Options & selection', () => {
 			</combo-box>
 		`);
 
-        expect(ctx.host.value).toBe(null);
+        expect(ctx.host.value).toBe('');
         expect(ctx.display.textContent).toContain('Pick');
 
         await openList(ctx);
         expect(ctx.host.isOpen).toBe(true);
-        expect(ctx.comboboxDiv.hasAttribute('data-open')).toBe(true);
+        expect(ctx.comboboxDiv.dataset.open).not.toBeUndefined();
 
         await ctx.user.keyboard('{ArrowDown}');
         await ctx.host.updateComplete;
