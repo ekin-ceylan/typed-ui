@@ -497,7 +497,7 @@ export default class ComboBox extends SelectBase {
         const activeDescendantId = this.activeIndex >= 0 ? this.#createOptionId(this.activeIndex) : undefined;
 
         return html`
-            ${this.labelHtml}
+            ${this.renderLabel()}
             <div
                 role="combobox"
                 aria-activedescendant=${ifDefined(activeDescendantId)}
@@ -541,7 +541,7 @@ export default class ComboBox extends SelectBase {
                     data-role="search"
                     tabindex="-1"
                 />
-                ${this.btnClear} ${this.chevron}
+                ${this.renderClearButton()} ${this.chevron}
                 <div id=${this.fieldId + '-list'} role="listbox" popover="manual" aria-expanded=${this.isOpen ? 'true' : 'false'}>
                     <div aria-disabled ?hidden=${this.filteredOptions?.length > 0}>
                         <slot name="no-options">${this.noOptionsLabel}</slot>

@@ -29,7 +29,7 @@ export default class SelectBox extends SelectBase {
 
     /**
      * Renders a disabled option element with the noOptionsLabel if there are no options available and a label is provided. Otherwise, returns an empty template.
-     * @return {import('lit').TemplateResult} The template for the no options message or an empty template if there are options or no label is provided.
+     * @return {import('lit').TemplateResult | typeof nothing} The template for the no options message or an empty template if there are options or no label is provided.
      */
     get noOptionHtml() {
         const isHidden = this.hasOptions || !this.noOptionsLabel;
@@ -231,7 +231,7 @@ export default class SelectBox extends SelectBase {
                     ${this.noOptionHtml} ${this.#optionList.map(option => option.htmlElement)}
                 </select>
 
-                ${this.btnClear} ${this.chevron}
+                ${this.renderClearButton()} ${this.chevron}
             </div>
             ${this.required ? this.validationMessageHtml : null}
         `;

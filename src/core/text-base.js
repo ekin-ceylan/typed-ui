@@ -221,7 +221,7 @@ export default class TextBase extends InputBase {
         return this.mask(snapshotValue.slice(0, caretPosition)).length; // imleci eski konumuna
     }
 
-    /** @protected @return {import('lit').TemplateResult} */
+    /** @protected @return {import('lit').TemplateResult | typeof nothing} */
     renderAdornment() {
         return nothing;
     }
@@ -412,7 +412,7 @@ export default class TextBase extends InputBase {
                     @blur=${this.onBlur}
                     @invalid=${this.onInvalid}
                 />
-                ${this.renderAdornment()} ${this.btnClear}
+                ${this.renderAdornment()} ${this.renderClearButton()}
             </div>
             ${this.validationMessageHtml}
         `;

@@ -51,7 +51,7 @@ export default class TcBox extends TextBase {
         }
     }
 
-    /** @override @return {import('lit').TemplateResult} */
+    /** @override @return {import('lit').TemplateResult | typeof nothing} */
     renderAdornment() {
         if (isEmpty(this.#ghostMask1) && isEmpty(this.#ghostMask2)) return nothing;
 
