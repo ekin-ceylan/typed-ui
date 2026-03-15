@@ -129,6 +129,25 @@ export const textBoxArgTypes = {
             type: { summary: 'string' },
         },
     },
+    allowPattern: {
+        name: 'allow-pattern',
+        control: 'text',
+        description: 'Maskeleme sırasında izin verilecek karakterleri belirleyen RegExp kaynak metni. Belirtilmezse filtre uygulanmaz.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'undefined' },
+            type: { summary: 'string' },
+        },
+    },
+    pattern: {
+        control: 'text',
+        description: 'Input doğrulaması için kullanılacak RegExp kaynak metni. Belirtilirse `patternMismatch` benzeri kontrol yapılır.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'undefined' },
+            type: { summary: 'string' },
+        },
+    },
     inputmode: {
         control: 'text',
         description: 'Inputun beklediği veri türünü belirtir ve mobil cihazlarda uygun klavyenin gösterilmesini sağlar. Örneğin, `text`, `numeric`, `decimal`, `email` gibi.',

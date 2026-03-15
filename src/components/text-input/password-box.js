@@ -1,10 +1,14 @@
-import TextBox from './text-box.js';
-import { html, nothing } from 'lit';
+import TextBase from '../../core/text-base.js';
+import { html } from 'lit';
 
-export default class PasswordBox extends TextBox {
+export default class PasswordBox extends TextBase {
     static get properties() {
         return {
             ...super.properties,
+            pattern: { type: String, reflect: true },
+            allowPattern: { type: String, attribute: 'allow-pattern' },
+            maxlength: { type: Number },
+            minlength: { type: Number },
             revealed: { type: Boolean, reflect: true }, // şifrenin görünür olup olmadığını tutar
         };
     }

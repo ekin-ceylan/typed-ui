@@ -1,13 +1,28 @@
-import { textBoxArgTypes } from '../../../utilities/common-arg-types.js';
+import { inputBaseArgTypes, textBoxArgTypes } from '../../../utilities/common-arg-types.js';
 import { Passwordbox } from '../../../utilities/register.js';
 import '../textbox/text-box.css';
 import './password-box.css';
 
+const argTypes = {
+    ...structuredClone(inputBaseArgTypes),
+    pattern: textBoxArgTypes.pattern,
+    allowPattern: textBoxArgTypes.allowPattern,
+    maxlength: textBoxArgTypes.maxlength,
+    minlength: textBoxArgTypes.minlength,
+    revealed: {
+        control: 'boolean',
+        description: 'Şifrenin görünür olup olmadığını belirler. Varsa şifre görünür.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'false' },
+            type: { summary: 'boolean' },
+        },
+    },
+};
+
 export default {
     title: 'Bileşenler/Textbox/PasswordBox',
-    argTypes: {
-        ...textBoxArgTypes,
-    },
+    argTypes,
 };
 
 // Mirrors index.html:
