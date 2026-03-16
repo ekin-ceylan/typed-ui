@@ -6,9 +6,21 @@ import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 
 Erişilebilirlik (a11y), web uygulamalarının herkes tarafından — engelli, yaşlı, farklı cihaz kullanan veya geçici kısıtlı durumda olan kullanıcılar dahil — rahatça kullanılabilmesini sağlamayı amaçlar. Doğru erişilebilirlik, hem etik hem de yasal gereklilikleri karşılar; daha geniş kullanıcı kitlesine ulaşmayı ve daha iyi kullanıcı deneyimi sunmayı mümkün kılar.
 
+> Dünya nüfusunun yaklaşık **%15’i bir tür engellilik durumuna sahiptir**. İnternet teknolojileri, bu kişiler için büyük fırsatlar sunar. Ancak bunun gerçekleşebilmesi için, erişilebilirliğin **sonradan eklenen bir özellik değil, geliştirme sürecinin doğal bir parçası** haline gelmesi gerekir.
+
 **SEO ve site trafiği açısından da erişilebilirlik kritiktir:** Arama motorları erişilebilir siteleri daha yüksek puanlar, daha fazla kullanıcıya ulaşılır ve _bounce rate_ düşer. Yasal uyumluluk da erişimin engellenmemesini sağlar.
 
-## `autocomplete`
+## Genel Tavsiyeler
+
+### Native (yerleşik) etkileşimli HTML elemanlarını kullanın
+
+`div` gibi semantik olmayan elementlere `onClick` eklemek yerine `button`, `a`, `input` gibi tarayıcı tarafından etkileşimli olarak tanınan elementler kullanılmalıdır. Bu elementler klavye ile erişilebilir ve ekran okuyucular tarafından doğru yorumlanır.
+
+Eğer semantik olmayan bir element kullanılacaksa `role` ve `tabindex="0"` gibi ARIA özellikleri eklenmelidir.
+
+## Öznitelikler
+
+### `autocomplete`
 
 `autocomplete`, tarayıcının ve şifre yöneticilerinin form alanlarını doğru tahmin edip doldurabilmesi için kullanılan standart bir ipucudur. Doğru kullanıldığında form doldurma süresini kısaltır, hata oranını düşürür ve özellikle mobil + klavye/autofill akışlarında erişilebilirliği belirgin şekilde iyileştirir.
 
@@ -43,17 +55,20 @@ Aşağıdaki bileşenler `autocomplete` değerini otomatik olarak doğru şekild
 
 Daha detaylı değer listesini [mozilla.org](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete#values) sitesinden bulabilirsiniz.
 
-### Neden önemli?
+#### Neden önemli?
 
 - Doğru otomatik doldurma → daha hızlı form tamamlama, daha az yazım hatası
 - Şifre yöneticileriyle uyum → kullanıcıların güvenli/benzersiz şifre kullanmasını kolaylaştırır
 - Mobilde uygun klavye + öneriler → daha az sürtünme
 
-### Ne zaman kapatılmalı?
+#### Ne zaman kapatılmalı?
 
 - Çok nadir. Kiosk/ortak cihaz gibi senaryolarda veya “tek seferlik / geçici” alanlarda `autocomplete="off"` düşünülebilir.
 - Login / signup / ödeme gibi kritik akışlarda genelde kapatmak yerine doğru token’ı seçmek daha iyi sonuç verir.
 
 > **Uyarı:** `off` her zaman garanti değildir; bazı tarayıcılar/şifre yöneticileri yine de doldurabilir.
 
+### `title`
+
 /_inputmode UX a11y mi?_/
+/_@storybook/addon-a11y_/

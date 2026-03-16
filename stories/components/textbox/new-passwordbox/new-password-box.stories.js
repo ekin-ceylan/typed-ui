@@ -1,21 +1,20 @@
-import { passwordboxArgTypes } from '../../../utilities/common-arg-types.js';
-import { Passwordbox } from '../../../utilities/register.js';
+import { NewPasswordbox } from '../../../utilities/register.js';
 import '../textbox/text-box.css';
-import './password-box.css';
+import '../passwordbox/password-box.css';
+import { passwordboxArgTypes } from '../../../utilities/common-arg-types.js';
 
 export default {
-    title: 'Bileşenler/Textbox/PasswordBox',
+    title: 'Bileşenler/Textbox/NewPasswordBox',
     argTypes: passwordboxArgTypes,
 };
 
-// Mirrors index.html:
-// <plate-box field-id="plate-no" label="Plaka Numarası" value="55  ty" required></plate-box>
 export const Default = {
-    render: args => Passwordbox(args),
+    render: args => NewPasswordbox(args),
     args: {
         fieldId: 'password',
         label: 'Şifre',
         placeholder: 'Şifrenizi giriniz',
+        required: true,
     },
     parameters: {
         docs: {
@@ -26,11 +25,11 @@ export const Default = {
 };
 
 export const PlaygroundStory = {
-    render: args => Passwordbox(args),
+    render: args => NewPasswordbox(args),
     tags: ['!dev'],
     args: {
-        fieldId: 'password',
-        label: 'Şifre',
+        label: 'Yeni Şifre',
+        fieldName: 'newPassword',
         placeholder: 'Şifrenizi giriniz',
     },
     parameters: {

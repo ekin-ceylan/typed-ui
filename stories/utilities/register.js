@@ -15,6 +15,7 @@ defineComponent('phone-box', TypedUI.PhoneBox);
 defineComponent('email-box', TypedUI.EmailBox);
 defineComponent('password-box', TypedUI.PasswordBox);
 defineComponent('confirm-password-box', TypedUI.ConfirmPasswordBox);
+defineComponent('new-password-box', TypedUI.NewPasswordBox);
 defineComponent('select-box', TypedUI.SelectBox);
 defineComponent('combo-box', TypedUI.ComboBox);
 defineComponent('modal-dialog', TypedUI.ModalDialog);
@@ -105,6 +106,11 @@ export const Passwordbox = args => {
 
 export const ConfirmPasswordbox = args => {
     const temp = `<confirm-password-box ${getAttrs(args)}> </confirm-password-box>`;
+    return elementFromText(temp);
+};
+
+export const NewPasswordbox = args => {
+    const temp = `<new-password-box ${getAttrs(args)}> </new-password-box>`;
     return elementFromText(temp);
 };
 

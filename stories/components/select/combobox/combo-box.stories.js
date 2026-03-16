@@ -44,18 +44,29 @@ export const Default = {
     render: args => Combobox(args),
     args: {
         defaultSlot: `<option value="tr">
-    <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />Türkiye
+    <img src="https://flagcdn.com/tr.svg" alt="Turkey Flag" width="20" height="15" style="margin-right: 5px" />Türkiye
 </option>
 <option value="de">
-    <img src="https://flagcdn.com/de.svg" alt="Germany Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />Almanya
+    <img src="https://flagcdn.com/de.svg" alt="Germany Flag" width="20" height="15" style="margin-right: 5px" />Almanya
 </option>
 <option value="us">
-    <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" style="vertical-align: middle; margin-right: 5px" />ABD
-</option>`,
+    <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15" style="margin-right: 5px" />ABD
+</option>
+<option value="ch" disabled>
+    <img src="https://flagcdn.com/cn.svg" alt="China Flag" width="20" height="15" style="margin-right: 5px" />Çin Halk Cumhuriyeti
+</option>
+<option value="kp">
+    <img src="https://flagcdn.com/kp.svg" alt="North Korea Flag" width="20" height="15" style="margin-right: 5px" />Kuzey Kore
+</option>
+<option value="it">
+    <img src="https://flagcdn.com/it.svg" alt="Italy Flag" width="20" height="15" style="margin-right: 5px" />İtalya
+</option>
+`,
         noOptionsSlot: `<template slot="no-options">Kayıt Bulunamadı</template>`,
         fieldId: 'country',
         label: 'Ülke',
         placeholder: 'Lütfen seçiniz',
+        required: true,
     },
     parameters: {
         docs: {

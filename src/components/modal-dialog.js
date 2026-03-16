@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
 import LightComponentBase from '../core/light-component-base.js';
 import { hideBodyScroll, showBodyScroll } from '../modules/scroll-lock-helper.js';
@@ -89,6 +89,11 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
         this.open = false;
     }
 
+    /** @return {import('lit').TemplateResult | typeof nothing} */
+    renderCloseButtonIcon() {
+        return html`&times;`;
+    }
+
     /** Show with small delay for CSS transitions. */
     #show() {
         this.#dialog?.showModal();
@@ -127,7 +132,7 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
     render() {
         return html`<dialog role="dialog" aria-modal="true" tabindex="-1">
             <button type="button" class=${ifDefined(this.closeButtonClass)} @click=${this.hide} data-role="close" aria-label="Close">
-                <slot name="close-button-icon">&times;</slot>
+                <slot name="close-button-icon">${this.renderCloseButtonIcon()}</slot>
             </button>
             <slot></slot>
         </dialog>`;

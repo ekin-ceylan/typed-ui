@@ -1,7 +1,7 @@
-import { Passwordbox, ConfirmPasswordbox } from '../../../utilities/register.js';
+import { NewPasswordbox, ConfirmPasswordbox } from '../../../utilities/register.js';
 import '../textbox/text-box.css';
 import '../passwordbox/password-box.css';
-import { passwordboxArgTypes } from '../passwordbox/password-box.stories.js';
+import { passwordboxArgTypes } from '../../../utilities/common-arg-types.js';
 
 const argTypes = {
     ...structuredClone(passwordboxArgTypes),
@@ -42,15 +42,15 @@ export const Default = {
 
 export const PlaygroundStory = {
     render: args => {
-        const passwordInput = Passwordbox({
-            id: 'password',
-            fieldId: 'password',
-            label: 'Şifre',
-            placeholder: 'Şifrenizi giriniz',
+        const confirmPasswordInput = ConfirmPasswordbox(args);
+        const passwordInput = NewPasswordbox({
+            id: 'new-password',
+            fieldId: 'newPassword',
+            label: 'Yeni Şifre',
+            placeholder: 'Yeni şifrenizi giriniz',
             required: true,
         });
 
-        const confirmPasswordInput = ConfirmPasswordbox(args);
         const button = document.createElement('button');
         button.type = 'submit';
         button.textContent = 'Gönder';
@@ -66,9 +66,9 @@ export const PlaygroundStory = {
     },
     tags: ['!dev'],
     args: {
-        label: 'Şifre Tekrar',
-        placeholder: 'Şifrenizi tekrar giriniz',
-        matchSelector: '#password',
+        label: 'Yeni Şifre Tekrar',
+        placeholder: 'Yeni şifrenizi tekrar giriniz',
+        matchSelector: '#new-password',
     },
     parameters: {
         docs: {

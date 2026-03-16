@@ -231,3 +231,20 @@ export const codeBoxArgTypes = {
         },
     },
 };
+
+export const passwordboxArgTypes = {
+    ...structuredClone(inputBaseArgTypes),
+    pattern: textBoxArgTypes.pattern,
+    allowPattern: textBoxArgTypes.allowPattern,
+    maxlength: textBoxArgTypes.maxlength,
+    minlength: textBoxArgTypes.minlength,
+    revealed: {
+        control: 'boolean',
+        description: 'Şifrenin görünür olup olmadığını belirler. Varsa şifre görünür.',
+        table: {
+            category: 'Attributes',
+            defaultValue: { summary: 'false' },
+            type: { summary: 'boolean' },
+        },
+    },
+};
