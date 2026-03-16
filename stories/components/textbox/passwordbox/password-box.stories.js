@@ -3,7 +3,7 @@ import { Passwordbox } from '../../../utilities/register.js';
 import '../textbox/text-box.css';
 import './password-box.css';
 
-const argTypes = {
+export const passwordboxArgTypes = {
     ...structuredClone(inputBaseArgTypes),
     pattern: textBoxArgTypes.pattern,
     allowPattern: textBoxArgTypes.allowPattern,
@@ -22,7 +22,7 @@ const argTypes = {
 
 export default {
     title: 'Bileşenler/Textbox/PasswordBox',
-    argTypes,
+    argTypes: passwordboxArgTypes,
 };
 
 // Mirrors index.html:

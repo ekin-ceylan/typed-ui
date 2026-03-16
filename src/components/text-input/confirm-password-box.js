@@ -6,7 +6,7 @@ export default class ConfirmPasswordBox extends PasswordBox {
     static get properties() {
         return {
             ...super.properties,
-            match: { type: String }, // CSS selector (confirm)
+            matchSelector: { type: String, attribute: 'match-selector' }, // CSS selector (confirm)
         };
     }
 
@@ -19,7 +19,7 @@ export default class ConfirmPasswordBox extends PasswordBox {
 
     firstUpdated() {
         super.firstUpdated();
-        this.#matchTarget = /** @type {HTMLInputElement } */ (this.getRootNode()).querySelector(this.match);
+        this.#matchTarget = /** @type {HTMLInputElement } */ (this.getRootNode()).querySelector(this.matchSelector);
     }
 
     constructor() {
@@ -28,6 +28,6 @@ export default class ConfirmPasswordBox extends PasswordBox {
         this.autocomplete = 'new-password';
 
         /** @type {String} */
-        this.match = undefined;
+        this.matchSelector = undefined;
     }
 }
