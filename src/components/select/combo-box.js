@@ -200,14 +200,8 @@ export default class ComboBox extends SelectBase {
 
     onInvalid(_e) {
         // e.preventDefault(); // mesaj baloncuğu çıkmaz
-        this.#checkValidity();
+        this.#checkValidity(true);
     }
-
-    // onFormSubmit(e) {
-    //     if (!this.#checkValidity()) {
-    //         e.preventDefault();
-    //     }
-    // }
 
     onOptionClick(option) {
         this.#onSelect(option);
@@ -241,8 +235,8 @@ export default class ComboBox extends SelectBase {
         this.displayElement.innerHTML = selectedOption?.innerHTML || this.placeholder;
     }
 
-    #checkValidity() {
-        if (!this.focused) return true; // etkileşime girilmediyse
+    #checkValidity(force) {
+        if (!this.focused && !force) return true; // etkileşime girilmediyse
 
         const el = this.inputElement;
         const v = el.validity;
