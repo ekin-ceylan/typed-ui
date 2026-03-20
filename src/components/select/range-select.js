@@ -25,10 +25,6 @@ export default class RangeSelect extends InputBase {
         // this.#checkValidity(true);
     }
 
-    onFormSubmit(_event) {
-        // throw new Error(`${this.constructor.name}: onFormSubmit(submitEvent) override edilmek zorunda.`);
-    }
-
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         const label = html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;

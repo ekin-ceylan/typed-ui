@@ -292,15 +292,6 @@ export default class TextBase extends InputBase {
         this.#checkValidity(true);
     }
 
-    /**
-     * @protected Handles the form submit event for the text box.
-     * @param {SubmitEvent} e
-     */
-    onFormSubmit(e) {
-        if (!this.#checkValidity(true)) {
-            e.preventDefault();
-        }
-    }
     // #endregion EVENT LISTENERS
 
     // #region PRIVATE METHODS

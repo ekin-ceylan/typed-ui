@@ -75,10 +75,6 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         }
     }
 
-    onFormSubmit(_event) {
-        // throw new Error(`${this.constructor.name}: onFormSubmit(submitEvent) override edilmek zorunda.`);
-    }
-
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         return html`

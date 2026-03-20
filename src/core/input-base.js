@@ -5,7 +5,6 @@ import { generateId } from '../modules/id-generator.js';
 
 /**
  * Base class for input components providing common functionality for form inputs.
- * This is an abstract class that must be extended and have onFormSubmit() implemented.
  * @template {HTMLInputElement | HTMLSelectElement} TElement
  * @abstract @extends LightComponentBase
  */
@@ -107,8 +106,6 @@ export default class InputBase extends LightComponentBase {
         this.readonly = false;
         /** @property {boolean} Show clear button */
         this.clearable = false;
-
-        this.#validateAbstracts();
     }
 
     /** @override */
@@ -177,35 +174,12 @@ export default class InputBase extends LightComponentBase {
         if (['Enter', 'Space'].includes(event.code)) event.stopPropagation();
     }
 
-    /**
-     * Abstract handler for the nearest <form> submit. Must be overridden.
-     * Typical flow: e.preventDefault(); validate; set validationMessage / invalid;
-     * dispatch a custom event with current value. Make async if server-side validation is needed.
-     * @abstract @protected
-     * @param {SubmitEvent | Event} _event
-     */
-    onFormSubmit(_event) {
-        throw new Error(`${this.constructor.name}: onFormSubmit(submitEvent) override edilmek zorunda.`);
-    }
-
     // #endregion EVENT LISTENERS
 
     // #region PRIVATE METHODS
     async #firstUpdateCompleted() {
         await this.updateComplete;
         this.inputElement.addEventListener('focus', () => (this.#focused = true), { once: true, capture: false });
-        const form = this.inputElement?.form;
-        form?.addEventListener('submit', this.onFormSubmit.bind(this));
-    }
-
-    #validateAbstracts() {
-        const baseProto = InputBase.prototype;
-
-        for (const name of ['onFormSubmit']) {
-            if (this[name] === baseProto[name]) {
-                throw new Error(`${this.componentName}: ${name}() method must be overridden.`);
-            }
-        }
     }
 
     #validateRequiredFields(fieldNames) {

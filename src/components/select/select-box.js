@@ -134,13 +134,7 @@ export default class SelectBox extends SelectBase {
 
     onInvalid(_e) {
         // e.preventDefault(); // mesaj baloncuğu çıkmaz
-        this.#checkValidity();
-    }
-
-    onFormSubmit(e) {
-        if (!this.#checkValidity()) {
-            e.preventDefault();
-        }
+        this.#checkValidity(true);
     }
 
     /** @override Clears the input value and dispatches a 'clear' custom event. */
@@ -148,15 +142,15 @@ export default class SelectBox extends SelectBase {
         super.onClearClick(event);
         this.dispatchCustomEvent('input');
         this.dispatchCustomEvent('change');
-        this.#checkValidity();
+        this.#checkValidity(true);
     }
 
     // #endregion EVENT LISTENERS
 
     // #region PRIVATE METHODS
 
-    #checkValidity() {
-        if (!this.focused) return true; // etkileşime girilmediyse
+    #checkValidity(force) {
+        if (!this.focused && !force) return true; // etkileşime girilmediyse
 
         const el = this.inputElement;
         const v = el.validity;

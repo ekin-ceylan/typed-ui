@@ -101,3 +101,7 @@ select-box > div > select ~ [data-chevron] {
 select-box > div > select[data-open] ~ [data-chevron] {
     transform: translateY(-50%) rotate(180deg);
 }
+
+select#native:user-invalid {
+    border-color: red;
+}

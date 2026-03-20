@@ -203,11 +203,11 @@ export default class ComboBox extends SelectBase {
         this.#checkValidity();
     }
 
-    onFormSubmit(e) {
-        if (!this.#checkValidity()) {
-            e.preventDefault();
-        }
-    }
+    // onFormSubmit(e) {
+    //     if (!this.#checkValidity()) {
+    //         e.preventDefault();
+    //     }
+    // }
 
     onOptionClick(option) {
         this.#onSelect(option);
