@@ -96,10 +96,15 @@ export default class SelectBox extends SelectBase {
     // #region EVENT LISTENERS
     onInput(e) {
         e.stopPropagation();
+        this.dispatchCustomEvent('input', e);
+    }
+
+    onChange(e) {
+        e.stopPropagation();
         this.value = e.target.value;
         this.isOpen = false;
         this.#checkValidity();
-        this.dispatchCustomEvent('input', e);
+        this.dispatchCustomEvent('change', e);
     }
 
     onBlur(_e) {
@@ -212,6 +217,7 @@ export default class SelectBox extends SelectBase {
                     aria-required=${this.required ? 'true' : 'false'}
                     aria-invalid=${ifDefined(this.ariaInvalid)}
                     @input=${this.onInput}
+                    @change=${this.onChange}
                     @mousedown=${this.onMousedown}
                     @mouseup=${this.onMouseup}
                     @keydown=${this.onKeydown}
