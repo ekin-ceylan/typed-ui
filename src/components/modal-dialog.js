@@ -6,8 +6,6 @@ import { ifDefined } from '../modules/utilities.js';
 
 /**
  * Modal dialog web component built with Lit.
- *
- * @tag modal-dialog
  * @summary Accessible modal dialog with optional backdrop & ESC close.
  * @slot default - Dialog content.
  */

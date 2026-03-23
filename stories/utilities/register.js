@@ -9,7 +9,6 @@ import { ifDefined, isEmpty } from '../../src/modules/utilities.js';
 defineComponent('check-box', TypedUI.CheckBox);
 defineComponent('text-box', TypedUI.TextBox);
 defineComponent('tc-box', TypedUI.TcBox);
-defineComponent('code-box', TypedUI.CodeBox);
 defineComponent('plate-box', TypedUI.PlateBox);
 defineComponent('phone-box', TypedUI.PhoneBox);
 defineComponent('email-box', TypedUI.EmailBox);
@@ -76,22 +75,6 @@ export const Textbox = args => {
 export const TcBox = args => {
     const temp = `<tc-box ${getAttrs(args)}> </tc-box>`;
     return elementFromText(temp);
-};
-
-export const CodeBox = ({ fieldId, fieldName, label, value, placeholder, digits, required, disabled }) => {
-    const temp = html`<code-box
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
-        label=${ifDefined(label)}
-        ?required=${required}
-        ?disabled=${disabled}
-        placeholder=${ifDefined(placeholder)}
-        value=${ifDefined(value)}
-        digits=${ifDefined(digits)}
-    >
-    </code-box>`;
-
-    return elementFromTemplate(temp);
 };
 
 export const Emailbox = args => {
