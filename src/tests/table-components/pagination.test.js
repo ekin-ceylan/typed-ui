@@ -39,11 +39,11 @@ describe('Pagination', () => {
         expect(numericLabels).toEqual(['1', '9', '10', '11', '20']);
     });
 
-    it('dispatches page-click when the first page button is clicked', async () => {
+    it('dispatches page-change-request when the first page button is clicked', async () => {
         const host = await initPagination({ currentPage: 2, pageCount: 5 });
 
         const eventPromise = new Promise(resolve => {
-            host.addEventListener('page-click', resolve, { once: true });
+            host.addEventListener('page-change-request', resolve, { once: true });
         });
 
         const firstLink = host.querySelector('li button[aria-label="Go to page 1"]');
@@ -59,7 +59,7 @@ describe('Pagination', () => {
         const host = await initPagination({ currentPage: 3, pageCount: 5 });
         const onPageClick = vi.fn();
 
-        host.addEventListener('page-click', onPageClick);
+        host.addEventListener('page-change-request', onPageClick);
 
         const activeLink = host.querySelector('button[aria-current="page"]');
         activeLink.click();

@@ -82,7 +82,7 @@ export default class Pagination extends LightComponentBase {
             aria-label="Go to previous page"
             aria-disabled=${ariaDisabled}
             ?disabled=${isFirstPage}
-            @click=${e => this.onPageClick(this.normalizedCurrentPage - 1, e)}
+            @click=${e => this.requestPage(this.normalizedCurrentPage - 1, e)}
         >
             &lt;
         </button>`;
@@ -99,7 +99,7 @@ export default class Pagination extends LightComponentBase {
             aria-label="Go to next page"
             aria-disabled=${ariaDisabled}
             ?disabled=${isLastPage}
-            @click=${e => this.onPageClick(this.normalizedCurrentPage + 1, e)}
+            @click=${e => this.requestPage(this.normalizedCurrentPage + 1, e)}
         >
             &gt;
         </button>`;
@@ -118,7 +118,7 @@ export default class Pagination extends LightComponentBase {
             aria-current=${ariaCurrent}
             aria-disabled=${ariaDisabled}
             ?disabled=${isActive}
-            @click=${e => this.onPageClick(pageNo, e)}
+            @click=${e => this.requestPage(pageNo, e)}
         >
             ${pageNo}
         </button>`;
@@ -150,12 +150,11 @@ export default class Pagination extends LightComponentBase {
     }
 
     /**
-     * Handles page navigation requests and dispatches a page-click event for valid targets.
+     * Handles page navigation requests and dispatches a `page-change-request` event for valid targets.
      * @param {number} pageNo
      * @param {MouseEvent} event
-     * @returns {void}
      */
-    onPageClick(pageNo, event) {
+    requestPage(pageNo, event) {
         event.preventDefault();
 
         if (pageNo < 1 || pageNo > this.normalizedPageCount || pageNo === this.normalizedCurrentPage) {
@@ -163,7 +162,7 @@ export default class Pagination extends LightComponentBase {
         }
 
         this.dispatchEvent(
-            new CustomEvent('page-click', {
+            new CustomEvent('page-change-request', {
                 bubbles: true,
                 cancelable: true,
                 composed: true,
