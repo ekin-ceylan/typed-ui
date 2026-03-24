@@ -99,10 +99,10 @@
     width: auto !important;
 }
 
-/* .sb-panel table thead tr > th:nth-child(4),
+.sb-panel table thead tr > th:nth-child(4),
 .sb-panel table tbody tr > td:nth-child(4) {
-    width: 50% !important;
-} */
+    min-width: 40% !important;
+}
 
 .sb-panel table tbody tr > :first-of-type {
     border-top-left-radius: 0 !important;

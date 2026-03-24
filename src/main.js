@@ -14,6 +14,8 @@ import RangeSelect from './components/select/range-select';
 import ModalDialog from './components/modal-dialog';
 import { defineComponent } from './modules/utilities.js';
 import TcBox from './components/text-input/tc-box.js';
+import Pagination from './components/table/pagination.js';
+defineComponent('typed-pagination', Pagination);
 
 defineComponent('text-box', TextBox);
 defineComponent('phone-box', PhoneBox);

@@ -27,5 +27,6 @@ export { default as RangeSelect } from './components/select/range-select.js';
 // Other components
 export { default as UrlLink } from './components/url-link.js';
 export { default as ModalDialog } from './components/modal-dialog.js';
+export { default as Pagination } from './components/table/pagination.js';
 
 export { default as CheckBox } from './components/check-box.js';
