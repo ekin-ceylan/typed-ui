@@ -27,7 +27,7 @@ export default class Pagination extends LightComponentBase {
         this.pageCount = 1;
 
         /** @type {number} Number of sibling pages shown on each side of the current page. */
-        this.siblingCount = 3;
+        this.siblingCount = 2;
 
         /** @type {string} Accessible label for the pagination navigation landmark. */
         this.ariaLabel = 'Pagination';

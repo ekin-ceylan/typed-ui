@@ -27,7 +27,6 @@ export default {
         },
         value: {
             type: { name: 'string' },
-            defaultValue: undefined,
             description:
                 "Checkbox'ın tuttuğu değer.\n\nSeçili olduğunda `checked-value`, seçili olmadığında `unchecked-value` değerini tutar.\n\n Başlangıçta yazılan değer `checked-value` ile eşleşiyorsa checkbox işaretli olur.",
             control: 'text',

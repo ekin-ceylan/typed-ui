@@ -27,7 +27,7 @@ describe('Pagination', () => {
         const numericLabels = pageLinks.map(link => link.textContent.trim()).filter(label => /^\d+$/.test(label));
         const ellipsisNodes = host.querySelectorAll('li > span[aria-hidden="true"]');
 
-        expect(numericLabels).toEqual(['1', '7', '8', '9', '10', '11', '12', '13', '20']);
+        expect(numericLabels).toEqual(['1', '8', '9', '10', '11', '12', '20']);
         expect(ellipsisNodes.length).toBe(2);
     });
 

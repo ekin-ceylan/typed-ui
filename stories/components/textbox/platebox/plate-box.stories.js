@@ -10,9 +10,7 @@ delete argTypes.pattern;
 delete argTypes.minlength;
 delete argTypes.maxlength;
 
-argTypes.autocomplete.defaultValue = 'off';
 argTypes.autocomplete.table.defaultValue.summary = 'off';
-argTypes.autounmask.defaultValue = true;
 argTypes.autounmask.table.defaultValue.summary = 'true';
 
 export default {

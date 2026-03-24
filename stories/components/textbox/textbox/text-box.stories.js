@@ -4,7 +4,6 @@ import './text-box.css';
 
 const argTypes = structuredClone(textBoxArgTypes);
 
-argTypes.spellcheck.defaultValue = true;
 argTypes.spellcheck.table.defaultValue.summary = 'true';
 
 export default {

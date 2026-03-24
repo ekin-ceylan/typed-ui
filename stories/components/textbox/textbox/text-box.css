@@ -3,7 +3,21 @@
 :is(text-box, plate-box, phone-box, email-box, password-box, confirm-password-box, new-password-box, tc-box, code-box) {
     --tbx-bg-color: #ffffff;
     --tbx-bg-color-hover: #ffffff;
-    --tbx-bg-color-disabled: #f2f2f2; /* #eef2f7; */
+    --tbx-bg-color-disabled: #f2f2f2;
+
+    --tbx-opacity-disabled: 1;
+
+    --tbx-label-font-size: 14px;
+    --tbx-label-font-weight: 500;
+    --tbx-label-letter-spacing: unset;
+    --tbx-label-color: #111827;
+    --tbx-label-color-hover: #111827;
+    --tbx-label-color-focus: #111827;
+    --tbx-label-color-invalid: #111827;
+    --tbx-label-color-disabled: #6c757d;
+    --tbx-label-bg-color: #fff;
+    --tbx-label-margin: 0 0 6px 0;
+    --tbx-label-padding: 0;
 
     --tbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --tbx-font-size: 14px;
@@ -52,13 +66,29 @@
 
 /* #endregion DESIGN TOKENS */
 
+:is(text-box, plate-box, phone-box, email-box, password-box, confirm-password-box, new-password-box, tc-box, code-box):has(input:disabled) {
+    opacity: var(--tbx-opacity-disabled);
+}
+
 :is(text-box, plate-box, phone-box, email-box, password-box, confirm-password-box, new-password-box, tc-box, code-box) > label {
-    display: block;
-    margin: 0 0 6px 0;
-    font-size: var(--tbx-font-size);
+    display: inline-block;
+    position: relative;
+    font-size: var(--tbx-label-font-size);
+    font-weight: var(--tbx-label-font-weight);
+    letter-spacing: var(--tbx-label-letter-spacing);
+    color: var(--tbx-label-color);
+    background-color: var(--tbx-label-bg-color);
+    margin: var(--tbx-label-margin);
+    padding: var(--tbx-label-padding);
     line-height: 20px;
-    font-weight: 500;
-    color: var(--tbx-text-color);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, confirm-password-box, new-password-box, tc-box, code-box):focus-within > label {
+    color: var(--tbx-label-color-focus);
+}
+
+:is(text-box, plate-box, phone-box, email-box, password-box, confirm-password-box, new-password-box, tc-box, code-box):has(input[aria-invalid='true']) > label {
+    color: var(--tbx-label-color-invalid);
 }
 
 :is(text-box, plate-box, phone-box, email-box, password-box, confirm-password-box, new-password-box, tc-box, code-box) > [data-role='container'] {

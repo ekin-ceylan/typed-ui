@@ -18,6 +18,7 @@ defineComponent('new-password-box', TypedUI.NewPasswordBox);
 defineComponent('select-box', TypedUI.SelectBox);
 defineComponent('combo-box', TypedUI.ComboBox);
 defineComponent('modal-dialog', TypedUI.ModalDialog);
+defineComponent('t-pagination', TypedUI.Pagination);
 
 export const Checkbox = ({ defaultSlot, fieldId, fieldName, label, checkedValue, required, checked, disabled, readonly, indeterminate }) => {
     const temp = html`<check-box
@@ -59,6 +60,11 @@ export const Combobox = args => {
 
 export const Platebox = args => {
     const temp = `<plate-box ${getAttrs(args)}> </plate-box>`;
+    return elementFromText(temp);
+};
+
+export const Pagination = args => {
+    const temp = `<t-pagination ${getAttrs(args)}> </t-pagination>`;
     return elementFromText(temp);
 };
 

@@ -22,7 +22,6 @@ export const inputBaseArgTypes = {
     inputClass: {
         name: 'input-class',
         type: { name: 'string' },
-        defaultValue: undefined,
         description: 'İçteki `<input>` veya `<select>` elementine uygulanacak CSS sınıfı.',
         control: 'text',
         table: {
@@ -33,7 +32,6 @@ export const inputBaseArgTypes = {
     },
     value: {
         type: { name: 'string' },
-        defaultValue: undefined,
         description: 'Inputun tuttuğu değer.',
         control: 'text',
         table: {
@@ -178,7 +176,6 @@ export const textBoxArgTypes = {
     autocomplete: {
         control: 'text',
         description: 'Inputun otomatik tamamlama özelliğini belirler. Örneğin, `on`, `off` gibi.',
-        defaultValue: undefined,
         table: {
             category: 'Attributes',
             defaultValue: { summary: 'undefined' },
@@ -189,7 +186,6 @@ export const textBoxArgTypes = {
         control: 'boolean',
         description:
             'Bileşenin değerinin maskeli şekilde tutulup tutulmayacağını belirler. Açıksa, inputun görünen değeri maskelenirken bileşenin tuttuğu değer maskesiz olur. `unmask()` fonksiyonu tanımlanmış olmalıdır.',
-        defaultValue: false,
         table: {
             category: 'Attributes',
             defaultValue: { summary: 'false' },
@@ -199,7 +195,6 @@ export const textBoxArgTypes = {
     spellcheck: {
         control: 'boolean',
         description: 'Tarayıcının inputun değeri için yazım denetimi yapıp yapmayacağını belirler.',
-        defaultValue: undefined,
         table: {
             category: 'Attributes',
             defaultValue: { summary: 'undefined' },
@@ -221,7 +216,6 @@ export const codeBoxArgTypes = {
     },
     digits: {
         type: { name: 'number' },
-        defaultValue: 1,
         description: "Inputun kaç haneli olduğunu belirler. `1`'den küçük veya geçersiz bir değer verilirse, `1` olarak atanır.",
         control: 'number',
         table: {
