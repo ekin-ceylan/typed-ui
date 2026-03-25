@@ -104,6 +104,14 @@
     min-width: 40% !important;
 }
 
+.sb-panel table thead tr > th:nth-child(3),
+.sb-panel table tbody tr > td:nth-child(3) {
+    display: none;
+}
+
+.sb-panel table tbody tr > td:nth-child(2) .css-1s51je1 {
+    display: none;
+}
 .sb-panel table tbody tr > :first-of-type {
     border-top-left-radius: 0 !important;
     border-inline-start: none !important;

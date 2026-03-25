@@ -1,4 +1,4 @@
-import { inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
+import { createAttrType, createSlotType, inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { Combobox } from '../../../utilities/register.js';
 import './combo-box.css';
 
@@ -6,37 +6,10 @@ export default {
     component: 'combo-box',
     title: 'Bileşenler/Select/Combobox',
     argTypes: {
-        defaultSlot: {
-            name: 'default',
-            control: 'text',
-            description: 'options için slot içeriği.',
-            table: {
-                category: 'Slots',
-                type: { summary: 'html' },
-                defaultValue: { summary: '' },
-            },
-        },
-        noOptionsSlot: {
-            name: 'no-options',
-            control: 'text',
-            description: 'options olmadığında gösterilecek option için slot içeriği.',
-            table: {
-                category: 'Slots',
-                type: { summary: 'html' },
-                defaultValue: { summary: '' },
-            },
-        },
+        defaultSlot: createSlotType('options için slot içeriği.', '""', 'default'),
+        noOptionsSlot: createSlotType('options olmadığında gösterilecek option için slot içeriği.', '""', 'no-options'),
         ...inputBaseArgTypes,
-        nativeBehavior: {
-            name: 'native-behavior',
-            control: 'boolean',
-            description: 'Klavye ile gezinirken tarayıcının *native* `<select>` davranışını kullanır.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
+        nativeBehavior: createAttrType('Klavye ile gezinirken tarayıcının *native* `<select>` davranışını kullanır.', 'boolean', 'false', false, 'native-behavior'),
     },
 };
 

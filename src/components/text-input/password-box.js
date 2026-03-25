@@ -20,19 +20,12 @@ export default class PasswordBox extends TextBase {
         if (/\s/.test(value)) return `${this.label} alanı boşluk içermemelidir.`;
     }
 
-    constructor() {
-        super();
+    updated(changedProperties) {
+        super.updated(changedProperties);
 
-        this.type = 'password';
-        this.autocomplete = 'current-password';
-
-        /** @type {Boolean} Whether the password is revealed or not */
-        this.revealed = false;
-    }
-
-    #toggleVisibility() {
-        this.revealed = !this.revealed;
-        this.inputElement.type = this.revealed ? 'text' : 'password';
+        if (changedProperties.has('revealed')) {
+            this.inputElement.type = this.revealed ? 'text' : 'password';
+        }
     }
 
     renderAdornment() {
@@ -66,5 +59,19 @@ export default class PasswordBox extends TextBase {
                 <path fill-rule="evenodd" d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
             </svg>
         </button>`;
+    }
+
+    constructor() {
+        super();
+
+        this.type = 'password';
+        this.autocomplete = 'current-password';
+
+        /** @type {Boolean} Whether the password is revealed or not */
+        this.revealed = false;
+    }
+
+    #toggleVisibility() {
+        this.revealed = !this.revealed;
     }
 }
