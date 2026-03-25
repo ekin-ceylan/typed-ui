@@ -1,31 +1,13 @@
-import { inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
+import { createAttrType, createSlotType, inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { createForm, Selectbox } from '../../../utilities/register.js';
 import './select-box.css';
 
 export default {
     title: 'Bileşenler/Select/Select',
     argTypes: {
-        defaultSlot: {
-            name: 'default',
-            control: 'text',
-            description: 'options için slot içeriği.',
-            table: {
-                category: 'Slots',
-                type: { summary: 'html' },
-                defaultValue: { summary: '' },
-            },
-        },
+        defaultSlot: createSlotType('options için slot içeriği.', '""', 'default'),
         ...inputBaseArgTypes,
-        noOptionsLabel: {
-            name: 'no-options-label',
-            type: { name: 'string' },
-            control: 'text',
-            description: 'Seçenek yokken listede gösterilen metin.',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'Kayıt Bulunamadı' },
-            },
-        },
+        noOptionsLabel: createAttrType('Seçenek yokken listede gösterilen metin.', 'string', 'Kayıt Bulunamadı', false, 'no-options-label'),
         // readonly: {
         //     control: 'boolean',
         //     table: {

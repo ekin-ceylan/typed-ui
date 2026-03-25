@@ -52,22 +52,7 @@ export const passwordboxArgTypes = {
     allowPattern: textBoxArgTypes.allowPattern,
     maxlength: textBoxArgTypes.maxlength,
     minlength: textBoxArgTypes.minlength,
-    revealed: {
-        control: 'boolean',
-        description: 'Şifrenin görünür olup olmadığını belirler. Varsa şifre görünür.',
-        table: {
-            category: 'Attributes',
-            defaultValue: { summary: 'false' },
-            type: { summary: 'boolean' },
-        },
-    },
-};
-
-export const paginationArgTypes = {
-    currentPage: createAttrType('Aktif sayfa numarası.', 'number', '1', false, 'current-page'),
-    pageCount: createAttrType('Toplam sayfa sayısı.', 'number', '1', false, 'page-count'),
-    siblingCount: createAttrType('Aktif sayfanın yanındaki sayfa sayısı.', 'number', '2', false, 'sibling-count'),
-    ariaLabel: createAttrType('Sayfalama bileşeni için ARIA etiketi.', 'string', 'Pagination', false, 'aria-label'),
+    revealed: createAttrType('Şifrenin görünür olup olmadığını belirler. Varsa şifre görünür.', 'boolean', 'false', false, 'revealed'),
 };
 
 /**
@@ -78,7 +63,7 @@ export const paginationArgTypes = {
  * @param {string} name
  */
 export function createAttrType(description, type, defaultValue, isRequired, name) {
-    const desc = `${description} \n\n Type: \`${type}\`, Default: \`${defaultValue}\``;
+    const desc = `${description} __*Type:*__ \`${type}\`, __*Default:*__ \`${defaultValue}\``;
 
     return {
         name,
@@ -94,7 +79,7 @@ export function createAttrType(description, type, defaultValue, isRequired, name
 
 export function createSlotType(description, defaultValue, name) {
     const type = 'html';
-    const desc = `${description} \n\n Type: \`${type}\` Default: \`${defaultValue}\``;
+    const desc = `${description} __*Type:*__ \`${type}\`, __*Default:*__ \`${defaultValue}\``;
 
     return {
         name,

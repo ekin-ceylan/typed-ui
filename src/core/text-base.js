@@ -374,7 +374,7 @@ export default class TextBase extends InputBase {
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         return html`
-            ${this.label && !this.hideLabel ? html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}>${this.inputLabel}</label>` : ``}
+            ${this.renderLabel()}
             <div data-role="container">
                 <input
                     id=${ifDefined(this.fieldId)}

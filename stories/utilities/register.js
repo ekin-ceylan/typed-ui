@@ -58,6 +58,27 @@ export const Combobox = args => {
     return elementFromTemplate(temp);
 };
 
+export const Selectbox = args => {
+    const temp = html`<select-box
+        id=${ifDefined(args.id)}
+        field-id=${ifDefined(args.fieldId)}
+        field-name=${ifDefined(args.fieldName)}
+        label=${ifDefined(args.label)}
+        ?hide-label=${args.hideLabel}
+        ?required=${args.required}
+        ?clearable=${args.clearable}
+        ?disabled=${args.disabled}
+        placeholder=${ifDefined(args.placeholder)}
+        no-options-label=${ifDefined(args.noOptionsLabel)}
+        value=${ifDefined(args.value)}
+        required-sign=${ifDefined(args.requiredSign)}
+    >
+        ${unsafeHTML(args.defaultSlot ?? '')}
+    </select-box>`;
+
+    return elementFromTemplate(temp);
+};
+
 export const Platebox = args => {
     const temp = `<plate-box ${getAttrs(args)}> </plate-box>`;
     return elementFromText(temp);
@@ -101,26 +122,6 @@ export const ConfirmPasswordbox = args => {
 export const NewPasswordbox = args => {
     const temp = `<new-password-box ${getAttrs(args)}> </new-password-box>`;
     return elementFromText(temp);
-};
-
-export const Selectbox = args => {
-    const temp = html`<select-box
-        id=${ifDefined(args.id)}
-        field-id=${ifDefined(args.fieldId)}
-        field-name=${ifDefined(args.fieldName)}
-        label=${ifDefined(args.label)}
-        ?required=${args.required}
-        ?disabled=${args.disabled}
-        ?clearable=${args.clearable}
-        placeholder=${ifDefined(args.placeholder)}
-        no-options-label=${ifDefined(args.noOptionsLabel)}
-        value=${ifDefined(args.value)}
-        required-sign=${ifDefined(args.requiredSign)}
-    >
-        ${unsafeHTML(args.defaultSlot ?? '')}
-    </select-box>`;
-
-    return elementFromTemplate(temp);
 };
 
 export const ModalDialog = ({ default: defaultSlot, closeButtonIcon, backdropClose, escClose }) => {

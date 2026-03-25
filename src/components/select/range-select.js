@@ -27,11 +27,8 @@ export default class RangeSelect extends InputBase {
 
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
-        const label = html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
-
         return html`
-            ${this.label && !this.hideLabel ? label : ``}
-
+            ${this.renderLabel()}
             <div>
                 <data value=${this.min} aria-hidden="true">${this.min}</data>
                 <input
