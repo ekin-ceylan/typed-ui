@@ -96,6 +96,7 @@ export default class SelectBox extends SelectBase {
     // #region EVENT LISTENERS
     onInput(e) {
         e.stopPropagation();
+        this.value = e.target.value;
         this.dispatchCustomEvent('input', e);
     }
 
