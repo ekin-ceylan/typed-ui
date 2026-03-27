@@ -12,7 +12,7 @@ describe('Validation Tests', () => {
     let errorElement;
 
     beforeEach(async () => {
-        [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" pattern="[A-Za-z]{4}" required minlength="3" maxlength="5"></text-box>');
+        [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" pattern="[A-Za-z]{5}" required minlength="3" maxlength="5"></text-box>');
         errorElement = host.querySelector('[data-role="error-message"]');
     });
 
@@ -71,6 +71,17 @@ describe('Validation Tests', () => {
     });
 
     // pattern attr göre validasyon ve hata mesajı
+    it('pattern with punctuation should fail validation', async () => {
+        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ -]+"></text-box>');
+
+        await user.type(input, 'Hello, world!');
+        await user.tab(); // blur to trigger validation
+        // await host.updateComplete;
+
+        const errorElement = host.querySelector('[data-role="error-message"]');
+        expect(errorElement.hidden).toBe(false);
+        expect(errorElement.textContent.trim()).toContain('Lütfen');
+    });
 });
 
 describe('Accessibility (A11y) tests', () => {

@@ -192,7 +192,7 @@ export default class TextBase extends InputBase {
         if (value?.length > this.maxlength) return this.maxLengthValidationMessage;
         if (Number(value) > this.max) return this.maxValueValidationMessage;
         if (Number(value) < this.min) return this.minValueValidationMessage;
-        if (!isEmpty(value) && this.#regexPattern && !this.#regexPattern.test(value)) return this.patternValidationMessage;
+        if (!this.#validatePattern(value)) return this.patternValidationMessage;
 
         return '';
     }
@@ -367,6 +367,14 @@ export default class TextBase extends InputBase {
         this.#globalAllowRegexPattern = this.allowPattern ? new RegExp(this.allowPattern, 'g') : null;
 
         this.#regexPattern = this.pattern ? new RegExp(this.pattern) : null;
+    }
+
+    #validatePattern(value) {
+        if (isEmpty(value) || !this.#regexPattern) return true;
+        if (this.#regexPattern.global) this.#regexPattern.lastIndex = 0;
+        const m = this.#regexPattern.exec(value);
+
+        return !!m && m.index === 0 && m[0].length === value.length;
     }
 
     // #endregion PRIVATE METHODS
