@@ -124,9 +124,10 @@ export const NewPasswordbox = args => {
     return elementFromText(temp);
 };
 
-export const ModalDialog = ({ default: defaultSlot, closeButtonIcon, backdropClose, escClose }) => {
+export const ModalDialog = ({ defaultSlot, backdropClose, escClose }) => {
+    // prettier-ignore
     const temp = html`<modal-dialog id="my-modal" ?backdrop-close=${backdropClose} ?esc-close=${escClose}>
-        ${unsafeHTML(closeButtonIcon ?? '')} ${unsafeHTML(defaultSlot ?? '')}
+        ${unsafeHTML(defaultSlot ?? '')}
     </modal-dialog>`;
 
     return elementFromTemplate(temp);

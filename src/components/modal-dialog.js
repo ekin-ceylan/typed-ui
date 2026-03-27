@@ -2,7 +2,6 @@ import { html, nothing } from 'lit';
 import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
 import LightComponentBase from '../core/light-component-base.js';
 import { hideBodyScroll, showBodyScroll } from '../modules/scroll-lock-helper.js';
-import { ifDefined } from '../modules/utilities.js';
 
 /**
  * Modal dialog web component built with Lit.
@@ -19,7 +18,6 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
     static get properties() {
         return {
             open: { type: Boolean },
-            closeButtonClass: { type: String, attribute: 'close-button-class' },
             backdropClose: { type: Boolean, attribute: 'backdrop-close' },
             escClose: { type: Boolean, attribute: 'esc-close' },
         };
@@ -41,9 +39,6 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
 
         /** @type {boolean} Close when pressing the Escape key. */
         this.escClose = false;
-
-        /** @type {string} CSS class for the close button. */
-        this.closeButtonClass = '';
     }
 
     /** @override @protected */
@@ -87,9 +82,47 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
         this.open = false;
     }
 
-    /** @return {import('lit').TemplateResult | typeof nothing} */
-    renderCloseButtonIcon() {
-        return html`&times;`;
+    /**
+     * Renders the dialog header area.
+     *
+     * Default implementation renders only the close button:
+     * ```
+     * return html`
+     *     <button type="button" ⁣@click=${this.hide} data-role="close" aria-label="Close">
+     *        &times;
+     *     </button>`;
+     * ```
+     * Subclasses may override this method to:
+     * - add a title or custom actions
+     * - replace the close button
+     * - return `nothing` to omit the header entirely
+     *
+     * @return {import('lit').TemplateResult | typeof nothing} */
+    renderHeader() {
+        return html`<button type="button" @click=${this.hide} data-role="close" aria-label="Close">&times;</button>`;
+    }
+
+    /**
+     * Renders the dialog footer area.
+     *
+     * Default implementation renders nothing:
+     * ```js
+     * return nothing;
+     * ```
+     * Subclasses may override this method to:
+     * - add action buttons
+     * - add slots for custom content
+     * @example
+     * ```js
+     * return html`
+     *     <slot name="footer"></slot>
+     *     <button type="button" ⁣@click=${this.hide}>Close</button>
+     * `;
+     * ```
+     *
+     * @return {import('lit').TemplateResult | typeof nothing} */
+    renderFooter() {
+        return nothing;
     }
 
     /** Show with small delay for CSS transitions. */
@@ -129,12 +162,9 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         return html`<dialog role="dialog" aria-modal="true" tabindex="-1">
-            <button type="button" class=${ifDefined(this.closeButtonClass)} @click=${this.hide} data-role="close" aria-label="Close">
-                <slot name="close-button-icon">${this.renderCloseButtonIcon()}</slot>
-            </button>
+            ${this.renderHeader()}
             <slot></slot>
+            ${this.renderFooter()}
         </dialog>`;
     }
 }
-
-// TODO: aria-hidden="true" focusable="false" ekle btn slota

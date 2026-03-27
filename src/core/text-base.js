@@ -132,7 +132,6 @@ export default class TextBase extends InputBase {
 
         // Recompile patterns when they change at runtime (attribute or property update).
         if (changed.has('allowPattern') || changed.has('pattern')) {
-            console.log('Patterns updated, recompiling regex.');
             this.#createRegexPatterns();
         }
     }
