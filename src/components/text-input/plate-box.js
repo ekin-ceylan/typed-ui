@@ -1,5 +1,17 @@
 import TextBase from '../../core/text-base';
 
+/**
+ * Input component that provides Turkish license plate format. Format: "34 ABC 1234"
+ *
+ * Spaces are automatically added/removed. Invalid character entries are prevented.
+ *
+ * The `autounmask` attribute allows the value to be automatically unmasked. Spaces are removed. Default is `true`.
+ * The `autocomplete` attribute allows disabling browser autocomplete.
+ * @extends TextBase
+ * @example
+ * <plate-box name="PlateNo"></plate-box>
+ * <plate-box autounmask autocomplete="off"></plate-box>
+ */
 export default class PlateBox extends TextBase {
     static get properties() {
         return {
@@ -23,19 +35,19 @@ export default class PlateBox extends TextBase {
 
         const newValue = (value.slice(0, caret) + key + value.slice(caretEnd)).replaceAll(' ', '');
 
-        return this.#testRegex.test(newValue); // Yeni karakter eklendiğinde değer paternle uyumlu mu?
+        return this.#testRegex.test(newValue); // Is the new value compatible with the pattern?
     }
 
     mask(value) {
-        value = value?.replaceAll(' ', '')?.match(this.#matchRegex); // Geçerli kısmı al
+        value = value?.replaceAll(' ', '')?.match(this.#matchRegex); // Get valid part
         value = value ? value[0] : '';
 
-        // Formatı uygula
+        // Apply format
         if (value?.length > 2) {
             value = value.replace(this.#groupingRegex, (_, a, b, c) => [a, b, c].filter(Boolean).join(' '));
         }
 
-        return value?.toLocaleUpperCase('tr-TR'); // Büyük harfe çevir
+        return value?.toLocaleUpperCase('tr-TR'); // Convert to uppercase
     }
 
     unmask(maskedValue) {
@@ -62,7 +74,7 @@ export default class PlateBox extends TextBase {
     }
 }
 
-// yapıştırma testleri
-// yazma testleri
-// silme testleri
-// imleç testleri
+// paste tests
+// write tests
+// delete tests
+// cursor tests
