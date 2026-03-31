@@ -24,6 +24,7 @@
     --tbx-text-color: #111827;
     --tbx-text-color-disabled: #6c757d;
     --tbx-letter-spacing: unset;
+    --tbx-line-height: 20px;
     --tbx-placeholder-color: #6b7280;
     --tbx-placeholder-color-focus: #6b7280;
 
@@ -80,7 +81,7 @@
     background-color: var(--tbx-label-bg-color);
     margin: var(--tbx-label-margin);
     padding: var(--tbx-label-padding);
-    line-height: 20px;
+    line-height: var(--tbx-line-height);
 }
 
 :is(text-box, plate-box, phone-box, email-box, password-box, confirm-password-box, new-password-box, tc-box, code-box):focus-within > label {
@@ -107,7 +108,7 @@
     font-size: var(--tbx-font-size);
     font-family: var(--tbx-font-family);
     color: var(--tbx-text-color);
-    line-height: 20px;
+    line-height: var(--tbx-line-height);
     letter-spacing: var(--tbx-letter-spacing);
 
     transition:
@@ -143,6 +144,7 @@
     pointer-events: none;
     box-sizing: content-box;
     padding: var(--tbx-padding);
+    line-height: var(--tbx-line-height);
     border: solid var(--tbx-border-width) transparent;
 }
 :is(text-box, plate-box, phone-box, email-box, password-box, confirm-password-box, new-password-box, tc-box, code-box) > [data-role='container'] > [data-role='underlay'] > pre {
@@ -150,6 +152,7 @@
     font-family: var(--tbx-font-family);
     letter-spacing: var(--tbx-letter-spacing);
     color: var(--tbx-placeholder-color);
+    line-height: var(--tbx-line-height);
     display: inline-block;
     margin: 0;
 }
@@ -228,4 +231,17 @@
     margin-top: 4px;
     font-size: 13px;
     line-height: 16px;
+}
+
+:is(phone-box, tc-box) {
+    --tbx-letter-spacing: 1.5px;
+    --tbx-placeholder-color-focus: transparent;
+}
+
+:is(phone-box, tc-box) input::placeholder {
+    letter-spacing: normal;
+}
+
+:is(phone-box, tc-box) > [data-role='container'] > input:not([data-has-value]):not(:focus) ~ [data-role='underlay'] {
+    display: none;
 }

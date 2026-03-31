@@ -1,3 +1,4 @@
+import { html, nothing } from 'lit';
 import TextBase from '../../core/text-base';
 import { isEmpty } from '../../modules/utilities';
 
@@ -12,13 +13,27 @@ export default class PhoneBox extends TextBase {
         };
     }
 
+    #ghostMask1 = '';
+    #ghostMask2 = '';
+
+    willUpdate(changed) {
+        super.willUpdate(changed);
+
+        if (changed.has('value')) {
+            const len = this.value.length;
+            this.#ghostMask1 = this.maskedValue;
+            this.#ghostMask2 = '0(___) ___ __ __'.slice(len);
+        }
+    }
+
     constructor() {
         super();
 
         this.type = 'tel';
         this.inputmode = 'tel';
-        this.pattern = String.raw`0 \d{3} \d{3} \d{2} \d{2}`;
+        this.pattern = String.raw`0\(\d{3}\) \d{3} \d{2} \d{2}`;
         this.autocomplete = 'tel';
+        this.placeholder = '0(242) 123 45 67';
     }
 
     mask(value) {
@@ -32,7 +47,13 @@ export default class PhoneBox extends TextBase {
 
         if (value.length > 1) {
             const pattern = /(\d)?(\d{1,3})?(\d{1,3})?(\d{1,2})?(\d{1,2})?/;
-            value = value.replace(pattern, (_, a, b, c, d, e) => [a, b, c, d, e].filter(Boolean).join(' '));
+            value = value.replace(pattern, (_, a, b, c, d, e) => {
+                let area = b?.length > 0 ? `(${b}` : '';
+                area += b?.length === 3 ? ')' : '';
+                const num = [c, d, e].filter(Boolean).join(' ');
+
+                return `${a}${area} ${num}`.trimEnd();
+            });
         }
 
         return value;
@@ -49,6 +70,16 @@ export default class PhoneBox extends TextBase {
         if (newValue.length > 11) return false; // Maksimum uzunluk 11 olmalı
 
         return /\d/.test(keyDownEvent.key);
+    }
+
+    /** @override @return {import('lit').TemplateResult | typeof nothing} */
+    renderAdornment() {
+        if (isEmpty(this.#ghostMask1) && isEmpty(this.#ghostMask2)) return nothing;
+
+        // prettier-ignore
+        return html` <div aria-hidden="true" data-role="underlay">
+                <pre>${this.#ghostMask1}</pre><pre>${this.#ghostMask2}</pre>
+            </div> `;
     }
 }
 

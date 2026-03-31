@@ -1,11 +1,16 @@
-import { textBoxArgTypes } from '../../../utilities/common-arg-types.js';
+import { createAttrType, inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { Phonebox } from '../../../utilities/register.js';
 import '../textbox/text-box.css';
 
 export default {
     title: 'Bileşenler/Textbox/PhoneBox',
     argTypes: {
-        ...textBoxArgTypes,
+        ...inputBaseArgTypes,
+        autounmask: createAttrType(
+            'Bileşenin değerinin maskeli şekilde tutulup tutulmayacağını belirler. Açıksa, inputun görünen değeri maskelenirken bileşenin tuttuğu değer maskesiz olur. `unmask()` fonksiyonu tanımlanmış olmalıdır.',
+            'boolean',
+            'false'
+        ),
     },
 };
 
@@ -18,7 +23,7 @@ export const Default = {
         fieldName: 'PhoneNumber',
         label: 'Telefon Numarası',
         value: undefined,
-        placeholder: '0555 555 5555',
+        placeholder: '0(555) 555 5555',
     },
     parameters: {
         docs: {
@@ -34,7 +39,7 @@ export const PlaygroundStory = {
     args: {
         fieldId: 'phone-no',
         label: 'Telefon Numarası',
-        placeholder: '0555 555 5555',
+        placeholder: '0(555) 555 5555',
     },
     parameters: {
         docs: {
