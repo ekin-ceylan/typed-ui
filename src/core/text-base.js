@@ -215,8 +215,10 @@ export default class TextBase extends InputBase {
         const maskedLength = this.maskedValue.length;
         const valueLength = snapshotValue.length;
 
+        if (this.lastKey == 'Backspace') return caretPosition;
         if (caretPosition === valueLength) return maskedLength; // imleç sona
         if (this.lastKey == 'Delete') return caretPosition - valueLength + maskedLength;
+
         return this.mask(snapshotValue.slice(0, caretPosition)).length; // imleci eski konumuna
     }
 
