@@ -217,7 +217,7 @@ export default class TextBase extends InputBase {
 
         if (this.lastKey == 'Backspace') return caretPosition;
         if (caretPosition === valueLength) return maskedLength; // imleç sona
-        if (this.lastKey == 'Delete') return caretPosition - valueLength + maskedLength;
+        if (this.lastKey == 'Delete') return caretPosition + (maskedLength > valueLength);
 
         return this.mask(snapshotValue.slice(0, caretPosition)).length; // imleci eski konumuna
     }
