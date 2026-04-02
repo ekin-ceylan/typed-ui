@@ -88,7 +88,7 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
      * Default implementation renders only the close button:
      * ```
      * return html`
-     *     <button type="button" ⁣@click=${this.hide} data-role="close" aria-label="Close">
+     *     <button type="button"⠀@click=${this.hide} data-role="close" aria-label="Close">
      *        &times;
      *     </button>`;
      * ```

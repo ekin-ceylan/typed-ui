@@ -39,7 +39,12 @@ export default class PhoneBox extends TextBase {
     mask(value) {
         if (isEmpty(value)) return value;
         value = value.replaceAll(/\D/g, ''); // Sayı olmayan karakterleri kaldır
-        value = value.slice(0, 11); // İlk 11 karakteri al
+
+        if (value.length >= 12) {
+            value = value.replace(/^0{0,2}9/, ''); // Ülke kodunu kaldır
+        }
+
+        value = value.match(/^0?\d{1,10}/)?.[0] || ''; // Geçerli kısmı al
 
         if (value.length > 0 && value[0] !== '0') {
             value = '0' + value;
