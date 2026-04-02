@@ -1,0 +1,84 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks';
+import * as PhoneboxStories from './phone-box.stories.js';
+
+<Meta of={PhoneboxStories} name="Overview" />
+
+# Phonebox
+
+## Component API
+
+`select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
+
+> Zorunlu: `field-id` ve `label` mutlaka verilmelidir. Bu iki öznitelik set edilmezse bileşen bağlanırken hata fırlatır.
+
+<div className="arg-types">
+    <ArgTypes of={PhoneboxStories.PropAttrEventLists} />
+</div>
+
+## Design Token
+
+```css
+--tbx-bg-color: #ffffff;
+--tbx-bg-color-hover: #ffffff;
+--tbx-bg-color-disabled: #f2f2f2;
+
+--tbx-opacity-disabled: 1;
+
+--tbx-label-font-size: 14px;
+--tbx-label-font-weight: 500;
+--tbx-label-letter-spacing: unset;
+--tbx-label-color: #111827;
+--tbx-label-color-hover: #111827;
+--tbx-label-color-focus: #111827;
+--tbx-label-color-invalid: #111827;
+--tbx-label-color-disabled: #6c757d;
+--tbx-label-bg-color: #fff;
+--tbx-label-margin: 0 0 6px 0;
+--tbx-label-padding: 0;
+
+--tbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+--tbx-font-size: 14px;
+--tbx-text-color: #111827;
+--tbx-text-color-disabled: #6c757d;
+--tbx-letter-spacing: unset;
+--tbx-line-height: 20px;
+--tbx-placeholder-color: #6b7280;
+--tbx-placeholder-color-focus: #6b7280;
+
+--tbx-error-color: #ef4444;
+
+--tbx-border-color: #d2d6de;
+--tbx-border-color-hover: #9ca3af;
+--tbx-border-color-focus: #3b82f6;
+--tbx-border-color-invalid: #ef4444;
+--tbx-border-color-disabled: #cbd5e1;
+--tbx-border-width: 1px;
+--tbx-border-radius: 0px;
+
+--tbx-outline-width: 1px;
+--tbx-outline-offset: 0px;
+--tbx-outline-color: #3c8dbc;
+--tbx-outline-color-invalid: #ef4444;
+
+--tbx-height: 40px;
+--tbx-padding: 8px;
+
+--tbx-clear-size: 17px;
+--tbx-clear-right-distance: 14px;
+--tbx-clear-padding: 4px;
+--tbx-clear-color: #6b7280;
+--tbx-clear-color-hover: #111827;
+--tbx-clear-color-active: #111827;
+--tbx-clear-bg-color: transparent;
+--tbx-clear-bg-color-hover: rgba(17, 24, 39, 0.06);
+--tbx-clear-bg-color-active: rgba(17, 24, 39, 0.1);
+--tbx-clear-border-radius: 0px;
+--tbx-clear-outline-color: #3c8dbc;
+--tbx-clear-outline-width: 1px;
+--tbx-clear-outline-style: solid;
+```
+
+# Custom Çözümler
+
+<Canvas of={PhoneboxStories.IntlStory_1} />
+<Canvas of={PhoneboxStories.IntlStory_2} />

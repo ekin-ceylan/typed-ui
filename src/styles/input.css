@@ -138,7 +138,7 @@ tc-box input:focus::placeholder {
     color: gray;
 }
 
-[data-role='underlay'] pre:first-child {
+[data-role='underlay'] pre:nth-last-child(2) {
     color: transparent;
 }
 

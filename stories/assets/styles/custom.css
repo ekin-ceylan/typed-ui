@@ -1,0 +1,101 @@
+phone-with-area {
+    display: flex;
+    flex-direction: row;
+
+    combo-box {
+        margin-right: 1rem;
+        width: 110px;
+
+        [data-role='display'] span:first-of-type {
+            display: none;
+        }
+
+        [role='listbox'] [role='option'] {
+            span:first-of-type {
+                margin-right: 5px;
+            }
+
+            span:last-of-type:before {
+                display: inline-block;
+                content: '(';
+            }
+
+            span:last-of-type:after {
+                display: inline-block;
+                content: ')';
+            }
+        }
+    }
+}
+
+phone-with-area-2 {
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    max-width: 300px;
+    display: block;
+
+    label {
+        margin-bottom: 6px;
+        display: inline-block;
+        position: relative;
+        font-size: 14px;
+    }
+
+    [role='container'] {
+        flex-direction: row;
+        border: solid 1px black;
+        display: inline-flex;
+
+        &:focus-within {
+            border-color: blue;
+        }
+        combo-box {
+            width: 60px;
+            --cbx-clear-right-distance: 0;
+            --cbx-chevron-right-distance: 0;
+
+            [data-role='search'] {
+                border: none !important;
+                outline: none !important;
+            }
+
+            [data-role='display'] span {
+                display: none;
+            }
+
+            [role='listbox'] [role='option'] {
+                span:first-of-type {
+                    margin-right: 5px;
+                }
+
+                span:last-of-type:before {
+                    display: inline-block;
+                    content: '(';
+                }
+
+                span:last-of-type:after {
+                    display: inline-block;
+                    content: ')';
+                }
+            }
+        }
+
+        phone-intl-2 {
+            --tbx-padding: 8px 8px 8px 50px;
+
+            input {
+                border: none !important;
+                outline: none !important;
+            }
+
+            pre:first-child {
+                position: absolute;
+                left: 8px;
+                top: 50%;
+                translate: 0 -50%;
+                display: inline-block !important;
+                text-align: center;
+                width: 37px;
+            }
+        }
+    }
+}

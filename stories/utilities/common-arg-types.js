@@ -63,7 +63,7 @@ export const passwordboxArgTypes = {
  * @param {string} name
  */
 export function createAttrType(description, type, defaultValue, isRequired, name) {
-    const desc = `${description} __*Type:*__ \`${type}\`, __*Default:*__ \`${defaultValue}\``;
+    const desc = `${description} \n\n __*Type:*__ \`${type}\`, __*Default:*__ \`${defaultValue}\``;
 
     return {
         name,
@@ -79,16 +79,30 @@ export function createAttrType(description, type, defaultValue, isRequired, name
 
 export function createSlotType(description, defaultValue, name) {
     const type = 'html';
-    const desc = `${description} __*Type:*__ \`${type}\`, __*Default:*__ \`${defaultValue}\``;
+    const desc = `${description} \n\n __*Type:*__ \`${type}\`, __*Default:*__ \`${defaultValue}\``;
 
     return {
         name,
         description: desc,
-        type: { name: type },
+        type,
         control: 'text',
         table: {
             category: 'Slots',
             defaultValue: { summary: defaultValue },
+        },
+    };
+}
+
+export function createEventType(action, description) {
+    const type = 'CustomEvent';
+    const desc = `${description} \n\n __*Type:*__ \`${type}\``;
+
+    return {
+        action,
+        type,
+        description: desc,
+        table: {
+            category: 'Events',
         },
     };
 }
