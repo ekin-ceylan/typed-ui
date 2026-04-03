@@ -328,6 +328,7 @@ export default class TextBase extends InputBase {
         this.invalid = !!this.validationMessage;
         this.inputElement.setCustomValidity(this.validationMessage || '');
         this.requestUpdate('validationMessage');
+        this.dispatchCustomEvent('validate', null, { validationMessage: this.validationMessage });
 
         return !this.validationMessage;
     }
@@ -336,7 +337,7 @@ export default class TextBase extends InputBase {
         const complete = this.isComplete();
         if (complete === this.#isComplete) return;
         if (complete && !this.#isComplete) {
-            this.dispatchEvent(new CustomEvent('complete', this.#eventInitDict()));
+            this.dispatchCustomEvent('complete');
         }
 
         this.#isComplete = complete;

@@ -23,16 +23,23 @@ export default class LightComponentBase extends LitElement {
         return this.localName || (this.tagName ? this.tagName.toLowerCase() : '') || this.constructor.name;
     }
 
-    dispatchCustomEvent(eventName, originalEvent = null) {
-        this.dispatchEvent(new CustomEvent(eventName, this.#eventInitDict(originalEvent)));
+    /**
+     * Helper to dispatch custom events with consistent options and detail structure.
+     * @param {string} eventName
+     * @param {Event | null} originalEvent
+     * @param {Object | null} data - Additional data to include in event.detail
+     */
+    dispatchCustomEvent(eventName, originalEvent = null, data = null) {
+        this.dispatchEvent(new CustomEvent(eventName, this.#eventInitDict(originalEvent, data)));
     }
 
-    #eventInitDict(originalEvent) {
+    #eventInitDict(originalEvent, data) {
         return {
             bubbles: true,
             cancelable: true,
             composed: true,
             detail: {
+                ...data,
                 originalEvent,
                 synthetic: !(originalEvent && originalEvent instanceof Event),
             },
