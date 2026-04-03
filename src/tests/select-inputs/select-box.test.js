@@ -8,10 +8,9 @@ defineElement('select-box', SelectBox);
  */
 async function initSelectBox(elementStr) {
     const [select, host, user] = await initInputBase(elementStr);
-    const error = host.querySelector('[data-role="error-message"]');
     const clearButton = host.querySelector('button[data-clear]');
 
-    return { select, host, user, error, clearButton };
+    return { select, host, user, clearButton };
 }
 
 describe('SelectBox - Accessibility (A11y) tests', () => {
@@ -37,9 +36,15 @@ describe('SelectBox - Accessibility (A11y) tests', () => {
     });
 
     it('sets required semantics and wires aria-errormessage', async () => {
-        const { select, host, error } = await initSelectBox(
+        const { select, host, user } = await initSelectBox(
             '<select-box field-id="country" label="Country" required required-sign="*"><option value="tr">Turkey</option></select-box>'
         );
+
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
+        expect(select.getAttribute('aria-errormessage')).toBeNull();
+
+        await user.tab();
+        await host.updateComplete;
 
         expect(select.required).toBe(true);
         expect(select.getAttribute('aria-required')).toBe('true');
@@ -50,10 +55,31 @@ describe('SelectBox - Accessibility (A11y) tests', () => {
         expect(label.textContent).toContain('Country');
         expect(label.textContent).toContain('*');
 
+        const error = host.querySelector('[data-role="error-message"]');
         expect(error).not.toBeNull();
         expect(error.id).toBe('country-error');
         expect(error.getAttribute('aria-live')).toBe('assertive');
-        expect(error.hidden).toBe(true);
+    });
+
+    it('removes aria-errormessage again when the selection becomes valid', async () => {
+        const { select, host, user } = await initSelectBox(
+            '<select-box field-id="country" label="Country" required required-sign="*"><option value="tr">Turkey</option><option value="de">Germany</option></select-box>'
+        );
+
+        expect(select.getAttribute('aria-errormessage')).toBeNull();
+
+        await user.tab();
+        await host.updateComplete;
+
+        expect(select.getAttribute('aria-errormessage')).toBe('country-error');
+        expect(host.querySelector('[data-role="error-message"]')).not.toBeNull();
+
+        await user.selectOptions(select, 'tr');
+        await host.updateComplete;
+
+        expect(select.value).toBe('tr');
+        expect(select.getAttribute('aria-errormessage')).toBeNull();
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
     });
 
     it('sets aria-required="false" when required is not set', async () => {
@@ -105,7 +131,7 @@ describe('SelectBox - Options & value', () => {
 
 describe('SelectBox - Required validation', () => {
     it('shows required error on blur when no value is selected', async () => {
-        const { select, host, error } = await initSelectBox(`
+        const { select, host } = await initSelectBox(`
 			<select-box field-id="team" label="Team" required placeholder="Choose">
 				<option value="a">A</option>
 				<option value="b">B</option>
@@ -118,12 +144,13 @@ describe('SelectBox - Required validation', () => {
 
         expect(select.validity.valueMissing).toBe(true);
         expect(select.getAttribute('aria-invalid')).toBe('true');
-        expect(error.hidden).toBe(false);
+        const error = host.querySelector('[data-role="error-message"]');
+        expect(error).not.toBeNull();
         expect(error.textContent.trim()).toContain('gereklidir');
     });
 
     it('clears the required error after a valid option is selected', async () => {
-        const { select, host, user, error } = await initSelectBox(`
+        const { select, host, user } = await initSelectBox(`
 			<select-box field-id="team" label="Team" required placeholder="Choose">
 				<option value="a">A</option>
 				<option value="b">B</option>
@@ -133,7 +160,7 @@ describe('SelectBox - Required validation', () => {
         select.focus();
         select.blur();
         await host.updateComplete;
-        expect(error.hidden).toBe(false);
+        expect(host.querySelector('[data-role="error-message"]')).not.toBeNull();
 
         await user.selectOptions(select, 'b');
         await host.updateComplete;
@@ -141,7 +168,7 @@ describe('SelectBox - Required validation', () => {
         expect(select.value).toBe('b');
         expect(host.value).toBe('b');
         expect(select.getAttribute('aria-invalid')).toBeNull();
-        expect(error.hidden).toBe(true);
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
     });
 });
 

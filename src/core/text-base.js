@@ -414,7 +414,7 @@ export default class TextBase extends InputBase {
                 />
                 ${this.renderAdornment()} ${this.renderClearButton()}
             </div>
-            ${this.validationMessageHtml}
+            ${this.renderErrorMessage()}
         `;
     }
 }

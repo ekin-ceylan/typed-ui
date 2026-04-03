@@ -231,7 +231,7 @@ export default class SelectBox extends SelectBase {
 
                 ${this.renderClearButton()} ${this.chevron}
             </div>
-            ${this.required ? this.validationMessageHtml : null}
+            ${this.renderErrorMessage()}
         `;
     }
 }

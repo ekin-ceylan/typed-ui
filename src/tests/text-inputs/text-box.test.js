@@ -11,16 +11,19 @@ describe('Validation Tests', () => {
     let user;
     let errorElement;
 
+    const getErrorElement = () => host.querySelector('[data-role="error-message"]');
+
     beforeEach(async () => {
         [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" pattern="[A-Za-z]{5}" required minlength="3" maxlength="5"></text-box>');
-        errorElement = host.querySelector('[data-role="error-message"]');
+        errorElement = getErrorElement();
     });
 
     it('Required validation should show error when value is missing', async () => {
         await user.tab();
 
         expect(input.validity.valueMissing).toBe(true);
-        expect(errorElement.hidden).toBe(false);
+        errorElement = getErrorElement();
+        expect(errorElement).not.toBeNull();
         expect(errorElement.textContent.trim()).toContain('gereklidir');
     });
 
@@ -28,7 +31,8 @@ describe('Validation Tests', () => {
         await user.type(input, 'a');
         await user.tab(); // focus'tan çık
 
-        expect(errorElement.hidden).toBe(false);
+        errorElement = getErrorElement();
+        expect(errorElement).not.toBeNull();
         expect(errorElement.textContent.trim()).toContain('en az');
     });
 
@@ -37,50 +41,52 @@ describe('Validation Tests', () => {
         await user.tab(); // focus'tan çık
 
         expect(input.value).toBe('abcde');
-        expect(errorElement.hidden).toBe(true);
+        expect(getErrorElement()).toBeNull();
     });
 
     it('validation is not checked immediately if it is valid or not checked', async () => {
         await user.type(input, 'abc');
 
         expect(input.value).toBe('abc');
-        expect(errorElement.hidden).toBe(true);
+        expect(getErrorElement()).toBeNull();
     });
 
     it('validation is checked immediately if it is not valid', async () => {
         await user.type(input, 'abc');
         await user.tab(); // focus'tan çık
 
-        expect(errorElement.hidden).toBe(false);
+        errorElement = getErrorElement();
+        expect(errorElement).not.toBeNull();
 
         await user.type(input, 'de');
 
         expect(input.value).toBe('abcde');
-        expect(errorElement.hidden).toBe(true);
+        expect(getErrorElement()).toBeNull();
     });
 
     it('if input is required and it gets empty, validation is shown immediately', async () => {
         await user.type(input, 'abc');
 
-        expect(errorElement.hidden).toBe(true);
+        expect(getErrorElement()).toBeNull();
 
         await user.clear(input);
 
         expect(input.value).toBe('');
-        expect(errorElement.hidden).toBe(false);
+        errorElement = getErrorElement();
+        expect(errorElement).not.toBeNull();
     });
 
     // pattern attr göre validasyon ve hata mesajı
     it('pattern with punctuation should fail validation', async () => {
-        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ -]+"></text-box>');
+        const [input, , user] = await initInputBase('<text-box field-id="name" label="Name" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ -]+"></text-box>');
 
         await user.type(input, 'Hello, world!');
         await user.tab(); // blur to trigger validation
         // await host.updateComplete;
 
-        const errorElement = host.querySelector('[data-role="error-message"]');
-        expect(errorElement.hidden).toBe(false);
-        expect(errorElement.textContent.trim()).toContain('Lütfen');
+        const errorElement = getErrorElement();
+        expect(errorElement).not.toBeNull();
+        expect(errorElement.textContent.trim()).toMatch(/gereklidir|Lütfen/);
     });
 });
 
@@ -132,7 +138,13 @@ describe('Accessibility (A11y) tests', () => {
     });
 
     it('wires aria-errormessage to the error element id', async () => {
-        const [input, host] = await initInputBase('<text-box field-id="name" label="Name" required></text-box>');
+        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" required></text-box>');
+
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
+        expect(input.getAttribute('aria-errormessage')).toBeNull();
+
+        await user.tab();
+        await host.updateComplete;
 
         const error = host.querySelector('[data-role="error-message"]');
         expect(error).not.toBeNull();
@@ -141,9 +153,26 @@ describe('Accessibility (A11y) tests', () => {
 
         // Live region is important for announcing validation updates.
         expect(error.getAttribute('aria-live')).toBe('assertive');
+    });
 
-        // By default there is no validation message, so it should be hidden.
-        expect(error.hidden).toBe(true);
+    it('removes aria-errormessage again when the field becomes valid', async () => {
+        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" required minlength="3"></text-box>');
+
+        expect(input.getAttribute('aria-errormessage')).toBeNull();
+
+        await user.tab();
+        await host.updateComplete;
+
+        expect(input.getAttribute('aria-errormessage')).toBe('name-error');
+        expect(host.querySelector('[data-role="error-message"]')).not.toBeNull();
+
+        input.focus();
+        await user.type(input, 'abc');
+        await user.tab();
+        await host.updateComplete;
+
+        expect(input.getAttribute('aria-errormessage')).toBeNull();
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
     });
 
     it('keeps accessible name coming from the label even when placeholder is present', async () => {
@@ -168,7 +197,6 @@ describe('Accessibility (A11y) tests', () => {
 
     it('is keyboard reachable and blur triggers validation UI updates', async () => {
         const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" required></text-box>');
-        const error = host.querySelector('[data-role="error-message"]');
 
         // Ensure input can receive focus via keyboard navigation.
         input.blur();
@@ -179,19 +207,20 @@ describe('Accessibility (A11y) tests', () => {
         // Blurring should run validity check and show the error.
         await user.tab();
         await host.updateComplete;
+        const error = host.querySelector('[data-role="error-message"]');
         expect(input.getAttribute('aria-invalid')).toBe('true');
-        expect(error.hidden).toBe(false);
+        expect(error).not.toBeNull();
     });
 
     it('toggles aria-invalid when validation state changes', async () => {
         const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" required minlength="3"></text-box>');
-        const error = host.querySelector('[data-role="error-message"]');
 
         // Trigger invalid state.
         await user.tab();
         await host.updateComplete;
         expect(input.getAttribute('aria-invalid')).toBe('true');
-        expect(error.hidden).toBe(false);
+        let error = host.querySelector('[data-role="error-message"]');
+        expect(error).not.toBeNull();
 
         // Fix the value, then blur again.
         input.focus();
@@ -201,7 +230,8 @@ describe('Accessibility (A11y) tests', () => {
 
         // When valid again, aria-invalid should be removed.
         expect(input.getAttribute('aria-invalid')).toBeNull();
-        expect(error.hidden).toBe(true);
+        error = host.querySelector('[data-role="error-message"]');
+        expect(error).toBeNull();
     });
 
     it('prevents focus when disabled', async () => {

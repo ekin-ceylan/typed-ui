@@ -59,15 +59,7 @@ export default class InputBase extends LightComponentBase {
         return this.fieldId && !this.hideLabel ? `${this.fieldId}-label` : null;
     }
     get errorId() {
-        return this.fieldId ? `${this.fieldId}-error` : null;
-    }
-    /**
-     * Returns the HTML template for displaying validation error messages.
-     * The span element includes ARIA attributes for accessibility and is hidden when no validation message exists.
-     * @returns {import('lit').TemplateResult} Lit HTML template with validation message
-     */
-    get validationMessageHtml() {
-        return html`<span id=${ifDefined(this.errorId)} data-role="error-message" ?hidden=${!this.validationMessage} aria-live="assertive"> ${this.validationMessage} </span>`;
+        return this.fieldId && this.validationMessage ? `${this.fieldId}-error` : null;
     }
 
     get requiredValidationMessage() {
@@ -146,6 +138,16 @@ export default class InputBase extends LightComponentBase {
                 </svg>
             </button>
         `;
+    }
+
+    /**
+     * Returns the HTML template for displaying validation error messages.
+     * The span element includes ARIA attributes for accessibility and is hidden when no validation message exists.
+     * @returns {import('lit').TemplateResult | typeof nothing} Lit HTML template with validation message
+     */
+    renderErrorMessage() {
+        if (!this.validationMessage) return nothing;
+        return html`<span id=${ifDefined(this.errorId)} data-role="error-message" aria-live="assertive">${this.validationMessage}</span>`;
     }
 
     clear() {

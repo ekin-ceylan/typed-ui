@@ -170,6 +170,8 @@ export default class ComboBox extends SelectBase {
     }
 
     onInputSearch(e) {
+        e.stopPropagation();
+        this.dispatchCustomEvent('search', e);
         this.filter = e.target.value;
         this.activeIndex = 0;
         this.#scrollToActive();
@@ -235,7 +237,12 @@ export default class ComboBox extends SelectBase {
         this.displayElement.innerHTML = selectedOption?.innerHTML || this.placeholder;
     }
 
-    #checkValidity(force) {
+    /**
+     * Checks the validity of the input and updates the validation message accordingly.
+     * @param {boolean} force
+     * @returns {boolean}
+     */
+    #checkValidity(force = false) {
         if (!this.focused && !force) return true; // etkileşime girilmediyse
 
         const el = this.inputElement;
@@ -512,7 +519,7 @@ export default class ComboBox extends SelectBase {
                     ?disabled=${this.disabled}
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
-                    aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
+                    aria-errormessage=${ifDefined(this.errorId)}
                     aria-required=${this.required ? 'true' : 'false'}
                     aria-invalid=${ifDefined(this.ariaInvalid)}
                     aria-readonly="true"
@@ -532,6 +539,7 @@ export default class ComboBox extends SelectBase {
                     aria-labelledby=${ifDefined(this.labelId)}
                     @focus=${this.onFocusSearch}
                     @input=${this.onInputSearch}
+                    @change=${e => e.stopPropagation()}
                     data-role="search"
                     tabindex="-1"
                 />
@@ -543,7 +551,7 @@ export default class ComboBox extends SelectBase {
                     ${this.filteredOptions.map(this.#optToDiv.bind(this))}
                 </div>
             </div>
-            ${this.required ? this.validationMessageHtml : null}
+            ${this.renderErrorMessage()}
         `;
     }
 }

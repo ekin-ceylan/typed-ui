@@ -39,7 +39,7 @@ export default class NewPasswordBox extends PasswordBox {
     /** @return {import('lit').TemplateResult | typeof nothing} */
     renderStrengthBar(strength, strengthMessage) {
         return html`<div role="progressbar" aria-label="Şifre gücü" aria-valuemin="0" aria-valuemax="5" aria-valuenow=${strength} aria-valuetext=${strengthMessage}>
-            <div role="presentation" data-strength="${strength}"></div>
+            <div role="presentation" data-strength=${strength}></div>
         </div>`;
     }
 

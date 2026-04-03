@@ -27,6 +27,7 @@
     --tbx-line-height: 20px;
     --tbx-placeholder-color: #6b7280;
     --tbx-placeholder-color-focus: #6b7280;
+    --tbx-placeholder-letter-spacing: unset;
 
     --tbx-error-color: #ef4444;
 
@@ -122,6 +123,7 @@
     > [data-role='container']
     > input::placeholder {
     color: var(--tbx-placeholder-color);
+    letter-spacing: var(--tbx-placeholder-letter-spacing);
     opacity: 1;
 }
 
@@ -267,10 +269,7 @@
 :is(phone-box, phone-intl, phone-intl-2, tc-box) {
     --tbx-letter-spacing: 1.5px;
     --tbx-placeholder-color-focus: transparent;
-}
-
-:is(phone-box, phone-intl, phone-intl-2, tc-box) input::placeholder {
-    letter-spacing: normal;
+    --tbx-placeholder-letter-spacing: normal;
 }
 
 :is(phone-box, phone-intl, phone-intl-2, tc-box) > [data-role='container'] > input:not([data-has-value]):not(:focus) ~ [data-role='underlay'] > pre {

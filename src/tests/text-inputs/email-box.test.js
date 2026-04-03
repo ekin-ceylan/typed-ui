@@ -58,20 +58,20 @@ describe('EmailBox: Validation Tests', () => {
     let host;
     /** @type {import('@testing-library/user-event').UserEvent} */
     let user;
-    /** @type {HTMLElement} */
-    let errorElement;
+
+    const getErrorElement = () => host.querySelector('[data-role="error-message"]');
 
     beforeEach(async () => {
         const el = '<email-box field-id="email" label="E-Posta Adresi" required></email-box>';
         [input, host, user] = await initInputBase(el);
-        errorElement = host.querySelector('[data-role="error-message"]');
     });
 
     it('validates required field (empty value)', async () => {
         await user.tab();
 
         expect(input.validity.valueMissing).toBe(true);
-        expect(errorElement.hidden).toBe(false);
+        const errorElement = getErrorElement();
+        expect(errorElement).not.toBeNull();
         expect(errorElement.textContent).toContain('gereklidir');
     });
 
@@ -79,7 +79,7 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, 'user@example.com');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(true);
+        expect(getErrorElement()).toBeNull();
         expect(host.invalid).toBe(false);
     });
 
@@ -87,7 +87,7 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, 'user@mail.example.com');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(true);
+        expect(getErrorElement()).toBeNull();
         expect(host.invalid).toBe(false);
     });
 
@@ -95,7 +95,7 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, 'user+tag@example.com');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(true);
+        expect(getErrorElement()).toBeNull();
         expect(host.invalid).toBe(false);
     });
 
@@ -103,7 +103,7 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, 'first.last@example.com');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(true);
+        expect(getErrorElement()).toBeNull();
         expect(host.invalid).toBe(false);
     });
 
@@ -111,7 +111,8 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, 'invalidemail.com');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(false);
+        const errorElement = getErrorElement();
+        expect(errorElement).not.toBeNull();
         expect(host.invalid).toBe(true);
         expect(errorElement.textContent).toContain('geçerli');
     });
@@ -120,7 +121,7 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, 'user@');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(false);
+        expect(getErrorElement()).not.toBeNull();
         expect(host.invalid).toBe(true);
     });
 
@@ -128,7 +129,7 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, '@example.com');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(false);
+        expect(getErrorElement()).not.toBeNull();
         expect(host.invalid).toBe(true);
     });
 
@@ -136,7 +137,7 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, 'user@@example.com');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(false);
+        expect(getErrorElement()).not.toBeNull();
         expect(host.invalid).toBe(true);
     });
 
@@ -144,7 +145,7 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, 'user..name@example.com');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(false);
+        expect(getErrorElement()).not.toBeNull();
         expect(host.invalid).toBe(true);
     });
 
@@ -162,13 +163,13 @@ describe('EmailBox: Validation Tests', () => {
         await user.type(input, 'invalid');
         await user.tab();
 
-        expect(errorElement.hidden).toBe(false);
+        expect(getErrorElement()).not.toBeNull();
 
         input.focus();
         await user.type(input, '@example.com');
 
         // Should validate immediately since it was previously invalid
-        expect(errorElement.hidden).toBe(true);
+        expect(getErrorElement()).toBeNull();
     });
 });
 
@@ -232,11 +233,38 @@ describe('EmailBox: Accessibility (A11y)', () => {
     });
 
     it('associates error message with aria-errormessage', async () => {
-        const [input, host] = await initInputBase('<email-box field-id="email" label="Email" required></email-box>');
+        const [input, host, user] = await initInputBase('<email-box field-id="email" label="Email" required></email-box>');
+
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
+        expect(input.getAttribute('aria-errormessage')).toBeNull();
+
+        await user.tab();
+        await host.updateComplete;
+
         const error = host.querySelector('[data-role="error-message"]');
 
         expect(error.id).toBe('email-error');
         expect(input.getAttribute('aria-errormessage')).toBe('email-error');
         expect(error.getAttribute('aria-live')).toBe('assertive');
+    });
+
+    it('removes aria-errormessage again when the input becomes valid', async () => {
+        const [input, host, user] = await initInputBase('<email-box field-id="email" label="Email" required></email-box>');
+
+        expect(input.getAttribute('aria-errormessage')).toBeNull();
+
+        await user.tab();
+        await host.updateComplete;
+
+        expect(input.getAttribute('aria-errormessage')).toBe('email-error');
+        expect(host.querySelector('[data-role="error-message"]')).not.toBeNull();
+
+        input.focus();
+        await user.type(input, 'valid@example.com');
+        await user.tab();
+        await host.updateComplete;
+
+        expect(input.getAttribute('aria-errormessage')).toBeNull();
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
     });
 });

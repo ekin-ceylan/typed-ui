@@ -39,7 +39,7 @@ export default class RangeSelect extends InputBase {
                     ?disabled=${this.disabled}
                     aria-labelledby=${ifDefined(this.labelId)}
                     aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
-                    aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
+                    aria-errormessage=${ifDefined(this.errorId)}
                     aria-required=${this.required ? 'true' : 'false'}
                     aria-invalid=${ifDefined(this.ariaInvalid)}
                     @input=${this.onInput}
@@ -52,7 +52,7 @@ export default class RangeSelect extends InputBase {
                 <data value=${this.max} aria-hidden="true">${this.max}</data>
                 <output for=${ifDefined(this.fieldId)}>${this.value}</output>
             </div>
-            ${this.required ? this.validationMessageHtml : null}
+            ${this.renderErrorMessage()}
         `;
     }
 

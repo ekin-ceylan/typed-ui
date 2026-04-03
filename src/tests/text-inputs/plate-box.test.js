@@ -66,19 +66,21 @@ describe('Validating tests', () => {
     let host;
     /** @type {import('@testing-library/user-event').UserEvent} */
     let user;
-    let errorElement;
+
+    const getErrorElement = () => host.querySelector('[data-role="error-message"]');
 
     beforeEach(async () => {
         const el = '<plate-box field-id="plate-no" label="Plaka Numarası" required></plate-box>';
         [input, host, user] = await initInputBase(el);
-        errorElement = host.querySelector('[data-role="error-message"]');
     });
 
     it('validates required', async () => {
         await user.tab(); // focus'tan çık
 
         expect(input.validity.valueMissing).toBe(true);
-        expect(errorElement.hidden).toBe(false);
+        const errorElement = getErrorElement();
+        expect(errorElement).not.toBeNull();
+        expect(errorElement.textContent.trim()).toContain('en az');
     });
 
     it('enforces maxlength', async () => {
@@ -95,6 +97,27 @@ describe('Validating tests', () => {
 
         expect(input.value).toBe('34 A');
         expect(input.validity.valid).toBe(false);
+    });
+
+    it('adds and removes aria-errormessage with validation state', async () => {
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
+        expect(input.getAttribute('aria-errormessage')).toBeNull();
+
+        await user.tab();
+        await host.updateComplete;
+
+        let errorElement = host.querySelector('[data-role="error-message"]');
+        expect(errorElement).not.toBeNull();
+        expect(input.getAttribute('aria-errormessage')).toBe('plate-no-error');
+
+        input.focus();
+        await user.type(input, '34ABC123');
+        await user.tab();
+        await host.updateComplete;
+
+        errorElement = host.querySelector('[data-role="error-message"]');
+        expect(errorElement).toBeNull();
+        expect(input.getAttribute('aria-errormessage')).toBeNull();
     });
 
     // Minimum karakter sayısı kontrolü ve hata mesajı

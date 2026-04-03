@@ -63,19 +63,13 @@ describe('ComboBox - Accessibility (A11y) tests', () => {
 
         expect(valueInput.required).toBe(true);
         expect(valueInput.getAttribute('aria-required')).toBe('true');
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
+        expect(valueInput.getAttribute('aria-errormessage')).toBeNull();
 
         const label = host.querySelector('label');
         expect(label).not.toBeNull();
         expect(label.textContent).toContain('Country');
         expect(label.textContent).toContain('*');
-
-        const error = host.querySelector('[data-role="error-message"]');
-        expect(error).not.toBeNull();
-        expect(error.id).toBe('country-error');
-        expect(error.getAttribute('aria-live')).toBe('assertive');
-        expect(error.hidden).toBe(true);
-
-        expect(valueInput.getAttribute('aria-errormessage')).toBe('country-error');
     });
 
     it('sets aria-required="false" when required is not set', async () => {
@@ -183,16 +177,19 @@ describe('ComboBox - Required validation', () => {
 			</combo-box>
 		`);
 
-        const error = ctx.host.querySelector('[data-role="error-message"]');
-        expect(error).not.toBeNull();
-        expect(error.hidden).toBe(true);
+        expect(ctx.host.querySelector('[data-role="error-message"]')).toBeNull();
+        expect(ctx.valueInput.getAttribute('aria-errormessage')).toBeNull();
 
         await openList(ctx); // focuses search => marks as interacted
         await closeListWithEscape(ctx);
 
         expect(ctx.valueInput.getAttribute('aria-invalid')).toBe('true');
+        const error = ctx.host.querySelector('[data-role="error-message"]');
+        expect(error).not.toBeNull();
+        expect(error.id).toBe('team-error');
         expect(error.hidden).toBe(false);
         expect(error.textContent.trim()).toContain('gereklidir');
+        expect(ctx.valueInput.getAttribute('aria-errormessage')).toBe('team-error');
     });
 
     it('clears error after a valid selection is made', async () => {
@@ -203,11 +200,12 @@ describe('ComboBox - Required validation', () => {
 			</combo-box>
 		`);
 
-        const error = ctx.host.querySelector('[data-role="error-message"]');
+        expect(ctx.host.querySelector('[data-role="error-message"]')).toBeNull();
 
         await openList(ctx);
         await closeListWithEscape(ctx);
-        expect(error.hidden).toBe(false);
+        const error = ctx.host.querySelector('[data-role="error-message"]');
+        expect(error).not.toBeNull();
 
         await openList(ctx);
         const optionDivs = getOptionDivs(ctx.host);
@@ -216,7 +214,8 @@ describe('ComboBox - Required validation', () => {
 
         expect(ctx.host.value).toBe('a');
         expect(ctx.valueInput.getAttribute('aria-invalid')).toBeNull();
-        expect(error.hidden).toBe(true);
+        expect(ctx.host.querySelector('[data-role="error-message"]')).toBeNull();
+        expect(ctx.valueInput.getAttribute('aria-errormessage')).toBeNull();
     });
 });
 
