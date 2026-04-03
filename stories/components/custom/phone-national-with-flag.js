@@ -1,6 +1,6 @@
-import { LightComponentBase, ComboBox, html } from '../../../dist/typed-ui-with-lit.js';
+import { LightComponentBase, html } from '../../../dist/typed-ui-with-lit.js';
 
-import { defineComponent } from '../../../src/index.js';
+import { ComboBox, defineComponent } from '../../../src/index.js';
 import PhoneIntl from './phone-intl.js';
 
 export default class PhoneNational extends LightComponentBase {
@@ -19,13 +19,15 @@ export default class PhoneNational extends LightComponentBase {
     }
 
     #handleCountryChange(event) {
-        this.countryCode = event.target.value;
+        const next = event.target.value;
+        if (!next || next === this.countryCode) return;
+        this.countryCode = next;
     }
 
     render() {
         return html`
-            <combo-box label="Country" placeholder="Select an area code" .options="${options}" .value="${this.countryCode}" @change="${this.#handleCountryChange}"></combo-box>
-            <phone-intl label="Phone" country-code="${this.countryCode}"></phone-intl>
+            <combo-box label="Country" placeholder="Select an area code" .options=${options} .value=${this.countryCode} @input=${this.#handleCountryChange}></combo-box>
+            <phone-intl label="Phone" country-code=${this.countryCode}></phone-intl>
         `;
     }
 }

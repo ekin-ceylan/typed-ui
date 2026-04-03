@@ -36,7 +36,7 @@ export default class PhoneIntl extends TextBase {
         if (changed.has('value') || changed.has('placeholder')) {
             const len = this.value.length;
             this.#ghostMask1 = this.maskedValue;
-            this.#ghostMask2 = this.#selectedCountry.maskPlaceholder.slice(len);
+            this.#ghostMask2 = this.#selectedCountry?.maskPlaceholder.slice(len);
         }
     }
 
@@ -45,6 +45,7 @@ export default class PhoneIntl extends TextBase {
 
         if (changedProperties.has('countryCode')) {
             this.#setCountry(countries[this.countryCode]);
+            this.value = this.mask(this.value);
         }
     }
 

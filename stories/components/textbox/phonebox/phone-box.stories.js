@@ -61,11 +61,6 @@ export const IntlStory_1 = {
         return phone;
     },
     tags: ['!dev'],
-    parameters: {
-        docs: {
-            canvas: { sourceState: 'shown' }, // Canvas altında code otomatik açık gelir
-        },
-    },
 };
 
 export const IntlStory_2 = {
@@ -77,11 +72,6 @@ export const IntlStory_2 = {
         return phone;
     },
     tags: ['!dev'],
-    parameters: {
-        docs: {
-            canvas: { sourceState: 'shown' }, // Canvas altında code otomatik açık gelir
-        },
-    },
 };
 
 export const PropAttrEventLists = {
