@@ -130,5 +130,6 @@ export const PropAttrEventLists = {
         change: createEventType('change', 'Değer commit edildiğinde (Seçim tamamlandığında veya temizlendiğinde) tetiklenir.'),
         clear: createEventType('clear', 'Temizleme (X) butonuna tıklandığında tetiklenir.'),
         update: createEventType('update', 'Değer programatik olarak (JS ile .value set edilerek) değiştirildiğinde tetiklenir.'),
+        validate: createEventType('validate', 'Değer programatik olarak (JS ile .value set edilerek) değiştirildiğinde tetiklenir.', 'validationMessage: String'),
     },
 };

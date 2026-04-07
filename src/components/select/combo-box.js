@@ -252,6 +252,7 @@ export default class ComboBox extends SelectBase {
         this.invalid = !v?.valid;
         this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
         el.setCustomValidity(this.validationMessage);
+        this.dispatchCustomEvent('validate', null, { validationMessage: this.validationMessage });
 
         return !this.validationMessage;
     }
