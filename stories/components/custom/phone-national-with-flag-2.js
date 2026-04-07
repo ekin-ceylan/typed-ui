@@ -72,6 +72,7 @@ export default class PhoneNational2 extends LightComponentBase {
                     ?required=${this.required}
                     country-code=${this.countryCode}
                     @validate=${this.#onValidate}
+                    class="textbox"
                 ></phone-intl-2>
             </div>
             ${this.renderErrorMessage()}

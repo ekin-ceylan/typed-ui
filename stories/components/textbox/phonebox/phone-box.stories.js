@@ -1,9 +1,9 @@
 import { defineComponent } from '../../../../dist/typed-ui-with-lit.js';
-import { createAttrType, createEventType, inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
+import { createAttrType, inputBaseArgTypes, textBoxEventTypes } from '../../../utilities/common-arg-types.js';
 import { Phonebox } from '../../../utilities/register.js';
 import PhoneNational from '../../custom/phone-national-with-flag.js';
 import PhoneNational2 from '../../custom/phone-national-with-flag-2.js';
-import '../textbox/text-box.css';
+import '../../../assets/styles/text-box.css';
 import '../../../assets/styles/custom.css';
 import '../../select/combobox/combo-box.css';
 
@@ -76,40 +76,5 @@ export const IntlStory_2 = {
 
 export const PropAttrEventLists = {
     tags: ['!dev'],
-    argTypes: {
-        input: createEventType('input', 'Kullanıcı inputa her veri girişi yaptığında tetiklenir.'),
-        change: createEventType('change', 'Inputun değeri değiştiğinde ve inputtan çıkıldığında tetiklenir.'),
-        clear: createEventType('clear', 'Temizleme (X) butonuna tıklandığında tetiklenir.'),
-        update: createEventType('update', 'Değer programatik olarak (JS ile .value set edilerek) değiştirildiğinde tetiklenir.'),
-    },
+    argTypes: textBoxEventTypes,
 };
-
-class CountryPhone {
-    value;
-    phoneCode;
-    label;
-
-    get innerHTML() {
-        return `<img src="https://flagcdn.com/${this.value}.svg" alt="${this.label} Bayrağı" width="20" height="15" style="margin-right: 5px" />
-            <span>${this.label}</span>
-            <span>+${this.phoneCode}</span>`;
-    }
-
-    constructor(data) {
-        for (const key in data) {
-            if (data.hasOwnProperty(key)) {
-                this[key] = data[key];
-            }
-        }
-    }
-}
-
-const options = [
-    new CountryPhone({ phoneCode: '90', value: 'tr', label: 'Türkiye' }),
-    new CountryPhone({ phoneCode: '1', value: 'us', label: 'Amerika Birleşik Devletleri' }),
-    new CountryPhone({ phoneCode: '49', value: 'de', label: 'Almanya' }),
-    new CountryPhone({ phoneCode: '33', value: 'fr', label: 'Fransa' }),
-    new CountryPhone({ phoneCode: '86', value: 'cn', label: 'Çin Halk Cumhuriyeti' }),
-    new CountryPhone({ phoneCode: '850', value: 'kp', label: 'Kuzey Kore' }),
-    new CountryPhone({ phoneCode: '39', value: 'it', label: 'İtalya' }),
-];

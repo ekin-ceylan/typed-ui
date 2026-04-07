@@ -1,5 +1,5 @@
 import { NewPasswordbox } from '../../../utilities/register.js';
-import '../textbox/text-box.css';
+import '../../../assets/styles/text-box.css';
 import '../passwordbox/password-box.css';
 import { passwordboxArgTypes } from '../../../utilities/common-arg-types.js';
 

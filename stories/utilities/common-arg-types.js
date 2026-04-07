@@ -46,6 +46,15 @@ export const textBoxArgTypes = {
     spellcheck: createAttrType('Tarayıcının inputun değeri için yazım denetimi yapıp yapmayacağını belirler.', 'boolean', 'undefined'),
 };
 
+export const textBoxEventTypes = {
+    change: createEventType('change', 'Inputun değeri değiştiğinde ve inputtan çıkıldığında tetiklenir.'),
+    clear: createEventType('clear', 'Temizleme (X) butonuna tıklandığında tetiklenir.'),
+    complete: createEventType('complete', '`isComplete()` fonksiyonu `true` döndüğünde tetiklenir. (`isComplete()` *override* edilmelidir.)'),
+    input: createEventType('input', 'Kullanıcı inputa her veri girişi yaptığında tetiklenir.'),
+    update: createEventType('update', 'Değer programatik olarak (JS ile `.value` set edilerek) değiştirildiğinde tetiklenir.'),
+    validate: createEventType('validate', 'Validasyon kontrolü yapıldığında tetiklenir.', 'validationMessage: String'),
+};
+
 export const passwordboxArgTypes = {
     ...structuredClone(inputBaseArgTypes),
     pattern: textBoxArgTypes.pattern,
@@ -93,13 +102,20 @@ export function createSlotType(description, defaultValue, name) {
     };
 }
 
-export function createEventType(action, description) {
-    const type = 'CustomEvent';
-    const desc = `${description} \n\n __*Type:*__ \`${type}\``;
+/**
+ * Creates a Storybook argType definition for a custom event.
+ * @param {string} name
+ * @param {string} description
+ * @param {string} details
+ * @returns {object}
+ */
+export function createEventType(name, description, details) {
+    const detailsText = details ? ` \n\n \`event.details: { ${details} }\`` : '';
+    const desc = `${description} ${detailsText}`.trim();
 
     return {
-        action,
-        type,
+        name,
+        type: 'CustomEvent',
         description: desc,
         table: {
             category: 'Events',

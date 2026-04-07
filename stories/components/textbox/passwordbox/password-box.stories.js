@@ -1,6 +1,6 @@
 import { passwordboxArgTypes } from '../../../utilities/common-arg-types.js';
 import { Passwordbox } from '../../../utilities/register.js';
-import '../textbox/text-box.css';
+import '../../../assets/styles/text-box.css';
 import './password-box.css';
 
 export default {

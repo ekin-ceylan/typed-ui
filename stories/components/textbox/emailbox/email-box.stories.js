@@ -1,6 +1,6 @@
 import { textBoxArgTypes } from '../../../utilities/common-arg-types.js';
 import { Emailbox } from '../../../utilities/register.js';
-import '../textbox/text-box.css';
+import '../../../assets/styles/text-box.css';
 
 export default {
     title: 'Bileşenler/Textbox/EmailBox',

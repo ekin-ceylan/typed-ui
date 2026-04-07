@@ -1,6 +1,6 @@
 import { textBoxArgTypes } from '../../../utilities/common-arg-types.js';
 import { Textbox } from '../../../utilities/register.js';
-import './text-box.css';
+import '../../../assets/styles/text-box.css';
 
 const argTypes = structuredClone(textBoxArgTypes);
 

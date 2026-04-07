@@ -79,50 +79,54 @@ export const Selectbox = args => {
     return elementFromTemplate(temp);
 };
 
-export const Platebox = args => {
-    const temp = `<plate-box ${getAttrs(args)}> </plate-box>`;
+export const Pagination = args => {
+    const temp = `<t-pagination ${getAttrs(args)} class="pagination"> </t-pagination>`;
     return elementFromText(temp);
 };
 
-export const Pagination = args => {
-    const temp = `<t-pagination ${getAttrs(args)}> </t-pagination>`;
+// #region TEXTBOX RENDERER
+
+export const Platebox = args => {
+    const temp = `<plate-box ${getAttrs(args)} class="textbox"> </plate-box>`;
     return elementFromText(temp);
 };
 
 export const Phonebox = args => {
-    const temp = `<phone-box ${getAttrs(args)}> </phone-box>`;
+    const temp = `<phone-box ${getAttrs(args)} class="textbox"> </phone-box>`;
     return elementFromText(temp);
 };
 
 export const Textbox = args => {
-    const temp = `<text-box ${getAttrs(args)}> </text-box>`;
+    const temp = `<text-box ${getAttrs(args)} class="textbox"> </text-box>`;
     return elementFromText(temp);
 };
 
 export const TcBox = args => {
-    const temp = `<tc-box ${getAttrs(args)}> </tc-box>`;
+    const temp = `<tc-box ${getAttrs(args)} class="textbox"> </tc-box>`;
     return elementFromText(temp);
 };
 
 export const Emailbox = args => {
-    const temp = `<email-box ${getAttrs(args)}> </email-box>`;
+    const temp = `<email-box ${getAttrs(args)} class="textbox"> </email-box>`;
     return elementFromText(temp);
 };
 
 export const Passwordbox = args => {
-    const temp = `<password-box ${getAttrs(args)}> </password-box>`;
+    const temp = `<password-box ${getAttrs(args)} class="textbox"> </password-box>`;
     return elementFromText(temp);
 };
 
 export const ConfirmPasswordbox = args => {
-    const temp = `<confirm-password-box ${getAttrs(args)}> </confirm-password-box>`;
+    const temp = `<confirm-password-box ${getAttrs(args)} class="textbox"> </confirm-password-box>`;
     return elementFromText(temp);
 };
 
 export const NewPasswordbox = args => {
-    const temp = `<new-password-box ${getAttrs(args)}> </new-password-box>`;
+    const temp = `<new-password-box ${getAttrs(args)} class="textbox"> </new-password-box>`;
     return elementFromText(temp);
 };
+
+// #endregion TEXTBOX RENDERER
 
 export const ModalDialog = ({ defaultSlot, backdropClose, escClose }) => {
     // prettier-ignore
