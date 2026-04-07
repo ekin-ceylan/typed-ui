@@ -1,0 +1,186 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks';
+import * as PaginationStories from './pagination.stories.js';
+
+<Meta of={PaginationStories} name="Overview" />
+
+# Pagination
+
+<Canvas of={PaginationStories.Initial} />
+
+## Component API
+
+<div className="arg-types">
+    <ArgTypes of={PaginationStories.PropAttrEventLists} />
+</div>
+
+## Design Token
+
+```css
+--pgn-bg-color: #ffffff;
+--pgn-bg-hover: #eef1f5;
+--pgn-bg-active: #3b7fc4;
+--pgn-bg-disabled: #ffffff;
+
+--pgn-text-color: #4b5563;
+--pgn-text-hover: #374151;
+--pgn-text-active: #ffffff;
+--pgn-text-disabled: #a0a8b3;
+--pgn-ellipsis-color: #8b95a1;
+
+--pgn-border-color: #d9dee5;
+--pgn-border-color-hover: #c7d0da;
+--pgn-border-color-active: #3b7fc4;
+
+--pgn-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+--pgn-font-size: 14px;
+--pgn-font-weight: 400;
+--pgn-font-weight-active: 600;
+--pgn-line-height: 20px;
+
+--pgn-height: 40px;
+--pgn-min-width: 40px;
+--pgn-padding-x: 14px;
+--pgn-border-radius: 4px;
+
+--pgn-outline-width: 1px;
+--pgn-outline-style: solid;
+--pgn-outline-color: #3b7fc4;
+--pgn-outline-offset: -1px;
+```
+
+## Custom Çözümler
+
+### Tasarım 1
+
+Bu tasarımda
+
+- Daima aynı sayıda buton oluşur
+
+<Canvas of={PaginationStories.CustomPagination_1} />
+
+Bunun için yeni bir _component_ oluşturmadan aşağıdaki yöntem kullanılabilir.
+
+```js
+page.addEventListener('page-change-request', event => {
+    const { page: newPage } = event.detail;
+    const siblingCount = newPage > 16 || newPage < 5 ? Math.max(newPage - 16, 5 - newPage) : 1;
+    const target = event.target;
+    target.currentPage = newPage;
+    target.siblingCount = siblingCount;
+});
+```
+
+### Tasarım 2
+
+Bu tasarımda
+
+- Üç nokta elementi yok.
+- Daima aynı sayıda buton oluşturulur.
+- İlk ve son sayfalara gitmek için ok simgeleri tercih edilmiştir.
+
+<Canvas of={PaginationStories.CustomPagination_2} />
+
+Bunu gerçekleştirmek için aşağıda görüldüğü gibi yeri bir _component_ oluşturmak gerekir.
+
+```js
+class CustomPagination1 extends Pagination {
+    // İlk sayfa butonu
+    renderFirstPageLink() {
+        const isActive = this.normalizedCurrentPage === 1;
+        const ariaDisabled = isActive ? 'true' : 'false';
+        const ariaLabel = `Go to page 1`;
+
+        return html`<button type="button" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isActive} @click=${e => this.requestPage(1, e)}>&lt;&lt;</button>`;
+    }
+
+    // Son sayfa butonu
+    renderLastPageLink() {
+        const isActive = this.normalizedCurrentPage === this.normalizedPageCount;
+        const ariaDisabled = isActive ? 'true' : 'false';
+        const ariaLabel = `Go to page ${this.normalizedPageCount}`;
+
+        return html`<button type="button" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isActive} @click=${e => this.requestPage(this.normalizedPageCount, e)}>
+            &gt;&gt;
+        </button>`;
+    }
+
+    // Soldaki üç nokta elementinin gösterilme koşulu
+    get showLeftEllipsis() {
+        return false;
+    }
+
+    // Sağdaki üç nokta elementinin gösterilme koşulu
+    get showRightEllipsis() {
+        return false;
+    }
+
+    // Render edilecek butonların listesi. Daima aynı sayıda olacak şekilde ayarlandı.
+    get visiblePages() {
+        const siblingCount = Math.max(0, Number(this.siblingCount) || 0);
+        const length = 2 * siblingCount + 1;
+        const min = Math.min(Math.max(this.normalizedCurrentPage - siblingCount, 1), this.normalizedPageCount - length + 1);
+
+        return Array.from({ length }, (_value, index) => min + index);
+    }
+}
+```
+
+### Tasarım 3
+
+Bu tasarım, resim kaydırıcılar gibi elementlerde kullanılabilir.
+
+- İlk ve son sayfa için ok simgesi tercih edilmiştir.
+- Sayfa butonları yerine bilgilendirici metin kullanılmıştır.
+
+<Canvas of={PaginationStories.CustomPagination_3} />
+
+Bu tasarımı oluşturmak için bir önceki `CustomPagination1` bileşeninden kalıtım alınarak yeni bir bileşen tasarlanacaktır.
+
+```js
+class CustomPagination2 extends CustomPagination1 {
+    get visiblePages() {
+        return [];
+    }
+
+    renderAdornment() {
+        return html`<li>
+            <span><span>(${this.normalizedCurrentPage}</span> of <span>${this.normalizedPageCount})</span></span>
+        </li>`;
+    }
+}
+```
+
+Ardından gerekli CSS stilleri eklendiğinde yeni bileşenimiz son görünümüne kavuşur.
+
+### Tasarım 4
+
+Responsive çözümleri
+
+<Canvas of={PaginationStories.CustomPagination_4} />
+```js
+class CustomPagination3 extends CustomPagination1 {
+    renderAdornment() {
+        return html`<li class="mobile-only">
+            <span><span>(${this.normalizedCurrentPage}</span> of <span>${this.normalizedPageCount})</span></span>
+        </li>`;
+    }
+}
+```
+
+```css
+nav ul li {
+    &.mobile-only {
+        display: none;
+    }
+
+    @media (max-width: 960px) {
+        &:not(.mobile-only):not(:nth-child(-n + 2)):not(:nth-last-child(-n + 2)) {
+            display: none;
+        }
+
+        &.mobile-only {
+            display: block;
+        }
+    }
+}
+```

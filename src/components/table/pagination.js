@@ -106,6 +106,36 @@ export default class Pagination extends LightComponentBase {
     }
 
     /** @return {import('lit').TemplateResult | typeof nothing} */
+    renderFirstPageLink() {
+        return this.renderPageLink(1);
+    }
+
+    /** @return {import('lit').TemplateResult | typeof nothing} */
+    renderLastPageLink() {
+        return this.renderPageLink(this.normalizedPageCount);
+    }
+
+    /**
+     * Renders a page link button for the given page number with appropriate ARIA attributes.
+     * Subclasses may override this method to provide custom link rendering (e.g. anchor tags) or additional content.
+     * The method should ensure that the rendered link is accessible and indicates the active page state.
+     *
+     * Default implementation renders a button element with click handler to request page change:
+     * ```
+     * return html`<button
+     *      type="button"
+     *      aria-label=${ariaLabel}
+     *      aria-current=${ariaCurrent}
+     *      aria-disabled=${ariaDisabled}
+     *      ?disabled=${isActive}
+     *     ⠀@click=${e => this.requestPage(pageNo, e)}
+     * >
+     *      ${pageNo}
+     * </button>`;
+     * ```
+     * @param {number} pageNo - The page number for which to render the link.
+     * @returns {import('lit').TemplateResult | typeof nothing}
+     */
     renderPageLink(pageNo) {
         const isActive = this.normalizedCurrentPage === pageNo;
         const ariaCurrent = isActive ? 'page' : nothing;
@@ -124,27 +154,66 @@ export default class Pagination extends LightComponentBase {
         </button>`;
     }
 
+    /**
+     * Renders the leading controls for the pagination component, typically including the previous page and first page links.
+     *
+     * Default implementation:
+     * ```
+     * return html`
+     *      <li>${this.renderPrevPageLink()}</li>
+     *      <li>${this.renderFirstPageLink()}</li>`;
+     * ```
+     * @returns {import('lit').TemplateResult | typeof nothing}
+     */
+    renderLeadingControls() {
+        return html`<li>${this.renderPrevPageLink()}</li>
+            <li>${this.renderFirstPageLink()}</li>`;
+    }
+
+    /**
+     * Renders the trailing controls for the pagination component, typically including the next page and last page links.
+     *
+     * Default implementation:
+     * ```
+     * return html`
+     *      <li>${this.renderNextPageLink()}</li>
+     *      <li>${this.renderLastPageLink()}</li>`;
+     * ```
+     * @returns {import('lit').TemplateResult | typeof nothing}
+     */
+    renderTrailingControls() {
+        return html`<li>${this.renderLastPageLink()}</li>
+            <li>${this.renderNextPageLink()}</li>`;
+    }
+
+    /**
+     * Renders additional adornment content within the pagination controls, such as a page count display.
+     * This method is called between the visible page links and the trailing controls.
+     *
+     * Default implementation returns `nothing`, rendering no additional content.
+     * @returns {import('lit').TemplateResult | typeof nothing}
+     */
+    renderAdornment() {
+        return nothing;
+    }
+
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         if (!this.showPagination) return html``;
 
+        // prettier-ignore
         return html`<nav aria-label=${this.ariaLabel}>
-            <ul class="pagination">
-                <li>${this.renderPrevPageLink()}</li>
-
-                <li>${this.renderPageLink(1)}</li>
+            <ul>
+                ${this.renderLeadingControls()}
 
                 ${this.showLeftEllipsis ? html`<li>${this.renderEllipsis()}</li>` : nothing}
 
-                <!-- Visible page links will be rendered here -->
-                ${this.visiblePages.map(pageNo => html`<li>${this.renderPageLink(pageNo)}</li> `)}
-                <!-- Visible page links will be rendered here -->
+                ${this.visiblePages.map(pageNo => html`<li>${this.renderPageLink(pageNo)}</li>`)}
+                ${this.renderAdornment()}
 
                 ${this.showRightEllipsis ? html`<li>${this.renderEllipsis()}</li>` : nothing}
 
-                <li>${this.renderPageLink(this.normalizedPageCount)}</li>
-
-                <li>${this.renderNextPageLink()}</li>
+                ${this.renderTrailingControls()}
             </ul>
         </nav>`;
     }
@@ -156,23 +225,8 @@ export default class Pagination extends LightComponentBase {
      */
     requestPage(pageNo, event) {
         event.preventDefault();
-
-        if (pageNo < 1 || pageNo > this.normalizedPageCount || pageNo === this.normalizedCurrentPage) {
-            return;
-        }
-
-        this.dispatchEvent(
-            new CustomEvent('page-change-request', {
-                bubbles: true,
-                cancelable: true,
-                composed: true,
-                detail: {
-                    page: pageNo,
-                    originalEvent: event,
-                    synthetic: false,
-                },
-            })
-        );
+        if (pageNo < 1 || pageNo > this.normalizedPageCount || pageNo === this.normalizedCurrentPage) return;
+        this.dispatchCustomEvent('page-change-request', event, { page: pageNo });
     }
 
     /**

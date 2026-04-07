@@ -129,3 +129,33 @@ phone-with-area-2 {
         line-height: 16px;
     }
 }
+
+.custom-page-2 {
+    nav ul li:nth-child(3) {
+        span span {
+            margin: 0 4px;
+            color: black;
+        }
+    }
+}
+
+nav ul li {
+    &.mobile-only {
+        display: none;
+
+        span span {
+            margin: 0 4px;
+            color: black;
+        }
+    }
+
+    @media (max-width: 960px) {
+        &:not(.mobile-only):not(:nth-child(-n + 2)):not(:nth-last-child(-n + 2)) {
+            display: none;
+        }
+
+        &.mobile-only {
+            display: block;
+        }
+    }
+}

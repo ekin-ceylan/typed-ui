@@ -1,4 +1,4 @@
-:is(t-pagination) {
+.pagination {
     --pgn-bg-color: #ffffff;
     --pgn-bg-hover: #eef1f5;
     --pgn-bg-active: #3b7fc4;
@@ -34,11 +34,11 @@
     font-family: var(--pgn-font-family);
 }
 
-t-pagination > nav {
+.pagination > nav {
     display: inline-block;
 }
 
-t-pagination > nav > ul {
+.pagination > nav > ul {
     display: inline-flex;
     align-items: stretch;
     margin: 0;
@@ -50,18 +50,18 @@ t-pagination > nav > ul {
     background: var(--pgn-bg-color);
 }
 
-t-pagination > nav > ul > li {
+.pagination > nav > ul > li {
     display: flex;
     align-items: stretch;
     margin: 0;
 }
 
-t-pagination > nav > ul > li + li {
+.pagination > nav > ul > li + li {
     border-left: 1px solid var(--pgn-border-color);
 }
 
-t-pagination > nav > ul > li > button,
-t-pagination > nav > ul > li > span {
+.pagination > nav > ul > li > button,
+.pagination > nav > ul > li > span {
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
@@ -76,7 +76,7 @@ t-pagination > nav > ul > li > span {
     white-space: nowrap;
 }
 
-t-pagination > nav > ul > li > button {
+.pagination > nav > ul > li > button {
     appearance: none;
     -webkit-appearance: none;
     border: 0;
@@ -87,36 +87,36 @@ t-pagination > nav > ul > li > button {
     cursor: pointer;
 }
 
-t-pagination > nav > ul > li > button:not(:disabled):hover {
+.pagination > nav > ul > li > button:not(:disabled):hover {
     background: var(--pgn-bg-hover);
     color: var(--pgn-text-hover);
 }
 
-t-pagination > nav > ul > li > button:focus-visible {
+.pagination > nav > ul > li > button:focus-visible {
     outline: var(--pgn-outline-width) var(--pgn-outline-style) var(--pgn-outline-color);
     outline-offset: var(--pgn-outline-offset);
     position: relative;
     z-index: 1;
 }
 
-t-pagination > nav > ul > li > button:disabled {
+.pagination > nav > ul > li > button:disabled {
     background: var(--pgn-bg-disabled);
     color: var(--pgn-text-disabled);
     cursor: default;
 }
 
-t-pagination > nav > ul > li > button[aria-current='page'],
-t-pagination > nav > ul > li > button[aria-current='page']:disabled {
+.pagination > nav > ul > li > button[aria-current='page'],
+.pagination > nav > ul > li > button[aria-current='page']:disabled {
     background: var(--pgn-bg-active);
     color: var(--pgn-text-active);
     font-weight: var(--pgn-font-weight-active);
 }
 
-t-pagination > nav > ul > li > button[aria-current='page']:focus-visible {
+.pagination > nav > ul > li > button[aria-current='page']:focus-visible {
     outline-color: var(--pgn-outline-color);
 }
 
-t-pagination > nav > ul > li > span {
+.pagination > nav > ul > li > span {
     color: var(--pgn-ellipsis-color);
     background: var(--pgn-bg-color);
     user-select: none;
