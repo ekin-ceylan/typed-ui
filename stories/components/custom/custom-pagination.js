@@ -1,4 +1,4 @@
-import { html, Pagination } from '../../../src';
+import { html, nothing, Pagination } from '../../../src';
 
 export class CustomPagination1 extends Pagination {
     renderFirstPageLink() {
@@ -63,5 +63,48 @@ export class CustomPagination3 extends CustomPagination1 {
         return html`<li class="mobile-only">
             <span><span>(${this.normalizedCurrentPage}</span> of <span>${this.normalizedPageCount})</span></span>
         </li>`;
+    }
+}
+
+export class CustomPagination4 extends Pagination {
+    renderPrevPageLink() {
+        const isFirstPage = this.normalizedCurrentPage === 1;
+        const ariaDisabled = isFirstPage ? 'true' : 'false';
+        const pageNo = this.normalizedCurrentPage - 1;
+        const ariaLabel = `Go to previous page, page ${pageNo}`;
+
+        return html`<a href="?page=${pageNo}" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isFirstPage} @click=${e => this.requestPage(pageNo, e)}>
+            &lt; Önceki
+        </a>`;
+    }
+
+    renderNextPageLink() {
+        const pageCount = this.normalizedPageCount;
+        const isLastPage = this.normalizedCurrentPage === pageCount;
+        const ariaDisabled = isLastPage ? 'true' : 'false';
+        const pageNo = this.normalizedCurrentPage + 1;
+        const ariaLabel = `Go to next page, page ${pageNo}`;
+
+        return html`<a href="?page=${pageNo}" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isLastPage} @click=${e => this.requestPage(pageNo, e)}>
+            Sonraki &gt;
+        </a>`;
+    }
+
+    renderPageLink(pageNo) {
+        const isActive = this.normalizedCurrentPage === pageNo;
+        const ariaCurrent = isActive ? 'page' : nothing;
+        const ariaDisabled = isActive ? 'true' : 'false';
+        const ariaLabel = `Go to page ${pageNo}`;
+
+        return html`<a
+            href="?page=${pageNo}"
+            aria-label=${ariaLabel}
+            aria-current=${ariaCurrent}
+            aria-disabled=${ariaDisabled}
+            ?disabled=${isActive}
+            @click=${e => this.requestPage(pageNo, e)}
+        >
+            ${pageNo}
+        </a>`;
     }
 }

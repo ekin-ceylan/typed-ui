@@ -3,7 +3,7 @@ import { Pagination } from '../../../utilities/register.js';
 import '../../../assets/styles/pagination.css';
 import '../../../assets/styles/custom.css';
 import { defineComponent } from '../../../../dist/typed-ui.js';
-import { CustomPagination1, CustomPagination2, CustomPagination3 } from '../../custom/custom-pagination.js';
+import { CustomPagination1, CustomPagination2, CustomPagination3, CustomPagination4 } from '../../custom/custom-pagination.js';
 
 export default {
     title: 'Bileşenler/Table/Pagination',
@@ -105,11 +105,6 @@ export const CustomPagination_2 = {
 
         return page;
     },
-    args: {
-        currentPage: 5,
-        pageCount: 20,
-        siblingCount: 1,
-    },
     tags: ['!dev'],
 };
 
@@ -120,11 +115,6 @@ export const CustomPagination_3 = {
         initPagination(page, ['pagination', 'custom-page-2']);
 
         return page;
-    },
-    args: {
-        currentPage: 5,
-        pageCount: 20,
-        siblingCount: 1,
     },
     tags: ['!dev'],
 };
@@ -137,10 +127,16 @@ export const CustomPagination_4 = {
 
         return page;
     },
-    args: {
-        currentPage: 5,
-        pageCount: 20,
-        siblingCount: 1,
+    tags: ['!dev'],
+};
+
+export const CustomPagination_5 = {
+    render: _args => {
+        defineComponent('custom-page-4', CustomPagination4);
+        const page = new CustomPagination4();
+        initPagination(page, ['pagination']);
+
+        return page;
     },
     tags: ['!dev'],
 };
@@ -152,6 +148,7 @@ function initPagination(page, classList = [], currentPage = 10, pageCount = 20, 
     page.classList.add(...classList);
 
     page.addEventListener('page-change-request', event => {
+        event.preventDefault();
         const { page: newPage } = event.detail;
         event.target.currentPage = newPage;
     });

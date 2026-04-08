@@ -17,21 +17,12 @@ export default class Pagination extends LightComponentBase {
         };
     }
 
-    constructor() {
-        super();
-
-        /** @type {number} Current active page number. */
-        this.currentPage = 1;
-
-        /** @type {number} Total number of available pages. */
-        this.pageCount = 1;
-
-        /** @type {number} Number of sibling pages shown on each side of the current page. */
-        this.siblingCount = 2;
-
-        /** @type {string} Accessible label for the pagination navigation landmark. */
-        this.ariaLabel = 'Pagination';
-    }
+    /** @type {string} Accessible labels for pagination controls. These can be customized to provide better context in different languages or use cases. */
+    prevPageLabel = 'Önceki Sayfaya git: Sayfa';
+    /** @type {string} Accessible labels for pagination controls. These can be customized to provide better context in different languages or use cases. */
+    nextPageLabel = 'Sonraki Sayfaya git: Sayfa';
+    /** @type {string} Accessible labels for pagination controls. These can be customized to provide better context in different languages or use cases. */
+    pageLabel = 'Sayfaya git: Sayfa';
 
     /** @returns {number} Total page count normalized to a minimum value of 1. */
     get normalizedPageCount() {
@@ -67,6 +58,22 @@ export default class Pagination extends LightComponentBase {
         return this.visiblePages.at(-1) < this.normalizedPageCount - 1;
     }
 
+    constructor() {
+        super();
+
+        /** @type {number} Current active page number. */
+        this.currentPage = 1;
+
+        /** @type {number} Total number of available pages. */
+        this.pageCount = 1;
+
+        /** @type {number} Number of sibling pages shown on each side of the current page. */
+        this.siblingCount = 2;
+
+        /** @type {string} Accessible label for the pagination navigation landmark. */
+        this.ariaLabel = 'Pagination';
+    }
+
     /** @return {import('lit').TemplateResult | typeof nothing} */
     renderEllipsis() {
         return html`<span aria-hidden="true"> ... </span>`;
@@ -76,16 +83,10 @@ export default class Pagination extends LightComponentBase {
     renderPrevPageLink() {
         const isFirstPage = this.normalizedCurrentPage === 1;
         const ariaDisabled = isFirstPage ? 'true' : 'false';
+        const pageNo = this.normalizedCurrentPage - 1;
+        const ariaLabel = `${this.prevPageLabel} ${pageNo}`;
 
-        return html`<button
-            type="button"
-            aria-label="Go to previous page"
-            aria-disabled=${ariaDisabled}
-            ?disabled=${isFirstPage}
-            @click=${e => this.requestPage(this.normalizedCurrentPage - 1, e)}
-        >
-            &lt;
-        </button>`;
+        return html`<button type="button" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isFirstPage} @click=${e => this.requestPage(pageNo, e)}>&lt;</button>`;
     }
 
     /** @return {import('lit').TemplateResult | typeof nothing} */
@@ -93,24 +94,36 @@ export default class Pagination extends LightComponentBase {
         const pageCount = this.normalizedPageCount;
         const isLastPage = this.normalizedCurrentPage === pageCount;
         const ariaDisabled = isLastPage ? 'true' : 'false';
+        const pageNo = this.normalizedCurrentPage + 1;
+        const ariaLabel = `${this.nextPageLabel} ${pageNo}`;
 
-        return html`<button
-            type="button"
-            aria-label="Go to next page"
-            aria-disabled=${ariaDisabled}
-            ?disabled=${isLastPage}
-            @click=${e => this.requestPage(this.normalizedCurrentPage + 1, e)}
-        >
-            &gt;
-        </button>`;
+        return html`<button type="button" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isLastPage} @click=${e => this.requestPage(pageNo, e)}>&gt;</button>`;
     }
 
-    /** @return {import('lit').TemplateResult | typeof nothing} */
+    /**
+     * Renders the link for the first page. By default, this calls `renderPageLink(1)` to render a standard page link for page 1.
+     * Subclasses can override this method to provide a custom rendering for the first page link (e.g. using a double left arrow icon).
+     *
+     * Default implementation:
+     * ```
+     * return this.renderPageLink(1);
+     * ```
+     * @return {import('lit').TemplateResult | typeof nothing}
+     */
     renderFirstPageLink() {
         return this.renderPageLink(1);
     }
 
-    /** @return {import('lit').TemplateResult | typeof nothing} */
+    /**
+     * Renders the link for the last page. By default, this calls `renderPageLink(this.normalizedPageCount)` to render a standard page link for the last page.
+     * Subclasses can override this method to provide a custom rendering for the last page link (e.g. using a double right arrow icon).
+     *
+     * Default implementation:
+     * ```
+     * return this.renderPageLink(this.normalizedPageCount);
+     * ```
+     * @return {import('lit').TemplateResult | typeof nothing}
+     */
     renderLastPageLink() {
         return this.renderPageLink(this.normalizedPageCount);
     }
@@ -140,7 +153,7 @@ export default class Pagination extends LightComponentBase {
         const isActive = this.normalizedCurrentPage === pageNo;
         const ariaCurrent = isActive ? 'page' : nothing;
         const ariaDisabled = isActive ? 'true' : 'false';
-        const ariaLabel = `Go to page ${pageNo}`;
+        const ariaLabel = `${this.pageLabel} ${pageNo}`;
 
         return html`<button
             type="button"

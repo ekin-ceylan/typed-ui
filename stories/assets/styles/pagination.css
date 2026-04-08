@@ -61,7 +61,8 @@
 }
 
 .pagination > nav > ul > li > button,
-.pagination > nav > ul > li > span {
+.pagination > nav > ul > li > span,
+.pagination > nav > ul > li > a {
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
@@ -105,14 +106,14 @@
     cursor: default;
 }
 
-.pagination > nav > ul > li > button[aria-current='page'],
-.pagination > nav > ul > li > button[aria-current='page']:disabled {
+.pagination > nav > ul > li > :is(button, a)[aria-current='page'],
+.pagination > nav > ul > li > :is(button, a)[aria-current='page']:disabled {
     background: var(--pgn-bg-active);
     color: var(--pgn-text-active);
     font-weight: var(--pgn-font-weight-active);
 }
 
-.pagination > nav > ul > li > button[aria-current='page']:focus-visible {
+.pagination > nav > ul > li > :is(button, a)[aria-current='page']:focus-visible {
     outline-color: var(--pgn-outline-color);
 }
 

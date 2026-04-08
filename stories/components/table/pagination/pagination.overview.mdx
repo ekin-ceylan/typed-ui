@@ -7,11 +7,51 @@ import * as PaginationStories from './pagination.stories.js';
 
 <Canvas of={PaginationStories.Initial} />
 
+## Erişilebilirlik
+
+### Ekran Okuyucu Desteği
+
+- Sayfalama alanı bir `nav` elementi içinde render edilir. Bu sayede ekran okuyucular için ayrı bir gezinme bölgesi olarak algılanır.
+- Sayfa geçiş kontrolleri varsayılan olarak `button` elementleridir. Bu nedenle klavye ile erişim, odak yönetimi ve etkin olmayan durumların belirtilmesi tarayıcının doğal davranışıyla sağlanır.
+- Aktif sayfa, `aria-current="page"` ile işaretlenir. Böylece ekran okuyucular kullanıcıya hangi sayfanın açık olduğunu net şekilde bildirir.
+- İlk, önceki, sonraki ve son sayfa kontrolleri için açıklayıcı `aria-label` metinleri kullanılır. Bu metinler bileşen içinde özelleştirilebilir olduğundan, farklı dil ve kullanım senaryolarına uyarlanabilir.
+- Üç nokta (`...`) ile gösterilen kısım dekoratiftir ve `aria-hidden="true"` ile ekran okuyuculardan gizlenir.
+- Bu bileşen sayfa numarası dışında ek bir durum raporu vermez. `aria-live`, satır sayısı seçici ya da sayfaya atla alanı gibi gelişmiş erişilebilirlik kalıpları bu bileşenin kapsamına dahil değildir.
+
+### Klavye Desteği
+
+- Sayfalama içindeki tüm etkileşimli kontroller `button` olduğu için `Tab` ile sırayla odaklanılabilir.
+- `Enter` ve `Space` ile aktif sayfa seçimi yapılır.
+- Geçerli sayfa için `disabled` durumu kullanıldığı için aktif sayfa ve ulaşılamayan yön kontrolleri klavye odağından çıkar.
+- Üç nokta (`...`) elementi etkileşimli değildir; bu nedenle klavye odağı almaz.
+- Klavye sırası, DOM sırasıyla aynıdır. Bu yüzden görsel sıra ile DOM sırasını aynı tutmak önemlidir.
+- Bu bileşen için ok tuşlarıyla özel gezinme uygulanmaz; çünkü bileşen klasik bir _roving tabindex widget_’ı olarak tasarlanmamıştır.
+
 ## Component API
 
 <div className="arg-types">
     <ArgTypes of={PaginationStories.PropAttrEventLists} />
 </div>
+
+## Render Özelleştirme
+
+Pagination bileşeni, sayfalama arayüzünü küçük render parçalarına ayırır. Bu parçalar override edilerek görünüm ve içerik ihtiyaca göre uyarlanabilir.
+
+Özelleştirilebilen temel noktalar şunlardır:
+
+- `renderLeadingControls()`: Önceki sayfa ve ilk sayfa kontrollerini üretir.
+- `renderTrailingControls()`: Son sayfa ve sonraki sayfa kontrollerini üretir.
+- `renderPageLink(pageNo)`: Sayfa numarası düğmesini üretir.
+- `renderAdornment()`: Sayfa numaralarının arasına ek bilgi yerleştirmek için kullanılır.
+
+Bu yapı sayesinde:
+
+- İlk ve son sayfa için farklı ikonlar kullanılabilir.
+- Sayfa numaraları yerine açıklayıcı metin gösterilebilir.
+- Mobil görünümde farklı bir içerik sunulabilir.
+- DOM sırası korunarak klavye erişimi doğal bırakılabilir.
+
+Varsayılan davranış sade ve erişilebilir bir sayfalama üretir. Daha özel senaryolarda yalnızca gerekli render noktaları değiştirilerek yeni bir alt bileşen oluşturulabilir.
 
 ## Design Token
 
@@ -82,6 +122,7 @@ Bu tasarımda
 
 Bunu gerçekleştirmek için aşağıda görüldüğü gibi yeri bir _component_ oluşturmak gerekir.
 
+<div class="code-pre">
 ```js
 class CustomPagination1 extends Pagination {
     // İlk sayfa butonu
@@ -122,8 +163,11 @@ class CustomPagination1 extends Pagination {
 
         return Array.from({ length }, (_value, index) => min + index);
     }
+
 }
-```
+
+````
+</div>
 
 ### Tasarım 3
 
@@ -148,15 +192,24 @@ class CustomPagination2 extends CustomPagination1 {
         </li>`;
     }
 }
-```
+````
 
 Ardından gerekli CSS stilleri eklendiğinde yeni bileşenimiz son görünümüne kavuşur.
 
-### Tasarım 4
+### Responsive Çözümleri
 
-Responsive çözümleri
+Sayfalama elementini mobil görünüme uydurmak için çeşitli yöntemler uygulanabilir:
+
+- `sibling-count` sayısını azaltmak
+- Yazı boyutu ve boşlukları azaltmak
+- `overflow-x: auto` ile _scroll_ eklemek
+
+Aşağıdaki çözümde ise ekran boyutu 960px altına indiğinde farklı bir içerik göstermek için yeni bir bileşen oluşturulmuştur:
 
 <Canvas of={PaginationStories.CustomPagination_4} />
+
+Bunun için yine `CustomPagination1` bileşeninden kalıtım alındıktan sonra `renderAdornment()` fonksiyonu _override_ edilmiştir.
+
 ```js
 class CustomPagination3 extends CustomPagination1 {
     renderAdornment() {
@@ -166,6 +219,8 @@ class CustomPagination3 extends CustomPagination1 {
     }
 }
 ```
+
+Gerekli CSS stilleri:
 
 ```css
 nav ul li {
@@ -184,3 +239,9 @@ nav ul li {
     }
 }
 ```
+
+### `<button>` Yerine `<a>` Kullanmak
+
+<Canvas of={PaginationStories.CustomPagination_5} />
+
+Burada sayfalar birer bağlantı olduğu için `event` yaymak ve dinlemek şart değildir.
