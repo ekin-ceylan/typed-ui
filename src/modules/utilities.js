@@ -114,3 +114,22 @@ export function checkTcNo(value) {
     // 1, 3, 5, 7 ve 9. rakamın toplamının 8 katının birler basamağı 11. rakamı vermektedir.
     return (totalOdd * 8) % 10 === valueArr[10];
 }
+
+/**
+ * Formats a string by replacing placeholders with corresponding argument values.
+ * Placeholders are in the format {0}, {1}, etc., where the number corresponds to the index of the argument.
+ * If an argument is undefined or null, it will be replaced with an empty string.
+ * @param {string} template - The string template containing placeholders.
+ * @param {...any} args - The values to replace the placeholders with.
+ * @returns {string} The formatted string with placeholders replaced by argument values.
+ *
+ * @example
+ * stringFormat('Hello, {0}!', 'World') // "Hello, World!"
+ * stringFormat('The value of {0} is {1}.', 'x', 10) // "The value of x is 10."
+ */
+export function stringFormat(template, ...args) {
+    return String(template).replaceAll(/{(\d+)}/g, (_m, index) => {
+        const value = args[Number(index)];
+        return value === undefined || value === null ? '' : String(value).trim();
+    });
+}
