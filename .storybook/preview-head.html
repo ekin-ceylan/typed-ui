@@ -17,4 +17,24 @@
         max-height: 500px;
         overflow-y: auto;
     }
+
+    blockquote {
+        margin-left: 30px !important;
+        max-width: 320px;
+        background: #ecf2f9;
+        border-color: #a2cdff !important;
+        padding: 10px 15px !important;
+        float: right;
+
+        p::before {
+            content: '📌';
+            display: inline-block;
+            margin-right: 5px;
+        }
+    }
+
+    .sbdocs,
+    pre {
+        clear: both;
+    }
 </style>

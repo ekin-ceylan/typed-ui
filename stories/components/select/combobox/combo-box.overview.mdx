@@ -38,9 +38,9 @@ Bu sayfa, `combo-box` bileşeninin kısa kullanımını ve Storybook kontrolleri
 
 ## Component API
 
-`select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
+> `label` mutlaka verilmelidir. Bu iki öznitelik set edilmezse bileşen bağlanırken hata fırlatır.
 
-> Zorunlu: `field-id` ve `label` mutlaka verilmelidir. Bu iki öznitelik set edilmezse bileşen bağlanırken hata fırlatır.
+`select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
 
 <div className="arg-types">
     <ArgTypes of={ComboboxStories.PropAttrEventLists} />
@@ -48,68 +48,72 @@ Bu sayfa, `combo-box` bileşeninin kısa kullanımını ve Storybook kontrolleri
 
 ## Design Token
 
-```css
---cbx-bg-color: #ffffff;
---cbx-bg-color-hover: #ffffff;
---cbx-bg-color-disabled: #eef2f7;
+<div class="code-pre">
+    ```css
+    --cbx-bg-color: #ffffff;
+    --cbx-bg-color-hover: #ffffff;
+    --cbx-bg-color-disabled: #eef2f7;
 
---cbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
---cbx-font-size: 14px;
---cbx-text-color: #111827;
---cbx-text-color-disabled: #6c757d;
---cbx-text-color-invalid: #ef4444;
---cbx-placeholder-color: #6b7280;
---cbx-placeholder-color-focus: #111827;
+    --cbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --cbx-font-size: 14px;
+    --cbx-text-color: #111827;
+    --cbx-text-color-disabled: #6c757d;
+    --cbx-text-color-invalid: #ef4444;
+    --cbx-placeholder-color: #6b7280;
+    --cbx-placeholder-color-focus: #111827;
 
---cbx-border-color: #d2d6de;
---cbx-border-color-hover: #9ca3af;
---cbx-border-color-focus: #3b82f6; /* #3b82f6 */
---cbx-border-color-invalid: #ef4444;
---cbx-border-color-disabled: #cbd5e1;
---cbx-border-radius: 0px;
+    --cbx-border-color: #d2d6de;
+    --cbx-border-color-hover: #9ca3af;
+    --cbx-border-color-focus: #3b82f6; /_ #3b82f6 _/
+    --cbx-border-color-invalid: #ef4444;
+    --cbx-border-color-disabled: #cbd5e1;
+    --cbx-border-radius: 0px;
 
---cbx-outline-width: 1px;
---cbx-outline-offset: -1px;
---cbx-outline-color: #3c8dbc;
---cbx-outline-color-invalid: #ef4444;
+    --cbx-outline-width: 1px;
+    --cbx-outline-offset: -1px;
+    --cbx-outline-color: #3c8dbc;
+    --cbx-outline-color-invalid: #ef4444;
 
---cbx-height: 40px;
---cbx-padding-x: 12px;
+    --cbx-height: 40px;
+    --cbx-padding-x: 12px;
 
---cbx-focus-ring: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
---cbx-focus-ring-invalid: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
+    --cbx-focus-ring: none; /_ 0 0 0 3px rgba(59, 130, 246, 0.28); _/
+    --cbx-focus-ring-invalid: none; /_ 0 0 0 3px rgba(59, 130, 246, 0.28); _/
 
-/* Listbox & Option */
---cbx-listbox-max-height: 165px;
---cbx-listbox-bg-color: #ffffff;
---cbx-listbox-padding: 4px;
---cbx-listbox-border-color: #3b82f6;
---cbx-listbox-border-radius: 0px;
+    /_ Listbox & Option _/
+    --cbx-listbox-max-height: 165px;
+    --cbx-listbox-bg-color: #ffffff;
+    --cbx-listbox-padding: 4px;
+    --cbx-listbox-border-color: #3b82f6;
+    --cbx-listbox-border-radius: 0px;
 
---cbx-option-color: inherit;
---cbx-option-color-selected: #000;
---cbx-option-color-disabled: #6e6e6f;
---cbx-option-bg-color: transparent;
---cbx-option-bg-color-hover: #c8dffd;
---cbx-option-bg-color-selected: #a1c4ec;
---cbx-option-bg-color-disabled: #e9e9ed;
---cbx-option-padding: 9px 8px;
+    --cbx-option-color: inherit;
+    --cbx-option-color-selected: #000;
+    --cbx-option-color-disabled: #6e6e6f;
+    --cbx-option-bg-color: transparent;
+    --cbx-option-bg-color-hover: #c8dffd;
+    --cbx-option-bg-color-selected: #a1c4ec;
+    --cbx-option-bg-color-disabled: #e9e9ed;
+    --cbx-option-padding: 9px 8px;
 
-/* Chevron */
---cbx-chevron-size: 16px;
---cbx-chevron-right-distance: 12px;
+    /_ Chevron _/
+    --cbx-chevron-size: 16px;
+    --cbx-chevron-right-distance: 12px;
 
-/* Clear button */
---cbx-clear-size: 17px;
---cbx-clear-right-distance: 32px;
---cbx-clear-padding: 4px;
---cbx-clear-border-radius: 0px;
---cbx-clear-color: #6b7280;
---cbx-clear-color-hover: #111827;
---cbx-clear-color-active: #111827;
---cbx-clear-bg-color-hover: rgba(17, 24, 39, 0.06);
---cbx-clear-bg-color-active: rgba(17, 24, 39, 0.1);
---cbx-clear-outline-color: #3c8dbc;
---cbx-clear-outline-width: 1px;
---cbx-clear-outline-style: solid;
-```
+    /_ Clear button _/
+    --cbx-clear-size: 17px;
+    --cbx-clear-right-distance: 32px;
+    --cbx-clear-padding: 4px;
+    --cbx-clear-border-radius: 0px;
+    --cbx-clear-color: #6b7280;
+    --cbx-clear-color-hover: #111827;
+    --cbx-clear-color-active: #111827;
+    --cbx-clear-bg-color-hover: rgba(17, 24, 39, 0.06);
+    --cbx-clear-bg-color-active: rgba(17, 24, 39, 0.1);
+    --cbx-clear-outline-color: #3c8dbc;
+    --cbx-clear-outline-width: 1px;
+    --cbx-clear-outline-style: solid;
+
+    ```
+
+</div>

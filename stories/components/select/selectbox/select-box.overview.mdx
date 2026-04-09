@@ -5,9 +5,11 @@ import * as SelectboxStories from './select-box.stories.js';
 
 # Select
 
-`select-box`, formlarda veya kullanıcı arayüzlerinde seçenekler arasından seçim yapılmasını sağlayan, erişilebilir ve özelleştirilebilir bir seçim kutusu bileşenidir. Hem klasik `<select>`/`<option>` slot kullanımıyla hem de programatik olarak seçenek eklemeye olanak tanır. Doğrulama, hata mesajı, klavye ve ekran okuyucu desteği gibi modern form ihtiyaçlarını karşılamak üzere tasarlanmıştır. Tasarım token’ları sayesinde kolayca özelleştirilebilir ve farklı temalarla uyumlu çalışır.
+> Seçenek sayısı çok fazla değilse tercih edilebilir. Seçenek sayısı 10'dan fazlaysa veya seçenek listesi sayfa boyunu aşıyorsa `ComboBox` tercih edilmelidir.
 
-Seçenek sayısı çok fazla değilse tercih edilebilir. Seçenek sayısı sayfa boyunu aşıyorsa `ComboBox` tercih edilmelidir.
+`select-box`, formlarda veya kullanıcı arayüzlerinde seçenekler arasından seçim yapılmasını sağlayan, erişilebilir ve özelleştirilebilir bir seçim kutusu bileşenidir. Hem klasik `<select>`/`<option>` slot kullanımıyla hem de programatik olarak seçenek eklemeye olanak tanır.
+
+Doğrulama, hata mesajı, klavye ve ekran okuyucu desteği gibi modern form ihtiyaçlarını karşılamak üzere tasarlanmıştır. Tasarım token’ları sayesinde kolayca özelleştirilebilir ve farklı temalarla uyumlu çalışır.
 
 ## Kurulum ve Temel Kullanım
 
@@ -39,8 +41,6 @@ TypedUI.defineComponent('do-select', TypedUI.SelectBox);
 
 En basit kullanımda seçenekler `<option>` (veya `<optgroup>`) olarak component’in içine yazılır:
 
-> Not: `select-box` çalışması için `field-id` ve `label` zorunludur. Bu attributelar verilmezse bileşen _runtime_'da hata fırlatır.
-
 <Canvas of={SelectboxStories.BasicSlotUsage} />
 
 `<optgroup>` desteği:
@@ -49,7 +49,7 @@ En basit kullanımda seçenekler `<option>` (veya `<optgroup>`) olarak component
 
 ### Bilinen problemler
 
-IOS'ta hidden ve option stilleri desteklenmiyor.
+IOS'ta `<option>` elementleri için `hidden` özniteliği ve stillendirmeler desteklenmiyor.
 
 ## Başlangıç Seçimi
 
@@ -69,7 +69,20 @@ Diğer yöntem ise `option` elementlerinden birine `selected` özniteliği eklem
 
 ## Programatik Kullanım
 
+> `options` set edildiğinde, slot ile verilen `<option>`/`<optgroup>` içerikleri yok sayılır.
+
 Seçenekleri JS üzerinden de verebilirsiniz. Bu durumda **slot içeriği yok sayılır**.
+
+`options`, ya bir `string` dizisi olmalıdır ya da elemenları aşağıdaki arayüze sahip nesnelerden oluşmalıdır:
+
+```ts
+options: {
+    value: String,
+    label: String,
+    selected: Boolean,
+    disabled: Boolean
+}[] | String[]
+```
 
 Öncelikle sayfada var olan `SelectBox` elementini seçmeniz
 
@@ -115,22 +128,19 @@ el.options = [
 ];
 ```
 
-### JS Property notu
+### Lit.js Bileşeni
 
-`options` **attribute değildir**; sadece JavaScript üzerinden property olarak set edilir. `options` set edildiğinde, slot ile verilen `<option>/<optgroup>` içerikleri yok sayılır.
+lit ile kullanım
 
 ```js
-document.querySelector('select-box[field-id="country"]').options = [
-    { value: 'tr', label: 'Türkiye' },
-    { value: 'de', label: 'Almanya', selected: true },
-];
+html`<select-box id="lit-select" label="Ülke" .options=${this.options} placeholder="Lütfen seçiniz"></select-box>`;
 ```
 
 ## Öznitelikler, Özellikler ve Olaylar
 
-`select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
+> **Zorunlu:** `select-box` bileşeninin çalışması için `label` zorunludur. Yazılmazsa, çalışma zamanında hata fırlatılır.
 
-> Zorunlu: `field-id` ve `label` mutlaka verilmelidir. Bu iki öznitelik set edilmezse bileşen bağlanırken hata fırlatır.
+`select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
 
 <ArgTypes of={SelectboxStories.PropAttrEventLists} />
 
@@ -159,51 +169,54 @@ el.addEventListener('clear', () => {
 
 ## Design Token
 
-```css
---sbx-bg-color: #ffffff;
---sbx-bg-hover-color: #ffffff;
---sbx-bg-disabled: #eef2f7;
+<div class="code-pre">
+    ```css
+    --sbx-bg-color: #ffffff;
+    --sbx-bg-hover-color: #ffffff;
+    --sbx-bg-disabled: #eef2f7;
 
---sbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
---sbx-font-size: 14px;
---sbx-text-color: #111827;
---sbx-text-disabled: #6c757d;
---sbx-text-invalid: #ef4444;
---sbx-placeholder-color: #6b7280;
---sbx-placeholder-focus-color: #111827;
+    --sbx-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --sbx-font-size: 14px;
+    --sbx-text-color: #111827;
+    --sbx-text-disabled: #6c757d;
+    --sbx-text-invalid: #ef4444;
+    --sbx-placeholder-color: #6b7280;
+    --sbx-placeholder-focus-color: #111827;
 
---sbx-border-color: #d2d6de;
---sbx-border-hover-color: #9ca3af;
---sbx-border-focus-color: #9ca3af; /* #3b82f6 */
---sbx-border-invalid-color: #ef4444;
---sbx-border-disabled: #cbd5e1;
---sbx-border-radius: 0px;
+    --sbx-border-color: #d2d6de;
+    --sbx-border-hover-color: #9ca3af;
+    --sbx-border-focus-color: #9ca3af; /* #3b82f6 */
+    --sbx-border-invalid-color: #ef4444;
+    --sbx-border-disabled: #cbd5e1;
+    --sbx-border-radius: 0px;
 
---sbx-outline-width: 1px;
---sbx-outline-color: #3c8dbc;
---sbx-outline-invalid-color: #ef4444;
+    --sbx-outline-width: 1px;
+    --sbx-outline-color: #3c8dbc;
+    --sbx-outline-invalid-color: #ef4444;
 
---sbx-height: 40px;
---sbx-padding-x: 12px;
+    --sbx-height: 40px;
+    --sbx-padding-x: 12px;
 
---sbx-focus-ring: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
---sbx-focus-ring-invalid: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
+    --sbx-focus-ring: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
+    --sbx-focus-ring-invalid: none; /* 0 0 0 3px rgba(59, 130, 246, 0.28); */
 
-/* Chevron */
---sbx-chevron-size: 16px;
---sbx-chevron-right-distance: 12px;
+    /* Chevron */
+    --sbx-chevron-size: 16px;
+    --sbx-chevron-right-distance: 12px;
 
-/* Clear button */
---sbx-clear-size: 17px;
---sbx-clear-right-distance: 32px;
---sbx-clear-padding: 4px;
---sbx-clear-color: #6b7280;
---sbx-clear-hover: #111827;
---sbx-clear-active: #111827;
---sbx-clear-bg-hover: rgba(17, 24, 39, 0.06);
---sbx-clear-bg-active: rgba(17, 24, 39, 0.1);
---sbx-clear-border-radius: 0px;
---sbx-clear-outline-color: #3c8dbc;
---sbx-clear-outline-width: 1px;
---sbx-clear-outline-style: solid;
-```
+    /* Clear button */
+    --sbx-clear-size: 17px;
+    --sbx-clear-right-distance: 32px;
+    --sbx-clear-padding: 4px;
+    --sbx-clear-color: #6b7280;
+    --sbx-clear-hover: #111827;
+    --sbx-clear-active: #111827;
+    --sbx-clear-bg-hover: rgba(17, 24, 39, 0.06);
+    --sbx-clear-bg-active: rgba(17, 24, 39, 0.1);
+    --sbx-clear-border-radius: 0px;
+    --sbx-clear-outline-color: #3c8dbc;
+    --sbx-clear-outline-width: 1px;
+    --sbx-clear-outline-style: solid;
+    ```
+
+</div>
