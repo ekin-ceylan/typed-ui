@@ -18,7 +18,7 @@ describe('Pagination', () => {
     it('does not render pagination markup when only one page exists', async () => {
         const host = await initPagination({ currentPage: 1, pageCount: 1 });
 
-        expect(host.querySelector('.pagination')).toBeNull();
+        expect(host.querySelector('nav')).toBeNull();
     });
 
     it('renders visible pages and ellipsis around the current page', async () => {
@@ -26,8 +26,8 @@ describe('Pagination', () => {
         const pageLinks = Array.from(host.querySelectorAll('li button'));
         const numericLabels = pageLinks.map(link => link.textContent.trim()).filter(label => /^\d+$/.test(label));
         const ellipsisNodes = host.querySelectorAll('li > span[aria-hidden="true"]');
-
-        expect(numericLabels).toEqual(['1', '8', '9', '10', '11', '12', '20']);
+        // component now renders numeric page items only for the visible page range
+        expect(numericLabels).toEqual(['8', '9', '10', '11', '12']);
         expect(ellipsisNodes.length).toBe(2);
     });
 
@@ -36,7 +36,7 @@ describe('Pagination', () => {
         const pageLinks = Array.from(host.querySelectorAll('li button'));
         const numericLabels = pageLinks.map(link => link.textContent.trim()).filter(label => /^\d+$/.test(label));
 
-        expect(numericLabels).toEqual(['1', '9', '10', '11', '20']);
+        expect(numericLabels).toEqual(['9', '10', '11']);
     });
 
     it('dispatches page-change-request when the first page button is clicked', async () => {
@@ -46,7 +46,8 @@ describe('Pagination', () => {
             host.addEventListener('page-change-request', resolve, { once: true });
         });
 
-        const firstLink = host.querySelector('li button[aria-label="Go to page 1"]');
+        // find the numeric button that points to page 1 and click it
+        const firstLink = Array.from(host.querySelectorAll('li button')).find(b => b.textContent.trim() === '1');
         firstLink.click();
 
         const event = await eventPromise;

@@ -5,6 +5,42 @@ import * as PaginationStories from './pagination.stories.js';
 
 # Pagination
 
+## Kurulum ve Temel Kullanım
+
+### Kurulum
+
+`pagination`, sayfa tabanlı gezinme için kullanılan erişilebilir ve özelleştirilebilir bir sayfalama bileşenidir. Sayfa sayısı birden büyük olduğunda görünür; tek sayfalı durumlarda kendini render etmez.
+
+`pagination` bir **Web Component (Custom Element)** olduğu için kullanılmadan önce _register_ edilmelidir. Bunun için `typed-ui` paketini projenize ekledikten sonra giriş noktasında aşağıdaki kodu çalıştırabilirsiniz:
+
+```js
+import { Pagination, defineComponent } from 'typed-ui';
+
+defineComponent('typed-pagination', Pagination);
+```
+
+Eğer `customElements.define` kullanmayı tercih ediyorsanız aynı kayıt şu şekilde de yapılabilir:
+
+```js
+import { Pagination } from 'typed-ui';
+
+customElements.define('typed-pagination', Pagination);
+```
+
+### Temel Kullanım
+
+En basit kullanımda `current-page` ve `page-count` değerleri verilerek bileşen render edilir. İsteğe bağlı olarak `sibling-count` ile ortadaki sayfa aralığı daraltılıp genişletilebilir.
+
+```html
+<typed-pagination current-page="5" page-count="20" sibling-count="2"></typed-pagination>
+```
+
+Sayfalama metinleri ve landmark etiketi `aria-label` benzeri özelliklerle özelleştirilebilir:
+
+```html
+<typed-pagination current-page="5" page-count="20" aria-label="Sayfalama"></typed-pagination>
+```
+
 <Canvas of={PaginationStories.Initial} />
 
 ## Erişilebilirlik
@@ -12,7 +48,7 @@ import * as PaginationStories from './pagination.stories.js';
 ### Ekran Okuyucu Desteği
 
 - Sayfalama alanı bir `nav` elementi içinde render edilir. Bu sayede ekran okuyucular için ayrı bir gezinme bölgesi olarak algılanır.
-- Sayfa geçiş kontrolleri varsayılan olarak `button` elementleridir. Bu nedenle klavye ile erişim, odak yönetimi ve etkin olmayan durumların belirtilmesi tarayıcının doğal davranışıyla sağlanır.
+- Sayfa geçiş kontrolleri varsayılan olarak `<button>` elementleridir. Bu nedenle klavye ile erişim, odak yönetimi ve etkin olmayan durumların belirtilmesi tarayıcının doğal davranışıyla sağlanır.
 - Aktif sayfa, `aria-current="page"` ile işaretlenir. Böylece ekran okuyucular kullanıcıya hangi sayfanın açık olduğunu net şekilde bildirir.
 - İlk, önceki, sonraki ve son sayfa kontrolleri için açıklayıcı `aria-label` metinleri kullanılır. Bu metinler bileşen içinde özelleştirilebilir olduğundan, farklı dil ve kullanım senaryolarına uyarlanabilir.
 - Üç nokta (`...`) ile gösterilen kısım dekoratiftir ve `aria-hidden="true"` ile ekran okuyuculardan gizlenir.
@@ -20,29 +56,43 @@ import * as PaginationStories from './pagination.stories.js';
 
 ### Klavye Desteği
 
-- Sayfalama içindeki tüm etkileşimli kontroller `button` olduğu için `Tab` ile sırayla odaklanılabilir.
+- Sayfalama içindeki tüm etkileşimli kontroller `<button>` olduğu için `Tab` ile sırayla odaklanılabilir. `<button>` yerine `<a>` elementi kullanıldığında da aynı durum geçerli olur.
 - `Enter` ve `Space` ile aktif sayfa seçimi yapılır.
 - Geçerli sayfa için `disabled` durumu kullanıldığı için aktif sayfa ve ulaşılamayan yön kontrolleri klavye odağından çıkar.
 - Üç nokta (`...`) elementi etkileşimli değildir; bu nedenle klavye odağı almaz.
 - Klavye sırası, DOM sırasıyla aynıdır. Bu yüzden görsel sıra ile DOM sırasını aynı tutmak önemlidir.
 - Bu bileşen için ok tuşlarıyla özel gezinme uygulanmaz; çünkü bileşen klasik bir _roving tabindex widget_’ı olarak tasarlanmamıştır.
 
-## Component API
-
-<div className="arg-types">
-    <ArgTypes of={PaginationStories.PropAttrEventLists} />
-</div>
-
 ## Render Özelleştirme
 
-Pagination bileşeni, sayfalama arayüzünü küçük render parçalarına ayırır. Bu parçalar override edilerek görünüm ve içerik ihtiyaca göre uyarlanabilir.
+`Pagination` bileşeni, sayfalama arayüzünü küçük _render_ parçalarına ayırır. Bu parçalar _override_ edilerek görünüm ve içerik ihtiyaca göre uyarlanabilir. Bileşenin genel yapısı şu şekildedir:
+
+{/* prettier-ignore */}
+```js
+html`<nav aria-label=${this.ariaLabel}>
+    <ul>
+        <li>${this.renderFirstItem()}</li>
+        <li>${this.renderSecondItem()}</li>
+
+        ${this.showLeftEllipsis ? html`<li>${this.renderEllipsis()}</li>` : nothing}
+
+        ${this.visiblePages.map(pageNo => html`<li>${this.renderPageItem(pageNo)}</li>`)}
+        ${this.renderAdornment()}
+
+        ${this.showRightEllipsis ? html`<li>${this.renderEllipsis()}</li>` : nothing}
+
+        <li>${this.renderSecondLastItem()}</li>
+        <li>${this.renderLastItem()}</li>
+    </ul>
+</nav>`;
+```
 
 Özelleştirilebilen temel noktalar şunlardır:
 
-- `renderLeadingControls()`: Önceki sayfa ve ilk sayfa kontrollerini üretir.
-- `renderTrailingControls()`: Son sayfa ve sonraki sayfa kontrollerini üretir.
-- `renderPageLink(pageNo)`: Sayfa numarası düğmesini üretir.
-- `renderAdornment()`: Sayfa numaralarının arasına ek bilgi yerleştirmek için kullanılır.
+- **`renderFirstItem()`:** İlk eleman. Varsayılan olarak ilk sayfaya yönlediren `<<` simgeli bağlantıyı üretir.
+- **`renderSecondItem()`:** İlk eleman. Varsayılan olarak bir önceki sayfaya yönlendiren `<` simgeli bağlantıyı üretir.
+- **`renderPageLink(pageNo)`:** Sayfa numarası düğmesini üretir.
+- **`renderAdornment()`:** Sayfa numaralarının arasına ek bilgi yerleştirmek için kullanılır. Öntanımlı içeriği: `nothing`
 
 Bu yapı sayesinde:
 
@@ -52,6 +102,225 @@ Bu yapı sayesinde:
 - DOM sırası korunarak klavye erişimi doğal bırakılabilir.
 
 Varsayılan davranış sade ve erişilebilir bir sayfalama üretir. Daha özel senaryolarda yalnızca gerekli render noktaları değiştirilerek yeni bir alt bileşen oluşturulabilir.
+
+## Özelleştirilmiş Çözümler
+
+### 1. Tasarım
+
+Bu tasarımda **daima aynı sayıda buton** oluşur.
+
+<Canvas of={PaginationStories.CustomPagination_1} />
+
+Bunun için yeni bir _component_ oluşturmadan aşağıdaki yöntem kullanılabilir.
+
+```js
+page.addEventListener('page-change-request', event => {
+    const { page: newPage } = event.detail;
+    const siblingCount = newPage > 16 || newPage < 5 ? Math.max(newPage - 16, 5 - newPage) : 1;
+    const target = event.target;
+    target.currentPage = newPage;
+    target.siblingCount = siblingCount;
+});
+```
+
+### 2. Tasarım
+
+Bu tasarımda
+
+- Üç nokta elementi yok.
+- Daima aynı sayıda buton oluşturulur.
+
+<Canvas of={PaginationStories.CustomPagination_2} />
+
+Bunu gerçekleştirmek için aşağıda görüldüğü gibi yeri bir _component_ oluşturmak gerekir.
+
+```js
+class CustomPagination2 extends Pagination {
+    // Soldaki üç nokta elementinin gösterilme koşulu
+    get showLeftEllipsis() {
+        return false;
+    }
+
+    // Sağdaki üç nokta elementinin gösterilme koşulu
+    get showRightEllipsis() {
+        return false;
+    }
+
+    // Render edilecek butonların listesi. Daima aynı sayıda olacak şekilde ayarlandı.
+    get visiblePages() {
+        const siblingCount = Math.max(0, Number(this.siblingCount) || 0);
+        const length = 2 * siblingCount + 1;
+        const min = Math.min(Math.max(this.normalizedCurrentPage - siblingCount, 1), this.normalizedPageCount - length + 1);
+
+        return Array.from({ length }, (_value, index) => min + index);
+    }
+}
+```
+
+### 3. Tasarım
+
+Bu tasarımda **sayfa butonları yerine bilgilendirici metin** kullanılmıştır. Resim kaydırıcılar gibi elementlerde kullanılabilir.
+
+<Canvas of={PaginationStories.CustomPagination_3} />
+
+Bu tasarımı oluşturmak için bir önceki `CustomPagination2` bileşeninden kalıtım alınarak yeni bir bileşen tasarlanacaktır.
+
+```js
+class CustomPagination3 extends CustomPagination2 {
+    get visiblePages() {
+        return [];
+    }
+
+    renderAdornment() {
+        return html`<li>
+            <span><span>(${this.normalizedCurrentPage}</span> of <span>${this.normalizedPageCount})</span></span>
+        </li>`;
+    }
+}
+```
+
+Ardından gerekli CSS stilleri eklendiğinde yeni bileşenimiz son görünümüne kavuşur.
+
+### 4. Tasarım - Responsive Çözümleri
+
+Sayfalama elementini mobil görünüme uydurmak için çeşitli yöntemler uygulanabilir:
+
+- `sibling-count` sayısını azaltmak
+- Yazı boyutu ve boşlukları azaltmak
+- `overflow-x: auto` ile _scroll_ eklemek
+
+Aşağıdaki çözümde ise ekran boyutu 960px altına indiğinde farklı bir içerik göstermek için yeni bir bileşen oluşturulmuştur:
+
+<Canvas of={PaginationStories.CustomPagination_4} />
+
+Bunun için yine `CustomPagination2` bileşeninden kalıtım alındıktan sonra `renderAdornment()` fonksiyonu _override_ edilmiştir.
+
+```js
+class CustomPagination4 extends CustomPagination2 {
+    renderAdornment() {
+        return html`<li class="mobile-only">
+            <span><span>(${this.normalizedCurrentPage}</span> of <span>${this.normalizedPageCount})</span></span>
+        </li>`;
+    }
+}
+```
+
+Gerekli CSS stilleri:
+
+```css
+nav ul li {
+    &.mobile-only {
+        display: none;
+    }
+
+    @media (max-width: 960px) {
+        &:not(.mobile-only):not(:nth-child(-n + 2)):not(:nth-last-child(-n + 2)) {
+            display: none;
+        }
+
+        &.mobile-only {
+            display: block;
+        }
+    }
+}
+```
+
+### 5. Tasarım - `<button>` Yerine `<a>`
+
+Url paylaşma ihtiyacı olan durumlarda `<button>` yerine `<a>` elementini kullanmak daha faydalı olabilir.
+
+<Canvas of={PaginationStories.CustomPagination_5} />
+
+Burada sayfalar birer bağlantı olduğu için `event` yaymak ve dinlemek şart değildir.
+
+```js
+class CustomPagination5 extends Pagination {
+    renderFirstItem() {
+        return nothing;
+    }
+
+    renderLastItem() {
+        return nothing;
+    }
+
+    renderSecondItem() {
+        const ariaDisabled = this.isFirstPage ? 'true' : 'false';
+        const pageNo = this.normalizedCurrentPage - 1;
+        const ariaLabel = stringFormat(this.prevPageLabel, pageNo);
+
+        return html`<a href="?page=${pageNo}" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${this.isFirstPage} @click=${e => this.requestPage(pageNo, e)}>
+            &lt; Önceki
+        </a>`;
+    }
+
+    renderSecondLastItem() {
+        const ariaDisabled = this.isLastPage ? 'true' : 'false';
+        const pageNo = this.normalizedCurrentPage + 1;
+        const ariaLabel = stringFormat(this.nextPageLabel, pageNo);
+
+        return html`<a href="?page=${pageNo}" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${this.isLastPage} @click=${e => this.requestPage(pageNo, e)}>
+            Sonraki &gt;
+        </a>`;
+    }
+
+    renderPageLink(pageNo) {
+        const isActive = this.normalizedCurrentPage === pageNo;
+        const ariaCurrent = isActive ? 'page' : nothing;
+        const ariaDisabled = isActive ? 'true' : 'false';
+        const ariaLabel = stringFormat(this.pageLabel, pageNo);
+
+        return html`<a href="?page=${pageNo}" aria-label=${ariaLabel} aria-current=${ariaCurrent} aria-disabled=${ariaDisabled} ?disabled=${isActive}> ${pageNo} </a>`;
+    }
+}
+```
+
+### 6. Tasarım
+
+Bu tasarımda ilk ve son sayfa okları yerine **daima görünen ilk ve son sayfa butonları** bulunur.
+
+<Canvas of={PaginationStories.CustomPagination_6} />
+
+```js
+class CustomPagination6 extends Pagination {
+    get visiblePages() {
+        const siblingCount = Math.max(0, Number(this.siblingCount) || 0);
+        const min = Math.max(this.normalizedCurrentPage - siblingCount, 2);
+        const max = Math.min(this.normalizedCurrentPage + siblingCount, this.normalizedPageCount - 1);
+
+        return Array.from({ length: max - min + 1 }, (_value, index) => min + index);
+    }
+
+    get showLeftEllipsis() {
+        return this.visiblePages[0] > 2;
+    }
+
+    get showRightEllipsis() {
+        return this.visiblePages.at(-1) < this.normalizedPageCount - 1;
+    }
+
+    renderFirstItem() {
+        return super.renderSecondItem();
+    }
+
+    renderLastItem() {
+        return super.renderSecondLastItem();
+    }
+
+    renderSecondItem() {
+        return this.renderPageItem(1);
+    }
+
+    renderSecondLastItem() {
+        return this.renderPageItem(this.normalizedPageCount);
+    }
+}
+```
+
+## Component API
+
+<div className="arg-types">
+    <ArgTypes of={PaginationStories.PropAttrEventLists} />
+</div>
 
 ## Design Token
 
@@ -87,161 +356,3 @@ Varsayılan davranış sade ve erişilebilir bir sayfalama üretir. Daha özel s
 --pgn-outline-color: #3b7fc4;
 --pgn-outline-offset: -1px;
 ```
-
-## Custom Çözümler
-
-### Tasarım 1
-
-Bu tasarımda
-
-- Daima aynı sayıda buton oluşur
-
-<Canvas of={PaginationStories.CustomPagination_1} />
-
-Bunun için yeni bir _component_ oluşturmadan aşağıdaki yöntem kullanılabilir.
-
-```js
-page.addEventListener('page-change-request', event => {
-    const { page: newPage } = event.detail;
-    const siblingCount = newPage > 16 || newPage < 5 ? Math.max(newPage - 16, 5 - newPage) : 1;
-    const target = event.target;
-    target.currentPage = newPage;
-    target.siblingCount = siblingCount;
-});
-```
-
-### Tasarım 2
-
-Bu tasarımda
-
-- Üç nokta elementi yok.
-- Daima aynı sayıda buton oluşturulur.
-- İlk ve son sayfalara gitmek için ok simgeleri tercih edilmiştir.
-
-<Canvas of={PaginationStories.CustomPagination_2} />
-
-Bunu gerçekleştirmek için aşağıda görüldüğü gibi yeri bir _component_ oluşturmak gerekir.
-
-<div class="code-pre">
-```js
-class CustomPagination1 extends Pagination {
-    // İlk sayfa butonu
-    renderFirstPageLink() {
-        const isActive = this.normalizedCurrentPage === 1;
-        const ariaDisabled = isActive ? 'true' : 'false';
-        const ariaLabel = `Go to page 1`;
-
-        return html`<button type="button" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isActive} @click=${e => this.requestPage(1, e)}>&lt;&lt;</button>`;
-    }
-
-    // Son sayfa butonu
-    renderLastPageLink() {
-        const isActive = this.normalizedCurrentPage === this.normalizedPageCount;
-        const ariaDisabled = isActive ? 'true' : 'false';
-        const ariaLabel = `Go to page ${this.normalizedPageCount}`;
-
-        return html`<button type="button" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isActive} @click=${e => this.requestPage(this.normalizedPageCount, e)}>
-            &gt;&gt;
-        </button>`;
-    }
-
-    // Soldaki üç nokta elementinin gösterilme koşulu
-    get showLeftEllipsis() {
-        return false;
-    }
-
-    // Sağdaki üç nokta elementinin gösterilme koşulu
-    get showRightEllipsis() {
-        return false;
-    }
-
-    // Render edilecek butonların listesi. Daima aynı sayıda olacak şekilde ayarlandı.
-    get visiblePages() {
-        const siblingCount = Math.max(0, Number(this.siblingCount) || 0);
-        const length = 2 * siblingCount + 1;
-        const min = Math.min(Math.max(this.normalizedCurrentPage - siblingCount, 1), this.normalizedPageCount - length + 1);
-
-        return Array.from({ length }, (_value, index) => min + index);
-    }
-
-}
-
-````
-</div>
-
-### Tasarım 3
-
-Bu tasarım, resim kaydırıcılar gibi elementlerde kullanılabilir.
-
-- İlk ve son sayfa için ok simgesi tercih edilmiştir.
-- Sayfa butonları yerine bilgilendirici metin kullanılmıştır.
-
-<Canvas of={PaginationStories.CustomPagination_3} />
-
-Bu tasarımı oluşturmak için bir önceki `CustomPagination1` bileşeninden kalıtım alınarak yeni bir bileşen tasarlanacaktır.
-
-```js
-class CustomPagination2 extends CustomPagination1 {
-    get visiblePages() {
-        return [];
-    }
-
-    renderAdornment() {
-        return html`<li>
-            <span><span>(${this.normalizedCurrentPage}</span> of <span>${this.normalizedPageCount})</span></span>
-        </li>`;
-    }
-}
-````
-
-Ardından gerekli CSS stilleri eklendiğinde yeni bileşenimiz son görünümüne kavuşur.
-
-### Responsive Çözümleri
-
-Sayfalama elementini mobil görünüme uydurmak için çeşitli yöntemler uygulanabilir:
-
-- `sibling-count` sayısını azaltmak
-- Yazı boyutu ve boşlukları azaltmak
-- `overflow-x: auto` ile _scroll_ eklemek
-
-Aşağıdaki çözümde ise ekran boyutu 960px altına indiğinde farklı bir içerik göstermek için yeni bir bileşen oluşturulmuştur:
-
-<Canvas of={PaginationStories.CustomPagination_4} />
-
-Bunun için yine `CustomPagination1` bileşeninden kalıtım alındıktan sonra `renderAdornment()` fonksiyonu _override_ edilmiştir.
-
-```js
-class CustomPagination3 extends CustomPagination1 {
-    renderAdornment() {
-        return html`<li class="mobile-only">
-            <span><span>(${this.normalizedCurrentPage}</span> of <span>${this.normalizedPageCount})</span></span>
-        </li>`;
-    }
-}
-```
-
-Gerekli CSS stilleri:
-
-```css
-nav ul li {
-    &.mobile-only {
-        display: none;
-    }
-
-    @media (max-width: 960px) {
-        &:not(.mobile-only):not(:nth-child(-n + 2)):not(:nth-last-child(-n + 2)) {
-            display: none;
-        }
-
-        &.mobile-only {
-            display: block;
-        }
-    }
-}
-```
-
-### `<button>` Yerine `<a>` Kullanmak
-
-<Canvas of={PaginationStories.CustomPagination_5} />
-
-Burada sayfalar birer bağlantı olduğu için `event` yaymak ve dinlemek şart değildir.

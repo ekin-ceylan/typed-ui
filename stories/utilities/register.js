@@ -79,9 +79,28 @@ export const Selectbox = args => {
     return elementFromTemplate(temp);
 };
 
+// prettier-ignore
 export const Pagination = args => {
-    const temp = `<t-pagination ${getAttrs(args)} class="pagination"> </t-pagination>`;
-    return elementFromText(temp);
+    const temp = html`<t-pagination
+        class="pagination"
+        current-page=${ifDefined(args.currentPage)}
+        page-count=${ifDefined(args.pageCount)}
+        sibling-count=${ifDefined(args.siblingCount)}
+        aria-label=${ifDefined(args.ariaLabel)}
+        first-page-label=${ifDefined(args.firstPageLabel)}
+        last-page-label=${ifDefined(args.lastPageLabel)}
+        prev-page-label=${ifDefined(args.prevPageLabel)}
+        next-page-label=${ifDefined(args.nextPageLabel)}
+        page-label=${ifDefined(args.pageLabel)}
+    >
+        ${unsafeHTML(args.goFirstIconSlot ?? '')}
+        ${unsafeHTML(args.goLastIconSlot ?? '')}
+        ${unsafeHTML(args.goPrevIconSlot ?? '')}
+        ${unsafeHTML(args.goNextIconSlot ?? '')}
+        ${unsafeHTML(args.ellipsisIconSlot ?? '')}
+    </t-pagination>`;
+
+    return elementFromTemplate(temp);
 };
 
 // #region TEXTBOX RENDERER

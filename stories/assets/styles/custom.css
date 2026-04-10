@@ -130,7 +130,7 @@ phone-with-area-2 {
     }
 }
 
-.custom-page-2 {
+custom-page-3 {
     nav ul li:nth-child(3) {
         span span {
             margin: 0 4px;
@@ -139,7 +139,7 @@ phone-with-area-2 {
     }
 }
 
-nav ul li {
+custom-page-4 nav ul li {
     &.mobile-only {
         display: none;
 

@@ -1,34 +1,8 @@
 import { html, nothing, Pagination } from '../../../src';
+import { stringFormat } from '../../../src/modules/utilities';
 
-export class CustomPagination1 extends Pagination {
-    renderFirstPageLink() {
-        const isActive = this.normalizedCurrentPage === 1;
-        const ariaDisabled = isActive ? 'true' : 'false';
-        const ariaLabel = `Go to page 1`;
-
-        return html`<button type="button" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isActive} @click=${e => this.requestPage(1, e)}>&lt;&lt;</button>`;
-    }
-
-    renderLastPageLink() {
-        const isActive = this.normalizedCurrentPage === this.normalizedPageCount;
-        const ariaDisabled = isActive ? 'true' : 'false';
-        const ariaLabel = `Go to page ${this.normalizedPageCount}`;
-
-        return html`<button type="button" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isActive} @click=${e => this.requestPage(this.normalizedPageCount, e)}>
-            &gt;&gt;
-        </button>`;
-    }
-
-    renderLeadingControls() {
-        return html`<li>${this.renderFirstPageLink()}</li>
-            <li>${this.renderPrevPageLink()}</li>`;
-    }
-
-    renderTrailingControls() {
-        return html`<li>${this.renderNextPageLink()}</li>
-            <li>${this.renderLastPageLink()}</li>`;
-    }
-
+// Same button
+export class CustomPagination2 extends Pagination {
     get showLeftEllipsis() {
         return false;
     }
@@ -46,7 +20,8 @@ export class CustomPagination1 extends Pagination {
     }
 }
 
-export class CustomPagination2 extends CustomPagination1 {
+// no-button
+export class CustomPagination3 extends CustomPagination2 {
     get visiblePages() {
         return [];
     }
@@ -58,7 +33,8 @@ export class CustomPagination2 extends CustomPagination1 {
     }
 }
 
-export class CustomPagination3 extends CustomPagination1 {
+// responsive
+export class CustomPagination4 extends CustomPagination2 {
     renderAdornment() {
         return html`<li class="mobile-only">
             <span><span>(${this.normalizedCurrentPage}</span> of <span>${this.normalizedPageCount})</span></span>
@@ -66,35 +42,41 @@ export class CustomPagination3 extends CustomPagination1 {
     }
 }
 
-export class CustomPagination4 extends Pagination {
-    renderPrevPageLink() {
-        const isFirstPage = this.normalizedCurrentPage === 1;
-        const ariaDisabled = isFirstPage ? 'true' : 'false';
-        const pageNo = this.normalizedCurrentPage - 1;
-        const ariaLabel = `Go to previous page, page ${pageNo}`;
+// link
+export class CustomPagination5 extends Pagination {
+    renderFirstItem() {
+        return nothing;
+    }
 
-        return html`<a href="?page=${pageNo}" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isFirstPage} @click=${e => this.requestPage(pageNo, e)}>
+    renderLastItem() {
+        return nothing;
+    }
+
+    renderSecondItem() {
+        const ariaDisabled = this.isFirstPage ? 'true' : 'false';
+        const pageNo = this.normalizedCurrentPage - 1;
+        const ariaLabel = stringFormat(this.prevPageLabel, pageNo);
+
+        return html`<a href="?page=${pageNo}" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${this.isFirstPage} @click=${e => this.requestPage(pageNo, e)}>
             &lt; Önceki
         </a>`;
     }
 
-    renderNextPageLink() {
-        const pageCount = this.normalizedPageCount;
-        const isLastPage = this.normalizedCurrentPage === pageCount;
-        const ariaDisabled = isLastPage ? 'true' : 'false';
+    renderSecondLastItem() {
+        const ariaDisabled = this.isLastPage ? 'true' : 'false';
         const pageNo = this.normalizedCurrentPage + 1;
-        const ariaLabel = `Go to next page, page ${pageNo}`;
+        const ariaLabel = stringFormat(this.nextPageLabel, pageNo);
 
-        return html`<a href="?page=${pageNo}" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${isLastPage} @click=${e => this.requestPage(pageNo, e)}>
+        return html`<a href="?page=${pageNo}" aria-label=${ariaLabel} aria-disabled=${ariaDisabled} ?disabled=${this.isLastPage} @click=${e => this.requestPage(pageNo, e)}>
             Sonraki &gt;
         </a>`;
     }
 
-    renderPageLink(pageNo) {
+    renderPageItem(pageNo) {
         const isActive = this.normalizedCurrentPage === pageNo;
         const ariaCurrent = isActive ? 'page' : nothing;
         const ariaDisabled = isActive ? 'true' : 'false';
-        const ariaLabel = `Go to page ${pageNo}`;
+        const ariaLabel = stringFormat(this.pageLabel, pageNo);
 
         return html`<a
             href="?page=${pageNo}"
@@ -106,5 +88,39 @@ export class CustomPagination4 extends Pagination {
         >
             ${pageNo}
         </a>`;
+    }
+}
+
+export class CustomPagination6 extends Pagination {
+    get visiblePages() {
+        const siblingCount = Math.max(0, Number(this.siblingCount) || 0);
+        const min = Math.max(this.normalizedCurrentPage - siblingCount, 2);
+        const max = Math.min(this.normalizedCurrentPage + siblingCount, this.normalizedPageCount - 1);
+
+        return Array.from({ length: max - min + 1 }, (_value, index) => min + index);
+    }
+
+    get showLeftEllipsis() {
+        return this.visiblePages[0] > 2;
+    }
+
+    get showRightEllipsis() {
+        return this.visiblePages.at(-1) < this.normalizedPageCount - 1;
+    }
+
+    renderFirstItem() {
+        return super.renderSecondItem();
+    }
+
+    renderLastItem() {
+        return super.renderSecondLastItem();
+    }
+
+    renderSecondItem() {
+        return this.renderPageItem(1);
+    }
+
+    renderSecondLastItem() {
+        return this.renderPageItem(this.normalizedPageCount);
     }
 }
