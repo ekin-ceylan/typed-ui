@@ -77,15 +77,15 @@ export default class Pagination extends SlotCollectorMixin(LightComponentBase) {
         this.siblingCount = 2;
         /** @type {string} Accessible label for the pagination navigation landmark. */
         this.ariaLabel = 'Pagination';
-        /** @type {string} Accessible labels for pagination controls. These can be customized to provide better context in different languages or use cases. */
+        /** @type {string} Accessible label for the first page button. */
         this.firstPageLabel = 'İlk sayfaya git';
-        /** @type {string} Accessible labels for pagination controls. These can be customized to provide better context in different languages or use cases. */
+        /** @type {string} Accessible label for the last page button. */
         this.lastPageLabel = 'Son sayfaya git';
-        /** @type {string} Accessible labels for pagination controls. These can be customized to provide better context in different languages or use cases. */
+        /** @type {string} Accessible label for the previous page button. */
         this.prevPageLabel = 'Önceki Sayfaya git: Sayfa {0}';
-        /** @type {string} Accessible labels for pagination controls. These can be customized to provide better context in different languages or use cases. */
+        /** @type {string} Accessible label for the next page button. */
         this.nextPageLabel = 'Sonraki Sayfaya git: Sayfa {0}';
-        /** @type {string} Accessible labels for pagination controls. These can be customized to provide better context in different languages or use cases. */
+        /** @type {string} Accessible label for individual page buttons. */
         this.pageLabel = 'Sayfaya git: Sayfa {0}';
     }
 
