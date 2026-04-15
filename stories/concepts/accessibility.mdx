@@ -4,9 +4,9 @@ import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 
 # Erişilebilirlik (_Accessibility_)
 
-Erişilebilirlik (a11y), web uygulamalarının herkes tarafından — engelli, yaşlı, farklı cihaz kullanan veya geçici kısıtlı durumda olan kullanıcılar dahil — rahatça kullanılabilmesini sağlamayı amaçlar. Doğru erişilebilirlik, hem etik hem de yasal gereklilikleri karşılar; daha geniş kullanıcı kitlesine ulaşmayı ve daha iyi kullanıcı deneyimi sunmayı mümkün kılar.
+> Dünya nüfusunun yaklaşık **%15’i bir tür engellilik durumuna sahiptir**. İnternet teknolojileri, bu kişiler için büyük fırsatlar sunar. Ancak bunun gerçekleşebilmesi için, erişilebilirliğin **sonradan eklenen bir özellik** olmaktan çıkıp, **geliştirme sürecinin doğal bir parçası** haline gelmesi gerekir.
 
-> Dünya nüfusunun yaklaşık **%15’i bir tür engellilik durumuna sahiptir**. İnternet teknolojileri, bu kişiler için büyük fırsatlar sunar. Ancak bunun gerçekleşebilmesi için, erişilebilirliğin **sonradan eklenen bir özellik değil, geliştirme sürecinin doğal bir parçası** haline gelmesi gerekir.
+Erişilebilirlik (a11y), web uygulamalarının herkes tarafından — engelli, yaşlı, farklı cihaz kullanan veya geçici kısıtlı durumda olan kullanıcılar dahil — rahatça kullanılabilmesini sağlamayı amaçlar. Doğru erişilebilirlik, hem etik hem de yasal gereklilikleri karşılar; daha geniş kullanıcı kitlesine ulaşmayı ve daha iyi kullanıcı deneyimi sunmayı mümkün kılar.
 
 **SEO ve site trafiği açısından da erişilebilirlik kritiktir:** Arama motorları erişilebilir siteleri daha yüksek puanlar, daha fazla kullanıcıya ulaşılır ve _bounce rate_ düşer. Yasal uyumluluk da erişimin engellenmemesini sağlar.
 
@@ -35,7 +35,9 @@ Aşağıdaki bileşenler `autocomplete` değerini otomatik olarak doğru şekild
 - `UrlLink` → `autocomplete="url"`
 - `CheckBox` → `autocomplete="off"`
 
-**Diğer genel bileşenlerde** (örn. `TextBox`) alanın neyi temsil ettiğini en iyi siz bilirsiniz; uygun `autocomplete` değerini elle belirtmeniz gerekir. Alan semantiği belliyse uygun `autocomplete` token'ını kullan:
+> **Öneri:** `field-id` / `field-name` değerlerini anlamlı tutun; tarayıcılar çoğu zaman `name` + `autocomplete` birlikteyken daha iyi tahmin yapar.
+
+**Diğer genel bileşenlerde** (örn. `TextBox`) alanın neyi temsil ettiği geliştirme sürecinde anlaşılır; uygun `autocomplete` değerini elle belirtmeniz gerekir. Alan semantiği belliyse uygun `autocomplete` token'ını kullan:
 
 <Markdown>
     {`
@@ -51,8 +53,6 @@ Aşağıdaki bileşenler `autocomplete` değerini otomatik olarak doğru şekild
 `}
 </Markdown>
 
-> **Öneri:** `field-id` / `field-name` değerlerini anlamlı tutun; tarayıcılar çoğu zaman `name` + `autocomplete` birlikteyken daha iyi tahmin yapar.
-
 Daha detaylı değer listesini [mozilla.org](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete#values) sitesinden bulabilirsiniz.
 
 #### Neden önemli?
@@ -63,10 +63,10 @@ Daha detaylı değer listesini [mozilla.org](https://developer.mozilla.org/en-US
 
 #### Ne zaman kapatılmalı?
 
+> **Uyarı:** `off` her zaman garanti değildir; bazı tarayıcılar/şifre yöneticileri yine de doldurabilir.
+
 - Çok nadir. Kiosk/ortak cihaz gibi senaryolarda veya “tek seferlik / geçici” alanlarda `autocomplete="off"` düşünülebilir.
 - Login / signup / ödeme gibi kritik akışlarda genelde kapatmak yerine doğru token’ı seçmek daha iyi sonuç verir.
-
-> **Uyarı:** `off` her zaman garanti değildir; bazı tarayıcılar/şifre yöneticileri yine de doldurabilir.
 
 ### `title`
 
