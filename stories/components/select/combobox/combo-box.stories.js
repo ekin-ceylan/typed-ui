@@ -1,6 +1,6 @@
 import { createAttrType, createEventType, createSlotType, inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { Combobox } from '../../../utilities/register.js';
-import './combo-box.css';
+import '../../../assets/styles/combo-box.css';
 
 export default {
     component: 'combo-box',

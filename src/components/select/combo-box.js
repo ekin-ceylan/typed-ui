@@ -193,6 +193,13 @@ export default class ComboBox extends SelectBase {
         // yazmaya başladığımızda arama yapılır
     }
 
+    onClick(e) {
+        if (!this.isOpen && !e.target.closest('[role="listbox"]')) {
+            this.#openList();
+            this.searchElement.focus();
+        }
+    }
+
     /** @override Clears the current selection. */
     onClearClick(event) {
         super.onClearClick(event);
@@ -290,6 +297,7 @@ export default class ComboBox extends SelectBase {
             }
         } else if (key === ' ' || key === 'Enter') {
             e.preventDefault();
+            this.#openList();
             this.searchElement.focus();
         }
     }
@@ -344,6 +352,7 @@ export default class ComboBox extends SelectBase {
     }
 
     #openList() {
+        if (this.isOpen) return;
         this.isOpen = true;
         this.listboxDiv?.showPopover();
         this.#lockBody();
@@ -494,10 +503,35 @@ export default class ComboBox extends SelectBase {
 
     // #endregion PRIVATE METHODS
 
+    renderSearchInput() {
+        return html`<input
+            type="search"
+            .value=${this.filter || ''}
+            ?disabled=${this.disabled}
+            autocomplete="off"
+            spellcheck="false"
+            aria-expanded=${this.isOpen}
+            aria-labelledby=${ifDefined(this.labelId)}
+            @focus=${this.onFocusSearch}
+            @input=${this.onInputSearch}
+            @change=${e => e.stopPropagation()}
+            data-role="search"
+            tabindex="-1"
+        />`;
+    }
+
+    renderListContent() {
+        return html`<div aria-disabled ?hidden=${this.filteredOptions?.length > 0}>
+                <slot name="no-options">${this.noOptionsLabel}</slot>
+            </div>
+            ${this.filteredOptions.map(this.#optToDiv.bind(this))}`;
+    }
+
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         const activeDescendantId = this.activeIndex >= 0 ? this.#createOptionId(this.activeIndex) : undefined;
 
+        // prettier-ignore
         return html`
             ${this.renderLabel()}
             <div
@@ -511,6 +545,7 @@ export default class ComboBox extends SelectBase {
                 tabindex="0"
                 @focusout=${this.onFocusOut}
                 @keydown=${this.onKeydown}
+                @click=${this.onClick}
             >
                 <input
                     id=${ifDefined(this.fieldId)}
@@ -530,26 +565,9 @@ export default class ComboBox extends SelectBase {
                     tabindex="-1"
                 />
                 <div data-role="display" aria-haspopup="listbox" .innerHTML=${this.placeholder}></div>
-                <input
-                    type="search"
-                    .value=${this.filter || ''}
-                    ?disabled=${this.disabled}
-                    autocomplete="off"
-                    spellcheck="false"
-                    aria-expanded=${this.isOpen}
-                    aria-labelledby=${ifDefined(this.labelId)}
-                    @focus=${this.onFocusSearch}
-                    @input=${this.onInputSearch}
-                    @change=${e => e.stopPropagation()}
-                    data-role="search"
-                    tabindex="-1"
-                />
-                ${this.renderClearButton()} ${this.chevron}
+                ${this.renderSearchInput()} ${this.renderClearButton()} ${this.renderChevron()}
                 <div id=${this.fieldId + '-list'} role="listbox" popover="manual" aria-expanded=${this.isOpen ? 'true' : 'false'}>
-                    <div aria-disabled ?hidden=${this.filteredOptions?.length > 0}>
-                        <slot name="no-options">${this.noOptionsLabel}</slot>
-                    </div>
-                    ${this.filteredOptions.map(this.#optToDiv.bind(this))}
+                    ${this.renderListContent()}
                 </div>
             </div>
             ${this.renderErrorMessage()}
