@@ -72,6 +72,7 @@ Sayfalama metinleri ve landmark etiketi `aria-label` benzeri özelliklerle özel
 html`<nav aria-label=${this.ariaLabel}>
     <ul>
         <li>${this.renderFirstItem()}</li>
+
         <li>${this.renderSecondItem()}</li>
 
         ${this.showLeftEllipsis ? html`<li>${this.renderEllipsis()}</li>` : nothing}
@@ -82,6 +83,7 @@ html`<nav aria-label=${this.ariaLabel}>
         ${this.showRightEllipsis ? html`<li>${this.renderEllipsis()}</li>` : nothing}
 
         <li>${this.renderSecondLastItem()}</li>
+
         <li>${this.renderLastItem()}</li>
     </ul>
 </nav>`;
