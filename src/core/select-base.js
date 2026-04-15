@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import InputBase from './input-base.js';
 import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
 
@@ -21,10 +21,6 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
 
     /** @override @type {TElement | null} */
     inputElement = null;
-    /** @protected @type {import('lit').TemplateResult} */
-    chevron = html`<svg role="presentation" data-chevron width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-    </svg>`;
 
     // #endregion STATICS, FIELDS, GETTERS
 
@@ -40,5 +36,12 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
         // /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | SelectBoxOption[] | []} */
         // /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | []} */
         // this.options = [];
+    }
+
+    /** @returns {import('lit').TemplateResult | typeof nothing} */
+    renderChevron() {
+        return html`<svg role="presentation" data-chevron width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>`;
     }
 }

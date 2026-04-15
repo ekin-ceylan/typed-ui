@@ -1,6 +1,6 @@
 import { createAttrType, createSlotType, inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { createForm, Selectbox } from '../../../utilities/register.js';
-import './select-box.css';
+import '../../../assets/styles/select-box.css';
 
 export default {
     title: 'Bileşenler/Select/Select',

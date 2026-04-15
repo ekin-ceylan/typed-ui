@@ -229,7 +229,7 @@ export default class SelectBox extends SelectBase {
                     ${this.noOptionHtml} ${this.#optionList.map(option => option.htmlElement)}
                 </select>
 
-                ${this.renderClearButton()} ${this.chevron}
+                ${this.renderClearButton()} ${this.renderChevron()}
             </div>
             ${this.renderErrorMessage()}
         `;
