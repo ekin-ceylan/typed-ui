@@ -64,7 +64,7 @@ phone-with-area-2 {
             border-color: var(--intl-border-color-disabled);
         }
 
-        combo-box {
+        :is(combo-box, .combo-box) {
             flex-shrink: 0;
             width: 60px;
             --cbx-clear-right-distance: 0;
@@ -75,30 +75,42 @@ phone-with-area-2 {
                 background-color: #eeeeee;
             }
 
-            [data-role='search'] {
-                border: none !important;
-                outline: none !important;
+            [role='listbox'] {
+                [data-role='search'] {
+                    position: sticky !important;
+                    top: 1px;
+                    background: white !important;
+                    box-shadow: white 0 -5px !important;
+                }
+
+                [role='option'] {
+                    span:first-of-type {
+                        margin-right: 5px;
+                    }
+
+                    span:last-of-type:before {
+                        display: inline-block;
+                        content: '(';
+                    }
+
+                    span:last-of-type:after {
+                        display: inline-block;
+                        content: ')';
+                    }
+                }
+            }
+
+            [role='combobox'][data-filtered] > div[data-role='display'] {
+                opacity: 0.5;
             }
 
             [data-role='display'] span {
                 display: none;
             }
+        }
 
-            [role='listbox'] [role='option'] {
-                span:first-of-type {
-                    margin-right: 5px;
-                }
-
-                span:last-of-type:before {
-                    display: inline-block;
-                    content: '(';
-                }
-
-                span:last-of-type:after {
-                    display: inline-block;
-                    content: ')';
-                }
-            }
+        .combo-box div[role='combobox'] {
+            height: 100%;
         }
 
         phone-intl-2 {
@@ -158,4 +170,8 @@ custom-page-4 nav ul li {
             display: block;
         }
     }
+}
+
+.combo-box div[role='combobox'] {
+    height: 100%;
 }

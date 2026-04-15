@@ -1,6 +1,6 @@
 import { defineComponent, ifDefined, isEmpty } from '../../../src/modules/utilities.js';
 import { generateId } from '../../../src/modules/id-generator.js';
-import ComboBox from '../../../src/components/select/combo-box.js';
+import { CustomCombobox } from './custom-combobox.js';
 import LightComponentBase from '../../../src/core/light-component-base.js';
 import { html, nothing } from 'lit';
 import TextBase from '../../../src/core/text-base.js';
@@ -64,7 +64,7 @@ export default class PhoneNational2 extends LightComponentBase {
         return html`
             <label for=${this.fieldId}>${this.label}</label>
             <div role="container">
-                <combo-box label="Alan Kodu" hide-label .options=${options} .value=${this.countryCode} @change=${this.#handleCountryChange}></combo-box>
+                <combo-box-2 label="Alan Kodu" hide-label .options=${options} .value=${this.countryCode} @change=${this.#handleCountryChange}></combo-box-2>
                 <phone-intl-2
                     label=${this.label}
                     field-id=${this.fieldId}
@@ -187,7 +187,7 @@ class PhoneIntl2 extends TextBase {
     }
 }
 
-defineComponent('combo-box', ComboBox);
+defineComponent('combo-box-2', CustomCombobox);
 defineComponent('phone-intl-2', PhoneIntl2);
 
 class Country {

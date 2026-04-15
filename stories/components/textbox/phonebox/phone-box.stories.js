@@ -4,8 +4,8 @@ import { Phonebox } from '../../../utilities/register.js';
 import PhoneNational from '../../custom/phone-national-with-flag.js';
 import PhoneNational2 from '../../custom/phone-national-with-flag-2.js';
 import '../../../assets/styles/text-box.css';
+import '../../../assets/styles/combo-box.css';
 import '../../../assets/styles/custom.css';
-import '../../select/combobox/combo-box.css';
 
 export default {
     title: 'Bileşenler/Textbox/PhoneBox',
