@@ -80,6 +80,8 @@ export default class PhoneNational2 extends LightComponentBase {
     }
 }
 
+// TODO: diğerinden kalıtım al
+
 /** @extends {TextBase} */
 class PhoneIntl2 extends TextBase {
     static get properties() {
