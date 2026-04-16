@@ -8,7 +8,7 @@ import '../../../assets/styles/combo-box.css';
 import '../../../assets/styles/custom.css';
 
 export default {
-    title: 'Bileşenler/Textbox/PhoneBox',
+    title: 'Bileşenler/Metin Kutuları/PhoneBox',
     argTypes: {
         ...inputBaseArgTypes,
         autounmask: createAttrType(

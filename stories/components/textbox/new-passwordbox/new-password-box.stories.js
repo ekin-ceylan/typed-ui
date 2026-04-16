@@ -4,7 +4,7 @@ import '../passwordbox/password-box.css';
 import { passwordboxArgTypes } from '../../../utilities/common-arg-types.js';
 
 export default {
-    title: 'Bileşenler/Textbox/NewPasswordBox',
+    title: 'Bileşenler/Metin Kutuları/NewPasswordBox',
     argTypes: passwordboxArgTypes,
 };
 

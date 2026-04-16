@@ -7,9 +7,12 @@ import * as PhoneboxStories from './phone-box.stories.js';
 
 <Canvas of={PhoneboxStories.Default} />
 
-# Özelleştirilmiş Çözümler
+## Özelleştirilmiş Çözümler
+
+### Tasarım 1
 
 <Canvas of={PhoneboxStories.IntlStory_1} />
+
 ```js
 export default class PhoneIntl extends TextBase {
     static get properties() {
@@ -72,17 +75,16 @@ export default class PhoneIntl extends TextBase {
                 <pre>${this.#ghostMask1}</pre><pre>${this.#ghostMask2}</pre>
             </div> `;
     }
-
 }
+```
 
-````
+### Tasarım 2
 
 <Canvas of={PhoneboxStories.IntlStory_2} />
 
-
 ## Component API
 
-> Zorunlu: `field-id` ve `label` mutlaka verilmelidir. Bu iki öznitelik set edilmezse bileşen bağlanırken hata fırlatır.
+> **Zorunlu:** `label` özniteliği atanmazsa, bileşen DOM'a bağlanırken hata fırlatır.
 
 `select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
 
@@ -151,4 +153,4 @@ export default class PhoneIntl extends TextBase {
 --tbx-clear-outline-color: #3c8dbc;
 --tbx-clear-outline-width: 1px;
 --tbx-clear-outline-style: solid;
-````
+```

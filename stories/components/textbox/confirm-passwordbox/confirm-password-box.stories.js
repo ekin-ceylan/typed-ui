@@ -18,7 +18,7 @@ const argTypes = {
 };
 
 export default {
-    title: 'Bileşenler/Textbox/ConfirmPasswordBox',
+    title: 'Bileşenler/Metin Kutuları/ConfirmPasswordBox',
     argTypes,
 };
 

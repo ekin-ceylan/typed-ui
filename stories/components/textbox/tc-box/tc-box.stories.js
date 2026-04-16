@@ -8,7 +8,7 @@ const argTypes = {
 };
 
 export default {
-    title: 'Bileşenler/Textbox/TcBox',
+    title: 'Bileşenler/Metin Kutuları/TcBox',
     argTypes,
 };
 

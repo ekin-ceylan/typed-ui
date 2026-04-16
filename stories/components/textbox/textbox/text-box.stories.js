@@ -7,7 +7,7 @@ const argTypes = structuredClone(textBoxArgTypes);
 argTypes.spellcheck.table.defaultValue.summary = 'true';
 
 export default {
-    title: 'Bileşenler/Textbox/TextBox',
+    title: 'Bileşenler/Metin Kutuları/TextBox',
     argTypes,
 };
 
