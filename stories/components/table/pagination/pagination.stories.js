@@ -6,7 +6,7 @@ import { defineComponent } from '../../../../dist/typed-ui.js';
 import { CustomPagination2, CustomPagination3, CustomPagination4, CustomPagination5, CustomPagination6 } from '../../custom/custom-pagination.js';
 
 export default {
-    title: 'Bileşenler/Table/Pagination',
+    title: 'Bileşenler/Liste Bileşenleri/Pagination',
     argTypes: {
         currentPage: createAttrType('Aktif sayfa numarası.', 'number', '1', false, 'current-page'),
         pageCount: createAttrType('Toplam sayfa sayısı.', 'number', '1', false, 'page-count'),
