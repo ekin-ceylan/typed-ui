@@ -1,6 +1,5 @@
 import { html, nothing } from 'lit';
 import LightComponentBase from '../../core/light-component-base.js';
-import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
 import { stringFormat } from '../../modules/utilities.js';
 
 /**
@@ -9,7 +8,7 @@ import { stringFormat } from '../../modules/utilities.js';
  * @summary Pagination component with sibling-based visible page calculation.
  * @extends LightComponentBase
  */
-export default class Pagination extends SlotCollectorMixin(LightComponentBase) {
+export default class Pagination extends LightComponentBase {
     static get properties() {
         return {
             currentPage: { type: Number, attribute: 'current-page' },
@@ -91,9 +90,7 @@ export default class Pagination extends SlotCollectorMixin(LightComponentBase) {
 
     /** @return {import('lit').TemplateResult | typeof nothing} */
     renderEllipsis() {
-        return html`<span aria-hidden="true">
-            <slot name="ellipsis-icon">&hellip;</slot>
-        </span>`;
+        return html`<span aria-hidden="true">&hellip;</span>`;
     }
 
     /** @return {import('lit').TemplateResult | typeof nothing} */
@@ -110,7 +107,7 @@ export default class Pagination extends SlotCollectorMixin(LightComponentBase) {
             ?disabled=${this.isFirstPage}
             @click=${e => this.requestPage(pageNo, e)}
         >
-            <slot name="go-prev-icon">&lsaquo;</slot>
+            &lsaquo;
         </button>`;
     }
 
@@ -128,12 +125,11 @@ export default class Pagination extends SlotCollectorMixin(LightComponentBase) {
             ?disabled=${this.isLastPage}
             @click=${e => this.requestPage(pageNo, e)}
         >
-            <slot name="go-next-icon">&rsaquo;</slot>
+            &rsaquo;
         </button>`;
     }
 
     /**
-     *
      * @returns {import('lit').TemplateResult | typeof nothing}
      */
     renderFirstItem() {
@@ -148,7 +144,7 @@ export default class Pagination extends SlotCollectorMixin(LightComponentBase) {
             ?disabled=${this.isFirstPage}
             @click=${e => this.requestPage(1, e)}
         >
-            <slot name="go-first-icon">&laquo;</slot>
+            &laquo;
         </button>`;
     }
 
@@ -168,7 +164,7 @@ export default class Pagination extends SlotCollectorMixin(LightComponentBase) {
             ?disabled=${this.isLastPage}
             @click=${e => this.requestPage(this.normalizedPageCount, e)}
         >
-            <slot name="go-last-icon">&raquo;</slot>
+            &raquo;
         </button>`;
     }
 

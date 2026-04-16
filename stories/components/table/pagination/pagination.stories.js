@@ -1,4 +1,4 @@
-import { createAttrType, createEventType, createSlotType } from '../../../utilities/common-arg-types.js';
+import { createAttrType, createEventType } from '../../../utilities/common-arg-types.js';
 import { Pagination } from '../../../utilities/register.js';
 import '../../../assets/styles/pagination.css';
 import '../../../assets/styles/custom.css';
@@ -17,11 +17,6 @@ export default {
         prevPageLabel: createAttrType('Önceki sayfaya yönlendiren buton için aria etiketi.', 'string', 'Önceki Sayfaya git: Sayfa {0}', false, 'prev-page-label'),
         nextPageLabel: createAttrType('Sonraki sayfaya yönlendiren buton için aria etiketi.', 'string', 'Sonraki Sayfaya git: Sayfa {0}', false, 'next-page-label'),
         pageLabel: createAttrType('Belirli bir sayfaya yönlendiren buton için aria etiketi.', 'string', 'Sayfaya git: Sayfa {0}', false, 'page-label'),
-        goFirstIconSlot: createSlotType('İlk sayfa ikonu için slot.', '&laquo;', 'go-first-icon'),
-        goLastIconSlot: createSlotType('Son sayfa ikonu için slot.', '&raquo;', 'go-last-icon'),
-        goPrevIconSlot: createSlotType('Önceki sayfa ikonu için slot.', '&lsaquo;', 'go-prev-icon'),
-        goNextIconSlot: createSlotType('Sonraki sayfa ikonu için slot.', '&rsaquo;', 'go-next-icon'),
-        ellipsisIconSlot: createSlotType('Ellipsis ikonu için slot.', '&hellip;', 'ellipsis-icon'),
     },
 };
 
@@ -70,8 +65,6 @@ export const PlaygroundStory = {
         currentPage: 5,
         pageCount: 20,
         ariaLabel: 'Sayfalama',
-        goFirstIconSlot: '<template slot="go-first-icon">&lt;&lt;</template>',
-        goLastIconSlot: '<template slot="go-last-icon">&gt;&gt;</template>',
     },
     parameters: {
         docs: {
