@@ -1,10 +1,10 @@
 import { createAttrType, createSlotType } from '../../utilities/common-arg-types.js';
 import { ModalDialog } from '../../utilities/register.js';
-import './modal-dialog.css';
+import '../../assets/styles/modal-dialog.css';
 
 export default {
     component: 'modal-dialog',
-    title: 'Bileşenler/Modal Dialog',
+    title: 'Bileşenler/Dialog Bileşenleri/Modal Dialog',
     argTypes: {
         defaultSlot: createSlotType('Dialog içeriği.', '""', 'default'),
         backdropClose: createAttrType('Backdrop tıklaması ile kapanır.', 'boolean', 'false', false, 'backdrop-close'),
