@@ -4,7 +4,7 @@ import '../../../assets/styles/combo-box.css';
 
 export default {
     component: 'combo-box',
-    title: 'Bileşenler/Select/Combobox',
+    title: 'Bileşenler/Seçim Bileşenleri/Combobox',
     argTypes: {
         defaultSlot: createSlotType('options için slot içeriği.', '""', 'default'),
         noOptionsSlot: createSlotType('options olmadığında gösterilecek option için slot içeriği.', '""', 'no-options'),

@@ -3,7 +3,7 @@ import { createForm, Selectbox } from '../../../utilities/register.js';
 import '../../../assets/styles/select-box.css';
 
 export default {
-    title: 'Bileşenler/Select/Select',
+    title: 'Bileşenler/Seçim Bileşenleri/Select',
     argTypes: {
         defaultSlot: createSlotType('options için slot içeriği.', '""', 'default'),
         ...inputBaseArgTypes,

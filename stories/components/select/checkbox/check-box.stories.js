@@ -1,77 +1,22 @@
-import { inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
+import { createAttrType, createSlotType, inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { Checkbox } from '../../../utilities/register.js';
 
 export default {
     component: 'check-box',
-    title: 'Bileşenler/Select/Checkbox',
+    title: 'Bileşenler/Seçim Bileşenleri/Checkbox',
     argTypes: {
-        defaultSlot: {
-            name: 'default',
-            control: 'text',
-            description: 'Checkbox etiket içeriği.',
-            table: {
-                category: 'Slots',
-                type: { summary: 'html' },
-                defaultValue: { summary: '' },
-            },
-        },
+        defaultSlot: createSlotType('Checkbox etiket içeriği.', '""', 'default'),
         ...structuredClone(inputBaseArgTypes),
-        label: {
-            type: { name: 'string', required: true },
-            control: 'text',
-            description: 'Checkbox açıklaması',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: '' },
-            },
-        },
-        value: {
-            type: { name: 'string' },
-            description:
-                "Checkbox'ın tuttuğu değer.\n\nSeçili olduğunda `checked-value`, seçili olmadığında `unchecked-value` değerini tutar.\n\n Başlangıçta yazılan değer `checked-value` ile eşleşiyorsa checkbox işaretli olur.",
-            control: 'text',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'null' },
-                type: { summary: 'string|number' },
-            },
-        },
-        checked: {
-            control: 'boolean',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
-        checkedValue: {
-            type: { name: 'string' },
-            description: "Seçili olduğunda gönderilecek değer. Atanmazsa attribute görünmez ve 'on' kabul edilir.",
-            control: 'text',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: '"on"' },
-                type: { summary: 'string|number' },
-            },
-        },
-        uncheckedValue: {
-            type: { name: 'string' },
-            description: 'Seçili olmadığında gönderilecek değer. Atanmazsa attribute görünmez ve undefined kabul edilir.',
-            control: 'text',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'undefined' },
-                type: { summary: 'string|number' },
-            },
-        },
-        indeterminate: {
-            control: 'boolean',
-            table: {
-                category: 'Attributes',
-                defaultValue: { summary: 'false' },
-                type: { summary: 'boolean' },
-            },
-        },
+        label: createAttrType('Checkbox için görsel olmayan bir açıklama. Erişilebilirlik için önemlidir.', 'string', '""', true),
+        value: createAttrType(
+            "Checkbox'ın tuttuğu değer. Seçili olduğunda `checked-value`, seçili olmadığında `unchecked-value` değerini tutar. Başlangıçta yazılan değer `checked-value` ile eşleşiyorsa checkbox işaretli olur.",
+            'string',
+            'null'
+        ),
+        checked: createAttrType("Checkbox'ın seçili olup olmadığını belirler. Atanmazsa checkbox işaretli olmaz.", 'boolean', 'false'),
+        checkedValue: createAttrType('Seçili olduğunda gönderilecek değer. Atanmazsa attribute görünmez ve "on" kabul edilir.', 'string', '"on"', false, 'checked-value'),
+        uncheckedValue: createAttrType('Seçili olmadığında gönderilecek değer.', 'string', 'undefined', false, 'unchecked-value'),
+        indeterminate: createAttrType("Checkbox'ın belirsiz (indeterminate) durumda olup olmayacağını belirler.", 'boolean', 'false'),
     },
 };
 
