@@ -30,7 +30,7 @@ phone-with-area {
 
 phone-with-area-2 {
     font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    max-width: 300px;
+    max-width: 250px;
     display: block;
 
     label {
@@ -65,10 +65,12 @@ phone-with-area-2 {
         }
 
         :is(combo-box, .combo-box) {
-            flex-shrink: 0;
-            width: 60px;
             --cbx-clear-right-distance: 0;
             --cbx-chevron-right-distance: 2px;
+            --cbx-listbox-max-height: 200px;
+
+            flex-shrink: 0;
+            width: 60px;
 
             &:hover [role='combobox'],
             &:focus-within [role='combobox'] {
@@ -76,11 +78,15 @@ phone-with-area-2 {
             }
 
             [role='listbox'] {
+                translate: -1px 1px;
+
                 [data-role='search'] {
                     position: sticky !important;
-                    top: 1px;
                     background: white !important;
                     box-shadow: white 0 -5px !important;
+                    top: 1px;
+                    padding-inline-start: 8px;
+                    height: 35px;
                 }
 
                 [role='option'] {
@@ -100,17 +106,17 @@ phone-with-area-2 {
                 }
             }
 
-            [role='combobox'][data-filtered] > div[data-role='display'] {
-                opacity: 0.5;
+            [role='combobox'] {
+                height: 100%;
+
+                [data-filtered] > div[data-role='display'] {
+                    opacity: 0.5;
+                }
             }
 
             [data-role='display'] span {
                 display: none;
             }
-        }
-
-        .combo-box div[role='combobox'] {
-            height: 100%;
         }
 
         phone-intl-2 {
