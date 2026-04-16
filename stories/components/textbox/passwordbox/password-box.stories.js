@@ -4,7 +4,7 @@ import '../../../assets/styles/text-box.css';
 import './password-box.css';
 
 export default {
-    title: 'Bileşenler/Metin Kutuları/PasswordBox',
+    title: 'Bileşenler/Metin Bileşenleri/PasswordBox',
     argTypes: passwordboxArgTypes,
 };
 

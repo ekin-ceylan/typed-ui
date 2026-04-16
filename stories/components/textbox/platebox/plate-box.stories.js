@@ -14,7 +14,7 @@ argTypes.autocomplete.table.defaultValue.summary = 'off';
 argTypes.autounmask.table.defaultValue.summary = 'true';
 
 export default {
-    title: 'Bileşenler/Metin Kutuları/PlateBox',
+    title: 'Bileşenler/Metin Bileşenleri/PlateBox',
     argTypes,
 };
 

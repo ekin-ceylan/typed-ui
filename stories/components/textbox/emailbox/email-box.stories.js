@@ -3,7 +3,7 @@ import { Emailbox } from '../../../utilities/register.js';
 import '../../../assets/styles/text-box.css';
 
 export default {
-    title: 'Bileşenler/Metin Kutuları/EmailBox',
+    title: 'Bileşenler/Metin Bileşenleri/EmailBox',
     argTypes: {
         ...textBoxArgTypes,
     },
