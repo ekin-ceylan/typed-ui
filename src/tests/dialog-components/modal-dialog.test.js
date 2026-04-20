@@ -1,5 +1,5 @@
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
-import ModalDialog from '../../components/modal-dialog.js';
+import ModalDialog from '../../components/dialog/modal-dialog';
 
 // Define custom element if not already defined
 if (!customElements.get('modal-dialog')) {

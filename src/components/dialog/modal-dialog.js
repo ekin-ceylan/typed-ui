@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
-import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
-import LightComponentBase from '../core/light-component-base.js';
-import { hideBodyScroll, showBodyScroll } from '../modules/scroll-lock-helper.js';
+import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
+import LightComponentBase from '../../core/light-component-base.js';
+import { hideBodyScroll, showBodyScroll } from '../../modules/scroll-lock-helper.js';
 
 /**
  * Modal dialog web component built with Lit.

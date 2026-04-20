@@ -1,7 +1,7 @@
 import { html } from 'lit';
-import { ifDefined } from '../modules/utilities.js';
-import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
-import InputBase from '../core/input-base.js';
+import { ifDefined } from '../../modules/utilities.js';
+import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
+import InputBase from '../../core/input-base.js';
 
 export default class CheckBox extends SlotCollectorMixin(InputBase) {
     static get properties() {
