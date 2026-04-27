@@ -1,4 +1,6 @@
 import { LitElement } from 'lit';
+import { isEmpty } from '../modules/utilities';
+import WarningField from '../models/WarningField';
 
 /**
  * @abstract Base class for components that render into the **light DOM** (no ShadowRoot).
@@ -21,6 +23,44 @@ export default class LightComponentBase extends LitElement {
      */
     get componentName() {
         return this.localName || (this.tagName ? this.tagName.toLowerCase() : '') || this.constructor.name;
+    }
+
+    get requiredFields() {
+        return [];
+    }
+
+    /**
+     * Fields that should trigger a warning if not set.
+     * @protected
+     * @returns {WarningField[]}
+     */
+    get warningFields() {
+        return [];
+    }
+
+    /** @override */
+    connectedCallback() {
+        super.connectedCallback();
+        this.#validateRequiredFields();
+        this.#validateWarningFields();
+    }
+
+    /** @override */
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+
+        if (this.requiredFields.some(fieldName => changedProperties.has(fieldName))) {
+            this.#validateRequiredFields();
+        }
+
+        if (this.warningFields.some(({ fields }) => fields.some(fieldName => changedProperties.has(fieldName)))) {
+            this.#validateWarningFields();
+        }
+    }
+
+    /** @override @protected Render in light DOM to keep page styles. */
+    createRenderRoot() {
+        return this; // Shadow DOM'u kapat
     }
 
     /**
@@ -46,8 +86,24 @@ export default class LightComponentBase extends LitElement {
         };
     }
 
-    /** @override @protected Render in light DOM to keep page styles. */
-    createRenderRoot() {
-        return this; // Shadow DOM'u kapat
+    #validateRequiredFields() {
+        for (const fieldName of this.requiredFields) {
+            if (isEmpty(this[fieldName])) {
+                throw new Error(`${this.componentName}: '${fieldName}' attribute must be set.`);
+            }
+        }
+    }
+
+    #validateWarningFields() {
+        for (const warning of this.warningFields) {
+            if (!Array.isArray(warning.fields) || warning.fields.length === 0) {
+                continue;
+            }
+
+            if (warning.fields.some(fieldName => isEmpty(this[fieldName]))) {
+                const message = warning.message || `${warning.fields.join(', ')} attribute${warning.fields.length > 1 ? 's are' : ' is'} missing.`;
+                console.warn(`${this.componentName}: ${message}`);
+            }
+        }
     }
 }

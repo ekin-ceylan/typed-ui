@@ -2,6 +2,28 @@ import TextBox from '../../components/text-input/text-box.js';
 
 defineElement('text-box', TextBox);
 
+describe('Component contract', () => {
+    afterEach(() => {
+        document.body.innerHTML = '';
+    });
+
+    it('throws when required label is missing', () => {
+        const host = document.createElement('text-box');
+
+        expect(() => {
+            host.willUpdate(new Map([['label', undefined]]));
+        }).toThrow("text-box: 'label' attribute must be set.");
+    });
+
+    it('throws when a required field is cleared after initial render', () => {
+        const host = document.createElement('text-box');
+
+        expect(() => {
+            host.willUpdate(new Map([['label', 'Name']]));
+        }).toThrow("text-box: 'label' attribute must be set.");
+    });
+});
+
 describe('Validation Tests', () => {
     /** @type {HTMLInputElement} */
     let input;

@@ -66,6 +66,10 @@ export default class InputBase extends LightComponentBase {
         return `${this.label} alanı gereklidir.`;
     }
 
+    get requiredFields() {
+        return [...super.requiredFields, 'label'];
+    }
+
     // #endregion STATICS, FIELDS, GETTERS
 
     // #region LIFECYCLE METHODS
@@ -104,7 +108,6 @@ export default class InputBase extends LightComponentBase {
     connectedCallback() {
         super.connectedCallback();
         if (!this.fieldId) this.fieldId = generateId(this.tagName.toLowerCase());
-        this.#validateRequiredFields(['label']);
         this.#firstUpdateCompleted();
     }
 
@@ -184,13 +187,6 @@ export default class InputBase extends LightComponentBase {
         this.inputElement.addEventListener('focus', () => (this.#focused = true), { once: true, capture: false });
     }
 
-    #validateRequiredFields(fieldNames) {
-        for (const fieldName of fieldNames) {
-            if (!this[fieldName]) {
-                throw new Error(`${this.componentName}: '${fieldName}' attribute must be set.`);
-            }
-        }
-    }
     // #endregion PRIVATE METHODS
 }
 
