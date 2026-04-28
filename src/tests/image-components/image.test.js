@@ -33,4 +33,10 @@ describe('Image', () => {
         expect(warnSpy).not.toHaveBeenCalledWith("typed-image: 'width' attribute is missing. Provide image dimensions to reduce layout shift (CLS).");
         expect(warnSpy).not.toHaveBeenCalledWith("typed-image: 'height' attribute is missing. Provide image dimensions to reduce layout shift (CLS).");
     });
+
+    it('renders empty alt text when the image is decorative', async () => {
+        const host = await initImage({ src: '/hero.jpg', alt: 'Hero image', decorative: true });
+
+        expect(host.querySelector('img')?.getAttribute('alt')).toBe('');
+    });
 });

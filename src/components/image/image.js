@@ -6,6 +6,9 @@ export default class Image extends LightComponentBase {
     static get properties() {
         return {
             src: { type: String },
+            srcset: { type: String },
+            sizes: { type: String },
+            decorative: { type: Boolean },
             alt: { type: String },
             width: { type: [Number, String] },
             height: { type: [Number, String] },
@@ -42,6 +45,12 @@ export default class Image extends LightComponentBase {
 
         /** @type {string} Source URL of the image */
         this.src = '';
+        /** @type {string} Responsive image candidates */
+        this.srcset = '';
+        /** @type {string} Slot size hints for srcset selection */
+        this.sizes = '';
+        /** @type {boolean} Whether the image is decorative and should render with empty alt text */
+        this.decorative = false;
         /** @type {string} Alternative text for the image */
         this.alt = '';
         /** @type {number|string|null} Width of the image */
@@ -57,9 +66,13 @@ export default class Image extends LightComponentBase {
     }
 
     render() {
+        const altText = this.decorative ? '' : this.alt;
+
         return html`<img
             src=${this.src}
-            alt=${this.alt}
+            srcset=${ifDefined(this.srcset)}
+            sizes=${ifDefined(this.sizes)}
+            alt=${altText}
             width=${ifDefined(this.width)}
             height=${ifDefined(this.height)}
             loading=${ifDefined(this.loading)}
