@@ -16,22 +16,34 @@ describe('Image', () => {
         document.body.innerHTML = '';
     });
 
-    it('warns when width and height are missing because it can increase CLS', async () => {
+    it('warns when alt is missing and image is not decorative', async () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+        await initImage({ src: '/hero.jpg' });
+
+        expect(warnSpy).toHaveBeenCalledWith(
+            "typed-image: 'alt' attribute is missing. Provide descriptive text, or set 'decorative' to indicate the image is intentionally presentation-only."
+        );
+    });
+
+    it('does not warn about alt when alt is provided', async () => {
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         await initImage({ src: '/hero.jpg', alt: 'Hero image' });
 
-        expect(warnSpy).toHaveBeenCalledWith("typed-image: 'width' attribute is missing. Provide image dimensions to reduce layout shift (CLS).");
-        expect(warnSpy).toHaveBeenCalledWith("typed-image: 'height' attribute is missing. Provide image dimensions to reduce layout shift (CLS).");
+        expect(warnSpy).not.toHaveBeenCalledWith(
+            "typed-image: 'alt' attribute is missing. Provide descriptive text, or set 'decorative' to indicate the image is intentionally presentation-only."
+        );
     });
 
-    it('does not warn about CLS when both width and height are provided', async () => {
+    it('does not warn about alt when image is decorative', async () => {
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-        await initImage({ src: '/hero.jpg', alt: 'Hero image', width: 640, height: 360 });
+        await initImage({ src: '/hero.jpg', decorative: true });
 
-        expect(warnSpy).not.toHaveBeenCalledWith("typed-image: 'width' attribute is missing. Provide image dimensions to reduce layout shift (CLS).");
-        expect(warnSpy).not.toHaveBeenCalledWith("typed-image: 'height' attribute is missing. Provide image dimensions to reduce layout shift (CLS).");
+        expect(warnSpy).not.toHaveBeenCalledWith(
+            "typed-image: 'alt' attribute is missing. Provide descriptive text, or set 'decorative' to indicate the image is intentionally presentation-only."
+        );
     });
 
     it('renders empty alt text when the image is decorative', async () => {

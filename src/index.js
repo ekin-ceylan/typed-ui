@@ -1,6 +1,14 @@
 export { html, LitElement, nothing } from 'lit';
+export { Directive, directive, PartType } from 'lit/directive.js';
+
+// Utils
 export { defineComponent } from './modules/utilities.js';
 export { hideBodyScroll, showBodyScroll, lockAllScrolls, unlockAllScrolls } from './modules/scroll-lock-helper.js';
+export { spread } from './modules/spread.js';
+
+// Models
+export { default as BaseModel } from './models/BaseModel.js';
+export { default as WarningField } from './models/WarningField.js';
 
 // Base and mixins
 export { default as InputBase } from './core/input-base.js';

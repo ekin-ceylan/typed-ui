@@ -66,8 +66,9 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
         }
     }
 
-    /** @override @protected */
-    updated() {
+    /** @override */
+    updated(changedProperties) {
+        super.updated(changedProperties);
         if (this.#dialog) {
             this.open ? this.#show() : this.#hide();
         }

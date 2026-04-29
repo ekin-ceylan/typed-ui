@@ -25,12 +25,20 @@ export default class LightComponentBase extends LitElement {
         return this.localName || (this.tagName ? this.tagName.toLowerCase() : '') || this.constructor.name;
     }
 
+    /**
+     * Fields that are required for the component to function correctly.
+     * Subclasses should override this getter to specify their required fields.
+     * @protected
+     * @returns {string[]}
+     */
     get requiredFields() {
         return [];
     }
 
     /**
      * Fields that should trigger a warning if not set.
+     * Each entry has a `fields` array (field names to check/watch) and a `message` string.
+     * If any field in the array is empty, the warning is shown.
      * @protected
      * @returns {WarningField[]}
      */
@@ -52,8 +60,13 @@ export default class LightComponentBase extends LitElement {
         if (this.requiredFields.some(fieldName => changedProperties.has(fieldName))) {
             this.#validateRequiredFields();
         }
+    }
 
-        if (this.warningFields.some(({ fields }) => fields.some(fieldName => changedProperties.has(fieldName)))) {
+    /** @override */
+    updated(changedProperties) {
+        super.updated(changedProperties);
+
+        if (this.warningFields.some(w => w.fields.some(f => changedProperties.has(f)))) {
             this.#validateWarningFields();
         }
     }
@@ -61,6 +74,35 @@ export default class LightComponentBase extends LitElement {
     /** @override @protected Render in light DOM to keep page styles. */
     createRenderRoot() {
         return this; // Shadow DOM'u kapat
+    }
+
+    /**
+     * Collects host attributes that carry the given `prefix:` scope, strips
+     * the prefix, and returns a plain object ready for the `spread` directive.
+     *
+     * Convention: write `prefix:attr-name="value"` on the custom element to
+     * forward an attribute to a specific inner element without touching the host.
+     *
+     * @example
+     * // In HTML:
+     * // <typed-image img:fetchpriority="high" img:aria-hidden="true" />
+     *
+     * // In render():
+     * // html`<img ${spread(this.getScopedAttrs('img'))} src=${this.src} />`
+     *
+     * @param {string} prefix - Scope name, e.g. `'img'`, `'input'`, `'label'`.
+     * @returns {Record<string, string>}
+     */
+    getScopedAttrs(prefix) {
+        const scopePrefix = `${prefix}:`;
+        /** @type {Record<string, string>} */
+        const result = {};
+        for (const { name, value } of this.attributes) {
+            if (name.startsWith(scopePrefix)) {
+                result[name.slice(scopePrefix.length)] = value;
+            }
+        }
+        return result;
     }
 
     /**
@@ -95,13 +137,8 @@ export default class LightComponentBase extends LitElement {
     }
 
     #validateWarningFields() {
-        for (const warning of this.warningFields) {
-            if (!Array.isArray(warning.fields) || warning.fields.length === 0) {
-                continue;
-            }
-
-            if (warning.fields.some(fieldName => isEmpty(this[fieldName]))) {
-                const message = warning.message || `${warning.fields.join(', ')} attribute${warning.fields.length > 1 ? 's are' : ' is'} missing.`;
+        for (const { fields, message } of this.warningFields) {
+            if (fields.every(fieldName => isEmpty(this[fieldName]) || this[fieldName] === false)) {
                 console.warn(`${this.componentName}: ${message}`);
             }
         }

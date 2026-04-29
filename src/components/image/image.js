@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import LightComponentBase from '../../core/light-component-base';
 import { ifDefined } from '../../modules/utilities';
+import { spread } from '../../modules/spread';
 
 export default class Image extends LightComponentBase {
     static get properties() {
@@ -18,25 +19,13 @@ export default class Image extends LightComponentBase {
         };
     }
 
-    get requiredFields() {
-        return [...super.requiredFields, 'src'];
-    }
-
     get warningFields() {
         return [
             ...super.warningFields,
             {
-                fields: ['width'],
-                message: "'width' attribute is missing. Provide image dimensions to reduce layout shift (CLS).",
+                fields: ['decorative', 'alt'],
+                message: "'alt' attribute is missing. Provide descriptive text, or set 'decorative' to indicate the image is intentionally presentation-only.",
             },
-            {
-                fields: ['height'],
-                message: "'height' attribute is missing. Provide image dimensions to reduce layout shift (CLS).",
-            },
-            // {
-            //     fields: ['alt'],
-            //     message: "'alt' attribute is missing, which can cause accessibility issues and SEO problems.",
-            // },
         ];
     }
 
@@ -69,6 +58,7 @@ export default class Image extends LightComponentBase {
         const altText = this.decorative ? '' : this.alt;
 
         return html`<img
+            ${spread(this.getScopedAttrs('img'))}
             src=${this.src}
             srcset=${ifDefined(this.srcset)}
             sizes=${ifDefined(this.sizes)}
