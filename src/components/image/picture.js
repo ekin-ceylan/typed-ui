@@ -4,4 +4,20 @@
 // Kullanıcı deneyimi: Yükleme animasyonu yok, hata durumları zayıf
 // Erişilebilirlik ve SEO: alt eksikliği ciddi sorun yaratır
 // preload/lazyload
+
+import { html } from 'lit';
+import LightComponentBase from '../../core/light-component-base';
+import SlotCollectorMixin from '../../mixins/slot-collector-mixin';
+
 // bg-image - ayrı comp olabilir
+export default class Picture extends SlotCollectorMixin(LightComponentBase) {
+    render() {
+        return html`
+            <picture>
+                <slot></slot>
+                <!-- <source data-srcset="/Assets/images/police_iptal_banner.webp" type="image/webp" />
+                <img data-src="/Assets/images/police_iptal_banner.png" alt="zeyil değişikliği banner" class="banner lazyload" width="423" height="145" /> -->
+            </picture>
+        `;
+    }
+}
