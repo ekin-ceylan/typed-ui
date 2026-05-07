@@ -72,18 +72,29 @@ export const passwordboxArgTypes = {
  * @param {string} name
  */
 export function createAttrType(description, type, defaultValue, isRequired, name) {
-    const desc = `${description} \n\n __*Type:*__ \`${type}\`, __*Default:*__ \`${defaultValue}\``;
-
-    return {
+    let typeDesc = type;
+    const attrType = {
         name,
-        description: desc,
         type: { name: type, required: isRequired },
-        control: ['string', 'html'].includes(type) ? 'text' : type,
+        control: type,
         table: {
             category: 'Attributes',
             defaultValue: { summary: defaultValue },
         },
     };
+
+    if (type.includes('|')) {
+        attrType.type.name = 'enum';
+        attrType.control = 'inline-radio';
+        attrType.options = type.split('|').map(opt => opt.trim());
+        typeDesc = 'string';
+    } else if (['string', 'html'].includes(type)) {
+        attrType.control = 'text';
+    }
+
+    attrType.description = `${description} \n\n __*Type:*__ \`${typeDesc}\`, __*Default:*__ \`${defaultValue}\``;
+
+    return attrType;
 }
 
 export function createSlotType(description, defaultValue, name) {
