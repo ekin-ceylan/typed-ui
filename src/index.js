@@ -36,6 +36,10 @@ export { default as CheckBox } from './components/select/check-box.js';
 // Dialog
 export { default as ModalDialog } from './components/dialog/modal-dialog.js';
 
+// Image
+export { default as Image } from './components/image/image.js';
+
+// List
 // export { default as TableComponent } from './components/table/table.js';
 export { default as Pagination } from './components/table/pagination.js';
 

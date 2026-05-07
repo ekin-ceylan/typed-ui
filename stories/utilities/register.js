@@ -19,6 +19,7 @@ defineComponent('select-box', TypedUI.SelectBox);
 defineComponent('combo-box', TypedUI.ComboBox);
 defineComponent('modal-dialog', TypedUI.ModalDialog);
 defineComponent('t-pagination', TypedUI.Pagination);
+defineComponent('basic-img', TypedUI.Image);
 
 export const Checkbox = ({ defaultSlot, fieldId, fieldName, label, checkedValue, required, checked, disabled, readonly, indeterminate }) => {
     const temp = html`<check-box
@@ -101,6 +102,11 @@ export const Pagination = args => {
     </t-pagination>`;
 
     return elementFromTemplate(temp);
+};
+
+export const Image = args => {
+    const temp = `<basic-img ${getAttrs(args)}> </basic-img>`;
+    return elementFromText(temp);
 };
 
 // #region TEXTBOX RENDERER
