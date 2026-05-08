@@ -19,6 +19,10 @@ export default class Image extends LightComponentBase {
         };
     }
 
+    get requiredFields() {
+        return [...super.requiredFields, 'src'];
+    }
+
     get warningFields() {
         return [
             ...super.warningFields,
