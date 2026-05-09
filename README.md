@@ -133,6 +133,9 @@ Prerequisites:
 # Install dependencies
 npm install
 
+# If running tests, install Playwright browsers (one-time setup)
+npx playwright install
+
 # Start development server
 npm run dev
 ```
@@ -160,7 +163,6 @@ npm run preview
 Notes:
 
 - `npm run build` generates the browser-ready bundles under `dist/` and type declarations at `dist/typed-ui.d.ts`.
-- Tests run in a real browser (Vitest Browser Mode + Playwright). If this is your first time running tests, you may need to install browsers: `npx playwright install`.
 
 ## License
 
