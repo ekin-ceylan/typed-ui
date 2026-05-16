@@ -20,7 +20,6 @@ export default class InputBase extends LightComponentBase {
             ...super.properties,
             fieldId: { type: String, attribute: 'field-id' },
             fieldName: { type: String, attribute: 'field-name' },
-            inputClass: { type: String, attribute: 'input-class' },
             value: { type: String },
             label: { type: String },
             hideLabel: { type: Boolean, attribute: 'hide-label' },
@@ -82,8 +81,6 @@ export default class InputBase extends LightComponentBase {
         this.fieldId = '';
         /** @property {string} Name attribute for the input field */
         this.fieldName = '';
-        /** @property {string} CSS class to apply to the input element */
-        this.inputClass = '';
         /** @property {string} Label text for the input field */
         this.label = '';
         /** @property {boolean} Whether to hide the label visually */

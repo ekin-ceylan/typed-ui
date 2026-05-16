@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
 import SelectBase from '../../core/select-base.js';
+import { spread } from '../../modules/spread.js';
 
 /** @extends {SelectBase<HTMLSelectElement>} */
 export default class SelectBox extends SelectBase {
@@ -204,9 +205,9 @@ export default class SelectBox extends SelectBase {
             ${this.renderLabel()}
             <div>
                 <select
+                    ${spread(this.getScopedAttrs('select'))}
                     id=${ifDefined(this.fieldId)}
                     name=${ifDefined(this.fieldName)}
-                    class=${ifDefined(this.inputClass)}
                     ?required=${this.required}
                     ?disabled=${this.disabled}
                     aria-labelledby=${ifDefined(this.labelId)}

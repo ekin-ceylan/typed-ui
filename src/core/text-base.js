@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { ifDefined, isEmpty } from '../modules/utilities.js';
 import InputBase from './input-base.js';
+import { spread } from '../modules/spread.js';
 
 /**
  * @abstract Base class for text-based input components, providing common functionality for masking, unmasking, validation, and event handling.
@@ -387,9 +388,9 @@ export default class TextBase extends InputBase {
             ${this.renderLabel()}
             <div data-role="container">
                 <input
+                    ${spread(this.getScopedAttrs('input'))}
                     id=${ifDefined(this.fieldId)}
                     name=${ifDefined(this.fieldName)}
-                    class=${ifDefined(this.inputClass)}
                     type=${this.type || 'text'}
                     ?disabled=${this.disabled}
                     ?readonly=${this.readonly}

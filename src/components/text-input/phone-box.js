@@ -33,7 +33,7 @@ export default class PhoneBox extends TextBase {
         this.inputmode = 'tel';
         this.pattern = String.raw`0\(\d{3}\) \d{3} \d{2} \d{2}`;
         this.autocomplete = 'tel';
-        this.placeholder = '0(242) 123 45 67';
+        this.placeholder = '0(___) ___ __ __';
     }
 
     mask(value) {
