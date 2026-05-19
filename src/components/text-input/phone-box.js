@@ -15,14 +15,16 @@ export default class PhoneBox extends TextBase {
 
     #ghostMask1 = '';
     #ghostMask2 = '';
+    /** @type {string} Placeholder for the ghost mask */
+    ghostPlaceholder = '0(___) ___ __ __';
 
     willUpdate(changed) {
         super.willUpdate(changed);
 
         if (changed.has('value')) {
-            const len = this.value.length;
+            const len = this.maskedValue.length;
             this.#ghostMask1 = this.maskedValue;
-            this.#ghostMask2 = '0(___) ___ __ __'.slice(len);
+            this.#ghostMask2 = this.ghostPlaceholder.slice(len);
         }
     }
 

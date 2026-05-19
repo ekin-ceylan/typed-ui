@@ -2,7 +2,7 @@ export { html, LitElement, nothing } from 'lit';
 export { Directive, directive, PartType } from 'lit/directive.js';
 
 // Utils
-export { defineComponent } from './modules/utilities.js';
+export { defineComponent, isEmpty } from './modules/utilities.js';
 export { hideBodyScroll, showBodyScroll, lockAllScrolls, unlockAllScrolls } from './modules/scroll-lock-helper.js';
 export { spread } from './modules/spread.js';
 
