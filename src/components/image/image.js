@@ -9,9 +9,9 @@ import { spread } from '../../modules/spread';
  * - The `src` attribute is required to specify the image source URL.
  * - The `alt` attribute provides alternative text for accessibility, and is required unless the image is marked as decorative.
  * - The `decorative` attribute indicates that the image is purely decorative and should have an empty alt text.
- * - The `error-text` attribute specifies the text to display if the image fails to load.
+ * - The `fallback-text` attribute specifies the text to display if the image fails to load.
  * - Supports responsive images through `srcset` and `sizes` attributes.
- * @example <custom-image src="image.jpg" alt="Description of the image" error-text="Image failed to load"></custom-image>
+ * @example <custom-image src="image.jpg" alt="Description of the image" fallback-text="Image failed to load"></custom-image>
  * @extends {LightComponentBase}
  */
 export default class Image extends LightComponentBase {
@@ -21,7 +21,7 @@ export default class Image extends LightComponentBase {
             srcset: { type: String },
             sizes: { type: String },
             decorative: { type: Boolean },
-            errorText: { type: String, attribute: 'error-text' },
+            fallbackText: { type: String, attribute: 'fallback-text' },
             alt: { type: String },
             width: { type: [Number, String] },
             height: { type: [Number, String] },
@@ -57,8 +57,8 @@ export default class Image extends LightComponentBase {
         this.sizes = '';
         /** @type {boolean} Whether the image is decorative and should render with empty alt text */
         this.decorative = false;
-        /** @type {string} Text rendered when the image fails to load */
-        this.errorText = '';
+        /** @type {string} Text rendered when the image falls back after a load failure */
+        this.fallbackText = '';
         /** @type {string} Alternative text for the image */
         this.alt = '';
         /** @type {number|string|null} Width of the image */
@@ -89,15 +89,15 @@ export default class Image extends LightComponentBase {
     }
 
     onError(event) {
-        this.hasError = Boolean(this.errorText);
+        this.hasError = Boolean(this.fallbackText);
         this.dispatchCustomEvent('error', event);
     }
 
     render() {
         const altText = this.decorative ? '' : this.alt;
 
-        if (this.hasError && this.errorText) {
-            return html`<span data-role="image-error-text">${this.errorText}</span>`;
+        if (this.hasError && this.fallbackText) {
+            return html`<span data-role="image-fallback-text">${this.fallbackText}</span>`;
         }
 
         return html`<img
