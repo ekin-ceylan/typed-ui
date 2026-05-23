@@ -201,8 +201,7 @@ export default class SelectBox extends SelectBase {
 
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
-        return html`
-            ${this.renderLabel()}
+        return html`${this.renderLabel()}
             <div>
                 <select
                     ${spread(this.getScopedAttrs('select'))}
@@ -232,8 +231,7 @@ export default class SelectBox extends SelectBase {
 
                 ${this.renderClearButton()} ${this.renderChevron()}
             </div>
-            ${this.renderErrorMessage()}
-        `;
+            ${this.renderErrorMessage()}`;
     }
 }
 

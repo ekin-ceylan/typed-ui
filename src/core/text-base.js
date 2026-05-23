@@ -384,8 +384,7 @@ export default class TextBase extends InputBase {
 
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
-        return html`
-            ${this.renderLabel()}
+        return html`${this.renderLabel()}
             <div data-role="container">
                 <input
                     ${spread(this.getScopedAttrs('input'))}
@@ -416,7 +415,6 @@ export default class TextBase extends InputBase {
                 />
                 ${this.renderAdornment()} ${this.renderClearButton()}
             </div>
-            ${this.renderErrorMessage()}
-        `;
+            ${this.renderErrorMessage()}`;
     }
 }
