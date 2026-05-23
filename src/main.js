@@ -6,15 +6,18 @@ import IntegerBox from './components/text-input/integer-box';
 import NewPasswordBox from './components/text-input/new-password-box';
 import PasswordBox from './components/text-input/password-box';
 import ConfirmPasswordBox from './components/text-input/confirm-password-box';
-import UrlLink from './components/url-link';
-import CheckBox from './components/check-box';
+import UrlLink from './components/button/url-link';
+import CheckBox from './components/select/check-box';
 import SelectBox from './components/select/select-box';
 import ComboBox from './components/select/combo-box';
 import RangeSelect from './components/select/range-select';
-import ModalDialog from './components/modal-dialog';
+import ModalDialog from './components/dialog/modal-dialog';
 import { defineComponent } from './modules/utilities.js';
 import TcBox from './components/text-input/tc-box.js';
+import TableComponent from './components/table/table.js';
 import Pagination from './components/table/pagination.js';
+
+defineComponent('typed-table', TableComponent);
 defineComponent('typed-pagination', Pagination);
 
 defineComponent('text-box', TextBox);

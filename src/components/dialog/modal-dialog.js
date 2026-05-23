@@ -129,20 +129,20 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
     /** Show with small delay for CSS transitions. */
     #show() {
         this.#dialog?.showModal();
+        hideBodyScroll(this.#dialog);
         clearTimeout(this.#timeout);
 
         this.#timeout = setTimeout(() => {
-            hideBodyScroll(this.#dialog);
             this.#dialog?.setAttribute('data-active', '');
         }, 20);
     }
     /** Hide with small delay for CSS transitions. */
     #hide() {
         this.#dialog?.removeAttribute('data-active');
-        showBodyScroll(this.#dialog);
         clearTimeout(this.#timeout);
 
         this.#timeout = setTimeout(() => {
+            showBodyScroll(this.#dialog);
             this.#dialog?.close();
         }, 300);
     }
