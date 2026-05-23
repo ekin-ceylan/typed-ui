@@ -52,17 +52,17 @@ describe('Image', () => {
         expect(host.querySelector('img')?.getAttribute('alt')).toBe('');
     });
 
-    it('renders fallback text when the image errors and errorText is provided', async () => {
-        const host = await initImage({ src: '/broken.jpg', alt: 'Broken image', errorText: 'Image failed to load.' });
+    it('renders fallback text when the image errors and fallbackText is provided', async () => {
+        const host = await initImage({ src: '/broken.jpg', alt: 'Broken image', fallbackText: 'Image failed to load.' });
 
         host.querySelector('img')?.dispatchEvent(new Event('error'));
         await host.updateComplete;
 
-        expect(host.querySelector('[data-role="image-error-text"]')?.textContent).toBe('Image failed to load.');
+        expect(host.querySelector('[data-role="image-fallback-text"]')?.textContent).toBe('Image failed to load.');
     });
 
     it('dispatches an error event even when fallback text is rendered', async () => {
-        const host = await initImage({ src: '/broken.jpg', alt: 'Broken image', errorText: 'Image failed to load.' });
+        const host = await initImage({ src: '/broken.jpg', alt: 'Broken image', fallbackText: 'Image failed to load.' });
         const eventPromise = new Promise(resolve => host.addEventListener('error', resolve, { once: true }));
 
         host.querySelector('img')?.dispatchEvent(new Event('error'));
@@ -72,7 +72,7 @@ describe('Image', () => {
         expect(event.detail.originalEvent).toBeInstanceOf(Event);
     });
 
-    it('dispatches an error event without rendering fallback text when errorText is missing', async () => {
+    it('dispatches an error event without rendering fallback text when fallbackText is missing', async () => {
         const host = await initImage({ src: '/broken.jpg', alt: 'Broken image' });
         const eventPromise = new Promise(resolve => host.addEventListener('error', resolve, { once: true }));
 
@@ -82,18 +82,18 @@ describe('Image', () => {
         const event = await eventPromise;
 
         expect(event.detail.originalEvent).toBeInstanceOf(Event);
-        expect(host.querySelector('[data-role="image-error-text"]')).toBeNull();
+        expect(host.querySelector('[data-role="image-fallback-text"]')).toBeNull();
     });
 
     it('clears the error fallback when src changes', async () => {
-        const host = await initImage({ src: '/broken.jpg', alt: 'Broken image', errorText: 'Image failed to load.' });
+        const host = await initImage({ src: '/broken.jpg', alt: 'Broken image', fallbackText: 'Image failed to load.' });
 
         host.querySelector('img')?.dispatchEvent(new Event('error'));
         await host.updateComplete;
         host.src = '/hero.jpg';
         await host.updateComplete;
 
-        expect(host.querySelector('[data-role="image-error-text"]')).toBeNull();
+        expect(host.querySelector('[data-role="image-fallback-text"]')).toBeNull();
         expect(host.querySelector('img')).not.toBeNull();
     });
 });
