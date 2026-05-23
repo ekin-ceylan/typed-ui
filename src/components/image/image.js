@@ -3,6 +3,17 @@ import LightComponentBase from '../../core/light-component-base';
 import { ifDefined } from '../../modules/utilities';
 import { spread } from '../../modules/spread';
 
+/**
+ * Custom image component that extends LightComponentBase to render an image with enhanced features such as error handling, decorative mode, and accessibility improvements.
+ * - Can be used after defining like `defineElement('custom-image', Image)` or `customElement.define('custom-image', Image)`.
+ * - The `src` attribute is required to specify the image source URL.
+ * - The `alt` attribute provides alternative text for accessibility, and is required unless the image is marked as decorative.
+ * - The `decorative` attribute indicates that the image is purely decorative and should have an empty alt text.
+ * - The `error-text` attribute specifies the text to display if the image fails to load.
+ * - Supports responsive images through `srcset` and `sizes` attributes.
+ * @example <custom-image src="image.jpg" alt="Description of the image" error-text="Image failed to load"></custom-image>
+ * @extends {LightComponentBase}
+ */
 export default class Image extends LightComponentBase {
     static get properties() {
         return {
@@ -10,12 +21,14 @@ export default class Image extends LightComponentBase {
             srcset: { type: String },
             sizes: { type: String },
             decorative: { type: Boolean },
+            errorText: { type: String, attribute: 'error-text' },
             alt: { type: String },
             width: { type: [Number, String] },
             height: { type: [Number, String] },
             loading: { type: String },
             decoding: { type: String },
             fetchpriority: { type: String },
+            hasError: { type: Boolean, attribute: false },
         };
     }
 
@@ -44,6 +57,8 @@ export default class Image extends LightComponentBase {
         this.sizes = '';
         /** @type {boolean} Whether the image is decorative and should render with empty alt text */
         this.decorative = false;
+        /** @type {string} Text rendered when the image fails to load */
+        this.errorText = '';
         /** @type {string} Alternative text for the image */
         this.alt = '';
         /** @type {number|string|null} Width of the image */
@@ -56,10 +71,34 @@ export default class Image extends LightComponentBase {
         this.decoding = 'async';
         /** @type {'high'|'low'|'auto'|undefined} Fetch priority hint for the image request */
         this.fetchpriority = undefined;
+        /** @type {boolean} Whether the image is currently showing its error fallback */
+        this.hasError = false;
+    }
+
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+
+        if (changedProperties.has('src')) {
+            this.hasError = false;
+        }
+    }
+
+    onLoad(event) {
+        this.hasError = false;
+        this.dispatchCustomEvent('load', event);
+    }
+
+    onError(event) {
+        this.hasError = Boolean(this.errorText);
+        this.dispatchCustomEvent('error', event);
     }
 
     render() {
         const altText = this.decorative ? '' : this.alt;
+
+        if (this.hasError && this.errorText) {
+            return html`<span data-role="image-error-text">${this.errorText}</span>`;
+        }
 
         return html`<img
             ${spread(this.getScopedAttrs('img'))}
@@ -72,6 +111,8 @@ export default class Image extends LightComponentBase {
             loading=${ifDefined(this.loading)}
             decoding=${ifDefined(this.decoding)}
             fetchpriority=${ifDefined(this.fetchpriority)}
+            @load=${this.onLoad}
+            @error=${this.onError}
         />`;
     }
 }
