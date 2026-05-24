@@ -9,6 +9,8 @@ export default {
         defaultSlot: createSlotType('Dialog içeriği.', '""', 'default'),
         backdropClose: createAttrType('Backdrop tıklaması ile kapanır.', 'boolean', 'false', false, 'backdrop-close'),
         escClose: createAttrType('ESC tuşu ile kapanır.', 'boolean', 'false', false, 'esc-close'),
+        // show: createEventType('show', 'Dialog açıldığında tetiklenir.'),
+        // hide: createEventType('hide', 'Dialog kapanmaya başladığında tetiklenir.'),
     },
 };
 

@@ -113,6 +113,7 @@ export function createSlotType(description, defaultValue, name) {
     };
 }
 
+// TODO: name seçimli olabilir, varsa eklenir
 /**
  * Creates a Storybook argType definition for a custom event.
  * @param {string} name
@@ -121,11 +122,12 @@ export function createSlotType(description, defaultValue, name) {
  * @returns {object}
  */
 export function createEventType(name, description, details) {
-    const detailsText = details ? ` \n\n \`event.details: { ${details} }\`` : '';
+    const detailsText = details ? ` \n\n \`event.detail: { ${details} }\`` : '';
     const desc = `${description} ${detailsText}`.trim();
 
     return {
         name,
+        control: false,
         type: 'CustomEvent',
         description: desc,
         table: {

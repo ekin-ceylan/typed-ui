@@ -4,9 +4,20 @@ import LightComponentBase from '../../core/light-component-base.js';
 import { hideBodyScroll, showBodyScroll } from '../../modules/scroll-lock-helper.js';
 
 /**
- * Modal dialog web component built with Lit.
- * @summary Accessible modal dialog with optional backdrop & ESC close.
- * @slot default - Dialog content.
+ * Custom modal dialog component that extends LightComponentBase and uses SlotCollectorMixin to manage its content. It provides features such as backdrop click to close, Escape key to close, and customizable header and footer rendering.
+ * - Can be used after defining like `defineElement('modal-dialog', ModalDialog)` or `customElement.define('modal-dialog', ModalDialog)`.
+ * - The `open` attribute controls the visibility of the dialog.
+ * - The `backdrop-close` attribute allows closing the dialog by clicking on the backdrop area.
+ * - The `esc-close` attribute allows closing the dialog by pressing the Escape key.
+ * - The `renderHeader()` method can be overridden to customize the dialog header, and `renderFooter()` for the footer. By default, a close button is provided in the header, and the footer is empty.
+ * @example
+ * ```html
+ * <modal-dialog backdrop-close esc-close>
+ *     <h2>Dialog Title</h2>
+ *     <p>Dialog content goes here.</p>
+ *     <button slot="footer" ⁣@click="this.hide()">Close</button>
+ * </modal-dialog>
+ * ```
  */
 export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) {
     // #region FIELDS
@@ -134,6 +145,7 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
 
         this.#timeout = setTimeout(() => {
             this.#dialog?.setAttribute('data-active', '');
+            this.dispatchCustomEvent('show');
         }, 20);
     }
     /** Hide with small delay for CSS transitions. */
@@ -144,6 +156,7 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
         this.#timeout = setTimeout(() => {
             showBodyScroll(this.#dialog);
             this.#dialog?.close();
+            this.dispatchCustomEvent('hide');
         }, 300);
     }
 
