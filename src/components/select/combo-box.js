@@ -3,7 +3,14 @@ import { ifDefined } from '../../modules/utilities.js';
 import SelectBase from '../../core/select-base.js';
 import { lockAllScrolls, unlockAllScrolls } from '../../modules/scroll-lock-helper.js';
 
-/** @extends {SelectBase<HTMLInputElement>} */
+/**
+ * Custom combo box component that extends SelectBase to provide a searchable dropdown list of options. It supports both native and custom behaviors, allowing for flexible usage in various contexts.
+ * - Can be used after defining like `defineElement('combo-box', ComboBox)` or `customElement.define('combo-box', ComboBox)`.
+ * - The `options` property accepts an array of option objects or HTMLOptionElements to populate the dropdown list.
+ * - The `value` property reflects the currently selected option's value, and the `selectedOption` property provides the full option object.
+ * - The component includes built-in filtering functionality, allowing users to search through options by typing in the input field.
+ * @extends {SelectBase<HTMLInputElement>}
+ */
 export default class ComboBox extends SelectBase {
     // #region STATICS, FIELDS, GETTERS
 
@@ -416,6 +423,8 @@ export default class ComboBox extends SelectBase {
 
             const topEdge = rect.top;
             const bottomEdge = rect.bottom;
+            const leftEdge = Math.max(0, rect.x);
+            const minWidth = Math.min(0, rect.x) + rect.width;
             const borderY = borderTop + borderBottom;
             const spaceBelow = window.innerHeight - bottomEdge;
             const spaceAbove = topEdge;
@@ -435,7 +444,8 @@ export default class ComboBox extends SelectBase {
                 listbox.style.removeProperty('bottom');
             }
 
-            listbox.style.minWidth = `${rect.width}px`;
+            listbox.style.minWidth = `${minWidth}px`;
+            listbox.style.left = `${leftEdge}px`;
             this.requestUpdate();
         });
     }
@@ -505,6 +515,7 @@ export default class ComboBox extends SelectBase {
 
     renderSearchInput() {
         return html`<input
+            id=${this.fieldId + '-search'}
             type="search"
             .value=${this.filter || ''}
             ?disabled=${this.disabled}
