@@ -142,7 +142,9 @@ html`<select-box id="lit-select" label="Ülke" .options=${this.options} placehol
 
 `select-box` bir form bileşenidir; temel olarak `InputBase` üzerinden gelen ortak öznitelikleri ve `SelectBase`’in eklediği birkaç alanı destekler.
 
-<ArgTypes of={SelectboxStories.PropAttrEventLists} />
+<div className="arg-types">
+    <ArgTypes of={SelectboxStories.PropAttrEventLists} />
+</div>
 
 ### Öznitelikler (_Attributes_)
 
@@ -169,7 +171,7 @@ el.addEventListener('clear', () => {
 
 ## Design Token
 
-<div class="code-pre">
+<div className="code-pre">
     ```css
     --sbx-bg-color: #ffffff;
     --sbx-bg-hover-color: #ffffff;

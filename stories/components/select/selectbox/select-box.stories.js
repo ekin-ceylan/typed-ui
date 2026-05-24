@@ -1,4 +1,4 @@
-import { createAttrType, createSlotType, inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
+import { createAttrType, createSlotType, createEventType, inputBaseArgTypes } from '../../../utilities/common-arg-types.js';
 import { createForm, Selectbox } from '../../../utilities/register.js';
 import '../../../assets/styles/select-box.css';
 
@@ -124,38 +124,9 @@ export const PropAttrEventLists = {
     tags: ['!dev'],
     argTypes: {
         // 3. Events (İstersen bunları da elle ekleyebilirsin)
-        input: {
-            action: 'input', // Actions panelinde 'input' ismiyle loglar
-            description: 'Kullanıcı listeden bir seçim yaptığında (anlık) tetiklenir.',
-            table: {
-                category: 'Events',
-                type: { summary: 'CustomEvent' }, // Tip sütununda görünür
-            },
-        },
-        change: {
-            action: 'change',
-            description: 'Değer commit edildiğinde (Seçim tamamlandığında veya temizlendiğinde) tetiklenir.',
-            table: {
-                category: 'Events',
-                type: { summary: 'CustomEvent' },
-            },
-        },
-        clear: {
-            action: 'clear',
-            description: 'Temizleme (X) butonuna tıklandığında tetiklenir.',
-            table: {
-                category: 'Events',
-                type: { summary: 'CustomEvent' },
-            },
-        },
-        update: {
-            action: 'update',
-            description: 'Değer programatik olarak (JS ile .value set edilerek) değiştirildiğinde tetiklenir.',
-            control: false, // Bu bir event olduğu için kontrol edilemez
-            table: {
-                category: 'Events',
-                type: { summary: 'CustomEvent' },
-            },
-        },
+        input: createEventType('input', 'Kullanıcı listeden bir seçim yaptığında (anlık) tetiklenir.'),
+        change: createEventType('change', 'Değer commit edildiğinde (Seçim tamamlandığında veya temizlendiğinde) tetiklenir.'),
+        clear: createEventType('clear', 'Temizleme (X) butonuna tıklandığında tetiklenir.'),
+        update: createEventType('update', 'Değer programatik olarak (JS ile `.value` alanına atama yapılarak) değiştirildiğinde tetiklenir.'),
     },
 };
