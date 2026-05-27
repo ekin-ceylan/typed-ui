@@ -8,6 +8,8 @@ export { spread } from './modules/spread.js';
 
 // Models
 export { default as BaseModel } from './models/BaseModel.js';
+export { default as Option } from './models/Option.js';
+export { default as OptionGroup } from './models/OptionGroup.js';
 export { default as WarningField } from './models/WarningField.js';
 
 // Base and mixins

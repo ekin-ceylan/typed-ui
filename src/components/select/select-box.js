@@ -2,12 +2,14 @@ import { html, nothing } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
 import SelectBase from '../../core/select-base.js';
 import { spread } from '../../modules/spread.js';
+import Option from '../../models/Option.js';
+import OptionGroup from '../../models/OptionGroup.js';
 
 /** @extends {SelectBase<HTMLSelectElement>} */
 export default class SelectBox extends SelectBase {
     // #region STATICS, FIELDS, GETTERS
 
-    /** @type {SelectBoxOption[]} */
+    /** @type {(Option | OptionGroup)[]} */
     #optionList = []; // işlenmiş seçenek listesi
     #options = [];
     #mouseFlag = false;
@@ -43,7 +45,7 @@ export default class SelectBox extends SelectBase {
 
     constructor() {
         super();
-        /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | SelectBoxOption[] | []} */
+        /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | Option[] | OptionGroup[] | []} */
         this.options = [];
     }
 
@@ -71,7 +73,9 @@ export default class SelectBox extends SelectBase {
         if (slotName != 'default') return true;
 
         const hasOptions = this.options?.length > 0;
-        const isAllowedType = node instanceof HTMLOptionElement || node instanceof HTMLOptGroupElement;
+        const isOptionElement = node instanceof HTMLOptionElement;
+        const isOptGroupElement = node instanceof HTMLOptGroupElement;
+        const isAllowedType = isOptionElement || isOptGroupElement;
 
         if (hasOptions) {
             console.warn('Options are already set via property. Ignoring slotted nodes.');
@@ -83,9 +87,9 @@ export default class SelectBox extends SelectBase {
             return false;
         }
 
-        const option = new SelectBoxOption(node);
+        const option = isOptionElement ? Option.init(node) : OptionGroup.init(node);
         this.#optionList.push(option);
-        option.selected && (this.value = option.value);
+        if (option.selected) this.value = option.value; // ilk seçili olan değeri alır, birden fazla seçili varsa ilkini alır
 
         return false;
     }
@@ -171,20 +175,16 @@ export default class SelectBox extends SelectBase {
     }
 
     #toOptionElement(raw) {
-        if (raw instanceof SelectBoxOption) {
-            return raw;
-        }
-
-        if (raw instanceof HTMLOptionElement || raw instanceof HTMLOptGroupElement) {
-            return new SelectBoxOption(raw);
-        }
+        if (raw instanceof Option || raw instanceof OptionGroup) return raw;
+        if (raw instanceof HTMLOptionElement) return Option.init(raw);
+        if (raw instanceof HTMLOptGroupElement) return OptionGroup.init(raw);
 
         if (typeof raw === 'string' || typeof raw === 'number') {
-            return new SelectBoxOption({ value: String(raw), label: String(raw) });
+            return Option.init({ value: String(raw), text: String(raw) });
         }
 
         if (raw && typeof raw === 'object') {
-            return new SelectBoxOption(raw);
+            return this.#isGroupLike(raw) ? OptionGroup.init(raw) : Option.init(raw);
         }
 
         throw new TypeError(`Invalid option entry: ${String(raw)}`);
@@ -195,6 +195,19 @@ export default class SelectBox extends SelectBase {
         this.updateComplete.then(() => {
             this.value = this.inputElement?.value || this.value;
         });
+    }
+
+    #isGroupLike(object) {
+        const optionsValue = object.options;
+        const childrenValue = object.children;
+        const hasArrayOptions = Array.isArray(optionsValue);
+        const hasArrayChildren = Array.isArray(childrenValue);
+        const hasCollectionChildren =
+            (typeof HTMLCollection !== 'undefined' && childrenValue instanceof HTMLCollection) ||
+            (typeof HTMLOptionsCollection !== 'undefined' && childrenValue instanceof HTMLOptionsCollection) ||
+            (typeof NodeList !== 'undefined' && childrenValue instanceof NodeList);
+
+        return hasArrayOptions || hasArrayChildren || hasCollectionChildren;
     }
 
     // #endregion PRIVATE METHODS
@@ -236,55 +249,3 @@ export default class SelectBox extends SelectBase {
 }
 
 // test case: başlangıç değeri varsa seçili gelsin
-
-class SelectBoxOption {
-    label = '';
-    #value = '';
-    #selected = false;
-    disabled = false;
-    options = []; // alt seçenekler (optgroup için)
-
-    get value() {
-        return this.isOptGroup ? this.options.find(opt => opt.selected)?.value || '' : this.#value;
-    }
-
-    set value(value) {
-        if (this.isOptGroup) return;
-        this.#value = value;
-    }
-
-    get selected() {
-        return this.isOptGroup ? this.options.some(opt => opt.selected) : this.#selected;
-    }
-
-    set selected(value) {
-        if (this.isOptGroup) return;
-        this.#selected = value;
-    }
-
-    get isOptGroup() {
-        return this.options?.length > 0;
-    }
-
-    get htmlElement() {
-        if (this.isOptGroup) {
-            return html`<optgroup label=${this.label}>${this.options.map(childOption => childOption.htmlElement)}</optgroup>`;
-        }
-        return html`<option value=${this.value} ?selected=${this.selected} ?disabled=${this.disabled}>${this.label}</option>`;
-    }
-
-    constructor(option) {
-        this.value = option?.value || '';
-        this.label = option?.label || '';
-        this.selected = option?.selected || false;
-        this.disabled = option?.disabled || false;
-
-        if (option instanceof HTMLOptGroupElement) {
-            this.options = Array.from(option.children)
-                .filter(child => child instanceof HTMLOptionElement)
-                .map(child => new SelectBoxOption(child));
-        } else {
-            this.options = option?.options || [];
-        }
-    }
-}

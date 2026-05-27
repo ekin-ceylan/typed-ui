@@ -2,13 +2,21 @@
 export default class BaseModel {
     /**
      * Initializes a new instance of the model with the provided data.
-     * @param {Object} data - The data to initialize the model with.
+     * @template {BaseModel} T
+     * @this {new () => T}
+     * @param {object} [data={}] - The data to initialize the model with.
+     * @returns {T} The initialized model instance.
      */
-    constructor(data) {
-        Object.keys(data).forEach(key => {
-            if (Object.hasOwn(this, key)) {
-                this[key] = data[key];
+    static init(data = {}) {
+        /** @type {T} */
+        const obj = new this();
+
+        for (let key in data) {
+            if (key in obj) {
+                obj[key] = data[key];
             }
-        });
+        }
+
+        return obj;
     }
 }
