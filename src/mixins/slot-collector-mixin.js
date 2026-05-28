@@ -11,7 +11,7 @@
  * @typedef {{
  *   bindSlots(collectedNodes?: (Element|Text)[]): void
  *   afterSlotsBinded(): void
- *   validateNode(node: Node, slotName: string): boolean
+ *   validateNode(node: Node, slotName: string, hiddenByCollector: boolean): boolean
  * }} SlotCollectorApi
  */
 
@@ -30,8 +30,8 @@ export default function SlotCollectorMixin(Base) {
         #slotNodes = [];
         #isCollected = false;
 
-        /** @type {WeakSet<Element>} */
-        #hiddenByCollector = new WeakSet();
+        /** @type {Set<Element>} */
+        #hiddenByCollector = new Set();
 
         constructor(...args) {
             super(...args);
@@ -61,14 +61,9 @@ export default function SlotCollectorMixin(Base) {
                 const nodeSlotName = (isElement && node.getAttribute('slot')) || 'default';
                 isElement && node.removeAttribute('slot');
 
-                if (!this.validateNode(node, nodeSlotName)) {
+                if (!this.validateNode(node, nodeSlotName, isElement && this.#hiddenByCollector.has(node))) {
                     node.remove();
                     continue;
-                }
-
-                if (node instanceof Element && this.#hiddenByCollector.has(node)) {
-                    node.removeAttribute('hidden');
-                    this.#hiddenByCollector.delete(node);
                 }
 
                 if (node instanceof HTMLTemplateElement) {
@@ -97,20 +92,27 @@ export default function SlotCollectorMixin(Base) {
                     slotEl.replaceWith(...slotEl.childNodes); // Fallback içerik
                 }
             }
+
+            this.#hiddenByCollector.forEach(node => node?.removeAttribute('hidden'));
+            collectedNodes.forEach(node => node instanceof Element && node?.removeAttribute(collectingAttr));
+            this.#hiddenByCollector = new Set();
         }
 
         /**
          * Validates nodes for slot binding.
          * @param {HTMLElement|Text} node
          * @param {String} slotName
+         * @param {Boolean} hiddenByCollector
          * @returns {Boolean}
          */
-        validateNode(node, slotName) {
+        validateNode(node, slotName, hiddenByCollector) {
             return true;
         }
 
         /** Called after slots have been bound. */
-        afterSlotsBinded() {}
+        afterSlotsBinded() {
+            // Hook for child classes.
+        }
 
         /**
          * @param {Map<string, (Element|Text)[]>} map
@@ -125,7 +127,7 @@ export default function SlotCollectorMixin(Base) {
         #extractTemplateContent(template, slotName) {
             return template.content
                 ? Array.from(template.content.childNodes).filter(node => {
-                      if (!this.validateNode(node, slotName)) return false;
+                      if (!this.validateNode(node, slotName, this.#hiddenByCollector.has(node))) return false;
 
                       if (node.nodeType === Node.ELEMENT_NODE) {
                           node.removeAttribute('slot');
@@ -153,9 +155,13 @@ export default function SlotCollectorMixin(Base) {
 
                 if (isTextNode)
                     node.remove(); // detach nodes
-                else if (node instanceof Element && !node.hasAttribute('hidden')) {
-                    node.setAttribute('hidden', '');
-                    this.#hiddenByCollector.add(node);
+                else if (node instanceof Element) {
+                    node.setAttribute(collectingAttr, '');
+
+                    if (!node.hasAttribute('hidden')) {
+                        node.setAttribute('hidden', '');
+                        this.#hiddenByCollector.add(node);
+                    }
                 }
 
                 return node.nodeType === Node.ELEMENT_NODE || (isTextNode && node.textContent.trim());
@@ -165,6 +171,8 @@ export default function SlotCollectorMixin(Base) {
         }
     };
 }
+
+const collectingAttr = 'data-slot-collecting';
 
 // template testleri
 // new testleri

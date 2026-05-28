@@ -69,7 +69,7 @@ export default class SelectBox extends SelectBase {
      * @param {String} slotName
      * @returns {Boolean}
      */
-    validateNode(node, slotName) {
+    validateNode(node, slotName, hiddenByCollector) {
         if (slotName != 'default') return true;
 
         const hasOptions = this.options?.length > 0;
@@ -88,6 +88,7 @@ export default class SelectBox extends SelectBase {
         }
 
         const option = isOptionElement ? Option.init(node) : OptionGroup.init(node);
+        option.hidden = !hiddenByCollector;
         this.#optionList.push(option);
         if (option.selected) this.value = option.value; // ilk seçili olan değeri alır, birden fazla seçili varsa ilkini alır
 

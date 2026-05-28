@@ -6,6 +6,7 @@ import Option from './Option.js';
 export default class OptionGroup extends BaseModel {
     label = '';
     disabled = false;
+    hidden = false;
     #options = [];
 
     /**
@@ -45,7 +46,7 @@ export default class OptionGroup extends BaseModel {
     }
 
     get htmlElement() {
-        return html`<optgroup label=${this.label} ?disabled=${this.disabled}>${this.#options.map(childOption => childOption.htmlElement)}</optgroup>`;
+        return html`<optgroup label=${this.label} ?disabled=${this.disabled} ?hidden=${this.hidden}>${this.#options.map(childOption => childOption.htmlElement)}</optgroup>`;
     }
 
     /**

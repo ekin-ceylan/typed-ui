@@ -9,6 +9,7 @@ export default class Option extends BaseModel {
     value = '';
     selected = false;
     disabled = false;
+    hidden = false;
 
     /**
      * Gets the display text for rendering.
@@ -20,6 +21,8 @@ export default class Option extends BaseModel {
     }
 
     get htmlElement() {
-        return html`<option label=${ifDefined(this.label)} value=${this.value} ?selected=${this.selected} ?disabled=${this.disabled}>${this.displayText}</option>`;
+        return html`<option label=${ifDefined(this.label)} value=${this.value} ?selected=${this.selected} ?disabled=${this.disabled} ?hidden=${this.hidden}>
+            ${this.displayText}
+        </option>`;
     }
 }
