@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import BaseModel from './BaseModel.js';
 import Option from './Option.js';
+import CustomOption from '../components/select/custom-option.js';
 
 /** Represents an option group model. */
 export default class OptionGroup extends BaseModel {
@@ -42,7 +43,7 @@ export default class OptionGroup extends BaseModel {
     }
 
     set children(value) {
-        this.options = value;
+        this.options = Array.from(value).filter(child => child instanceof CustomOption || child instanceof HTMLOptionElement);
     }
 
     get htmlElement() {

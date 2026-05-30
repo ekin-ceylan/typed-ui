@@ -4,6 +4,8 @@ import SelectBase from '../../core/select-base.js';
 import { spread } from '../../modules/spread.js';
 import Option from '../../models/Option.js';
 import OptionGroup from '../../models/OptionGroup.js';
+import CustomOption from './custom-option.js';
+import CustomOptgroup from './custom-optgroup.js';
 
 /** @extends {SelectBase<HTMLSelectElement>} */
 export default class SelectBox extends SelectBase {
@@ -73,8 +75,8 @@ export default class SelectBox extends SelectBase {
         if (slotName != 'default') return true;
 
         const hasOptions = this.options?.length > 0;
-        const isOptionElement = node instanceof HTMLOptionElement;
-        const isOptGroupElement = node instanceof HTMLOptGroupElement;
+        const isOptionElement = node instanceof HTMLOptionElement || node instanceof CustomOption;
+        const isOptGroupElement = node instanceof HTMLOptGroupElement || node instanceof CustomOptgroup;
         const isAllowedType = isOptionElement || isOptGroupElement;
 
         if (hasOptions) {

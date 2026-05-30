@@ -1,6 +1,10 @@
 import SelectBox from '../../components/select/select-box.js';
+import CustomOption from '../../components/select/custom-option.js';
+import CustomOptgroup from '../../components/select/custom-optgroup.js';
 
 defineElement('select-box', SelectBox);
+defineElement('custom-option', CustomOption);
+defineElement('custom-optgroup', CustomOptgroup);
 
 /**
  * Initializes a select-box and returns useful internals.
@@ -120,6 +124,38 @@ describe('SelectBox - Options & value', () => {
         expect(group.querySelectorAll('option')).toHaveLength(2);
     });
 
+    it('parses slotted custom-option nodes and respects selected attribute', async () => {
+        const { select, host } = await initSelectBox(`
+			<select-box field-id="priority" label="Priority" placeholder="Pick one">
+				<custom-option value="low">Low</custom-option>
+				<custom-option value="high" selected>High</custom-option>
+			</select-box>
+		`);
+
+        expect(host.value).toBe('high');
+        expect(select.value).toBe('high');
+        expect(select.options).toHaveLength(3);
+        expect(select.selectedOptions[0].textContent).toContain('High');
+    });
+
+    it('renders custom-optgroup with custom-option children', async () => {
+        const { select } = await initSelectBox(`
+			<select-box field-id="cars" label="Cars">
+				<custom-optgroup label="German Cars" hidden>
+					<custom-option value="bmw">BMW</custom-option>
+					<custom-option value="audi">Audi</custom-option>
+				</custom-optgroup>
+			</select-box>
+		`);
+
+        const group = select.querySelector('optgroup');
+        expect(group).not.toBeNull();
+        expect(group.label).toBe('German Cars');
+        expect(group.hidden).toBe(true);
+        expect(group.querySelectorAll('option')).toHaveLength(2);
+        expect(Array.from(group.querySelectorAll('option')).map(option => option.value)).toEqual(['bmw', 'audi']);
+    });
+
     it('renders noOptionsLabel as a disabled option when there are no options', async () => {
         const { select } = await initSelectBox('<select-box field-id="empty" label="Empty" placeholder="Choose"></select-box>');
 
@@ -212,5 +248,88 @@ describe('SelectBox - Options property', () => {
         expect(() => {
             host.options = /** @type {any} */ ('nope');
         }).toThrow(/options must be an array/i);
+    });
+});
+
+describe('SelectBox - validateNode guards', () => {
+    it('returns true for non-default slots', async () => {
+        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const node = document.createElement('div');
+
+        const result = host.validateNode(node, 'suffix', false);
+
+        expect(result).toBe(true);
+    });
+
+    it('returns false and warns when slotted nodes exist while options property is already set', async () => {
+        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        host.options = ['one'];
+        await host.updateComplete;
+
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const node = document.createElement('option');
+        node.value = 'two';
+        node.textContent = 'Two';
+
+        const result = host.validateNode(node, 'default', false);
+
+        expect(result).toBe(false);
+        expect(warnSpy).toHaveBeenCalledWith('Options are already set via property. Ignoring slotted nodes.');
+        warnSpy.mockRestore();
+    });
+
+    it('returns false and logs error for invalid child element types', async () => {
+        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        const invalidNode = document.createElement('div');
+        const result = host.validateNode(invalidNode, 'default', false);
+
+        expect(result).toBe(false);
+        expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('Only <option> and <optgroup> elements are allowed as children of'));
+        errorSpy.mockRestore();
+    });
+});
+
+describe('SelectBox - keyboard and invalid handlers', () => {
+    it('opens when Enter or Space is pressed on keydown', async () => {
+        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+
+        host.isOpen = false;
+        host.onKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(host.isOpen).toBe(true);
+
+        host.isOpen = false;
+        host.onKeydown(new KeyboardEvent('keydown', { key: ' ' }));
+        expect(host.isOpen).toBe(true);
+    });
+
+    it('closes when Escape, Tab, or Enter is pressed on keyup', async () => {
+        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+
+        host.isOpen = true;
+        host.onKeyup(new KeyboardEvent('keyup', { key: 'Escape' }));
+        expect(host.isOpen).toBe(false);
+
+        host.isOpen = true;
+        host.onKeyup(new KeyboardEvent('keyup', { key: 'Tab' }));
+        expect(host.isOpen).toBe(false);
+
+        host.isOpen = true;
+        host.onKeyup(new KeyboardEvent('keyup', { key: 'Enter' }));
+        expect(host.isOpen).toBe(false);
+    });
+
+    it('forces validation on invalid handler', async () => {
+        const { host } = await initSelectBox(`
+			<select-box field-id="team" label="Team" required>
+				<option value="a">A</option>
+			</select-box>
+		`);
+
+        host.onInvalid(new Event('invalid'));
+
+        expect(host.invalid).toBe(true);
+        expect(host.validationMessage).toContain('gereklidir');
     });
 });
