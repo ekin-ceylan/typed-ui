@@ -133,3 +133,35 @@ export function stringFormat(template, ...args) {
         return value === undefined || value === null ? '' : String(value).trim();
     });
 }
+
+/**
+ * Extracts ARIA attributes and their values from a given HTML element and returns them as an object.
+ * ARIA attributes are identified by the 'aria-' prefix. The returned object will have keys without the 'aria-' prefix and their corresponding values.
+ * @param {HTMLElement} element
+ * @returns {Record<string, string>}
+ */
+export function getAriaAttributesWithValues(element) {
+    if (!element || !(element instanceof HTMLElement)) return {};
+
+    return element
+        .getAttributeNames()
+        .filter(attr => attr.startsWith('aria-'))
+        .reduce((obj, attr) => {
+            obj[attr.replace('aria-', '')] = element.getAttribute(attr);
+            return obj;
+        }, {});
+}
+
+/**
+ * Converts attribute-like names to kebab-case.
+ * Examples: `ariaLabel` -> `aria-label`, `DataTestId` -> `data-test-id`.
+ * @param {string} name
+ * @returns {string}
+ */
+export function toKebabCase(name) {
+    return String(name)
+        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .replace(/[\s_]+/g, '-')
+        .toLowerCase();
+}
