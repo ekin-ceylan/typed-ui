@@ -172,7 +172,7 @@ export default function SlotCollectorMixin(Base) {
     };
 }
 
-const collectingAttr = 'data-slot-collecting';
+const collectingAttr = 'slot-collecting';
 
 // template testleri
 // new testleri

@@ -1,13 +1,13 @@
 import { html } from 'lit';
-import BaseModel from './BaseModel.js';
 import Option from './Option.js';
 import CustomOption from '../components/select/custom-option.js';
+import { spread } from '../modules/spread.js';
+import HtmlBaseModel from './HtmlBaseModel.js';
 
 /** Represents an option group model. */
-export default class OptionGroup extends BaseModel {
+export default class OptionGroup extends HtmlBaseModel {
     label = '';
     disabled = false;
-    hidden = false;
     #options = [];
 
     /**
@@ -46,10 +46,6 @@ export default class OptionGroup extends BaseModel {
         this.options = Array.from(value).filter(child => child instanceof CustomOption || child instanceof HTMLOptionElement);
     }
 
-    get htmlElement() {
-        return html`<optgroup label=${this.label} ?disabled=${this.disabled} ?hidden=${this.hidden}>${this.#options.map(childOption => childOption.htmlElement)}</optgroup>`;
-    }
-
     /**
      * Checks if any option in the group is selected.
      * @return {boolean} True if any option is selected, otherwise false.
@@ -64,5 +60,11 @@ export default class OptionGroup extends BaseModel {
      */
     get value() {
         return this.#options.find(option => option.selected)?.value || '';
+    }
+
+    get htmlElement() {
+        return html`<optgroup label=${this.label} ?disabled=${this.disabled} ?hidden=${this.hidden} ${spread(this.dataset, 'data-')} ${spread(this.ariaset, 'aria-')}>
+            ${this.#options.map(childOption => childOption.htmlElement)}
+        </optgroup>`;
     }
 }

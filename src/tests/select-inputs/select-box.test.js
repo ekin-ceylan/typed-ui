@@ -242,6 +242,63 @@ describe('SelectBox - Options property', () => {
         expect(values).toContain('two');
     });
 
+    it('renders dataset and ariaset from options API on option nodes', async () => {
+        const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+
+        host.options = [
+            {
+                value: 'ank',
+                label: 'Ankara',
+                dataset: { trackingId: 'city-ank' },
+                ariaset: { label: 'Ankara option' },
+            },
+        ];
+        await host.updateComplete;
+
+        const option = select.querySelector('option[value="ank"]');
+        expect(option).not.toBeNull();
+        console.log(option.dataset);
+        expect(option.dataset.trackingId).toBe('city-ank');
+        expect(option.getAttribute('aria-label')).toBe('Ankara option');
+    });
+
+    it('renders dataset and ariaset from options API on optgroup nodes', async () => {
+        const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+
+        host.options = [
+            {
+                label: 'Turkey',
+                dataset: { region: 'tr' },
+                ariaset: { label: 'Turkey cities' },
+                options: [{ value: 'ank', text: 'Ankara' }],
+            },
+        ];
+        await host.updateComplete;
+
+        const group = select.querySelector('optgroup');
+        expect(group).not.toBeNull();
+        expect(group.dataset.region).toBe('tr');
+        expect(group.getAttribute('aria-label')).toBe('Turkey cities');
+    });
+
+    it('collects slotted aria attributes into rendered option and optgroup nodes', async () => {
+        const { select } = await initSelectBox(`
+            <select-box field-id="city" label="City">
+                <optgroup label="Turkey" aria-label="Turkey group">
+                    <option value="ank" aria-label="Ankara option">Ankara</option>
+                </optgroup>
+            </select-box>
+        `);
+
+        const group = select.querySelector('optgroup');
+        const option = select.querySelector('option[value="ank"]');
+
+        expect(group).not.toBeNull();
+        expect(option).not.toBeNull();
+        expect(group.getAttribute('aria-label')).toBe('Turkey group');
+        expect(option.getAttribute('aria-label')).toBe('Ankara option');
+    });
+
     it('throws when options is not an array', async () => {
         const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
 
