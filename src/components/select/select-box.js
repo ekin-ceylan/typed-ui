@@ -173,6 +173,7 @@ export default class SelectBox extends SelectBase {
         this.invalid = !v?.valid; // TODO custom validasyon ekle
         this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
         el.setCustomValidity(this.validationMessage);
+        this.dispatchCustomEvent('validate', null, { validationMessage: this.validationMessage });
 
         return !this.validationMessage;
     }

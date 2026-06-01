@@ -57,7 +57,7 @@ Başlangıç seçimi için `value` verebilirsiniz (`value`, `option` değerlerin
 
 <Canvas of={SelectboxStories.BasicSelectedUsage} />
 
-Diğer yöntem ise `option` elementlerinden birine `selected` özniteliği eklemektir. İki öyntem aynı anda kullanılırsa `selected` baskın olur.
+Diğer yöntem ise `option` elementlerinden birine `selected` özniteliği eklemektir. İki yöntem aynı anda kullanılırsa `selected` baskın olur.
 
 ## Doğrulama (_Validation_)
 
@@ -67,21 +67,54 @@ Diğer yöntem ise `option` elementlerinden birine `selected` özniteliği eklem
 
 `required` olduğunda temizleme (_clear_) butonu gösterilmez.
 
+## Erişilebilirlik
+
+### Etiketleme ve İlişkilendirme
+
+Görünür etiket kullanımında `<label for="..."></label>` ile `<select id="..."></select>` ilişkilendirmesi yapılır. Bu durumda `aria-labelledby` otomatik bağlanır.
+
+`hide-label` kullanıldığında görünür `<label>` yerine `aria-label` kullanılır.
+
+### Required ve Hata Durumu
+
+`required` verildiğinde `aria-required="true"`, aksi durumda `aria-required="false"` atanır.
+
+Alan geçersiz olduğunda `aria-invalid` atanır ve hata metni gösterilir. `aria-errormessage`, hata alanının id değerine bağlanır. Değer tekrar geçerli olduğunda `aria-errormessage` kaldırılır.
+
+### Klavye Davranışı
+
+Native `<select>` davranışı korunur (özellikle seçenek gezinimi tarayıcı tarafından yönetilir). Bileşen seviyesi açık/kapalı durumu için `Enter`/`Space` ile açma, `Escape`/`Tab`/`Enter` ile kapama davranışı uygulanır.
+
 ## Programatik Kullanım
 
 > `options` set edildiğinde, slot ile verilen `<option>`/`<optgroup>` içerikleri yok sayılır.
 
 Seçenekleri JS üzerinden de verebilirsiniz. Bu durumda **slot içeriği yok sayılır**.
 
-`options`, ya bir `string` dizisi olmalıdır ya da elemenları aşağıdaki arayüze sahip nesnelerden oluşmalıdır:
+`options`, ya bir `string` dizisi olmalıdır ya da elemanları aşağıdaki arayüzlerden birini sağlamalıdır:
 
 ```ts
-options: {
-    value: String,
-    label: String,
-    selected: Boolean,
-    disabled: Boolean
-}[] | String[]
+type Option = {
+    value?: string;
+    label?: string;
+    text?: string;
+    selected?: boolean;
+    disabled?: boolean;
+    hidden?: boolean;
+    dataset?: Record<string, string | number | boolean | null | undefined>;
+    ariaset?: Record<string, string | null | undefined>;
+};
+
+type OptionGroup = {
+    label?: string;
+    disabled?: boolean;
+    hidden?: boolean;
+    dataset?: Record<string, string | number | boolean | null | undefined>;
+    ariaset?: Record<string, string | null | undefined>;
+    options?: Option[];
+};
+
+options: Array<string | Option | OptionGroup>;
 ```
 
 Öncelikle sayfada var olan `SelectBox` elementini seçmeniz
@@ -107,12 +140,27 @@ el.options = [
 ];
 ```
 
+`dataset` ve `ariaset` ile option seviyesinde özel öznitelik geçebilirsiniz:
+
+```js
+el.options = [
+    {
+        value: 'ank',
+        label: 'Ankara',
+        dataset: { trackingId: 'city-ank' },
+        ariaset: { label: 'Ankara seçeneği' },
+    },
+];
+```
+
 `<optgroup>` desteği:
 
 ```js
 el.options = [
     {
         label: 'Avrupa',
+        dataset: { region: 'eu' },
+        ariaset: { label: 'Avrupa ülkeleri' },
         options: [
             { value: 'de', label: 'Almanya' },
             { value: 'fr', label: 'Fransa' },
@@ -127,6 +175,17 @@ el.options = [
     },
 ];
 ```
+
+> `dataset` ve `ariaset` anahtarları _prefix_ kullanılmadan verilmelidir:
+>
+> - `dataset.testId` -> `data-test-id`
+> - `ariaset.label` -> `aria-label`.
+
+### Kapsam Dışı Davranışlar
+
+- Tüm öznitelikler için sınırsız _passthrough_ desteklenmez.
+- `onclick` gibi `on*` event öznitelikleri model üzerinden geçirilmez.
+- `style` model üzerinden geçirilmez.
 
 ### Lit.js Bileşeni
 
@@ -156,6 +215,7 @@ html`<select-box id="lit-select" label="Ülke" .options=${this.options} placehol
 - `change`: özellikle temizleme (clear) sonrası da tetiklenir
 - `clear`: temizleme butonuna basıldığında
 - `update`: `value` programatik değiştiğinde
+- `validate`: doğrulama çalıştığında (`detail.validationMessage` içerir)
 
 ```js
 const el = document.querySelector('select-box[field-id="country"]');

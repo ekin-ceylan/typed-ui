@@ -81,8 +81,8 @@ export const OptGroupSlotUsage = {
     <option value="volvo">Volvo</option>
     <option value="saab">Saab</option>
 </optgroup>`,
-        fieldId: 'country',
-        label: 'Ülke',
+        fieldId: 'cars',
+        label: 'Arabalar',
         placeholder: 'Lütfen seçiniz',
         id: 'basic-select',
     },
@@ -128,5 +128,6 @@ export const PropAttrEventLists = {
         change: createEventType('change', 'Değer commit edildiğinde (Seçim tamamlandığında veya temizlendiğinde) tetiklenir.'),
         clear: createEventType('clear', 'Temizleme (X) butonuna tıklandığında tetiklenir.'),
         update: createEventType('update', 'Değer programatik olarak (JS ile `.value` alanına atama yapılarak) değiştirildiğinde tetiklenir.'),
+        validate: createEventType('validate', 'Doğrulama işlemi tamamlandığında tetiklenir.', 'validationMessage: String'),
     },
 };
