@@ -53,9 +53,8 @@ export default class ComboBox extends SelectBase {
         return this.#options;
     }
     set options(val) {
-        if (!Array.isArray(val)) {
-            throw new TypeError('options must be an array');
-        }
+        if (!Array.isArray(val)) throw new TypeError('options must be an array');
+
         this.#options = val;
         this.#optionList = this.options.map(o => {
             const opt = this.#toListElement(o);

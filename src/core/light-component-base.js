@@ -97,11 +97,13 @@ export default class LightComponentBase extends LitElement {
         const scopePrefix = `${prefix}:`;
         /** @type {Record<string, string>} */
         const result = {};
+
         for (const { name, value } of this.attributes) {
             if (name.startsWith(scopePrefix)) {
                 result[name.slice(scopePrefix.length)] = value;
             }
         }
+
         return result;
     }
 
