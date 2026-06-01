@@ -5,7 +5,7 @@ export default defineConfig({
         globals: true,
         setupFiles: ['src/tests/setup.js'],
         include: ['src/tests/**/*.test.js'],
-        exclude: ['src/tests/unit-tests/**/*.test.js'],
+        // exclude: ['src/tests/unit-tests/**/*.test.js'],
         browser: {
             enabled: true,
             provider: 'playwright',

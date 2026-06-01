@@ -163,6 +163,7 @@ npm run preview
 Notes:
 
 - `npm run build` generates the browser-ready bundles under `dist/` and type declarations at `dist/typed-ui.d.ts`.
+- Testing standards are documented in `TESTING_POLICY.md`.
 
 ## License
 
