@@ -45,6 +45,7 @@ export default class ComboBox extends SelectBase {
         return this.#optionList?.filter(opt => {
             const searchValue = this.filter?.toLowerCase() || '';
             const optionText = opt.label.toLowerCase();
+
             return optionText.includes(searchValue);
         });
     }
@@ -85,15 +86,11 @@ export default class ComboBox extends SelectBase {
     // #region LIFECYCLE METHODS
     firstUpdated() {
         this.inputElement = this.renderRoot.querySelector('input[data-role="value"]');
-        /** @type {HTMLInputElement} */
-        this.searchElement = this.renderRoot.querySelector('input[data-role="search"]');
-        /** @type {HTMLDivElement} */
-        this.displayElement = this.renderRoot.querySelector('div[data-role="display"]');
-        /** @type {HTMLDivElement} */
-        this.comboboxDiv = this.renderRoot.querySelector('div[role="combobox"]');
-        /** @type {HTMLDivElement} */
-        this.listboxDiv = this.renderRoot.querySelector('div[role="listbox"]');
-        this.clearButton = this.renderRoot.querySelector('button[data-role="clear"]');
+        this.searchElement = /** @type {HTMLInputElement} */ (this.renderRoot.querySelector('input[data-role="search"]'));
+        this.displayElement = /** @type {HTMLDivElement} */ (this.renderRoot.querySelector('div[data-role="display"]'));
+        this.comboboxDiv = /** @type {HTMLDivElement} */ (this.renderRoot.querySelector('div[role="combobox"]'));
+        this.listboxDiv = /** @type {HTMLDivElement} */ (this.renderRoot.querySelector('div[role="listbox"]'));
+        this.clearButton = /** @type {HTMLButtonElement} */ (this.renderRoot.querySelector('button[data-role="clear"]'));
 
         this.#setInputAndDisplay(this.#selectedOption);
         this.searchElement.addEventListener('focus', () => (this.#focused = true), { once: true, capture: false });
