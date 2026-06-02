@@ -122,7 +122,7 @@
             <select-box field-id="country-selected" label="Ülke Selected" value="tr" placeholder="Seçiniz" required>
                 <option value="tr">Türkiye</option>
                 <option value="de" data-tracking-id="5" data-test="" aria-test="alm">Almanya</option>
-                <option value="us">ABD</option>
+                <option value="us" label="Amerika">ABD</option>
                 <option value="ch" selected>Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti Çin Halk Cumhuriyeti</option>
             </select-box>
             <br />
@@ -210,11 +210,12 @@
             // Dinamik attr set
             setTimeout(() => {
                 const el = document.getElementById('sb-dynamic');
-                el.options = [
-                    { value: 'x', label: 'X' },
-                    { value: 'y', label: 'Y', selected: true },
-                    { value: 'z', label: 'Z' },
-                ];
+                el.options = ['X', 'Y', 'Z'];
+                // el.options = [
+                //     { value: 'x', label: 'X' },
+                //     { value: 'y', label: 'Y', selected: true },
+                //     { value: 'z', label: 'Z' },
+                // ];
             }, 1500);
 
             import { LitElement, html } from 'lit';

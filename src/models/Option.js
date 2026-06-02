@@ -1,7 +1,7 @@
-import { html } from 'lit';
-import { ifDefined } from '../modules/utilities.js';
+import { html, nothing } from 'lit';
 import { spread } from '../modules/spread.js';
 import HtmlBaseModel from './HtmlBaseModel.js';
+import { ifDefined } from '../modules/utilities.js';
 
 /**
  * Represents an option model for select elements, encapsulating properties such as `label`, `text`, `value`, `selected`, and `disabled`.
@@ -23,12 +23,16 @@ export default class Option extends HtmlBaseModel {
      * @returns {string}
      */
     get displayText() {
-        return this.label || this.text || this.value;
+        return this.text || this.label || this.value;
+    }
+
+    get labelAttr() {
+        return this.label && this.text && this.label != this.text ? this.label : nothing;
     }
 
     get htmlElement() {
         return html`<option
-            label=${ifDefined(this.label)}
+            label=${ifDefined(this.labelAttr)}
             value=${this.value}
             ?selected=${this.selected}
             ?disabled=${this.disabled}

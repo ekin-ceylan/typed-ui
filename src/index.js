@@ -7,7 +7,6 @@ export { hideBodyScroll, showBodyScroll, lockAllScrolls, unlockAllScrolls } from
 export { spread } from './modules/spread.js';
 
 // Models
-export { default as BaseModel } from './models/BaseModel.js';
 export { default as Option } from './models/Option.js';
 export { default as OptionGroup } from './models/OptionGroup.js';
 export { default as WarningField } from './models/WarningField.js';
@@ -31,6 +30,8 @@ export { default as IntegerBox } from './components/text-input/integer-box.js';
 
 // Select
 export { default as SelectBox } from './components/select/select-box.js';
+export { default as CustomOption } from './components/select/custom-option.js';
+export { default as CustomOptgroup } from './components/select/custom-optgroup.js';
 export { default as ComboBox } from './components/select/combo-box.js';
 export { default as RangeSelect } from './components/select/range-select.js';
 export { default as CheckBox } from './components/select/check-box.js';

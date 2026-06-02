@@ -163,6 +163,58 @@ describe('SelectBox - Options & value', () => {
         expect(select.options[1].disabled).toBe(true);
         expect(select.options[1].textContent).toContain('Kayıt Bulunamadı');
     });
+
+    it('conditionally renders label attribute for slotted native option nodes', async () => {
+        const { select } = await initSelectBox(`
+			<select-box field-id="city" label="City">
+				<option value="ank" label="Ankara Label">Ankara Text</option>
+				<option value="ist" label="Istanbul">Istanbul</option>
+				<option value="izm">Izmir</option>
+			</select-box>
+		`);
+
+        const optionWithDifferentText = select.querySelector('option[value="ank"]');
+        const optionWithSameText = select.querySelector('option[value="ist"]');
+        const optionWithoutLabel = select.querySelector('option[value="izm"]');
+
+        expect(optionWithDifferentText).not.toBeNull();
+        expect(optionWithDifferentText.textContent.trim()).toBe('Ankara Text');
+        expect(optionWithDifferentText.getAttribute('label')).toBe('Ankara Label');
+
+        expect(optionWithSameText).not.toBeNull();
+        expect(optionWithSameText.textContent.trim()).toBe('Istanbul');
+        expect(optionWithSameText.getAttribute('label')).toBeNull();
+
+        expect(optionWithoutLabel).not.toBeNull();
+        expect(optionWithoutLabel.textContent.trim()).toBe('Izmir');
+        expect(optionWithoutLabel.getAttribute('label')).toBeNull();
+    });
+
+    it('conditionally renders label attribute for slotted custom-option nodes', async () => {
+        const { select } = await initSelectBox(`
+			<select-box field-id="city" label="City">
+				<custom-option value="ank" label="Ankara Label">Ankara Text</custom-option>
+				<custom-option value="ist" label="Istanbul">Istanbul</custom-option>
+				<custom-option value="izm">Izmir</custom-option>
+			</select-box>
+		`);
+
+        const optionWithDifferentText = select.querySelector('option[value="ank"]');
+        const optionWithSameText = select.querySelector('option[value="ist"]');
+        const optionWithoutLabel = select.querySelector('option[value="izm"]');
+
+        expect(optionWithDifferentText).not.toBeNull();
+        expect(optionWithDifferentText.textContent.trim()).toBe('Ankara Text');
+        expect(optionWithDifferentText.getAttribute('label')).toBe('Ankara Label');
+
+        expect(optionWithSameText).not.toBeNull();
+        expect(optionWithSameText.textContent.trim()).toBe('Istanbul');
+        expect(optionWithSameText.getAttribute('label')).toBeNull();
+
+        expect(optionWithoutLabel).not.toBeNull();
+        expect(optionWithoutLabel.textContent.trim()).toBe('Izmir');
+        expect(optionWithoutLabel.getAttribute('label')).toBeNull();
+    });
 });
 
 describe('SelectBox - Required validation', () => {
@@ -231,6 +283,20 @@ describe('SelectBox - Clear button', () => {
 });
 
 describe('SelectBox - Options property', () => {
+    it('accepts string-only arrays in options API and renders matching values/text', async () => {
+        const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+
+        host.options = ['one', 'two', 'three'];
+        await host.updateComplete;
+
+        const options = Array.from(select.querySelectorAll('option'));
+        const values = options.map(option => option.value);
+        const texts = options.map(option => option.textContent.trim());
+
+        expect(values).toEqual(expect.arrayContaining(['one', 'two', 'three']));
+        expect(texts).toEqual(expect.arrayContaining(['one', 'two', 'three']));
+    });
+
     it('accepts options arrays and renders them', async () => {
         const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
 
@@ -305,6 +371,39 @@ describe('SelectBox - Options property', () => {
         expect(() => {
             host.options = /** @type {any} */ ('nope');
         }).toThrow(/options must be an array/i);
+    });
+
+    it('resolves display text and label attribute via options API rules', async () => {
+        const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+
+        host.options = [
+            { value: 'labelOnly', label: 'Only Label' },
+            { value: 'textOnly', text: 'Only Text' },
+            { value: 'diff', label: 'Ankara Label', text: 'Ankara Text' },
+            { value: 'same', label: 'Istanbul', text: 'Istanbul' },
+        ];
+        await host.updateComplete;
+
+        const labelOnlyOption = select.querySelector('option[value="labelOnly"]');
+        const textOnlyOption = select.querySelector('option[value="textOnly"]');
+        const differentTextOption = select.querySelector('option[value="diff"]');
+        const sameTextOption = select.querySelector('option[value="same"]');
+
+        expect(labelOnlyOption).not.toBeNull();
+        expect(labelOnlyOption.textContent.trim()).toBe('Only Label');
+        expect(labelOnlyOption.getAttribute('label')).toBeNull();
+
+        expect(textOnlyOption).not.toBeNull();
+        expect(textOnlyOption.textContent.trim()).toBe('Only Text');
+        expect(textOnlyOption.getAttribute('label')).toBeNull();
+
+        expect(differentTextOption).not.toBeNull();
+        expect(differentTextOption.textContent.trim()).toBe('Ankara Text');
+        expect(differentTextOption.getAttribute('label')).toBe('Ankara Label');
+
+        expect(sameTextOption).not.toBeNull();
+        expect(sameTextOption.textContent.trim()).toBe('Istanbul');
+        expect(sameTextOption.getAttribute('label')).toBeNull();
     });
 });
 

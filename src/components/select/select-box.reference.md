@@ -50,8 +50,9 @@
 3. For default slot parsing, only option/optgroup node types are accepted; invalid node types are rejected and logged.
 4. Rendered option nodes come from normalized `Option`/`OptionGroup` models (`#optionList`), not raw payload objects.
 5. `dataset` and `ariaset` are explicit allowlisted channels for custom attributes at model level; unknown payload keys remain ignored by `BaseModel.init`.
-6. `Option.postInit` must only read `label` attribute for `HTMLOptionElement` sources (object payloads must not be treated as DOM nodes).
-7. Validation UI state (`invalid`, `validationMessage`, `aria-invalid`, error message node) is driven by native select validity plus component rules and should remain consistent after blur/change/clear/invalid flow.
+6. `Option` rendering must derive visible option text as `text || label || value`.
+7. `Option` `label` attribute should be rendered only when both `label` and `text` exist and differ (`label !== text`).
+8. Validation UI state (`invalid`, `validationMessage`, `aria-invalid`, error message node) is driven by native select validity plus component rules and should remain consistent after blur/change/clear/invalid flow.
 
 ## Input Contract
 
@@ -81,7 +82,9 @@
     - `options` path: external payload -> `#toOptionElement` -> `Option.init`/`OptionGroup.init` -> `#optionList` -> template map to `htmlElement`.
     - Slot path: slot collector -> `validateNode` -> `Option.init(node)` / `OptionGroup.init(node)` -> `#optionList`.
     - Model render path:
-        - `Option.htmlElement` renders `<option>` with selected/disabled/hidden/value/label and custom attr spreads.
+        - `Option.htmlElement` renders `<option>` with selected/disabled/hidden/value and custom attr spreads.
+        - Visible option text is resolved as `text || label || value`.
+        - `label` attribute is conditionally rendered only when `label` and `text` are both present and different.
         - `OptionGroup.htmlElement` renders `<optgroup>` and child options recursively.
     - Select template renders placeholder option + `noOptionHtml` + normalized options.
 - Key transformation points:
@@ -161,7 +164,7 @@
 
 - Constraints for safe edits:
     - Preserve allowlist model (`BaseModel.init` key filter); do not introduce unrestricted attribute passthrough without explicit decision.
-    - Keep `Option.postInit` source-type guarding intact for dual-path input safety.
+    - Keep `HtmlBaseModel.postInit` source-type guarding intact for dual-path input safety.
     - Keep `options` array guard and slot precedence warning behavior unless intentionally changing API contract.
     - Avoid changing event names (`input`, `change`, `validate`) without coordinated downstream updates.
 - What must be tested after edits:

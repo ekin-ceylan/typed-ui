@@ -184,7 +184,7 @@ export default class SelectBox extends SelectBase {
         if (raw instanceof HTMLOptGroupElement) return OptionGroup.init(raw);
 
         if (typeof raw === 'string' || typeof raw === 'number') {
-            return Option.init({ value: String(raw), text: String(raw) });
+            return Option.init({ value: String(raw) });
         }
 
         if (raw && typeof raw === 'object') {
