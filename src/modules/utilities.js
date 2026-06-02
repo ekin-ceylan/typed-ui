@@ -165,3 +165,41 @@ export function toKebabCase(name) {
         .replace(/[\s_]+/g, '-')
         .toLowerCase();
 }
+
+/**
+ * Sanitizes HTML by removing potentially dangerous elements and attributes.
+ * @param {string} raw - The raw HTML string to sanitize.
+ * @returns {string} The sanitized HTML string.
+ */
+export function sanitizeHtml(raw) {
+    const t = document.createElement('template');
+    t.innerHTML = String(raw ?? '');
+
+    const blockedTags = ['script', 'style', 'iframe', 'object', 'embed', 'link', 'meta'];
+    blockedTags.forEach(tag => t.content.querySelectorAll(tag).forEach(el => el.remove()));
+
+    t.content.querySelectorAll('*').forEach(el => {
+        [...el.attributes].forEach(attr => {
+            const n = attr.name.toLowerCase();
+            const v = String(attr.value || '')
+                .trim()
+                .toLowerCase();
+
+            if (n.startsWith('on')) {
+                el.removeAttribute(attr.name);
+                return;
+            }
+
+            if (n === 'style') {
+                el.removeAttribute('style');
+                return;
+            }
+
+            if ((n === 'href' || n === 'src') && (v.startsWith('javascript:') || v.startsWith('data:text/html'))) {
+                el.removeAttribute(attr.name);
+            }
+        });
+    });
+
+    return t.innerHTML;
+}
