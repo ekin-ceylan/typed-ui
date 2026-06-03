@@ -16,4 +16,14 @@ export default class CustomOption extends LightComponentBase {
     get text() {
         return this.textContent.trim();
     }
+
+    constructor() {
+        super();
+        this.label = '';
+        /** @type {string} */
+        this.value = '';
+        this.selected = false;
+        this.disabled = false;
+        this.hidden = false;
+    }
 }

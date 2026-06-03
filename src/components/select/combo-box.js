@@ -2,6 +2,9 @@ import { html } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
 import SelectBase from '../../core/select-base.js';
 import { lockAllScrolls, unlockAllScrolls } from '../../modules/scroll-lock-helper.js';
+import ComboOption from '../../models/ComboOption.js';
+import CustomOption from './custom-option.js';
+import { generateId } from '../../modules/id-generator.js';
 
 /**
  * Custom combo box component that extends SelectBase to provide a searchable dropdown list of options. It supports both native and custom behaviors, allowing for flexible usage in various contexts.
@@ -25,10 +28,11 @@ export default class ComboBox extends SelectBase {
         };
     }
 
-    /** @type {ComboBoxOption[]} */
+    /** @type {ComboOption[]} */
     #optionList = [];
-    /** @type {ComboBoxOption | null} */
+    /** @type {ComboOption | null} */
     #selectedOption = null;
+    /** @type {Array<object|string>} */
     #options = [];
 
     #focused = false; // Inputun odaklanıp odaklanmadığını takip eder
@@ -54,12 +58,15 @@ export default class ComboBox extends SelectBase {
         return this.#options;
     }
     set options(val) {
-        if (!Array.isArray(val)) throw new TypeError('options must be an array');
+        if (!Array.isArray(val)) {
+            throw new TypeError('options must be an array');
+        }
 
         this.#options = val;
         this.#optionList = this.options.map(o => {
             const opt = this.#toListElement(o);
-            opt.selected && this.#onSelect(opt);
+            if (opt.selected) this.#onSelect(opt);
+
             return opt;
         });
 
@@ -71,10 +78,13 @@ export default class ComboBox extends SelectBase {
     constructor() {
         super();
 
-        /** @type {ComboBoxOption[]} */
-        this.options = [];
-        /** @type {ComboBoxOption | null} */
+        /**
+         * Stores the currently selected option info, which includes both the value and label. This property is updated whenever a new option is selected, providing easy access to the full details of the selected option for use in event handlers or other logic.
+         * @type {{ value: string, label: string } | null}
+         */
         this.selectedOption = null;
+        /** @type {Object|string[]} */
+        this.options = [];
         /** @type {string} */
         this.filter = '';
         /** @type {Boolean} */
@@ -103,7 +113,6 @@ export default class ComboBox extends SelectBase {
     updated(changed) {
         if (changed.has('value') && this.inputElement?.value !== this.value) {
             const matchedOption = this.#optionList.find(o => o.value === this.value) || null;
-            //TODO bulunamazsa!! console.log('handleValueUpdate', { value: this.value, matchedOption });
             this.#onSelect(matchedOption);
             this.#checkValidity();
             this.dispatchCustomEvent('update');
@@ -124,13 +133,14 @@ export default class ComboBox extends SelectBase {
      * @override Validates nodes for slot binding.
      * @param {HTMLElement|Text} node
      * @param {String} slotName
+     * @param {Boolean} hiddenByCollector
      * @returns {Boolean}
      */
-    validateNode(node, slotName) {
+    validateNode(node, slotName, hiddenByCollector) {
         if (slotName != 'default') return true;
 
         const hasOptions = this.options?.length > 0;
-        const isAllowedType = node instanceof HTMLOptionElement;
+        const isAllowedType = node instanceof HTMLOptionElement || node instanceof CustomOption;
 
         if (hasOptions) {
             console.warn('Options are already set via property. Ignoring slotted nodes.');
@@ -138,15 +148,16 @@ export default class ComboBox extends SelectBase {
         }
 
         if (!isAllowedType) {
-            console.error('Only <option> elements are allowed as children of <combo-box>.');
+            console.error(`Only \`HTMLOptionElement\` and \`CustomOption\` are allowed as children of \`${this.tagName.toLowerCase()}\`.`);
             return false;
         }
 
         const option = this.#parseOption(node);
+        option.hidden = !hiddenByCollector;
         this.#optionList.push(option);
-        option.selected && this.#onSelect(option);
+        if (option.selected) this.#onSelect(option);
 
-        return false;
+        return false; // abort default slotting process
     }
 
     // #region EVENT LISTENERS
@@ -220,31 +231,51 @@ export default class ComboBox extends SelectBase {
         this.#closeList();
     }
 
+    onListboxClick(e) {
+        const optionId = this.#getOptionIdFromEvent(e);
+        const option = this.filteredOptions.find(opt => opt.id === optionId);
+        if (!option || option.disabled) return;
+
+        this.onOptionClick(option);
+    }
+
+    onListboxMouseover(e) {
+        const optionId = this.#getOptionIdFromEvent(e);
+        const index = this.filteredOptions.findIndex(opt => opt.id === optionId);
+        if (index < 0) return;
+
+        this.activeIndex = index;
+    }
+
     // #endregion EVENT LISTENERS
 
     // #region PRIVATE METHODS
     /**
      * Handles option selection.
-     * @param {ComboBoxOption} selectedOption
+     * @param {ComboOption} selectedOption
      */
     #onSelect(selectedOption) {
         if (this.#selectedOption === selectedOption) return;
-
-        this.#selectedOption && (this.#selectedOption.selected = false);
+        if (this.#selectedOption) this.#selectedOption.selected = false;
         this.#selectedOption = selectedOption;
-        this.#selectedOption && (this.#selectedOption.selected = true);
-        this.selectedOption = { value: selectedOption?.value, label: selectedOption?.label };
+
+        if (this.#selectedOption) this.#selectedOption.selected = true;
+        this.selectedOption = { value: selectedOption?.value, label: selectedOption?.displayText };
         this.#setInputAndDisplay(selectedOption);
         this.value = selectedOption?.value || null;
         this.dispatchCustomEvent('input');
         this.dispatchCustomEvent('change');
     }
 
+    /**
+     * Sets the input value and display content based on the selected option.
+     * @param {ComboOption} selectedOption
+     */
     #setInputAndDisplay(selectedOption) {
         if (!this.inputElement || !this.displayElement) return;
 
         this.inputElement.value = selectedOption?.value || '';
-        this.displayElement.innerHTML = selectedOption?.innerHTML || this.placeholder;
+        this.displayElement.innerHTML = selectedOption?.displayContent || this.placeholder;
     }
 
     /**
@@ -313,7 +344,7 @@ export default class ComboBox extends SelectBase {
     /**
      * Gets the adjacent option based on the current selection.
      * @param {Boolean} next
-     * @returns {[ComboBoxOption|null, number]} The adjacent option and its index.
+     * @returns {[ComboOption|null, number]} The adjacent option and its index.
      */
     #getAdjacentOption(next) {
         const direction = next ? 1 : -1;
@@ -447,60 +478,49 @@ export default class ComboBox extends SelectBase {
     }
 
     /**
-     * @typedef {Object} ComboBoxOption
-     * @property {string} value
-     * @property {string} label
-     * @property {boolean} [disabled]
-     * @property {boolean} [selected]
-     * @property {string} [innerHTML]
-     * Parses an HTMLOptionElement into a plain object.
-     * @param {HTMLOptionElement } opt
-     * @returns {ComboBoxOption}
+     * Resolves option and index from a delegated listbox event.
+     * @param {Event} event
+     * @returns {string} The ID of the option element that was interacted with.
+     */
+    #getOptionIdFromEvent(event) {
+        const target = /** @type {HTMLElement} */ (event.target);
+        const optionElement = target?.closest('[role="option"]');
+
+        return optionElement?.id || '';
+    }
+
+    /**
+     * Parses an HTMLOptionElement or ComboOption into a plain object.
+     * @param { HTMLOptionElement | CustomOption } opt
+     * @returns {ComboOption}
      */
     #parseOption(opt) {
-        const isSelected = opt.selected || this.value === opt.value;
+        const option = ComboOption.init(opt);
+        option.id = generateId(`${this.fieldId}-option`);
+        if (this.value === opt.value) option.selected = true;
 
-        return {
-            value: opt.value,
-            label: opt.textContent?.trim() || opt.label || opt.value,
-            disabled: !!opt.disabled,
-            selected: isSelected,
-            innerHTML: opt.innerHTML || opt.label || opt.value,
-        };
+        return option;
     }
 
-    #createOptionId(index) {
-        return `${this.fieldId}-option-${index}`;
-    }
-
+    /**
+     * Converts a ComboOption into a div element.
+     * @param {ComboOption} opt
+     * @param {number} i
+     * @returns {import('lit').TemplateResult}
+     */
     #optToDiv(opt, i) {
         const isActive = this.activeIndex === -1 ? opt.selected : this.activeIndex === i;
-        const optionId = this.#createOptionId(i);
 
-        return html`
-            <div
-                id=${optionId}
-                role="option"
-                ?data-active=${isActive && this.isOpen}
-                data-value=${opt.value}
-                ?aria-disabled=${!!opt.disabled}
-                ?aria-selected=${opt.selected}
-                @click=${opt.disabled ? undefined : _e => this.onOptionClick(opt)}
-                @mouseenter=${_e => {
-                    this.activeIndex = i;
-                }}
-                .innerHTML=${opt.innerHTML}
-            ></div>
-        `;
+        return opt.toHtml(isActive);
     }
 
     #toListElement(raw) {
-        if (raw instanceof HTMLOptionElement || typeof raw === 'object') {
+        if (raw instanceof HTMLOptionElement || raw instanceof CustomOption || typeof raw === 'object') {
             return this.#parseOption(raw);
         }
 
         if (typeof raw === 'string' || typeof raw === 'number') {
-            const opt = /** @type {HTMLOptionElement} */ ({ value: String(raw), label: String(raw) });
+            const opt = /** @type {CustomOption} */ ({ value: String(raw) });
             return this.#parseOption(opt);
         }
 
@@ -536,7 +556,7 @@ export default class ComboBox extends SelectBase {
 
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
-        const activeDescendantId = this.activeIndex >= 0 ? this.#createOptionId(this.activeIndex) : undefined;
+        const activeDescendantId = this.filteredOptions[this.activeIndex]?.id;
 
         // prettier-ignore
         return html`
@@ -573,7 +593,14 @@ export default class ComboBox extends SelectBase {
                 />
                 <div data-role="display" aria-haspopup="listbox" .innerHTML=${this.placeholder}></div>
                 ${this.renderSearchInput()} ${this.renderClearButton()} ${this.renderChevron()}
-                <div id=${this.fieldId + '-list'} role="listbox" popover="manual" aria-expanded=${this.isOpen ? 'true' : 'false'}>
+                <div
+                    id=${this.fieldId + '-list'}
+                    role="listbox"
+                    popover="manual"
+                    aria-expanded=${this.isOpen ? 'true' : 'false'}
+                    @click=${this.onListboxClick}
+                    @mouseover=${this.onListboxMouseover}
+                >
                     ${this.renderListContent()}
                 </div>
             </div>

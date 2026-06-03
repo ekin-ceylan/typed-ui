@@ -10,6 +10,7 @@ All behavior claims here are intended to be verifiable from implementation and t
 
 - Component: ComboBox
 - Source file: [src/components/select/combo-box.js](src/components/select/combo-box.js)
+- Option model: [src/models/ComboOption.js](src/models/ComboOption.js)
 - Primary tests: [src/tests/select-inputs/combo-box.test.js](src/tests/select-inputs/combo-box.test.js)
 - Story behavior reference: [stories/components/select/combobox/combo-box.overview.mdx](stories/components/select/combobox/combo-box.overview.mdx)
 - Base class: SelectBase
@@ -40,6 +41,10 @@ Derived state:
 - `filteredOptions`:
     - returns all options when `filter` is empty.
     - otherwise applies case-insensitive `label.includes(filter)`.
+
+Per-option state:
+
+- each normalized option has a generated stable `id` used for `aria-activedescendant` and delegated event lookup.
 
 ## Critical Invariants
 
@@ -84,7 +89,9 @@ Invalid input:
 1. Input source:
     - options are provided by either the `options` property or default-slot option nodes.
 2. Normalization:
-    - values are converted into a uniform internal option object shape in `#optionList`.
+    - values are converted into `ComboOption` instances in `#optionList`.
+    - each option receives a generated `id`.
+    - option display content is sanitized in the model (`displayContent`) before being rendered.
 3. Selection mapping:
     - internal selected reference is tracked in `#selectedOption`.
     - public selected snapshot is mirrored in `selectedOption`.
@@ -94,6 +101,8 @@ Invalid input:
     - `filteredOptions` projects current list using case-insensitive label matching.
 6. Render output:
     - listbox options render with role and aria attributes; active option is linked through `aria-activedescendant`.
+7. Interaction dispatch:
+    - listbox-level delegated handlers (`click`, `mouseover`) resolve the interacted option by element `id`.
 
 ## Event and Behavior Flow
 
@@ -128,6 +137,14 @@ Invalid input:
 6. Set `value`.
 7. Dispatch `input` and `change`.
 
+### Delegated option events
+
+1. Listbox receives `click` and `mouseover` at container level.
+2. Handler resolves nearest `[role="option"]` from event target.
+3. Option id is mapped to current `filteredOptions` entry.
+4. `click`: selects option (unless disabled) and closes list.
+5. `mouseover`: updates `activeIndex` for hover highlighting.
+
 ## Interaction Contract
 
 ### Closed state
@@ -160,7 +177,8 @@ Must keep the following semantics intact:
 
 ## Security and Risk Notes
 
-- `innerHTML` usage in option/render pipeline can be unsafe with untrusted content.
+- Option display HTML is sanitized in `ComboOption` before rendering, but content is still rendered via `innerHTML` sink.
+- Sanitizer quality directly determines XSS resistance for rich option content.
 - External invalid `value` assignments may clear selection; UX expectations should be explicit.
 - Missing listener cleanup can cause leaks and side effects.
 - Keyboard and validation flows are coupled to open/close lifecycle; partial edits can introduce regressions.
@@ -195,6 +213,7 @@ Missing or weakly covered areas to add:
 - Resize-triggered close behavior.
 - Direction-up positioning branch and max-height clamping behavior.
 - Native mode commit-on-close behavior for non-Enter close paths.
+- Delegated listbox event behavior (`click`/`mouseover`) and id-to-option resolution.
 
 ## Change Policy for Agents
 
@@ -238,6 +257,7 @@ host.options = 'not-an-array';
 Use these facts for fast responses in chat:
 
 - ComboBox uses a hidden value input plus display div and search input.
+- Options are normalized as `ComboOption` with generated ids.
 - `options` must be an array.
 - Default keyboard mode commits selection with Enter while open.
 - Native mode can commit via arrows while closed and commits active option on close.

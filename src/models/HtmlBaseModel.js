@@ -27,7 +27,7 @@ export default class HtmlBaseModel extends BaseModel {
 
     static postInit(obj, data) {
         if (data instanceof HTMLElement) {
-            obj['ariaset'] = getAriaAttributesWithValues(data);
+            Object.assign(obj['ariaset'], getAriaAttributesWithValues(data));
         }
 
         return obj;

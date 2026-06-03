@@ -13,6 +13,7 @@ import { ifDefined } from '../modules/utilities.js';
 export default class Option extends HtmlBaseModel {
     label = '';
     text = '';
+    /** @type {string} */
     value = '';
     selected = false;
     disabled = false;
@@ -39,8 +40,7 @@ export default class Option extends HtmlBaseModel {
             ?hidden=${this.hidden}
             ${spread(this.dataset, 'data-')}
             ${spread(this.ariaset, 'aria-')}
-        >
-            ${this.displayText}
-        </option>`;
+            .innerText=${this.displayText}
+        ></option>`;
     }
 }

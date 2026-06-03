@@ -146,6 +146,62 @@ describe('ComboBox - Options & selection', () => {
         expect(ctx.host.value).toBe('ts');
         expect(ctx.display.textContent).toContain('TypeScript');
     });
+
+    it('selects option when clicking nested element inside option (delegated click)', async () => {
+        const ctx = await initComboBox('<combo-box field-id="city" label="City" placeholder="Pick"></combo-box>');
+
+        ctx.host.options = [
+            { value: 'ank', innerHTML: '<span data-part="label">Ankara</span>' },
+            { value: 'ist', innerHTML: '<span data-part="label">Istanbul</span>' },
+        ];
+        await ctx.host.updateComplete;
+
+        await openList(ctx);
+        const nestedLabel = ctx.host.querySelector('div[role="listbox"] div[role="option"] span[data-part="label"]');
+        expect(nestedLabel).not.toBeNull();
+
+        await ctx.user.click(nestedLabel);
+        await ctx.host.updateComplete;
+
+        expect(ctx.host.value).toBe('ank');
+        expect(ctx.host.isOpen).toBe(false);
+    });
+
+    it('does not select disabled option on delegated click', async () => {
+        const ctx = await initComboBox('<combo-box field-id="city" label="City" placeholder="Pick"></combo-box>');
+
+        ctx.host.options = [
+            { value: 'ank', label: 'Ankara' },
+            { value: 'ist', label: 'Istanbul', disabled: true },
+        ];
+        await ctx.host.updateComplete;
+
+        await openList(ctx);
+        const optionDivs = getOptionDivs(ctx.host);
+        await ctx.user.click(optionDivs[1]);
+        await ctx.host.updateComplete;
+
+        expect(ctx.host.value).toBe('');
+        expect(ctx.host.isOpen).toBe(true);
+    });
+
+    it('updates active descendant to hovered option id (delegated mouseover)', async () => {
+        const ctx = await initComboBox(`
+			<combo-box field-id="city" label="City" placeholder="Pick">
+				<option value="a">Ankara</option>
+				<option value="i">Istanbul</option>
+			</combo-box>
+		`);
+
+        await openList(ctx);
+        const optionDivs = getOptionDivs(ctx.host);
+
+        await ctx.user.hover(optionDivs[1]);
+        await ctx.host.updateComplete;
+
+        expect(ctx.host.activeIndex).toBe(1);
+        expect(ctx.comboboxDiv.getAttribute('aria-activedescendant')).toBe(optionDivs[1].id);
+    });
 });
 
 describe('ComboBox - Filtering', () => {
@@ -229,7 +285,7 @@ describe('ComboBox - Options property', () => {
         await openList(ctx);
         const optionDivs = getOptionDivs(ctx.host);
         expect(optionDivs.length).toBe(2);
-        expect(optionDivs.map(o => o.getAttribute('data-value'))).toEqual(['one', 'two']);
+        expect(optionDivs.map(o => o.dataset.value)).toEqual(['one', 'two']);
     });
 
     it('throws when options is not an array', async () => {
@@ -237,5 +293,39 @@ describe('ComboBox - Options property', () => {
         expect(() => {
             host.options = /** @type {any} */ ('nope');
         }).toThrow(/options must be an array/i);
+    });
+
+    it('ignores slotted nodes and warns when options are already set via property', async () => {
+        const { host } = await initComboBox('<combo-box field-id="x" label="X"></combo-box>');
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+        host.options = ['one'];
+        await host.updateComplete;
+
+        const slottedOption = document.createElement('option');
+        slottedOption.value = 'two';
+        slottedOption.textContent = 'Two';
+
+        const result = host.validateNode(slottedOption, 'default', true);
+
+        expect(result).toBe(false);
+        expect(warnSpy).toHaveBeenCalledWith('Options are already set via property. Ignoring slotted nodes.');
+
+        warnSpy.mockRestore();
+    });
+
+    it('rejects unsupported slotted children and logs an error', async () => {
+        const { host } = await initComboBox('<combo-box field-id="x" label="X"></combo-box>');
+        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        const invalidChild = document.createElement('div');
+        invalidChild.textContent = 'Invalid';
+
+        const result = host.validateNode(invalidChild, 'default', true);
+
+        expect(result).toBe(false);
+        expect(errorSpy).toHaveBeenCalledWith('Only `HTMLOptionElement` and `CustomOption` are allowed as children of `combo-box`.');
+
+        errorSpy.mockRestore();
     });
 });
