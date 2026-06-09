@@ -71,6 +71,7 @@ export default class ComboBox extends SelectBase {
         });
 
         this.requestUpdate();
+        if (this.isOpen) this.#calcListSizeAndDirection();
     }
 
     // #endregion STATICS, FIELDS, GETTERS
