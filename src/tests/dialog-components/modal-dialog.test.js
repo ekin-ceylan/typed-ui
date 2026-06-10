@@ -9,8 +9,14 @@ if (!customElements.get('modal-dialog')) {
 describe('ModalDialog Component', () => {
     let modal;
     let container;
-    const showModalSpy = vi.fn();
-    const closeSpy = vi.fn();
+    const showModalSpy = vi.fn(function () {
+        this.open = true;
+        this.setAttribute('open', '');
+    });
+    const closeSpy = vi.fn(function () {
+        this.open = false;
+        this.removeAttribute('open');
+    });
 
     beforeEach(async () => {
         // Mock dialog methods (browser mode'da native <dialog> var ama spy için mock edelim)
@@ -123,7 +129,11 @@ describe('ModalDialog Component', () => {
 
         it('should call close after timeout when hiding', async () => {
             modal.show();
+            await modal.updateComplete;
+            vi.advanceTimersByTime(20);
+
             modal.hide();
+            await modal.updateComplete;
 
             // Close should not be called immediately
             expect(closeSpy).not.toHaveBeenCalled();
@@ -212,6 +222,9 @@ describe('ModalDialog Component', () => {
 
         it('should clear existing timeout when hiding multiple times', async () => {
             modal.show();
+            await modal.updateComplete;
+            vi.advanceTimersByTime(20);
+
             modal.hide();
             modal.hide(); // Call hide again before timeout
             await modal.updateComplete;

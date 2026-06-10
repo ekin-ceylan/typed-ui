@@ -80,7 +80,8 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
     /** @override */
     updated(changedProperties) {
         super.updated(changedProperties);
-        if (this.#dialog) {
+
+        if (this.#dialog && changedProperties.has('open') && this.open != this.#dialog.open) {
             this.open ? this.#show() : this.#hide();
         }
     }
@@ -148,6 +149,7 @@ export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) 
             this.dispatchCustomEvent('show');
         }, 20);
     }
+
     /** Hide with small delay for CSS transitions. */
     #hide() {
         this.#dialog?.removeAttribute('data-active');
