@@ -22,6 +22,10 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
     /** @override @type {TElement | null} */
     inputElement = null;
 
+    get listId() {
+        return `${this.componentName}-list-${this.uniqueId}`;
+    }
+
     // #endregion STATICS, FIELDS, GETTERS
 
     constructor() {

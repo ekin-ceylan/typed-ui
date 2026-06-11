@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import { ifDefined } from '../modules/utilities.js';
 import LightComponentBase from './light-component-base';
-import { generateId } from '../modules/id-generator.js';
+import generateId from '../modules/id-generator.js';
 import Keys from '../enums/Keys.js';
 
 /**
@@ -19,8 +19,7 @@ export default class InputBase extends LightComponentBase {
     static get properties() {
         return {
             ...super.properties,
-            fieldId: { type: String, attribute: 'field-id' },
-            fieldName: { type: String, attribute: 'field-name' },
+            name: { type: String },
             value: { type: String },
             label: { type: String },
             hideLabel: { type: Boolean, attribute: 'hide-label' },
@@ -34,6 +33,7 @@ export default class InputBase extends LightComponentBase {
         };
     }
 
+    #uniqueId = null; // Bileşen için benzersiz ID
     #focused = false; // Inputun odaklanıp odaklanmadığını takip eder
 
     /** @type {TElement | null} */
@@ -52,14 +52,17 @@ export default class InputBase extends LightComponentBase {
         this.ariaInvalid = value ? 'true' : undefined;
     }
 
-    get inputLabel() {
-        return this.label && this.label + (this.required ? this.requiredSign : '');
+    get uniqueId() {
+        return this.#uniqueId;
+    }
+    get fieldId() {
+        return `${this.componentName}-${this.uniqueId}`;
     }
     get labelId() {
-        return this.fieldId && !this.hideLabel ? `${this.fieldId}-label` : null;
+        return this.hideLabel ? null : `${this.componentName}-label-${this.uniqueId}`;
     }
     get errorId() {
-        return this.fieldId && this.validationMessage ? `${this.fieldId}-error` : null;
+        return this.validationMessage ? `${this.componentName}-error-${this.uniqueId}` : null;
     }
 
     get requiredValidationMessage() {
@@ -75,13 +78,12 @@ export default class InputBase extends LightComponentBase {
     // #region LIFECYCLE METHODS
     constructor() {
         super();
+        this.#uniqueId = generateId();
 
         /** @type {string | number | boolean | null } */
         this.value = '';
-        /** @property {string} Unique identifier for the input field */
-        this.fieldId = '';
-        /** @property {string} Name attribute for the input field */
-        this.fieldName = '';
+        /** @type {string} Name attribute for the input field */
+        this.name = '';
         /** @property {string} Label text for the input field */
         this.label = '';
         /** @property {boolean} Whether to hide the label visually */
@@ -105,7 +107,6 @@ export default class InputBase extends LightComponentBase {
     /** @override */
     connectedCallback() {
         super.connectedCallback();
-        if (!this.fieldId) this.fieldId = generateId(this.tagName.toLowerCase());
         this.#firstUpdateCompleted();
     }
 
@@ -197,7 +198,7 @@ export default class InputBase extends LightComponentBase {
 
     /** @return {import('lit').TemplateResult | typeof nothing} */
     renderLabel() {
-        return this.hideLabel ? nothing : html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
+        return this.hideLabel ? nothing : html`<label id=${this.labelId} for=${this.fieldId}>${this.renderLabelText()}</label>`;
     }
 
     /** @return {import('lit').TemplateResult | typeof nothing} */
@@ -228,7 +229,9 @@ export default class InputBase extends LightComponentBase {
     // #region PRIVATE METHODS
     async #firstUpdateCompleted() {
         await this.updateComplete;
-        this.inputElement.addEventListener('focus', () => (this.#focused = true), { once: true, capture: false });
+        this.inputElement?.addEventListener('focus', () => (this.#focused = true), { once: true, capture: false });
+this.inputElement?.form?.addEventListener('reset', this.onFormReset.bind(this));
+        // this.inputElement?.addEventListener('change', () => (this.#focused = false), { once: true, capture: false });
     }
 
     // #endregion PRIVATE METHODS

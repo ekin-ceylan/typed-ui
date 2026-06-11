@@ -222,8 +222,8 @@ export default class SelectBox extends SelectBase {
             <div>
                 <select
                     ${spread(this.getScopedAttrs('select'))}
-                    id=${ifDefined(this.fieldId)}
-                    name=${ifDefined(this.fieldName)}
+                    id=${this.fieldId}
+                    name=${ifDefined(this.name)}
                     ?required=${this.required}
                     ?disabled=${this.disabled}
                     aria-labelledby=${ifDefined(this.labelId)}

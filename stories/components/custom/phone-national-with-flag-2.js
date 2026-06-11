@@ -1,5 +1,5 @@
 import { defineComponent, ifDefined, isEmpty } from '../../../src/modules/utilities.js';
-import { generateId } from '../../../src/modules/id-generator.js';
+import generateId from '../../../src/modules/id-generator.js';
 import { CustomCombobox } from './custom-combobox.js';
 import LightComponentBase from '../../../src/core/light-component-base.js';
 import { html, nothing } from 'lit';
@@ -11,33 +11,36 @@ export default class PhoneNational2 extends LightComponentBase {
             ...super.properties,
             countryCode: { type: String, attribute: 'phone-code' },
             label: { type: String },
-            fieldId: { type: String, attribute: 'field-id' },
             validationMessage: { type: String, state: true },
             disabled: { type: Boolean, reflect: true },
             required: { type: Boolean, reflect: true },
         };
     }
 
+    #uniqueId = null; // Bileşen için benzersiz ID
+
+    get uniqueId() {
+        return this.#uniqueId;
+    }
+
+    get fieldId() {
+        return `${this.componentName}-${this.uniqueId}`;
+    }
+
     constructor() {
         super();
+        this.#uniqueId = generateId();
 
         /** @type {string | undefined} */
         this.countryCode = 'tr';
         /** @type {string | undefined} */
         this.label = undefined;
         /** @type {string | undefined} */
-        this.fieldId = undefined;
-        /** @type {string | undefined} */
         this.validationMessage = undefined;
         /** @type {boolean | undefined} */
         this.disabled = undefined;
         /** @type {boolean | undefined} */
         this.required = undefined;
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        if (!this.fieldId) this.fieldId = generateId(this.tagName.toLowerCase());
     }
 
     #handleCountryChange(event) {

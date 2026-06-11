@@ -14,16 +14,8 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
         };
     }
 
-    get inputLabel() {
-        return this.label || '';
-    }
-
-    get labelId() {
-        return this.fieldId ? `${this.fieldId}-label` : null;
-    }
-
     get descriptionId() {
-        return this.fieldId ? `${this.fieldId}-description` : null;
+        return `${this.componentName}-description-${this.uniqueId}`;
     }
 
     /**
@@ -78,14 +70,14 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         return html`
-            <label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}>
+            <label id=${this.labelId} for=${this.fieldId}>
                 <input
-                    id=${ifDefined(this.fieldId)}
-                    name=${ifDefined(this.fieldName)}
+                    id=${this.fieldId}
+                    name=${ifDefined(this.name)}
                     type="checkbox"
                     value=${ifDefined(this.checkedValue)}
                     ?checked=${ifDefined(this.checked)}
-                    aria-describedby=${ifDefined(this.descriptionId)}
+                    aria-describedby=${this.descriptionId}
                     aria-errormessage=${ifDefined(this.errorId)}
                     aria-required=${this.required ? 'true' : 'false'}
                     aria-invalid=${ifDefined(this.ariaInvalid)}
@@ -96,7 +88,7 @@ export default class CheckBox extends SlotCollectorMixin(InputBase) {
                     @click=${this.onClick}
                     @invalid=${this.#checkValidity}
                 />
-                <span id=${ifDefined(this.descriptionId)}><slot></slot></span>
+                <span id=${this.descriptionId}><slot></slot></span>
             </label>
             ${this.renderErrorMessage()}
         `;

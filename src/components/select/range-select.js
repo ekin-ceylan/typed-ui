@@ -32,8 +32,8 @@ export default class RangeSelect extends InputBase {
             <div>
                 <data value=${this.min} aria-hidden="true">${this.min}</data>
                 <input
-                    id=${ifDefined(this.fieldId)}
-                    name=${ifDefined(this.fieldName)}
+                    id=${this.fieldId}
+                    name=${ifDefined(this.name)}
                     .value=${this.value ?? ''}
                     ?required=${this.required}
                     ?disabled=${this.disabled}
@@ -50,7 +50,7 @@ export default class RangeSelect extends InputBase {
                     step=${this.step}
                 />
                 <data value=${this.max} aria-hidden="true">${this.max}</data>
-                <output for=${ifDefined(this.fieldId)}>${this.value}</output>
+                <output for=${this.fieldId}>${this.value}</output>
             </div>
             ${this.renderErrorMessage()}
         `;

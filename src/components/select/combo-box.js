@@ -4,7 +4,7 @@ import SelectBase from '../../core/select-base.js';
 import { lockAllScrolls, unlockAllScrolls } from '../../modules/scroll-lock-helper.js';
 import ComboOption from '../../models/ComboOption.js';
 import CustomOption from './custom-option.js';
-import { generateId } from '../../modules/id-generator.js';
+import generateId from '../../modules/id-generator.js';
 
 /**
  * Custom combo box component that extends SelectBase to provide a searchable dropdown list of options. It supports both native and custom behaviors, allowing for flexible usage in various contexts.
@@ -72,6 +72,10 @@ export default class ComboBox extends SelectBase {
 
         this.requestUpdate();
         if (this.isOpen) this.#calcListSizeAndDirection();
+    }
+
+    get searchId() {
+        return `${this.componentName}-search-${this.uniqueId}`;
     }
 
     // #endregion STATICS, FIELDS, GETTERS
@@ -497,7 +501,7 @@ export default class ComboBox extends SelectBase {
      */
     #parseOption(opt) {
         const option = new ComboOption(opt);
-        option.id = generateId(`${this.fieldId}-option`);
+        option.id = `option-${generateId()}`;
         if (this.value === opt.value) option.selected = true;
 
         return option;
@@ -532,7 +536,7 @@ export default class ComboBox extends SelectBase {
 
     renderSearchInput() {
         return html`<input
-            id=${this.fieldId + '-search'}
+            id=${this.searchId}
             type="search"
             .value=${this.filter || ''}
             ?disabled=${this.disabled}
@@ -576,8 +580,8 @@ export default class ComboBox extends SelectBase {
                 @click=${this.onClick}
             >
                 <input
-                    id=${ifDefined(this.fieldId)}
-                    name=${ifDefined(this.fieldName)}
+                    id=${this.fieldId}
+                    name=${ifDefined(this.name)}
                     type="text"
                     ?required=${this.required}
                     ?disabled=${this.disabled}
@@ -595,7 +599,7 @@ export default class ComboBox extends SelectBase {
                 <div data-role="display" aria-haspopup="listbox" .innerHTML=${this.placeholder}></div>
                 ${this.renderSearchInput()} ${this.renderClearButton()} ${this.renderChevron()}
                 <div
-                    id=${this.fieldId + '-list'}
+                    id=${this.listId}
                     role="listbox"
                     popover="manual"
                     aria-expanded=${this.isOpen ? 'true' : 'false'}

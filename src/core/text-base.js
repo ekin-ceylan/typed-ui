@@ -390,8 +390,8 @@ export default class TextBase extends InputBase {
             <div data-role="container">
                 <input
                     ${spread(this.getScopedAttrs('input'))}
-                    id=${ifDefined(this.fieldId)}
-                    name=${ifDefined(this.fieldName)}
+                    id=${this.fieldId}
+                    name=${ifDefined(this.name)}
                     type=${this.type || 'text'}
                     ?disabled=${this.disabled}
                     ?readonly=${this.readonly}
