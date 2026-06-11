@@ -11,12 +11,10 @@ export default {
     argTypes,
 };
 
-// Mirrors index.html:
-// <plate-box field-id="plate-no" label="Plaka Numarası" value="55  ty" required></plate-box>
 export const Default = {
     render: args => Textbox(args),
     args: {
-        fieldName: 'FirstName',
+        name: 'FirstName',
         label: 'Adınız',
         placeholder: 'Adınızı giriniz',
     },
@@ -32,13 +30,11 @@ export const PlaygroundStory = {
     render: args => Textbox(args),
     tags: ['!dev'],
     args: {
-        fieldId: undefined,
-        fieldName: 'FirstName',
+        name: 'FirstName',
         label: 'Adınız',
         value: undefined,
         placeholder: 'Adınızı giriniz',
         required: undefined,
-        requiredSign: '*',
         disabled: undefined,
         clearable: true,
     },

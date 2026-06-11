@@ -15,8 +15,7 @@ export default {
 export const Default = {
     render: args => TcBox(args),
     args: {
-        fieldId: undefined,
-        fieldName: 'TcNo',
+        name: 'TcNo',
         label: 'Kimlik Numaranız',
         value: undefined,
         placeholder: 'Kimlik numaranızı giriniz',
@@ -33,8 +32,7 @@ export const PlaygroundStory = {
     render: args => TcBox(args),
     tags: ['!dev'],
     args: {
-        fieldId: undefined,
-        fieldName: 'TcNo',
+        name: 'TcNo',
         label: 'Kimlik Numaranız',
         value: undefined,
         placeholder: 'Kimlik numaranızı giriniz',
@@ -44,7 +42,6 @@ export const PlaygroundStory = {
         clearable: true,
         hideLabel: undefined,
         autocomplete: undefined,
-        requiredSign: '*',
     },
     parameters: {
         docs: {

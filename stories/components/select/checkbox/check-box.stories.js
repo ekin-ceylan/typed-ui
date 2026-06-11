@@ -36,7 +36,6 @@ export const Default = {
     render: args => Checkbox(args),
     args: {
         defaultSlot: 'Okudum, Anladım',
-        fieldId: 'subscribe',
         label: 'Abone Ol',
     },
     parameters: {
@@ -49,7 +48,6 @@ export const PlaygroundStory = {
     tags: ['!dev'],
     args: {
         defaultSlot: 'Okudum, Anladım',
-        fieldId: 'subscribe',
         label: 'Abone Ol',
     },
     parameters: {

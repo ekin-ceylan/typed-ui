@@ -9,7 +9,7 @@ describe('EmailBox: Masking Tests', () => {
     let user;
 
     beforeEach(async () => {
-        const el = '<email-box field-id="email" label="E-Posta Adresi"></email-box>';
+        const el = '<email-box label="E-Posta Adresi"></email-box>';
         [input, , user] = await initInputBase(el);
     });
 
@@ -62,7 +62,7 @@ describe('EmailBox: Validation Tests', () => {
     const getErrorElement = () => host.querySelector('[data-role="error-message"]');
 
     beforeEach(async () => {
-        const el = '<email-box field-id="email" label="E-Posta Adresi" required></email-box>';
+        const el = '<email-box label="E-Posta Adresi" required></email-box>';
         [input, host, user] = await initInputBase(el);
     });
 
@@ -175,25 +175,25 @@ describe('EmailBox: Validation Tests', () => {
 
 describe('EmailBox: Attribute Forwarding', () => {
     it('sets inputmode="email" by default', async () => {
-        const [input] = await initInputBase('<email-box field-id="email" label="Email"></email-box>');
+        const [input] = await initInputBase('<email-box label="Email"></email-box>');
 
         expect(input.getAttribute('inputmode')).toBe('email');
     });
 
     it('sets autocomplete="email" by default', async () => {
-        const [input] = await initInputBase('<email-box field-id="email" label="Email"></email-box>');
+        const [input] = await initInputBase('<email-box label="Email"></email-box>');
 
         expect(input.getAttribute('autocomplete')).toBe('email');
     });
 
     it('sets maxlength=254 by default', async () => {
-        const [input] = await initInputBase('<email-box field-id="email" label="Email"></email-box>');
+        const [input] = await initInputBase('<email-box label="Email"></email-box>');
 
         expect(input.maxLength).toBe(254);
     });
 
     it('allows overriding placeholder attribute', async () => {
-        const [input] = await initInputBase('<email-box field-id="email" label="Email" placeholder="Enter your email"></email-box>');
+        const [input] = await initInputBase('<email-box label="Email" placeholder="Enter your email"></email-box>');
 
         expect(input.getAttribute('placeholder')).toBe('Enter your email');
     });
@@ -201,23 +201,23 @@ describe('EmailBox: Attribute Forwarding', () => {
 
 describe('EmailBox: Accessibility (A11y)', () => {
     it('maintains proper label association', async () => {
-        const [input, host] = await initInputBase('<email-box field-id="email" label="Email Address"></email-box>');
+        const [input, host] = await initInputBase('<email-box label="Email Address"></email-box>');
         const label = host.querySelector('label');
 
-        expect(label.getAttribute('for')).toBe('email');
-        expect(input.id).toBe('email');
-        expect(input.getAttribute('aria-labelledby')).toBe('email-label');
+        expect(label.getAttribute('for')).toBe(host.fieldId);
+        expect(input.id).toBe(host.fieldId);
+        expect(input.getAttribute('aria-labelledby')).toBe(host.labelId);
     });
 
     it('sets aria-required when required', async () => {
-        const [input] = await initInputBase('<email-box field-id="email" label="Email" required></email-box>');
+        const [input] = await initInputBase('<email-box label="Email" required></email-box>');
 
         expect(input.getAttribute('aria-required')).toBe('true');
         expect(input.required).toBe(true);
     });
 
     it('toggles aria-invalid on validation state change', async () => {
-        const [input, , user] = await initInputBase('<email-box field-id="email" label="Email" required></email-box>');
+        const [input, , user] = await initInputBase('<email-box label="Email" required></email-box>');
 
         // Trigger invalid state
         await user.tab();
@@ -233,7 +233,7 @@ describe('EmailBox: Accessibility (A11y)', () => {
     });
 
     it('associates error message with aria-errormessage', async () => {
-        const [input, host, user] = await initInputBase('<email-box field-id="email" label="Email" required></email-box>');
+        const [input, host, user] = await initInputBase('<email-box label="Email" required></email-box>');
 
         expect(host.querySelector('[data-role="error-message"]')).toBeNull();
         expect(input.getAttribute('aria-errormessage')).toBeNull();
@@ -243,20 +243,20 @@ describe('EmailBox: Accessibility (A11y)', () => {
 
         const error = host.querySelector('[data-role="error-message"]');
 
-        expect(error.id).toBe('email-error');
-        expect(input.getAttribute('aria-errormessage')).toBe('email-error');
+        expect(error.id).toBe(host.errorId);
+        expect(input.getAttribute('aria-errormessage')).toBe(host.errorId);
         expect(error.getAttribute('aria-live')).toBe('assertive');
     });
 
     it('removes aria-errormessage again when the input becomes valid', async () => {
-        const [input, host, user] = await initInputBase('<email-box field-id="email" label="Email" required></email-box>');
+        const [input, host, user] = await initInputBase('<email-box label="Email" required></email-box>');
 
         expect(input.getAttribute('aria-errormessage')).toBeNull();
 
         await user.tab();
         await host.updateComplete;
 
-        expect(input.getAttribute('aria-errormessage')).toBe('email-error');
+        expect(input.getAttribute('aria-errormessage')).toBe(host.errorId);
         expect(host.querySelector('[data-role="error-message"]')).not.toBeNull();
 
         input.focus();

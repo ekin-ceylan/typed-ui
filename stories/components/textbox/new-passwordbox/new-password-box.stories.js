@@ -11,7 +11,6 @@ export default {
 export const Default = {
     render: args => NewPasswordbox(args),
     args: {
-        fieldId: 'password',
         label: 'Şifre',
         placeholder: 'Şifrenizi giriniz',
         required: true,
@@ -29,7 +28,7 @@ export const PlaygroundStory = {
     tags: ['!dev'],
     args: {
         label: 'Yeni Şifre',
-        fieldName: 'newPassword',
+        name: 'newPassword',
         placeholder: 'Şifrenizi giriniz',
     },
     parameters: {

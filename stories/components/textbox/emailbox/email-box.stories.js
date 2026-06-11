@@ -9,12 +9,9 @@ export default {
     },
 };
 
-// Mirrors index.html:
-// <plate-box field-id="plate-no" label="Plaka Numarası" value="55  ty" required></plate-box>
 export const Default = {
     render: args => Emailbox(args),
     args: {
-        fieldId: 'email-address',
         label: 'E-Posta Adresi',
         placeholder: 'E-Posta adresinizi giriniz',
     },
@@ -30,7 +27,6 @@ export const PlaygroundStory = {
     render: args => Emailbox(args),
     tags: ['!dev'],
     args: {
-        fieldId: 'email-address',
         label: 'E-Posta Adresi',
         placeholder: 'E-Posta adresinizi giriniz',
     },

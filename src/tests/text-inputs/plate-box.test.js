@@ -108,7 +108,7 @@ describe('Validating tests', () => {
 
         let errorElement = host.querySelector('[data-role="error-message"]');
         expect(errorElement).not.toBeNull();
-        expect(input.getAttribute('aria-errormessage')).toBe('plate-no-error');
+        expect(input.getAttribute('aria-errormessage')).toBe(host.errorId);
 
         input.focus();
         await user.type(input, '34ABC123');

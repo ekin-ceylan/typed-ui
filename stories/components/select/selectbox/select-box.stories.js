@@ -29,8 +29,7 @@ export const PlaygroundStory = {
 <option value="kp">Kuzey Kore</option>
 <option value="jp">Japonya</option>
 <option value="it">İtalya</option>`,
-        fieldId: undefined,
-        fieldName: 'country',
+        name: 'country',
         label: 'Ülke',
         value: undefined,
         placeholder: 'Lütfen seçiniz',
@@ -38,7 +37,6 @@ export const PlaygroundStory = {
         disabled: undefined,
         readonly: undefined,
         clearable: true,
-        requiredSign: '*',
     },
     parameters: {
         docs: {
@@ -57,7 +55,6 @@ export const BasicSlotUsage = {
 <option value="kp" disabled>Kuzey Kore</option>
 <option value="jp">Japonya</option>
 <option value="it">İtalya</option>`,
-        fieldId: 'country',
         label: 'Ülke',
         placeholder: 'Lütfen seçiniz',
         id: 'basic-select',
@@ -81,7 +78,6 @@ export const OptGroupSlotUsage = {
     <option value="volvo">Volvo</option>
     <option value="saab">Saab</option>
 </optgroup>`,
-        fieldId: 'cars',
         label: 'Arabalar',
         placeholder: 'Lütfen seçiniz',
         id: 'basic-select',
@@ -96,7 +92,6 @@ export const BasicSelectedUsage = {
 <option value="de">Almanya</option>
 <option value="us">ABD</option>
 <option value="jp">Japonya</option>`,
-        fieldId: 'country',
         label: 'Ülke',
         placeholder: 'Lütfen seçiniz',
         value: 'de',
@@ -113,7 +108,6 @@ export const ValidationUsage = {
         defaultSlot: `<option value="tr">Türkiye</option>
 <option value="de">Almanya</option>
 <option value="us">ABD</option>`,
-        fieldId: 'country',
         label: 'Ülke',
         placeholder: 'Lütfen seçiniz',
         required: true,

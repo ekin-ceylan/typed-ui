@@ -19,20 +19,20 @@ async function initSelectBox(elementStr) {
 
 describe('SelectBox - Accessibility (A11y) tests', () => {
     it('associates <label> with <select> via for/id and aria-labelledby', async () => {
-        const { select, host } = await initSelectBox('<select-box field-id="country" label="Country"></select-box>');
+        const { select, host } = await initSelectBox('<select-box label="Country"></select-box>');
 
         const label = host.querySelector('label');
         expect(label).not.toBeNull();
-        expect(label.getAttribute('for')).toBe('country');
-        expect(label.id).toBe('country-label');
+        expect(label.getAttribute('for')).toBe(host.fieldId);
+        expect(label.id).toBe(host.labelId);
 
-        expect(select.id).toBe('country');
-        expect(select.getAttribute('aria-labelledby')).toBe('country-label');
+        expect(select.id).toBe(host.fieldId);
+        expect(select.getAttribute('aria-labelledby')).toBe(host.labelId);
         expect(select.hasAttribute('aria-label')).toBe(false);
     });
 
     it('uses aria-label when hide-label is enabled (no visible label)', async () => {
-        const { select, host } = await initSelectBox('<select-box field-id="country" label="Country" hide-label></select-box>');
+        const { select, host } = await initSelectBox('<select-box label="Country" hide-label></select-box>');
 
         expect(host.querySelector('label')).toBeNull();
         expect(select.getAttribute('aria-label')).toBe('Country');
@@ -40,9 +40,7 @@ describe('SelectBox - Accessibility (A11y) tests', () => {
     });
 
     it('sets required semantics and wires aria-errormessage', async () => {
-        const { select, host, user } = await initSelectBox(
-            '<select-box field-id="country" label="Country" required required-sign="*"><option value="tr">Turkey</option></select-box>'
-        );
+        const { select, host, user } = await initSelectBox('<select-box label="Country" required><option value="tr">Turkey</option></select-box>');
 
         expect(host.querySelector('[data-role="error-message"]')).toBeNull();
         expect(select.getAttribute('aria-errormessage')).toBeNull();
@@ -52,22 +50,21 @@ describe('SelectBox - Accessibility (A11y) tests', () => {
 
         expect(select.required).toBe(true);
         expect(select.getAttribute('aria-required')).toBe('true');
-        expect(select.getAttribute('aria-errormessage')).toBe('country-error');
+        expect(select.getAttribute('aria-errormessage')).toBe(host.errorId);
 
         const label = host.querySelector('label');
         expect(label).not.toBeNull();
         expect(label.textContent).toContain('Country');
-        expect(label.textContent).toContain('*');
 
         const error = host.querySelector('[data-role="error-message"]');
         expect(error).not.toBeNull();
-        expect(error.id).toBe('country-error');
+        expect(error.id).toBe(host.errorId);
         expect(error.getAttribute('aria-live')).toBe('assertive');
     });
 
     it('removes aria-errormessage again when the selection becomes valid', async () => {
         const { select, host, user } = await initSelectBox(
-            '<select-box field-id="country" label="Country" required required-sign="*"><option value="tr">Turkey</option><option value="de">Germany</option></select-box>'
+            '<select-box label="Country" required required-sign="*"><option value="tr">Turkey</option><option value="de">Germany</option></select-box>'
         );
 
         expect(select.getAttribute('aria-errormessage')).toBeNull();
@@ -75,7 +72,7 @@ describe('SelectBox - Accessibility (A11y) tests', () => {
         await user.tab();
         await host.updateComplete;
 
-        expect(select.getAttribute('aria-errormessage')).toBe('country-error');
+        expect(select.getAttribute('aria-errormessage')).toBe(host.errorId);
         expect(host.querySelector('[data-role="error-message"]')).not.toBeNull();
 
         await user.selectOptions(select, 'tr');
@@ -87,7 +84,7 @@ describe('SelectBox - Accessibility (A11y) tests', () => {
     });
 
     it('sets aria-required="false" when required is not set', async () => {
-        const { select } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { select } = await initSelectBox('<select-box label="X"></select-box>');
         expect(select.getAttribute('aria-required')).toBe('false');
         expect(select.required).toBe(false);
     });

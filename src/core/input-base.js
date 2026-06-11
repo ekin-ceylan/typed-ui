@@ -26,7 +26,6 @@ export default class InputBase extends LightComponentBase {
             clearable: { type: Boolean, attribute: 'clearable' },
             placeholder: { type: String, reflect: true },
             required: { type: Boolean, reflect: true },
-            requiredSign: { type: String, attribute: 'required-sign' },
             ariaInvalid: { type: String, attribute: false, reflect: false },
             disabled: { type: Boolean, reflect: true },
             readonly: { type: Boolean, reflect: true },
@@ -84,23 +83,21 @@ export default class InputBase extends LightComponentBase {
         this.value = '';
         /** @type {string} Name attribute for the input field */
         this.name = '';
-        /** @property {string} Label text for the input field */
+        /** @type {string} Label text for the input field */
         this.label = '';
-        /** @property {boolean} Whether to hide the label visually */
+        /** @type {boolean} Whether to hide the label visually */
         this.hideLabel = false;
-        /** @property {string} Placeholder text for the input */
+        /** @type {string} Placeholder text for the input */
         this.placeholder = '';
-        /** @property {boolean} Whether the input is required */
+        /** @type {boolean} Whether the input is required */
         this.required = false;
-        /** @property {string} The sign to indicate a required field */
-        this.requiredSign = '';
-        /** @property {boolean} ARIA invalid state for accessibility */
+        /** @type {boolean} ARIA invalid state for accessibility */
         this.invalid = false;
-        /** @property {boolean} Whether the input is disabled */
+        /** @type {boolean} Whether the input is disabled */
         this.disabled = false;
-        /** @property {boolean} Whether the input is readonly */
+        /** @type {boolean} Whether the input is readonly */
         this.readonly = false;
-        /** @property {boolean} Show clear button */
+        /** @type {boolean} Show clear button */
         this.clearable = false;
     }
 

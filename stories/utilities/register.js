@@ -21,10 +21,9 @@ defineComponent('modal-dialog', TypedUI.ModalDialog);
 defineComponent('t-pagination', TypedUI.Pagination);
 defineComponent('basic-img', TypedUI.Image);
 
-export const Checkbox = ({ defaultSlot, fieldId, fieldName, label, checkedValue, required, checked, disabled, readonly, indeterminate }) => {
+export const Checkbox = ({ defaultSlot, name, label, checkedValue, required, checked, disabled, readonly, indeterminate }) => {
     const temp = html`<check-box
-        field-id=${ifDefined(fieldId)}
-        field-name=${ifDefined(fieldName)}
+        name=${ifDefined(name)}
         label=${ifDefined(label)}
         checked-value=${ifDefined(checkedValue)}
         ?required=${required}
@@ -41,8 +40,7 @@ export const Checkbox = ({ defaultSlot, fieldId, fieldName, label, checkedValue,
 
 export const Combobox = args => {
     const temp = html`<combo-box
-        field-id=${ifDefined(args.fieldId)}
-        field-name=${ifDefined(args.fieldName)}
+        name=${ifDefined(args.name)}
         label=${ifDefined(args.label)}
         ?hide-label=${args.hideLabel}
         ?required=${args.required}
@@ -51,7 +49,6 @@ export const Combobox = args => {
         ?native-behavior=${args.nativeBehavior}
         placeholder=${ifDefined(args.placeholder)}
         value=${ifDefined(args.value)}
-        required-sign=${ifDefined(args.requiredSign)}
     >
         ${unsafeHTML(args.noOptionsSlot ?? '')} ${unsafeHTML(args.defaultSlot ?? '')}
     </combo-box>`;
@@ -62,8 +59,7 @@ export const Combobox = args => {
 export const Selectbox = args => {
     const temp = html`<select-box
         id=${ifDefined(args.id)}
-        field-id=${ifDefined(args.fieldId)}
-        field-name=${ifDefined(args.fieldName)}
+        name=${ifDefined(args.name)}
         label=${ifDefined(args.label)}
         ?hide-label=${args.hideLabel}
         ?required=${args.required}
@@ -72,7 +68,6 @@ export const Selectbox = args => {
         placeholder=${ifDefined(args.placeholder)}
         no-options-label=${ifDefined(args.noOptionsLabel)}
         value=${ifDefined(args.value)}
-        required-sign=${ifDefined(args.requiredSign)}
     >
         ${unsafeHTML(args.defaultSlot ?? '')}
     </select-box>`;

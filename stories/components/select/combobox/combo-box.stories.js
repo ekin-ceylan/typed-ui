@@ -36,7 +36,6 @@ export const Default = {
 </option>
 `,
         noOptionsSlot: `<template slot="no-options">Kayıt Bulunamadı</template>`,
-        fieldId: 'country',
         label: 'Ülke',
         placeholder: 'Lütfen seçiniz',
         required: true,
@@ -73,8 +72,7 @@ export const PlaygroundStory = {
 </option>
 `,
         noOptionsSlot: `<template slot="no-options">Kayıt Bulunamadı</template>`,
-        fieldId: undefined,
-        fieldName: 'country',
+        name: 'country',
         label: 'Ülke',
         value: undefined,
         placeholder: 'Lütfen seçiniz',
@@ -82,7 +80,6 @@ export const PlaygroundStory = {
         disabled: undefined,
         readonly: undefined,
         clearable: true,
-        requiredSign: '*',
     },
     parameters: {
         docs: {
@@ -115,7 +112,6 @@ export const NativeStory = {
 </option>
 `,
         noOptionsSlot: `<template slot="no-options">Kayıt Bulunamadı</template>`,
-        fieldId: 'country-native',
         label: 'Ülke (native)',
         placeholder: 'Lütfen seçiniz',
         nativeBehavior: true,

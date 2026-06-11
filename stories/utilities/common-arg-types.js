@@ -1,11 +1,9 @@
 export const inputBaseArgTypes = {
-    fieldId: createAttrType('Input elementinin `id` özniteliğini belirler. Eğer belirtilmezse, otomatik olarak bir değer atanır.', 'string', '""', false, 'field-id'),
-    fieldName: createAttrType(
+    name: createAttrType(
         'Input elementinin `name` özniteliğini belirler. Alanın, arka uçtaki ismi yazılmalıdır. Boş bırakılırsa, inputun değeri form ile gönderilmez.',
         'string',
         '""',
-        false,
-        'field-name'
+        false
     ),
     inputClass: createAttrType('İçteki `<input>` veya `<select>` elementine uygulanacak CSS sınıfı.', 'string', 'null', false, 'input-class'),
     value: createAttrType('Inputun tuttuğu değer.', 'string', 'null'),
@@ -14,7 +12,6 @@ export const inputBaseArgTypes = {
     required: createAttrType('Inputun doldurulmasının zorunlu olup olmadığını belirler ve `valueMissing` durumunu etkiler.', 'boolean', 'false'),
     disabled: createAttrType('Inputun devre dışı olup olmadığını belirler. Devre dışıysa, input etkileşime kapatılır ve form ile gönderilmez.', 'boolean', 'false'),
     placeholder: createAttrType('Değer boşken gösterilecek yer tutucu metin.', 'string', '""'),
-    requiredSign: createAttrType('Zorunlu alanlar için input etiketine eklenecek işaret.', 'string', '""', false, 'required-sign'),
     clearable: createAttrType('Açıksa, "İçeriği Temizle" butonu gösterilir.', 'boolean', 'false'),
     readonly: createAttrType('Inputun salt okunur olup olmadığını belirler. Salt okunursa, input etkileşime kapatılır ancak form ile gönderilir.', 'boolean', 'false'),
 };

@@ -43,7 +43,7 @@ export default class SelectBase extends SlotCollectorMixin(InputBase) {
     }
 
     /** @returns {import('lit').TemplateResult | typeof nothing} */
-    renderChevron() {
+    renderIndicator() {
         return html`<svg role="presentation" data-chevron width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>`;

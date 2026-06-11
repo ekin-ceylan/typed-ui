@@ -19,13 +19,10 @@ export default {
     },
 };
 
-// Mirrors index.html:
-// <phone-box field-id="phone-no" label="Telefon Numarası" value="0555 555 5555" required></phone-box>
 export const Default = {
     render: args => Phonebox(args),
     args: {
-        fieldId: undefined,
-        fieldName: 'PhoneNumber',
+        name: 'PhoneNumber',
         label: 'Telefon Numarası',
         value: undefined,
         placeholder: '0(555) 555 5555',
@@ -42,7 +39,6 @@ export const PlaygroundStory = {
     render: args => Phonebox(args),
     tags: ['!dev'],
     args: {
-        fieldId: 'phone-no',
         label: 'Telefon Numarası',
         placeholder: '0(555) 555 5555',
     },

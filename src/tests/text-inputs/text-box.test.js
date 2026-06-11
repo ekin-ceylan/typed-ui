@@ -36,7 +36,7 @@ describe('Validation Tests', () => {
     const getErrorElement = () => host.querySelector('[data-role="error-message"]');
 
     beforeEach(async () => {
-        [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" pattern="[A-Za-z]{5}" required minlength="3" maxlength="5"></text-box>');
+        [input, host, user] = await initInputBase('<text-box label="Name" pattern="[A-Za-z]{5}" required minlength="3" maxlength="5"></text-box>');
         errorElement = getErrorElement();
     });
 
@@ -100,7 +100,7 @@ describe('Validation Tests', () => {
 
     // pattern attr göre validasyon ve hata mesajı
     it('pattern with punctuation should fail validation', async () => {
-        const [input, , user] = await initInputBase('<text-box field-id="name" label="Name" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ -]+"></text-box>');
+        const [input, , user] = await initInputBase('<text-box label="Name" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ -]+"></text-box>');
 
         await user.type(input, 'Hello, world!');
         await user.tab(); // blur to trigger validation
@@ -114,22 +114,24 @@ describe('Validation Tests', () => {
 
 describe('Accessibility (A11y) tests', () => {
     it('associates <label> with <input> via for/id and aria-labelledby', async () => {
-        const [input, host] = await initInputBase('<text-box field-id="email" label="Email"></text-box>');
+        const [input, host] = await initInputBase('<text-box label="Email"></text-box>');
+        const expectedFieldId = host.fieldId;
+        const expectedLabelId = host.labelId;
 
         // Visible label should be linked to the input.
         const label = host.querySelector('label');
         expect(label).not.toBeNull();
-        expect(label.getAttribute('for')).toBe('email');
-        expect(label.id).toBe('email-label');
+        expect(label.getAttribute('for')).toBe(expectedFieldId);
+        expect(label.id).toBe(expectedLabelId);
 
-        expect(input.id).toBe('email');
-        expect(input.getAttribute('aria-labelledby')).toBe('email-label');
+        expect(input.id).toBe(expectedFieldId);
+        expect(input.getAttribute('aria-labelledby')).toBe(expectedLabelId);
         // When label is visible, aria-label should not be used.
         expect(input.hasAttribute('aria-label')).toBe(false);
     });
 
     it('uses aria-label when hide-label is enabled (no visible label)', async () => {
-        const [input, host] = await initInputBase('<text-box field-id="email" label="Email" hide-label></text-box>');
+        const [input, host] = await initInputBase('<text-box label="Email" hide-label></text-box>');
 
         // No visible label rendered.
         expect(host.querySelector('label')).toBeNull();
@@ -139,28 +141,14 @@ describe('Accessibility (A11y) tests', () => {
         expect(input.hasAttribute('aria-labelledby')).toBe(false);
     });
 
-    it('sets required semantics (required + aria-required) and updates label text', async () => {
-        const [input, host] = await initInputBase('<text-box field-id="name" label="Name" required-sign="*" required></text-box>');
-
-        // Native required behavior and ARIA hint should both be present.
-        expect(input.required).toBe(true);
-        expect(input.getAttribute('aria-required')).toBe('true');
-
-        // Required fields append an asterisk to the label.
-        const label = host.querySelector('label');
-        expect(label).not.toBeNull();
-        expect(label.textContent).toContain('Name');
-        expect(label.textContent).toContain('*');
-    });
-
     it('sets aria-required="false" when required is not set', async () => {
-        const [input] = await initInputBase('<text-box field-id="name" label="Name"></text-box>');
+        const [input] = await initInputBase('<text-box label="Name"></text-box>');
         expect(input.getAttribute('aria-required')).toBe('false');
         expect(input.required).toBe(false);
     });
 
     it('wires aria-errormessage to the error element id', async () => {
-        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" required></text-box>');
+        const [input, host, user] = await initInputBase('<text-box label="Name" required></text-box>');
 
         expect(host.querySelector('[data-role="error-message"]')).toBeNull();
         expect(input.getAttribute('aria-errormessage')).toBeNull();
@@ -170,22 +158,22 @@ describe('Accessibility (A11y) tests', () => {
 
         const error = host.querySelector('[data-role="error-message"]');
         expect(error).not.toBeNull();
-        expect(error.id).toBe('name-error');
-        expect(input.getAttribute('aria-errormessage')).toBe('name-error');
+        expect(error.id).toBe(host.errorId);
+        expect(input.getAttribute('aria-errormessage')).toBe(host.errorId);
 
         // Live region is important for announcing validation updates.
         expect(error.getAttribute('aria-live')).toBe('assertive');
     });
 
     it('removes aria-errormessage again when the field becomes valid', async () => {
-        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" required minlength="3"></text-box>');
+        const [input, host, user] = await initInputBase('<text-box label="Name" required minlength="3"></text-box>');
 
         expect(input.getAttribute('aria-errormessage')).toBeNull();
 
         await user.tab();
         await host.updateComplete;
 
-        expect(input.getAttribute('aria-errormessage')).toBe('name-error');
+        expect(input.getAttribute('aria-errormessage')).toBe(host.errorId);
         expect(host.querySelector('[data-role="error-message"]')).not.toBeNull();
 
         input.focus();
@@ -198,17 +186,17 @@ describe('Accessibility (A11y) tests', () => {
     });
 
     it('keeps accessible name coming from the label even when placeholder is present', async () => {
-        const [input, host] = await initInputBase('<text-box field-id="name" label="Name" placeholder="Type here"></text-box>');
+        const [input, host] = await initInputBase('<text-box label="Name" placeholder="Type here"></text-box>');
 
         // Placeholder should be forwarded, but it should not replace the accessible name.
         expect(input.getAttribute('placeholder')).toBe('Type here');
         expect(host.querySelector('label')).not.toBeNull();
         expect(input.hasAttribute('aria-label')).toBe(false);
-        expect(input.getAttribute('aria-labelledby')).toBe('name-label');
+        expect(input.getAttribute('aria-labelledby')).toBe(host.labelId);
     });
 
     it('forwards helper attributes: autocomplete, spellcheck, inputmode', async () => {
-        const [input] = await initInputBase('<text-box field-id="name" label="Name" autocomplete="name" inputmode="text" spellcheck></text-box>');
+        const [input] = await initInputBase('<text-box label="Name" autocomplete="name" inputmode="text" spellcheck></text-box>');
 
         expect(input.getAttribute('autocomplete')).toBe('name');
         expect(input.getAttribute('inputmode')).toBe('text');
@@ -218,7 +206,7 @@ describe('Accessibility (A11y) tests', () => {
     });
 
     it('is keyboard reachable and blur triggers validation UI updates', async () => {
-        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" required></text-box>');
+        const [input, host, user] = await initInputBase('<text-box label="Name" required></text-box>');
 
         // Ensure input can receive focus via keyboard navigation.
         input.blur();
@@ -235,7 +223,7 @@ describe('Accessibility (A11y) tests', () => {
     });
 
     it('toggles aria-invalid when validation state changes', async () => {
-        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" required minlength="3"></text-box>');
+        const [input, host, user] = await initInputBase('<text-box label="Name" required minlength="3"></text-box>');
 
         // Trigger invalid state.
         await user.tab();
@@ -257,7 +245,7 @@ describe('Accessibility (A11y) tests', () => {
     });
 
     it('prevents focus when disabled', async () => {
-        const [input] = await initInputBase('<text-box field-id="x" label="X" disabled></text-box>');
+        const [input] = await initInputBase('<text-box label="X" disabled></text-box>');
 
         // Disabled inputs are not focusable.
         expect(input.disabled).toBe(true);
@@ -269,7 +257,7 @@ describe('Accessibility (A11y) tests', () => {
 // mask pattern ekle
 describe('Allow Pattern Tests', () => {
     it('does not filter when allow-pattern is empty', async () => {
-        const [input, , user] = await initInputBase('<text-box field-id="name" label="Name" allow-pattern=""></text-box>');
+        const [input, , user] = await initInputBase('<text-box label="Name" allow-pattern=""></text-box>');
 
         await user.type(input, 'a1b2');
 
@@ -277,7 +265,7 @@ describe('Allow Pattern Tests', () => {
     });
 
     it('filters disallowed characters on typing', async () => {
-        const [input, , user] = await initInputBase('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+        const [input, , user] = await initInputBase('<text-box label="Name" allow-pattern="[0-9]"></text-box>');
 
         await user.type(input, 'a1b2');
 
@@ -285,7 +273,7 @@ describe('Allow Pattern Tests', () => {
     });
 
     it('filters disallowed characters on paste', async () => {
-        const [input, , user] = await initInputBase('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+        const [input, , user] = await initInputBase('<text-box label="Name" allow-pattern="[0-9]"></text-box>');
 
         await user.paste('a1b2');
 
@@ -293,7 +281,7 @@ describe('Allow Pattern Tests', () => {
     });
 
     it('starts filtering when allow-pattern is set after connect', async () => {
-        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name"></text-box>');
+        const [input, host, user] = await initInputBase('<text-box label="Name"></text-box>');
 
         host.setAttribute('allow-pattern', '[0-9]');
         await user.type(input, 'a1b2');
@@ -302,7 +290,7 @@ describe('Allow Pattern Tests', () => {
     });
 
     it('stops filtering when allow-pattern is removed after connect', async () => {
-        const [input, host, user] = await initInputBase('<text-box field-id="name" label="Name" allow-pattern="[0-9]"></text-box>');
+        const [input, host, user] = await initInputBase('<text-box label="Name" allow-pattern="[0-9]"></text-box>');
         host.removeAttribute('allow-pattern');
 
         await user.type(input, 'a1');
@@ -318,7 +306,7 @@ describe('Allow Pattern Tests', () => {
         };
 
         globalThis.addEventListener('unhandledrejection', handler);
-        document.body.innerHTML = '<text-box field-id="name" label="Name" allow-pattern="["></text-box>';
+        document.body.innerHTML = '<text-box label="Name" allow-pattern="["></text-box>';
         await new Promise(resolve => setTimeout(resolve, 0));
         globalThis.removeEventListener('unhandledrejection', handler);
 
