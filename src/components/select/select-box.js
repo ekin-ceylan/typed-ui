@@ -89,7 +89,7 @@ export default class SelectBox extends SelectBase {
             return false;
         }
 
-        const option = isOptionElement ? Option.init(node) : OptionGroup.init(node);
+        const option = isOptionElement ? new Option(node) : new OptionGroup(node);
         option.hidden = !hiddenByCollector;
         this.#optionList.push(option);
         if (option.selected) this.value = option.value; // ilk seçili olan değeri alır, birden fazla seçili varsa ilkini alır
@@ -180,15 +180,15 @@ export default class SelectBox extends SelectBase {
 
     #toOptionElement(raw) {
         if (raw instanceof Option || raw instanceof OptionGroup) return raw;
-        if (raw instanceof HTMLOptionElement) return Option.init(raw);
-        if (raw instanceof HTMLOptGroupElement) return OptionGroup.init(raw);
+        if (raw instanceof HTMLOptionElement) return new Option(raw);
+        if (raw instanceof HTMLOptGroupElement) return new OptionGroup(raw);
 
         if (typeof raw === 'string' || typeof raw === 'number') {
-            return Option.init({ value: String(raw) });
+            return new Option({ value: String(raw) });
         }
 
         if (raw && typeof raw === 'object') {
-            return this.#isGroupLike(raw) ? OptionGroup.init(raw) : Option.init(raw);
+            return this.#isGroupLike(raw) ? new OptionGroup(raw) : new Option(raw);
         }
 
         throw new TypeError(`Invalid option entry: ${String(raw)}`);

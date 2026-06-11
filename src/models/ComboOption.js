@@ -47,4 +47,11 @@ export default class ComboOption extends Option {
             ></div>
         `;
     }
+
+    constructor(data = {}) {
+        super(data);
+
+        this.innerHTML = data.innerHTML ?? '';
+        this.id = data.id ?? '';
+    }
 }

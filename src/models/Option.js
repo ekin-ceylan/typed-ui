@@ -16,7 +16,6 @@ export default class Option extends HtmlBaseModel {
     /** @type {string} */
     value = '';
     selected = false;
-    disabled = false;
 
     /**
      * Gets the display text for rendering.
@@ -42,5 +41,14 @@ export default class Option extends HtmlBaseModel {
             ${spread(this.ariaset, 'aria-')}
             .innerText=${this.displayText}
         ></option>`;
+    }
+
+    constructor(data = {}) {
+        super(data);
+
+        this.label = data.label ?? '';
+        this.text = data.text ?? '';
+        this.value = data.value ?? '';
+        this.selected = data.selected ?? false;
     }
 }

@@ -496,7 +496,7 @@ export default class ComboBox extends SelectBase {
      * @returns {ComboOption}
      */
     #parseOption(opt) {
-        const option = ComboOption.init(opt);
+        const option = new ComboOption(opt);
         option.id = generateId(`${this.fieldId}-option`);
         if (this.value === opt.value) option.selected = true;
 

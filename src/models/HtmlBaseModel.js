@@ -1,14 +1,15 @@
 import { getAriaAttributesWithValues } from '../modules/utilities.js';
-import BaseModel from './BaseModel.js';
 
 /**
  * Represents a base model for HTML elements, providing common properties and a post-initialization hook to extract ARIA attributes from HTML elements during initialization.
  * This class extends the BaseModel and adds properties for handling hidden state, custom data attributes, and ARIA attributes.
  * It also includes a static postInit method that checks if the initialization data is an HTML element and, if so, extracts its ARIA attributes into the ariaset property.
  * Subclasses can utilize this base model to inherit these common functionalities and ensure consistent handling of HTML-related properties and ARIA attributes across different models.
- * @extends BaseModel
  */
-export default class HtmlBaseModel extends BaseModel {
+export default class HtmlBaseModel {
+    /** Indicates whether the element is disabled. */
+    disabled = false;
+    /** Indicates whether the element is hidden. */
     hidden = false;
     /**
      * Custom data attributes map without `data-` prefix.
@@ -25,11 +26,10 @@ export default class HtmlBaseModel extends BaseModel {
      */
     ariaset = {};
 
-    static postInit(obj, data) {
-        if (data instanceof HTMLElement) {
-            Object.assign(obj['ariaset'], getAriaAttributesWithValues(data));
-        }
-
-        return obj;
+    constructor(data = {}) {
+        this.disabled = data.disabled ?? false;
+        this.hidden = data.hidden ?? false;
+        this.dataset = data.dataset ? { ...data.dataset } : {};
+        this.ariaset = data instanceof HTMLElement ? getAriaAttributesWithValues(data) : { ...data.ariaset };
     }
 }
