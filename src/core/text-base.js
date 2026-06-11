@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { ifDefined, isEmpty } from '../modules/utilities.js';
 import InputBase from './input-base.js';
 import { spread } from '../modules/spread.js';
+import Keys from '../enums/Keys.js';
 
 /**
  * @abstract Base class for text-based input components, providing common functionality for masking, unmasking, validation, and event handling.
@@ -216,9 +217,9 @@ export default class TextBase extends InputBase {
         const maskedLength = this.maskedValue.length;
         const valueLength = snapshotValue.length;
 
-        if (this.lastKey == 'Backspace') return caretPosition;
+        if (this.lastKey == Keys.BACKSPACE) return caretPosition;
         if (caretPosition === valueLength) return maskedLength; // imleç sona
-        if (this.lastKey == 'Delete') return caretPosition + Number(maskedLength > valueLength);
+        if (this.lastKey == Keys.DELETE) return caretPosition + Number(maskedLength > valueLength);
 
         return this.mask(snapshotValue.slice(0, caretPosition)).length; // imleci eski konumuna
     }
@@ -264,7 +265,8 @@ export default class TextBase extends InputBase {
 
         this.#lastKey = e.key;
         const keyCode = e.code;
-        const allowedKeys = ['Backspace', 'Tab', 'Escape', 'Enter', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Process'];
+        /** @type {string[]} */
+        const allowedKeys = [Keys.BACKSPACE, Keys.TAB, Keys.ESCAPE, Keys.ENTER, Keys.DELETE, Keys.ARROW_LEFT, Keys.ARROW_RIGHT, Keys.HOME, Keys.END, Keys.PROCESS];
 
         // değer bir karakter değilse
         if (allowedKeys.includes(keyCode) || e.ctrlKey || e.altKey || e.metaKey) {

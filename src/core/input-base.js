@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { ifDefined } from '../modules/utilities.js';
 import LightComponentBase from './light-component-base';
 import { generateId } from '../modules/id-generator.js';
+import Keys from '../enums/Keys.js';
 
 /**
  * Base class for input components providing common functionality for form inputs.
@@ -121,6 +122,79 @@ export default class InputBase extends LightComponentBase {
 
     // #region PUBLIC API
 
+    /** Clears the input value and dispatches a 'clear' custom event. */
+    clear() {
+        this.value = '';
+    }
+
+    /** Clears the validation message and resets the invalid state. */
+    clearValidation() {
+        this.validationMessage = '';
+        this.invalid = false;
+        this.inputElement?.setCustomValidity(this.validationMessage);
+    }
+
+    /** Resets the input value to its initial state and clears any validation messages. */
+    async reset() {
+        const valueAttr = this.getAttribute('value');
+        this.value = valueAttr || '';
+        await this.updateComplete;
+        this.clearValidation();
+        this.#focused = false;
+    }
+
+    // validate() {}
+
+    // #endregion PUBLIC API
+
+    // #region EVENT LISTENERS
+
+    /**
+     * Clears the input value and dispatches a 'clear' custom event.
+     * @param {Event} event The event that triggered the clear action.
+     */
+    onClearClick(event) {
+        this.clear();
+        this.dispatchCustomEvent('clear');
+        this.inputElement.focus();
+    }
+
+    /**
+     * Handles keydown events on the clear button
+     * @param {KeyboardEvent} event The keyboard event triggered on the clear button.
+     */
+    onClearKeyDown(event) {
+        /** @type {string[]} */ const stopKeys = [Keys.ENTER, Keys.SPACE];
+        if (stopKeys.includes(event.key)) event.stopPropagation();
+    }
+
+    /**
+     * Handles the form reset event by resetting the input value to its initial state and clearing any validation messages.
+     * @param {Event} event
+     */
+    onFormReset(event) {
+        requestAnimationFrame(this.reset.bind(this));
+    }
+
+    // #endregion EVENT LISTENERS
+
+    // #region RENDER METHODS
+
+    /**
+     * Renders the label text for the input field. By default, it returns the value of the `label` property, but can be overridden by subclasses to provide custom label rendering logic.
+     *
+     * Implementation example for a required field with an asterisk:
+     * ```javascript
+     * renderLabelText() {
+     *     return html`${this.label}${this.required ? html`<span>*</span>` : nothing}`;
+     * }
+     * ```
+     * @return {import('lit').TemplateResult | string | typeof nothing}
+     */
+    renderLabelText() {
+        return this.label;
+    }
+
     /** @return {import('lit').TemplateResult | typeof nothing} */
     renderLabel() {
         return this.hideLabel ? nothing : html`<label id=${ifDefined(this.labelId)} for=${ifDefined(this.fieldId)}> ${this.inputLabel} </label>`;
@@ -149,34 +223,7 @@ export default class InputBase extends LightComponentBase {
         if (!this.validationMessage) return nothing;
         return html`<span id=${ifDefined(this.errorId)} data-role="error-message" aria-live="assertive">${this.validationMessage}</span>`;
     }
-
-    clear() {
-        this.value = '';
-        this.dispatchCustomEvent('clear');
-    }
-
-    // #endregion PUBLIC API
-
-    // #region EVENT LISTENERS
-
-    /**
-     * Clears the input value and dispatches a 'clear' custom event.
-     * @param {Event} event The event that triggered the clear action.
-     */
-    onClearClick(event) {
-        this.clear();
-        this.inputElement.focus();
-    }
-
-    /**
-     * Handles keydown events on the clear button
-     * @param {KeyboardEvent} event The keyboard event triggered on the clear button.
-     */
-    onClearKeyDown(event) {
-        if (['Enter', 'Space'].includes(event.code)) event.stopPropagation();
-    }
-
-    // #endregion EVENT LISTENERS
+// #endregion RENDER METHODS
 
     // #region PRIVATE METHODS
     async #firstUpdateCompleted() {
