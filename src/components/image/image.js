@@ -1,7 +1,8 @@
 import { html } from 'lit';
-import LightComponentBase from '../../core/light-component-base';
 import { ifDefined } from '../../modules/utilities';
 import { spread } from '../../modules/spread';
+import PropValidatorMixin from '../../mixins/prop-validator-mixin';
+import { lightMixins } from '../../modules/mixin-utils';
 
 /**
  * Custom image component that extends LightComponentBase to render an image with enhanced features such as error handling, decorative mode, and accessibility improvements.
@@ -12,9 +13,8 @@ import { spread } from '../../modules/spread';
  * - The `fallback-text` attribute specifies the text to display if the image fails to load.
  * - Supports responsive images through `srcset` and `sizes` attributes.
  * @example <custom-image src="image.jpg" alt="Description of the image" fallback-text="Image failed to load"></custom-image>
- * @extends {LightComponentBase}
  */
-export default class Image extends LightComponentBase {
+export default class Image extends lightMixins(PropValidatorMixin) {
     static get properties() {
         return {
             src: { type: String },

@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
-import LightComponentBase from '../../core/light-component-base.js';
 import { hideBodyScroll, showBodyScroll } from '../../modules/scroll-lock-helper.js';
+import { lightMixins } from '../../modules/mixin-utils.js';
 
 /**
  * Custom modal dialog component that extends LightComponentBase and uses SlotCollectorMixin to manage its content. It provides features such as backdrop click to close, Escape key to close, and customizable header and footer rendering.
@@ -19,7 +19,7 @@ import { hideBodyScroll, showBodyScroll } from '../../modules/scroll-lock-helper
  * </modal-dialog>
  * ```
  */
-export default class ModalDialog extends SlotCollectorMixin(LightComponentBase) {
+export default class ModalDialog extends lightMixins(SlotCollectorMixin) {
     // #region FIELDS
 
     /**

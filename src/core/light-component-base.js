@@ -1,6 +1,4 @@
 import { LitElement } from 'lit';
-import { isEmpty } from '../modules/utilities';
-import WarningField from '../models/WarningField';
 
 /**
  * @abstract Base class for components that render into the **light DOM** (no ShadowRoot).
@@ -23,52 +21,6 @@ export default class LightComponentBase extends LitElement {
      */
     get componentName() {
         return this.localName || (this.tagName ? this.tagName.toLowerCase() : '') || this.constructor.name;
-    }
-
-    /**
-     * Fields that are required for the component to function correctly.
-     * Subclasses should override this getter to specify their required fields.
-     * @protected
-     * @returns {string[]}
-     */
-    get requiredFields() {
-        return [];
-    }
-
-    /**
-     * Fields that should trigger a warning if not set.
-     * Each entry has a `fields` array (field names to check/watch) and a `message` string.
-     * If any field in the array is empty, the warning is shown.
-     * @protected
-     * @returns {WarningField[]}
-     */
-    get warningFields() {
-        return [];
-    }
-
-    /** @override */
-    connectedCallback() {
-        super.connectedCallback();
-        this.#validateRequiredFields();
-        this.#validateWarningFields();
-    }
-
-    /** @override */
-    willUpdate(changedProperties) {
-        super.willUpdate(changedProperties);
-
-        if (this.requiredFields.some(fieldName => changedProperties.has(fieldName))) {
-            this.#validateRequiredFields();
-        }
-    }
-
-    /** @override */
-    updated(changedProperties) {
-        super.updated(changedProperties);
-
-        if (this.warningFields.some(w => w.fields.some(f => changedProperties.has(f)))) {
-            this.#validateWarningFields();
-        }
     }
 
     /** @override @protected Render in light DOM to keep page styles. */
@@ -129,20 +81,7 @@ export default class LightComponentBase extends LitElement {
             },
         };
     }
-
-    #validateRequiredFields() {
-        for (const fieldName of this.requiredFields) {
-            if (isEmpty(this[fieldName])) {
-                throw new Error(`${this.componentName}: '${fieldName}' attribute must be set.`);
-            }
-        }
-    }
-
-    #validateWarningFields() {
-        for (const { fields, message } of this.warningFields) {
-            if (fields.every(fieldName => isEmpty(this[fieldName]) || this[fieldName] === false)) {
-                console.warn(`${this.componentName}: ${message}`);
-            }
-        }
-    }
 }
+
+// güvenli sorgu yardımcısı eklenebilir.
+// $scope(selector) { return this.querySelector(selector); }

@@ -227,7 +227,7 @@ describe('ComboBox - Filtering', () => {
 describe('ComboBox - Required validation', () => {
     it('shows required error after interaction when closed without selection', async () => {
         const ctx = await initComboBox(`
-			<combo-box field-id="team" label="Team" required placeholder="Pick">
+            <combo-box label="Team" required placeholder="Pick">
 				<option value="a">A</option>
 				<option value="b">B</option>
 			</combo-box>
@@ -245,12 +245,12 @@ describe('ComboBox - Required validation', () => {
         expect(error.id).toBe('team-error');
         expect(error.hidden).toBe(false);
         expect(error.textContent.trim()).toContain('gereklidir');
-        expect(ctx.valueInput.getAttribute('aria-errormessage')).toBe('team-error');
+        expect(ctx.valueInput.getAttribute('aria-errormessage')).toBe(ctx.host.errorId);
     });
 
     it('clears error after a valid selection is made', async () => {
         const ctx = await initComboBox(`
-			<combo-box field-id="team" label="Team" required placeholder="Pick">
+            <combo-box label="Team" required placeholder="Pick">
 				<option value="a">A</option>
 				<option value="b">B</option>
 			</combo-box>

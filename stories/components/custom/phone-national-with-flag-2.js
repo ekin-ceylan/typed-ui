@@ -1,11 +1,11 @@
 import { defineComponent, ifDefined, isEmpty } from '../../../src/modules/utilities.js';
-import generateId from '../../../src/modules/id-generator.js';
 import { CustomCombobox } from './custom-combobox.js';
-import LightComponentBase from '../../../src/core/light-component-base.js';
 import { html, nothing } from 'lit';
 import TextBase from '../../../src/core/text-base.js';
+import UniqueIdGeneratorMixin from '../../../src/mixins/unique-id-generator-mixin.js';
+import { lightMixins } from '../../../src/index.js';
 
-export default class PhoneNational2 extends LightComponentBase {
+export default class PhoneNational2 extends lightMixins(UniqueIdGeneratorMixin) {
     static get properties() {
         return {
             ...super.properties,
@@ -17,19 +17,12 @@ export default class PhoneNational2 extends LightComponentBase {
         };
     }
 
-    #uniqueId = null; // Bileşen için benzersiz ID
-
-    get uniqueId() {
-        return this.#uniqueId;
-    }
-
     get fieldId() {
         return `${this.componentName}-${this.uniqueId}`;
     }
 
     constructor() {
         super();
-        this.#uniqueId = generateId();
 
         /** @type {string | undefined} */
         this.countryCode = 'tr';

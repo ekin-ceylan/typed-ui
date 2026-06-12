@@ -12,18 +12,19 @@
  *   bindSlots(collectedNodes?: (Element|Text)[]): void
  *   afterSlotsBinded(): void
  *   validateNode(node: Node, slotName: string, hiddenByCollector: boolean): boolean
- * }} SlotCollectorApi
+ * }} SlotCollector
  */
 
 /**
- * Slot collector mixin.
- *
- * **Constraint:** Can only be applied to classes extending `LightComponentBase`
- * (ensures LitElement APIs like `updateComplete` / `requestUpdate` exist).
+ * Slot collector mixin that provides functionality to collect and manage slotted content in a web component. It collects child nodes, validates them, and binds them to their respective slots in the component's template.
+ * - Collects child nodes when the component is connected to the DOM and binds them to slots defined in the template like `<slot name="...">`.
+ * - Provides a `validateNode` method that can be overridden to filter out nodes that should not be included in the slots.
+ * - After binding slots, it calls `afterSlotsBinded()` which can be used for any post-processing.
+ * - **Constraint:** Can only be applied to classes extending `LightComponentBase` (ensures LitElement APIs like `updateComplete` / `requestUpdate` exist).
  *
  * @template {Constructor<LightComponentBase>} TBase
- * @param {TBase} Base
- * @returns {Constructor<LightComponentBase & SlotCollectorApi> & TBase}
+ * @param {TBase} Base - The base class to extend
+ * @returns {Constructor<SlotCollector> & TBase}
  */
 export default function SlotCollectorMixin(Base) {
     return class SlotCollector extends Base {

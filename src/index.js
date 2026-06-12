@@ -4,6 +4,7 @@ export { Directive, directive, PartType } from 'lit/directive.js';
 // Utils
 export { defineComponent, isEmpty } from './modules/utilities.js';
 export { hideBodyScroll, showBodyScroll, lockAllScrolls, unlockAllScrolls } from './modules/scroll-lock-helper.js';
+export { lightMixins, mixins } from './modules/mixin-utils.js';
 export { spread } from './modules/spread.js';
 
 // Models
@@ -16,6 +17,8 @@ export { default as InputBase } from './core/input-base.js';
 export { default as TextBase } from './core/text-base.js';
 export { default as LightComponentBase } from './core/light-component-base.js';
 export { default as SlotCollectorMixin } from './mixins/slot-collector-mixin.js';
+export { default as UniqueIdGeneratorMixin } from './mixins/unique-id-generator-mixin.js';
+export { default as PropValidatorMixin } from './mixins/prop-validator-mixin.js';
 
 // Text input
 export { default as TextBox } from './components/text-input/text-box.js';

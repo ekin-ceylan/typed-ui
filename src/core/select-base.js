@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import InputBase from './input-base.js';
 import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
+import { mixins } from '../modules/mixin-utils.js';
 
 /**
  * Base class for select components providing common functionality for select inputs.
@@ -8,7 +9,7 @@ import SlotCollectorMixin from '../mixins/slot-collector-mixin.js';
  * @template {HTMLInputElement | HTMLSelectElement} TElement
  * @abstract
  */
-export default class SelectBase extends SlotCollectorMixin(InputBase) {
+export default class SelectBase extends mixins(InputBase, SlotCollectorMixin) {
     // #region STATICS, FIELDS, GETTERS
     static get properties() {
         return {

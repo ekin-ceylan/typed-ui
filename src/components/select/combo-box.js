@@ -4,7 +4,6 @@ import SelectBase from '../../core/select-base.js';
 import { lockAllScrolls, unlockAllScrolls } from '../../modules/scroll-lock-helper.js';
 import ComboOption from '../../models/ComboOption.js';
 import CustomOption from './custom-option.js';
-import generateId from '../../modules/id-generator.js';
 
 /**
  * Custom combo box component that extends SelectBase to provide a searchable dropdown list of options. It supports both native and custom behaviors, allowing for flexible usage in various contexts.
@@ -501,7 +500,7 @@ export default class ComboBox extends SelectBase {
      */
     #parseOption(opt) {
         const option = new ComboOption(opt);
-        option.id = `option-${generateId()}`;
+        option.id = `option-${this.generateUniqueId()}`;
         if (this.value === opt.value) option.selected = true;
 
         return option;
@@ -597,7 +596,7 @@ export default class ComboBox extends SelectBase {
                     tabindex="-1"
                 />
                 <div data-role="display" aria-haspopup="listbox" .innerHTML=${this.placeholder}></div>
-                ${this.renderSearchInput()} ${this.renderClearButton()} ${this.renderChevron()}
+                ${this.renderSearchInput()} ${this.renderClearButton()} ${this.renderIndicator()}
                 <div
                     id=${this.listId}
                     role="listbox"

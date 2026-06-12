@@ -1,9 +1,9 @@
 import { html } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
 import SlotCollectorMixin from '../../mixins/slot-collector-mixin.js';
-import LightComponentBase from '../../core/light-component-base.js';
+import { lightMixins } from '../../modules/mixin-utils.js';
 
-export default class UrlLink extends SlotCollectorMixin(LightComponentBase) {
+export default class UrlLink extends lightMixins(SlotCollectorMixin) {
     static get properties() {
         return {
             href: { type: String, attribute: 'href', reflect: true },

@@ -1,15 +1,15 @@
 import { html, nothing } from 'lit';
 import { ifDefined } from '../modules/utilities.js';
-import LightComponentBase from './light-component-base';
-import generateId from '../modules/id-generator.js';
 import Keys from '../enums/Keys.js';
+import PropValidatorMixin from '../mixins/prop-validator-mixin.js';
+import UniqueIdGeneratorMixin from '../mixins/unique-id-generator-mixin.js';
+import { lightMixins } from '../modules/mixin-utils.js';
 
 /**
  * Base class for input components providing common functionality for form inputs.
  * @template {HTMLInputElement | HTMLSelectElement} TElement
- * @abstract @extends LightComponentBase
  */
-export default class InputBase extends LightComponentBase {
+export default class InputBase extends lightMixins(PropValidatorMixin, UniqueIdGeneratorMixin) {
     // #region STATICS, FIELDS, GETTERS
 
     /**
@@ -32,7 +32,6 @@ export default class InputBase extends LightComponentBase {
         };
     }
 
-    #uniqueId = null; // Bileşen için benzersiz ID
     #focused = false; // Inputun odaklanıp odaklanmadığını takip eder
 
     /** @type {TElement | null} */
@@ -51,9 +50,6 @@ export default class InputBase extends LightComponentBase {
         this.ariaInvalid = value ? 'true' : undefined;
     }
 
-    get uniqueId() {
-        return this.#uniqueId;
-    }
     get fieldId() {
         return `${this.componentName}-${this.uniqueId}`;
     }
@@ -77,7 +73,6 @@ export default class InputBase extends LightComponentBase {
     // #region LIFECYCLE METHODS
     constructor() {
         super();
-        this.#uniqueId = generateId();
 
         /** @type {string | number | boolean | null } */
         this.value = '';
@@ -221,17 +216,35 @@ export default class InputBase extends LightComponentBase {
         if (!this.validationMessage) return nothing;
         return html`<span id=${ifDefined(this.errorId)} data-role="error-message" aria-live="assertive">${this.validationMessage}</span>`;
     }
-// #endregion RENDER METHODS
+    // #endregion RENDER METHODS
 
     // #region PRIVATE METHODS
     async #firstUpdateCompleted() {
         await this.updateComplete;
         this.inputElement?.addEventListener('focus', () => (this.#focused = true), { once: true, capture: false });
-this.inputElement?.form?.addEventListener('reset', this.onFormReset.bind(this));
+        this.inputElement?.form?.addEventListener('reset', this.onFormReset.bind(this));
         // this.inputElement?.addEventListener('change', () => (this.#focused = false), { once: true, capture: false });
     }
 
     // #endregion PRIVATE METHODS
 }
 
+// required-sign akışı -> iptal isteyen render günceller
+// basemodel iptal
+
+// label renderi de taşımak gerekebilir.
+// input ağacını belirle
+
+// hide label input labelden taşınacak
 // updated eventini test et her biri için
+// base api
+// inputElement nasıl ve ne zaman bağlanmalı. hook mu eklemeli yoksa getter mı?
+// event listenerler private olmalı
+// uniqueId mekanizması
+// Selectbase options get set için T tipi kullanmayı dene
+// typeahead veya autocomplete eklenecek
+
+// ghost mask mixin dene
+// uniqueId mixin dene
+
+// digit-box ekle
