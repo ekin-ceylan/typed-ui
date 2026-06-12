@@ -1,7 +1,7 @@
 import { defineComponent, ifDefined, isEmpty } from '../../../src/modules/utilities.js';
 import { CustomCombobox } from './custom-combobox.js';
 import { html, nothing } from 'lit';
-import TextBase from '../../../src/core/text-base.js';
+import TextBase from '../../../src/base/text-base.js';
 import UniqueIdGeneratorMixin from '../../../src/mixins/unique-id-generator-mixin.js';
 import { lightMixins } from '../../../src/index.js';
 

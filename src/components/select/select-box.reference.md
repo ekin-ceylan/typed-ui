@@ -14,7 +14,7 @@
     - `stories/components/select/selectbox/select-box.playground.mdx`
     - `stories/components/select/selectbox/select-box.stories.js`
 - Base/parent dependencies:
-    - `src/core/select-base.js`
+    - `src/base/select-base.js`
     - `src/models/Option.js`
     - `src/models/OptionGroup.js`
     - `src/models/HtmlBaseModel.js`

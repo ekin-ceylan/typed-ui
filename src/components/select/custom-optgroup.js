@@ -1,4 +1,4 @@
-import LightComponentBase from '../../core/light-component-base.js';
+import LightComponentBase from '../../base/light-component-base.js';
 
 export default class CustomOptgroup extends LightComponentBase {
     static get properties() {

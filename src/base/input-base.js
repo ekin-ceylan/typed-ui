@@ -8,6 +8,9 @@ import { lightMixins } from '../modules/mixin-utils.js';
 /**
  * Base class for input components providing common functionality for form inputs.
  * @template {HTMLInputElement | HTMLSelectElement} TElement
+ * @abstract DO NOT use this class directly in component definitions (e.g., customElements.define). It is intended to serve strictly as a base class and must be extended by concrete components.
+ * @mixes PropValidatorMixin
+ * @mixes UniqueIdGeneratorMixin
  */
 export default class InputBase extends lightMixins(PropValidatorMixin, UniqueIdGeneratorMixin) {
     // #region STATICS, FIELDS, GETTERS

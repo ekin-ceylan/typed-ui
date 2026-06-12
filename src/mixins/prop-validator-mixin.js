@@ -2,7 +2,7 @@ import WarningField from '../models/WarningField.js';
 import { isEmpty } from '../modules/utilities.js';
 
 /**
- * @typedef {import('../core/light-component-base.js').default} LightComponentBase
+ * @typedef {import('../base/light-component-base.js').default} LightComponentBase
  */
 
 /**

@@ -1,4 +1,4 @@
-import TextBase from '../../core/text-base';
+import TextBase from '../../base/text-base';
 
 /**
  * Input component that provides Turkish license plate format. Format: "34 ABC 1234"

@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
-import SelectBase from '../../core/select-base.js';
+import SelectBase from '../../base/select-base.js';
 import { spread } from '../../modules/spread.js';
 import Option from '../../models/Option.js';
 import OptionGroup from '../../models/OptionGroup.js';

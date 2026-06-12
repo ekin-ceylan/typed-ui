@@ -6,11 +6,11 @@
 // preload/lazyload
 
 import { html } from 'lit';
-import LightComponentBase from '../../core/light-component-base';
 import SlotCollectorMixin from '../../mixins/slot-collector-mixin';
+import { lightMixins } from '../../modules/mixin-utils';
 
 // bg-image - ayrı comp olabilir
-export default class Picture extends SlotCollectorMixin(LightComponentBase) {
+export default class Picture extends lightMixins(SlotCollectorMixin) {
     render() {
         return html`
             <picture>

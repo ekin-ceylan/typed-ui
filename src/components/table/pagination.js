@@ -1,5 +1,5 @@
 import { html, nothing } from 'lit';
-import LightComponentBase from '../../core/light-component-base.js';
+import LightComponentBase from '../../base/light-component-base.js';
 import { stringFormat } from '../../modules/utilities.js';
 
 /**

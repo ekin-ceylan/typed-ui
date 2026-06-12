@@ -1,15 +1,14 @@
 import { LitElement } from 'lit';
 
 /**
- * @abstract Base class for components that render into the **light DOM** (no ShadowRoot).
- *
- * Purpose:
+ * Base class for components that render into the **light DOM** (no ShadowRoot).
  * - Keep page/global styles affecting the component (no style encapsulation).
- * - Provide small shared utilities (e.g. custom event helper).
- *
- * Notes:
+ * - Provide `getScopedAttrs()` helper for attribute forwarding.
+ * - Provide `dispatchCustomEvent()` helper for consistent custom event dispatching.
+ * - Provide a stable `componentName` for logs/errors (minify-safe).
  * - Because it extends `LitElement`, instances have `updateComplete`, `requestUpdate`, etc.
- * - `createRenderRoot()` returns `this`, so styles and DOM are not encapsulated. *
+ * - `createRenderRoot()` returns `this`, so styles and DOM are not encapsulated.
+ * @abstract DO NOT use this class directly in component definitions (e.g., customElements.define). It is intended to serve strictly as a base class and must be extended by concrete components.
  * @extends {LitElement}
  */
 export default class LightComponentBase extends LitElement {

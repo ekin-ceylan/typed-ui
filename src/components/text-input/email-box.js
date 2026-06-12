@@ -1,4 +1,4 @@
-import TextBase from '../../core/text-base';
+import TextBase from '../../base/text-base';
 import { isEmpty } from '../../modules/utilities';
 
 export default class EmailBox extends TextBase {

@@ -1,4 +1,4 @@
-import LightComponentBase from '../../core/light-component-base.js';
+import LightComponentBase from '../../base/light-component-base.js';
 
 export default class CustomOption extends LightComponentBase {
     static get properties() {
@@ -19,11 +19,16 @@ export default class CustomOption extends LightComponentBase {
 
     constructor() {
         super();
+
+        /** @type {string} */
         this.label = '';
         /** @type {string} */
         this.value = '';
+        /** @type {boolean} */
         this.selected = false;
+        /** @type {boolean} */
         this.disabled = false;
+        /** @type {boolean} */
         this.hidden = false;
     }
 }

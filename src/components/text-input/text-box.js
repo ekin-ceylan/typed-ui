@@ -1,4 +1,4 @@
-import TextBase from '../../core/text-base.js';
+import TextBase from '../../base/text-base.js';
 
 /**
  * General purpose text input component. Can be used for various input types such as text, email, password, number, etc. depending on the `type` attribute.

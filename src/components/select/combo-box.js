@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
-import SelectBase from '../../core/select-base.js';
+import SelectBase from '../../base/select-base.js';
 import { lockAllScrolls, unlockAllScrolls } from '../../modules/scroll-lock-helper.js';
 import ComboOption from '../../models/ComboOption.js';
 import CustomOption from './custom-option.js';

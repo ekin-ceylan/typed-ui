@@ -1,4 +1,4 @@
-import TextBase from '../../core/text-base.js';
+import TextBase from '../../base/text-base.js';
 import { html } from 'lit';
 
 export default class PasswordBox extends TextBase {

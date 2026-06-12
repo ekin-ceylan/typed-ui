@@ -1,5 +1,5 @@
 import { html, nothing } from 'lit';
-import TextBase from '../../core/text-base';
+import TextBase from '../../base/text-base';
 import { isEmpty } from '../../modules/utilities';
 
 /** @extends {TextBase} */

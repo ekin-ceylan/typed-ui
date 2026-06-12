@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import { checkTcNo, isEmpty } from '../../modules/utilities';
-import TextBase from '../../core/text-base';
+import TextBase from '../../base/text-base';
 
 /** @extends TextBase */
 export default class TcBox extends TextBase {

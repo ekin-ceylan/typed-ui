@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { ifDefined } from '../../modules/utilities.js';
-import InputBase from '../../core/input-base.js';
+import InputBase from '../../base/input-base.js';
 
 export default class RangeSelect extends InputBase {
     static get properties() {

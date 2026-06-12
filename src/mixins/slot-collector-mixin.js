@@ -1,5 +1,5 @@
 /**
- * @typedef {import('../core/light-component-base.js').default} LightComponentBase
+ * @typedef {import('../base/light-component-base.js').default} LightComponentBase
  */
 
 /**
