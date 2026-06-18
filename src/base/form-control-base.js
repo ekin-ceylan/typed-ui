@@ -112,11 +112,11 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
     constructor() {
         super();
 
-        /** @type {string} */
+        /** The name attribute of the form control. @type {string} */
         this.name = '';
-        /** @type {string} */
+        /** The label associated with the form control. @type {string} */
         this.label = '';
-        /** @type {string} */
+        /** The current value of the form control. @type {string} */
         this.value = '';
         /**
          * ARIA invalid state passed to the underlying control.
@@ -125,11 +125,11 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
          * @type {'true' | 'grammar' | 'spelling' | undefined}
          */
         this.ariaInvalid = undefined;
-        /** @type {boolean} */
+        /** Whether the form control is required. @type {boolean} */
         this.required = false;
-        /** @type {boolean} */
+        /** Whether the form control is disabled. @type {boolean} */
         this.disabled = false;
-        /** @type {boolean} */
+        /** Whether the form control is read-only. @type {boolean} */
         this.readonly = false;
     }
 

@@ -180,4 +180,4 @@ function getMessage(key, ...args) {
     return factory(...args);
 }
 
-export { defaultMessages, getLocale, setLocale, configure, registerLocale, getMessages, getMessage };
+export { getLocale, setLocale, configure, registerLocale, getMessages, getMessage };
