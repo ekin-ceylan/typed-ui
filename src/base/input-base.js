@@ -8,9 +8,9 @@ import { lightMixins } from '../modules/mixin-utils.js';
 /**
  * Base class for input components providing common functionality for form inputs.
  * @template {HTMLInputElement | HTMLSelectElement} TElement
- * @abstract DO NOT use this class directly in component definitions (e.g., customElements.define). It is intended to serve strictly as a base class and must be extended by concrete components.
- * @mixes PropValidatorMixin
- * @mixes UniqueIdGeneratorMixin
+ * @abstract Not intended to be used directly in component definitions (for example, with customElements.define). Extend this class to create concrete components.
+ * @mixes PropValidatorMixin - Provides required and warning field validation logic. Components can specify required fields that must be set and warning fields that trigger console warnings when empty.
+ * @mixes UniqueIdGeneratorMixin - Provides a unique ID generator for creating stable, minify-safe component identifiers.
  */
 export default class InputBase extends lightMixins(PropValidatorMixin, UniqueIdGeneratorMixin) {
     // #region STATICS, FIELDS, GETTERS
@@ -46,6 +46,12 @@ export default class InputBase extends lightMixins(PropValidatorMixin, UniqueIdG
         return this.#focused;
     }
 
+    /**
+     * Convenience boolean API for generic "invalid" state. `true` maps to `ariaInvalid='true'`, `false` clears `ariaInvalid`.
+     *
+     * Note: grammar/spelling should be set via ariaInvalid directly.
+     * @returns {boolean}
+     */
     get invalid() {
         return this.ariaInvalid === 'true' || this.ariaInvalid === 'grammar' || this.ariaInvalid === 'spelling';
     }
@@ -89,8 +95,13 @@ export default class InputBase extends lightMixins(PropValidatorMixin, UniqueIdG
         this.placeholder = '';
         /** @type {boolean} Whether the input is required */
         this.required = false;
-        /** @type {boolean} ARIA invalid state for accessibility */
-        this.invalid = false;
+        /**
+         * ARIA invalid state passed to the underlying control.
+         *
+         * Use `'true'` for generic validation errors, or `'grammar'`/`'spelling'` for language-specific issues. Keep undefined to omit the `aria-invalid` attribute.
+         * @type {'true' | 'grammar' | 'spelling' | undefined}
+         */
+        this.ariaInvalid = undefined;
         /** @type {boolean} Whether the input is disabled */
         this.disabled = false;
         /** @type {boolean} Whether the input is readonly */
