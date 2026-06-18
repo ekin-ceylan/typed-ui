@@ -1,6 +1,10 @@
 import { LitElement } from 'lit';
 
 /**
+ * @typedef {keyof import('../modules/locale').LocaleRegistry} LocaleKey
+ */
+
+/**
  * Base class for components that render into the **light DOM** (no ShadowRoot).
  * - Keep page/global styles affecting the component (no style encapsulation).
  * - Provide `getScopedAttrs()` helper for attribute forwarding.
@@ -8,10 +12,12 @@ import { LitElement } from 'lit';
  * - Provide a stable `componentName` for logs/errors (minify-safe).
  * - Because it extends `LitElement`, instances have `updateComplete`, `requestUpdate`, etc.
  * - `createRenderRoot()` returns `this`, so styles and DOM are not encapsulated.
- * @abstract DO NOT use this class directly in component definitions (e.g., customElements.define). It is intended to serve strictly as a base class and must be extended by concrete components.
+ * @abstract Not intended to be used directly in component definitions (for example, with customElements.define). Extend this class to create concrete components.
  * @extends {LitElement}
  */
 export default class LightComponentBase extends LitElement {
+    #lang = null;
+
     /**
      * Stable component identifier for logs/errors (minify-safe).
      * Falls back to constructor.name when not connected/upgraded.
@@ -20,6 +26,25 @@ export default class LightComponentBase extends LitElement {
      */
     get componentName() {
         return this.localName || (this.tagName ? this.tagName.toLowerCase() : '') || this.constructor.name;
+    }
+
+    /**
+     * Current locale of the component, derived from the closest ancestor with a `lang` attribute. Updates automatically on `locale-change` events.
+     * @returns {LocaleKey | null}
+     */
+    get lang() {
+        return /** @type {LocaleKey | null} */ (this.#lang);
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        this.#setLocale();
+        document.addEventListener('locale-change', this.#onLocaleChange);
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        document.removeEventListener('locale-change', this.#onLocaleChange);
     }
 
     /** @override @protected Render in light DOM to keep page styles. */
@@ -80,6 +105,13 @@ export default class LightComponentBase extends LitElement {
             },
         };
     }
+
+    /** Updates the component's locale based on the closest ancestor with a `lang` attribute. */
+    #setLocale() {
+        this.#lang = this.closest('[lang]')?.getAttribute('lang') || null;
+    }
+
+    #onLocaleChange = () => this.#setLocale();
 }
 
 // güvenli sorgu yardımcısı eklenebilir.
