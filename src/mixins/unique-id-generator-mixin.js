@@ -17,6 +17,7 @@
  * - Provides a `uniqueId` getter to access the generated ID and a `generateUniqueId()` method to create new IDs if needed.
  * @template {Constructor<Object>} TBase
  * @param {TBase} Base - The base class to extend
+ * @category mixins
  * @returns {TBase & Constructor<UniqueIdGenerator>}
  */
 export default function UniqueIdGeneratorMixin(Base) {

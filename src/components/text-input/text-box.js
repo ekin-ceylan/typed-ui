@@ -1,4 +1,4 @@
-import TextBase from '../../base/text-base.js';
+import TextControlBase from '../../base/text-control-base.js';
 
 /**
  * General purpose text input component. Can be used for various input types such as text, email, password, number, etc. depending on the `type` attribute.
@@ -6,9 +6,9 @@ import TextBase from '../../base/text-base.js';
  * - The `required`, `pattern`, `maxlength`, `minlength`, `min`, `max` attributes can be used for validation.
  * - The `allow-pattern` attribute determines which characters are allowed to be entered. For example, if `allow-pattern="\d"` then only numeric input is allowed.
  * @example <text-box name="year" required allow-pattern="\d" minlength="4" maxlength="4"></text-box>
- * @extends {TextBase}
+ * @extends {TextControlBase}
  */
-export default class TextBox extends TextBase {
+export default class TextBox extends TextControlBase {
     static get properties() {
         return {
             ...super.properties,

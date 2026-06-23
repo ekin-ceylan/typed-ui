@@ -64,12 +64,12 @@ export function classMap(...args) {
 }
 
 /**
- * Checks if a string is empty, undefined, or null.
- * @param {string|null|undefined} str - The string to check.
- * @returns {boolean} True if the string is empty, undefined, or null; otherwise false.
+ * Checks if a string is empty, `undefined`, or `null`.
+ * @param {string|null|undefined} value The string to check.
+ * @returns {boolean}
  */
-export function isEmpty(str) {
-    return str === '' || str === undefined || str === null;
+export function isEmpty(value) {
+    return value === '' || value === undefined || value === null;
 }
 
 /**

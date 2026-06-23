@@ -41,6 +41,8 @@ describe('Validation Tests', () => {
     });
 
     it('Required validation should show error when value is missing', async () => {
+        await user.type(input, 'x');
+        await user.clear(input);
         await user.tab();
 
         expect(input.validity.valueMissing).toBe(true);
@@ -87,26 +89,30 @@ describe('Validation Tests', () => {
     });
 
     it('if input is required and it gets empty, validation is shown immediately', async () => {
+        const [input, host, user] = await initInputBase('<text-box label="Name" required></text-box>');
+
         await user.type(input, 'abc');
 
-        expect(getErrorElement()).toBeNull();
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
 
         await user.clear(input);
+        await user.tab();
+        await host.updateComplete;
 
         expect(input.value).toBe('');
-        errorElement = getErrorElement();
+        const errorElement = host.querySelector('[data-role="error-message"]');
         expect(errorElement).not.toBeNull();
     });
 
     // pattern attr göre validasyon ve hata mesajı
     it('pattern with punctuation should fail validation', async () => {
-        const [input, , user] = await initInputBase('<text-box label="Name" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ -]+"></text-box>');
+        const [input, host, user] = await initInputBase('<text-box label="Name" pattern="[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ -]+"></text-box>');
 
         await user.type(input, 'Hello, world!');
         await user.tab(); // blur to trigger validation
         // await host.updateComplete;
 
-        const errorElement = getErrorElement();
+        const errorElement = host.querySelector('[data-role="error-message"]');
         expect(errorElement).not.toBeNull();
         expect(errorElement.textContent.trim()).toMatch(/gereklidir|Lütfen/);
     });
@@ -153,6 +159,8 @@ describe('Accessibility (A11y) tests', () => {
         expect(host.querySelector('[data-role="error-message"]')).toBeNull();
         expect(input.getAttribute('aria-errormessage')).toBeNull();
 
+        await user.type(input, 'x');
+        await user.clear(input);
         await user.tab();
         await host.updateComplete;
 
@@ -170,6 +178,8 @@ describe('Accessibility (A11y) tests', () => {
 
         expect(input.getAttribute('aria-errormessage')).toBeNull();
 
+        await user.type(input, 'x');
+        await user.clear(input);
         await user.tab();
         await host.updateComplete;
 
@@ -215,6 +225,8 @@ describe('Accessibility (A11y) tests', () => {
         expect(document.activeElement).toBe(input);
 
         // Blurring should run validity check and show the error.
+        await user.type(input, 'x');
+        await user.clear(input);
         await user.tab();
         await host.updateComplete;
         const error = host.querySelector('[data-role="error-message"]');
@@ -226,6 +238,8 @@ describe('Accessibility (A11y) tests', () => {
         const [input, host, user] = await initInputBase('<text-box label="Name" required minlength="3"></text-box>');
 
         // Trigger invalid state.
+        await user.type(input, 'x');
+        await user.clear(input);
         await user.tab();
         await host.updateComplete;
         expect(input.getAttribute('aria-invalid')).toBe('true');

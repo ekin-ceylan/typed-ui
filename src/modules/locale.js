@@ -4,7 +4,10 @@
  * @property {(label?: string) => string} pattern
  * @property {(label?: string, min?: number) => string} minlength
  * @property {(label?: string, max?: number) => string} maxlength
+* @property {(label?: string, min?: number) => string} min
+ * @property {(label?: string, max?: number) => string} max
  * @property {(label?: string, min?: number, max?: number) => string} range
+* @property {string} clearButtonAriaLabel
  */
 
 /**
@@ -30,18 +33,24 @@
 /** @type {Record<LocaleKey, LocaleMessages>} */
 const defaultMessages = {
     tr: {
-        required: label => `${label ? label + ' alanı ' : 'Bu alan '}gereklidir.`,
+        required: label => `${label || 'Bu alan'} gereklidir.`,
         pattern: label => `Lütfen geçerli bir ${label || 'değer'} giriniz.`,
         minlength: (label, min) => `${label || 'Bu alan'} en az ${min} karakter olmalıdır.`,
         maxlength: (label, max) => `${label || 'Bu alan'} en fazla ${max} karakter olabilir.`,
+min: (label, min) => `${label || 'Bu alan'} ${min} değerinden az olamaz.`,
+        max: (label, max) => `${label || 'Bu alan'} ${max} değerinden fazla olamaz.`,
         range: (label, min, max) => `${label || 'Bu alan'} ${min} ile ${max} arasında olmalıdır.`,
+clearButtonAriaLabel: 'Değeri temizle',
     },
     en: {
-        required: label => `${label ? label + ' is ' : 'This field is '}required.`,
+        required: label => `${label || 'This field'} is required.`,
         pattern: label => `Please enter a valid ${label || 'value'}.`,
         minlength: (label, min) => `${label || 'This field'} must be at least ${min} characters.`,
         maxlength: (label, max) => `${label || 'This field'} must be at most ${max} characters.`,
+min: (label, min) => `${label || 'This field'} cannot be less than ${min}.`,
+        max: (label, max) => `${label || 'This field'} cannot be greater than ${max}.`,
         range: (label, min, max) => `${label || 'This field'} must be between ${min} and ${max}.`,
+clearButtonAriaLabel: 'Clear value',
     },
 };
 
@@ -177,7 +186,8 @@ function getMessages(lang) {
 function getMessage(key, ...args) {
     const factory = getMessages()[key];
     if (!factory) return '';
-    return factory(...args);
+    if (typeof factory === 'function') return factory(...args);
+    return factory;
 }
 
 export { getLocale, setLocale, configure, registerLocale, getMessages, getMessage };

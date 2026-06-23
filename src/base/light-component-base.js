@@ -1,4 +1,5 @@
 import { LitElement } from 'lit';
+import { getMessages } from '../modules/locale';
 
 /**
  * @typedef {keyof import('../modules/locale').LocaleRegistry} LocaleKey
@@ -20,8 +21,7 @@ export default class LightComponentBase extends LitElement {
 
     /**
      * Stable component identifier for logs/errors (minify-safe).
-     * Falls back to constructor.name when not connected/upgraded.
-     * @protected
+     * Falls back to `constructor.name` when not connected/upgraded.
      * @returns {string}
      */
     get componentName() {
@@ -36,18 +36,37 @@ export default class LightComponentBase extends LitElement {
         return /** @type {LocaleKey | null} */ (this.#lang);
     }
 
+    /**
+     * Messages for the current locale, derived from the closest ancestor with a `lang` attribute.
+     * @returns {Readonly<import('../modules/locale').LocaleMessages>}
+     */
+    get localeMessages() {
+        return getMessages(this.lang);
+    }
+
+    /**
+     * @override
+     * Initializes component lifecycle, locale, and event listeners.
+     * - Calls `super.connectedCallback()` for proper Lit lifecycle.
+     * - Sets locale from closest `[lang]` ancestor.
+     * - Listens to `locale-change` events for dynamic locale updates.
+     */
     connectedCallback() {
         super.connectedCallback();
         this.#setLocale();
         document.addEventListener('locale-change', this.#onLocaleChange);
     }
 
+    /**
+     * @override
+     * Cleans up event listeners and other resources when the component is disconnected.
+     */
     disconnectedCallback() {
         super.disconnectedCallback();
         document.removeEventListener('locale-change', this.#onLocaleChange);
     }
 
-    /** @override @protected Render in light DOM to keep page styles. */
+    /** @override @protected */
     createRenderRoot() {
         return this; // Shadow DOM'u kapat
     }
@@ -108,7 +127,7 @@ export default class LightComponentBase extends LitElement {
 
     /** Updates the component's locale based on the closest ancestor with a `lang` attribute. */
     #setLocale() {
-        this.#lang = this.closest('[lang]')?.getAttribute('lang') || null;
+        this.#lang = this.getAttribute('lang') || this.closest('[lang]')?.getAttribute('lang');
     }
 
     #onLocaleChange = () => this.#setLocale();

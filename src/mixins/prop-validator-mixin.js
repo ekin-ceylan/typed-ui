@@ -27,6 +27,7 @@ import { isEmpty } from '../modules/utilities.js';
  *
  * @template {Constructor<LightComponentBase>} TBase
  * @param {TBase} Base - The base class to extend
+ * @category mixins
  * @returns {TBase & Constructor<PropValidator>}
  */
 export default function PropValidatorMixin(Base) {

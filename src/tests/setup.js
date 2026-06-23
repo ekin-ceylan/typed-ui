@@ -8,11 +8,12 @@ import InputBase from '../base/input-base';
 /**
  * Initializes a InputBase component for testing.
  * @param {string} elementStr
+ * @param {string} [lang='tr']
  * @returns {Promise<[HTMLInputElement|HTMLSelectElement, InputBase, import('@testing-library/user-event').UserEvent]>}
  */
-async function initInputBase(elementStr) {
+async function initInputBase(elementStr, lang = 'tr') {
+    document.body.setAttribute('lang', lang);
     document.body.innerHTML = elementStr;
-
     const host = document.body.firstElementChild;
     if (!host) {
         throw new Error('initInputBase: no host element found in document.body');

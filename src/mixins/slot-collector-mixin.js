@@ -24,6 +24,7 @@
  *
  * @template {Constructor<LightComponentBase>} TBase
  * @param {TBase} Base - The base class to extend
+ * @category mixins
  * @returns {Constructor<SlotCollector> & TBase}
  */
 export default function SlotCollectorMixin(Base) {
