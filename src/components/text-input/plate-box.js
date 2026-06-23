@@ -1,4 +1,4 @@
-import TextBase from '../../base/text-base';
+import TextControlBase from '../../base/text-control-base.js';
 
 /**
  * Input component that provides Turkish license plate format. Format: "34 ABC 1234"
@@ -7,12 +7,12 @@ import TextBase from '../../base/text-base';
  *
  * The `autounmask` attribute allows the value to be automatically unmasked. Spaces are removed. Default is `true`.
  * The `autocomplete` attribute allows disabling browser autocomplete.
- * @extends TextBase
  * @example
  * <plate-box name="PlateNo"></plate-box>
  * <plate-box autounmask autocomplete="off"></plate-box>
+ * @extends TextControlBase
  */
-export default class PlateBox extends TextBase {
+export default class PlateBox extends TextControlBase {
     static get properties() {
         return {
             ...super.properties,
@@ -27,17 +27,19 @@ export default class PlateBox extends TextBase {
     #matchRegex = new RegExp(this.#lazySelectionPattern);
     #groupingRegex = /^(\d{2})([A-PR-VYZa-hj-pr-vyzı]{1,3})(\d{1,5})?$/;
 
-    validateLastChar(e) {
+    /** @inheritDoc */
+    validateLastChar(event) {
         const value = this.inputElement.value;
         const caret = this.inputElement.selectionStart;
         const caretEnd = this.inputElement.selectionEnd;
-        const key = e.key;
+        const key = event.key;
 
         const newValue = (value.slice(0, caret) + key + value.slice(caretEnd)).replaceAll(' ', '');
 
         return this.#testRegex.test(newValue); // Is the new value compatible with the pattern?
     }
 
+    /** @inheritDoc */
     mask(value) {
         value = value?.replaceAll(' ', '')?.match(this.#matchRegex); // Get valid part
         value = value ? value[0] : '';
@@ -50,16 +52,18 @@ export default class PlateBox extends TextBase {
         return value?.toLocaleUpperCase('tr-TR'); // Convert to uppercase
     }
 
+    /** @inheritDoc */
     unmask(maskedValue) {
         return maskedValue.replaceAll(' ', '');
     }
 
-    validate(maskedValue) {
+    /** @inheritDoc */
+    validate(value) {
         if (this.unmaskedValue.length < this.minlength) {
             return this.minLengthValidationMessage;
         }
 
-        return super.validate(maskedValue);
+        return super.validate(value);
     }
 
     constructor() {

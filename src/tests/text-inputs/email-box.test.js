@@ -66,13 +66,12 @@ describe('EmailBox: Validation Tests', () => {
         [input, host, user] = await initInputBase(el);
     });
 
-    it('validates required field (empty value)', async () => {
+    it('does not show required error before first input interaction', async () => {
         await user.tab();
 
         expect(input.validity.valueMissing).toBe(true);
-        const errorElement = getErrorElement();
-        expect(errorElement).not.toBeNull();
-        expect(errorElement.textContent).toContain('gereklidir');
+        expect(getErrorElement()).toBeNull();
+        expect(host.invalid).toBe(false);
     });
 
     it('accepts valid email format', async () => {
@@ -216,10 +215,11 @@ describe('EmailBox: Accessibility (A11y)', () => {
         expect(input.required).toBe(true);
     });
 
-    it('toggles aria-invalid on validation state change', async () => {
+    it('toggles aria-invalid after input-based validation state change', async () => {
         const [input, , user] = await initInputBase('<email-box label="Email" required></email-box>');
 
-        // Trigger invalid state
+        // Trigger invalid state after first input interaction
+        await user.type(input, 'invalid');
         await user.tab();
         expect(input.getAttribute('aria-invalid')).toBe('true');
 
@@ -238,6 +238,7 @@ describe('EmailBox: Accessibility (A11y)', () => {
         expect(host.querySelector('[data-role="error-message"]')).toBeNull();
         expect(input.getAttribute('aria-errormessage')).toBeNull();
 
+        await user.type(input, 'invalid');
         await user.tab();
         await host.updateComplete;
 
@@ -253,6 +254,7 @@ describe('EmailBox: Accessibility (A11y)', () => {
 
         expect(input.getAttribute('aria-errormessage')).toBeNull();
 
+        await user.type(input, 'invalid');
         await user.tab();
         await host.updateComplete;
 

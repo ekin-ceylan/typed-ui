@@ -231,20 +231,6 @@ export default class TextControlBase extends StandardControlBase {
         return false;
     }
 
-    /**
-     * @override
-     */
-    validate(value) {
-        if (this.required && !value) return this.requiredValidationMessage;
-        if (value?.length > 0 && value?.length < this.minlength) return this.minLengthValidationMessage;
-        if (value?.length > this.maxlength) return this.maxLengthValidationMessage;
-        if (Number(value) > this.max) return this.maxValueValidationMessage;
-        if (Number(value) < this.min) return this.minValueValidationMessage;
-        if (!this.#validatePattern(value)) return this.patternValidationMessage;
-
-        return '';
-    }
-
     // #endregion PUBLIC API
 
     // #region INTERNAL HOOKS
@@ -301,6 +287,18 @@ export default class TextControlBase extends StandardControlBase {
         return this.mask(snapshotValue.slice(0, caretPosition)).length; // imleci eski konumuna
     }
 
+    /** @inheritDoc */
+    validate(value) {
+        if (this.required && !value) return this.requiredValidationMessage;
+        if (value?.length > 0 && value?.length < this.minlength) return this.minLengthValidationMessage;
+        if (value?.length > this.maxlength) return this.maxLengthValidationMessage;
+        if (Number(value) > this.max) return this.maxValueValidationMessage;
+        if (Number(value) < this.min) return this.minValueValidationMessage;
+        if (!this.#validatePattern(value)) return this.patternValidationMessage;
+
+        return '';
+    }
+
     /**
      * Validates the last character entered based on the allow-pattern regex.
      * This method is called during the keydown event to prevent invalid characters from being entered into the input field.
@@ -332,7 +330,7 @@ export default class TextControlBase extends StandardControlBase {
         this.dispatchCustomEvent('update');
     }
 
-    /** @protected */
+    /** @override @protected */
     setupFirstInteraction() {
         // programatik atama etkiler mi native ile dene
         this.inputElement?.addEventListener('input', _e => this.dispatchCustomEvent('first-interaction'), { once: true });

@@ -16,6 +16,8 @@ export { default as WarningField } from './models/WarningField.js';
 // Base Classes
 export { default as LightComponentBase } from './base/light-component-base.js';
 export { default as FormControlBase } from './base/form-control-base.js';
+export { default as StandardControlBase } from './base/standard-control-base.js';
+export { default as TextControlBase } from './base/text-control-base.js';
 export { default as InputBase } from './base/input-base.js';
 export { default as TextBase } from './base/text-base.js';
 

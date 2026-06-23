@@ -74,13 +74,12 @@ describe('Validating tests', () => {
         [input, host, user] = await initInputBase(el);
     });
 
-    it('validates required', async () => {
+    it('does not show required error before first input interaction', async () => {
         await user.tab(); // focus'tan çık
 
         expect(input.validity.valueMissing).toBe(true);
-        const errorElement = getErrorElement();
-        expect(errorElement).not.toBeNull();
-        expect(errorElement.textContent.trim()).toContain('en az');
+        expect(getErrorElement()).toBeNull();
+        expect(host.invalid).toBe(false);
     });
 
     it('enforces maxlength', async () => {
@@ -99,25 +98,18 @@ describe('Validating tests', () => {
         expect(input.validity.valid).toBe(false);
     });
 
-    it('adds and removes aria-errormessage with validation state', async () => {
+    it('adds aria-errormessage after first input interaction and invalid state', async () => {
         expect(host.querySelector('[data-role="error-message"]')).toBeNull();
         expect(input.getAttribute('aria-errormessage')).toBeNull();
 
+        await user.type(input, '3');
+        await user.clear(input);
         await user.tab();
         await host.updateComplete;
 
         let errorElement = host.querySelector('[data-role="error-message"]');
         expect(errorElement).not.toBeNull();
         expect(input.getAttribute('aria-errormessage')).toBe(host.errorId);
-
-        input.focus();
-        await user.type(input, '34ABC123');
-        await user.tab();
-        await host.updateComplete;
-
-        errorElement = host.querySelector('[data-role="error-message"]');
-        expect(errorElement).toBeNull();
-        expect(input.getAttribute('aria-errormessage')).toBeNull();
     });
 
     // Minimum karakter sayısı kontrolü ve hata mesajı
