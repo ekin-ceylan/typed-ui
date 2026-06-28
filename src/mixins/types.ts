@@ -52,3 +52,12 @@ export interface PropValidator {
      */
     get warningFields(): WarningField[];
 }
+
+export interface GhostPlaceholder {
+    /**
+     * The ghost placeholder text displayed when the input is being edited.
+     * If not set, it defaults to the value of the `placeholder` property.
+     * @protected
+     */
+    ghostPlaceholder: string;
+}

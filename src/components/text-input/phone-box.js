@@ -1,9 +1,11 @@
-import { html, nothing } from 'lit';
 import TextBase from '../../base/text-base';
 import { isEmpty } from '../../modules/utilities';
+import { mixins } from '../../modules/mixin-utils';
+import GhostPlaceholderMixin from '../../mixins/ghost-placeholder-mixin';
+import TextControlBase from '../../base/text-control-base';
 
 /** @extends {TextBase} */
-export default class PhoneBox extends TextBase {
+export default class PhoneBox extends mixins(TextControlBase, GhostPlaceholderMixin) {
     static get properties() {
         return {
             ...super.properties,
@@ -11,21 +13,6 @@ export default class PhoneBox extends TextBase {
             // minlength: { type: Number },
             autounmask: { type: Boolean },
         };
-    }
-
-    #ghostMask1 = '';
-    #ghostMask2 = '';
-    /** @type {string} Placeholder for the ghost mask */
-    ghostPlaceholder = '0(___) ___ __ __';
-
-    willUpdate(changed) {
-        super.willUpdate(changed);
-
-        if (changed.has('value')) {
-            const len = this.maskedValue.length;
-            this.#ghostMask1 = this.maskedValue;
-            this.#ghostMask2 = this.ghostPlaceholder.slice(len);
-        }
     }
 
     constructor() {
@@ -77,16 +64,6 @@ export default class PhoneBox extends TextBase {
         if (newValue.length > 11) return false; // Maksimum uzunluk 11 olmalı
 
         return /\d/.test(keyDownEvent.key);
-    }
-
-    /** @override @return {import('lit').TemplateResult | typeof nothing} */
-    renderAdornment() {
-        if (isEmpty(this.#ghostMask1) && isEmpty(this.#ghostMask2)) return nothing;
-
-        // prettier-ignore
-        return html` <div aria-hidden="true" data-role="underlay">
-                <pre>${this.#ghostMask1}</pre><pre>${this.#ghostMask2}</pre>
-            </div> `;
     }
 }
 
