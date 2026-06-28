@@ -6,16 +6,12 @@ import { isEmpty } from '../modules/utilities.js';
  */
 
 /**
- * A generic type that represents any class constructor.
  * @template T
- * @typedef {new (...args: any[]) => T} Constructor
+ * @typedef {import('./types').Constructor<T>} Constructor
  */
 
 /**
- * @typedef {{
- *   get requiredFields(): string[]
- *   get warningFields(): WarningField[]
- * }} PropValidator
+ * @typedef {import('./types').PropValidator} PropValidator
  */
 
 /**

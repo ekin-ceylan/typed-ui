@@ -3,16 +3,12 @@
  */
 
 /**
- * @template TInstance
- * @typedef {new (...args: any[]) => TInstance} Constructor
+ * @template T
+ * @typedef {import('./types').Constructor<T>} Constructor
  */
 
 /**
- * @typedef {{
- *   bindSlots(collectedNodes?: (Element|Text)[]): void
- *   afterSlotsBinded(): void
- *   validateNode(node: Node, slotName: string, hiddenByCollector: boolean): boolean
- * }} SlotCollector
+ * @typedef {import('./types').SlotCollector} SlotCollector
  */
 
 /**

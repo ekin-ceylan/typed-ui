@@ -347,9 +347,9 @@ export default class TextBase extends InputBase {
     }
 
     /**
-     * Creates an event initialization dictionary for custom events.
+     * Creates an event initialization dictionary for custom events. Returns  An event initialization object with bubbles, cancelable, composed, and detail properties
      * @param {InputEvent | Event & { target: HTMLInputElement }} [originalEvent] - The original browser event that triggered this custom event
-     * @returns {Object} An event initialization object with bubbles, cancelable, composed, and detail properties
+     * @returns {object}
      */
     #eventInitDict(originalEvent) {
         const isInputEvent = originalEvent instanceof InputEvent;
@@ -384,7 +384,7 @@ export default class TextBase extends InputBase {
 
     // #endregion PRIVATE METHODS
 
-    /** @override @protected @returns {import('lit').TemplateResult} */
+    /** @inheritdoc */
     render() {
         return html`${this.renderLabel()}
             <div data-role="container">

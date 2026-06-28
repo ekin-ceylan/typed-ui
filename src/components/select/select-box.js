@@ -65,12 +65,7 @@ export default class SelectBox extends SelectBase {
 
     // #endregion LIFECYCLE METHODS
 
-    /**
-     * @override Validates nodes for slot binding.
-     * @param {HTMLElement|Text} node
-     * @param {String} slotName
-     * @returns {Boolean}
-     */
+    /** @inheritdoc */
     validateNode(node, slotName, hiddenByCollector) {
         if (slotName != 'default') return true;
 
@@ -97,6 +92,7 @@ export default class SelectBox extends SelectBase {
         return false;
     }
 
+    /** @inheritdoc */
     afterSlotsBinded() {
         this.inputElement.value = /** @type {string} */ (this.value || '');
     }

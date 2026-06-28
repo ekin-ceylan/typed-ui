@@ -1,14 +1,10 @@
 /**
- * A generic type that represents any class constructor.
  * @template T
- * @typedef {new (...args: any[]) => T} Constructor
+ * @typedef {import('./types').Constructor<T>} Constructor
  */
 
 /**
- * @typedef {{
- *   get uniqueId(): string
- *   generateUniqueId(): string
- * }} UniqueIdGenerator
+ * @typedef {import('./types').UniqueIdGenerator} UniqueIdGenerator
  */
 
 /**
