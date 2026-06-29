@@ -1,11 +1,16 @@
-import TextBase from '../../base/text-base';
-import { isEmpty } from '../../modules/utilities';
-import { mixins } from '../../modules/mixin-utils';
-import GhostPlaceholderMixin from '../../mixins/ghost-placeholder-mixin';
-import TextControlBase from '../../base/text-control-base';
+import { isEmpty } from '../../modules/utilities.js';
+import { mixins } from '../../modules/mixin-utils.js';
+import InputMaskMixin from '../../mixins/input-mask-mixin.js';
+import TextControlBase from '../../base/text-control-base.js';
 
-/** @extends {TextBase} */
-export default class PhoneBox extends mixins(TextControlBase, GhostPlaceholderMixin) {
+/**
+ * Input component that provides phone number format validation and masking.
+ *
+ * The `PhoneBox` component extends `TextControlBase` and incorporates the `InputMaskMixin` to provide a user-friendly interface for entering phone numbers.
+ * It automatically formats the input as the user types, ensuring that the phone number adheres to a specific pattern.
+ * @extends {TextControlBase}
+ */
+export default class PhoneBox extends mixins(TextControlBase, InputMaskMixin) {
     static get properties() {
         return {
             ...super.properties,

@@ -1,9 +1,10 @@
-import { html, nothing } from 'lit';
-import { checkTcNo, isEmpty } from '../../modules/utilities';
-import TextBase from '../../base/text-base';
+import { checkTcNo } from '../../modules/utilities.js';
+import TextControlBase from '../../base/text-control-base.js';
+import InputMaskMixin from '../../mixins/input-mask-mixin.js';
+import { mixins } from '../../modules/mixin-utils.js';
 
-/** @extends TextBase */
-export default class TcBox extends TextBase {
+/** @extends TextControlBase */
+export default class TcBox extends mixins(TextControlBase, InputMaskMixin) {
     static get properties() {
         return {
             ...super.properties,
@@ -11,8 +12,6 @@ export default class TcBox extends TextBase {
         };
     }
 
-    #ghostMask1 = '';
-    #ghostMask2 = '';
     #digits = 11;
 
     constructor() {
@@ -23,16 +22,8 @@ export default class TcBox extends TextBase {
         this.maxlength = this.#digits;
         this.allowPattern = `[0-9]{1,${this.#digits}}`;
         this.pattern = String.raw`\d{${this.#digits}}`;
-    }
-
-    willUpdate(changed) {
-        super.willUpdate(changed);
-
-        if (changed.has('value')) {
-            const len = this.#digits - this.value.length;
-            this.#ghostMask1 = this.value;
-            this.#ghostMask2 = '_'.repeat(Math.max(0, len));
-        }
+        this.placeholder = '_'.repeat(this.#digits);
+        this.inputMask = '_'.repeat(this.#digits);
     }
 
     isComplete() {
@@ -49,15 +40,5 @@ export default class TcBox extends TextBase {
         if (value && !checkTcNo(value)) {
             return this.patternValidationMessage || 'Geçersiz TC Kimlik Numarası';
         }
-    }
-
-    /** @override @return {import('lit').TemplateResult | typeof nothing} */
-    renderAdornment() {
-        if (isEmpty(this.#ghostMask1) && isEmpty(this.#ghostMask2)) return nothing;
-
-        // prettier-ignore
-        return html` <div aria-hidden="true" data-role="underlay">
-            <pre>${this.#ghostMask1}</pre><pre>${this.#ghostMask2}</pre>
-        </div> `;
     }
 }
