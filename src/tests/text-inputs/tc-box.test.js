@@ -58,6 +58,8 @@ describe('TcBox: Validation tests', () => {
     });
 
     it('shows required validation when empty', async () => {
+        await user.type(input, '3');
+        await user.clear(input);
         await user.tab();
 
         expect(input.validity.valueMissing).toBe(true);

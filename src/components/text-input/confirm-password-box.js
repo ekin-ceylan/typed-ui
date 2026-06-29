@@ -17,8 +17,8 @@ export default class ConfirmPasswordBox extends PasswordBox {
         if (this.#matchTarget?.value !== value) return 'Şifreler eşleşmiyor.';
     }
 
-    firstUpdated() {
-        super.firstUpdated();
+    firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
         this.#matchTarget = /** @type {HTMLInputElement } */ (this.getRootNode()).querySelector(this.matchSelector);
     }
 

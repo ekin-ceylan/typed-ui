@@ -195,7 +195,11 @@ function getMessages(lang) {
 function getMessage(key, ...args) {
     const factory = getMessages()[key];
     if (!factory) return '';
-    if (typeof factory === 'function') return factory(...args);
+    if (typeof factory === 'function') {
+        /** @type {(...params: any[]) => string} */
+        const callable = factory;
+        return callable(...args);
+    }
     return factory;
 }
 
