@@ -287,7 +287,7 @@ export default class TextControlBase extends StandardControlBase {
         return this.mask(snapshotValue.slice(0, caretPosition)).length; // imleci eski konumuna
     }
 
-    /** @inheritDoc */
+    /** @inheritdoc */
     validate(value) {
         if (this.required && !value) return this.requiredValidationMessage;
         if (value?.length > 0 && value?.length < this.minlength) return this.minLengthValidationMessage;

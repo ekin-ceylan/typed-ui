@@ -1,7 +1,15 @@
-import TextBase from '../../base/text-base.js';
 import { html } from 'lit';
+import TextControlBase from '../../base/text-control-base.js';
 
-export default class PasswordBox extends TextBase {
+/**
+ * Password input component. Extends the general purpose text input component to provide password-specific functionality, such as toggling visibility of the password.
+ * - Can be used after defining like `defineElement('password-box', PasswordBox)` or `customElement.define('password-box', PasswordBox)`.
+ * - The `required`, `pattern`, `maxlength`, `minlength`, `min`, `max` attributes can be used for validation.
+ * - The `allow-pattern` attribute determines which characters are allowed to be entered. For example, if `allow-pattern="\d"` then only numeric input is allowed.
+ * @example <password-box name="password" required allow-pattern="\S" minlength="8"></password-box>
+ * @extends {TextControlBase}
+ */
+export default class PasswordBox extends TextControlBase {
     static get properties() {
         return {
             ...super.properties,
@@ -13,13 +21,17 @@ export default class PasswordBox extends TextBase {
         };
     }
 
-    validate(value) {
-        const base = super.validate(value);
+    constructor() {
+        super();
 
-        if (base) return base;
-        if (/\s/.test(value)) return `${this.label} alanı boşluk içermemelidir.`;
+        this.type = 'password';
+        this.autocomplete = 'current-password';
+
+        /** @type {Boolean} Whether the password is revealed or not */
+        this.revealed = false;
     }
 
+    /** @inheritdoc */
     updated(changedProperties) {
         super.updated(changedProperties);
 
@@ -28,6 +40,24 @@ export default class PasswordBox extends TextBase {
         }
     }
 
+    /** @inheritdoc */
+    validate(value) {
+        const base = super.validate(value);
+
+        if (base) return base;
+        if (/\s/.test(value)) return `${this.label} alanı boşluk içermemelidir.`;
+    }
+
+    #toggleVisibility() {
+        this.revealed = !this.revealed;
+    }
+
+    /**
+     * Renders the toggle visibility button for the password input.
+     * @override
+     * @protected
+     * @returns {import('lit').TemplateResult}
+     */
     renderAdornment() {
         return html`<button
             type="button"
@@ -59,19 +89,5 @@ export default class PasswordBox extends TextBase {
                 <path fill-rule="evenodd" d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
             </svg>
         </button>`;
-    }
-
-    constructor() {
-        super();
-
-        this.type = 'password';
-        this.autocomplete = 'current-password';
-
-        /** @type {Boolean} Whether the password is revealed or not */
-        this.revealed = false;
-    }
-
-    #toggleVisibility() {
-        this.revealed = !this.revealed;
     }
 }

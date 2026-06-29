@@ -4,10 +4,13 @@
  * @property {(label?: string) => string} pattern
  * @property {(label?: string, min?: number) => string} minlength
  * @property {(label?: string, max?: number) => string} maxlength
-* @property {(label?: string, min?: number) => string} min
+ * @property {(label?: string, min?: number) => string} min
  * @property {(label?: string, max?: number) => string} max
  * @property {(label?: string, min?: number, max?: number) => string} range
-* @property {string} clearButtonAriaLabel
+ * @property {string} clearButtonAriaLabel
+ * @property {() => string} passwordStrengthValidationMessage
+ * @property {(strength?: number) => string} passwordStrengthLabel
+ * @property {string} passwordStrengthAriaLabel
  */
 
 /**
@@ -37,20 +40,26 @@ const defaultMessages = {
         pattern: label => `Lütfen geçerli bir ${label || 'değer'} giriniz.`,
         minlength: (label, min) => `${label || 'Bu alan'} en az ${min} karakter olmalıdır.`,
         maxlength: (label, max) => `${label || 'Bu alan'} en fazla ${max} karakter olabilir.`,
-min: (label, min) => `${label || 'Bu alan'} ${min} değerinden az olamaz.`,
+        min: (label, min) => `${label || 'Bu alan'} ${min} değerinden az olamaz.`,
         max: (label, max) => `${label || 'Bu alan'} ${max} değerinden fazla olamaz.`,
         range: (label, min, max) => `${label || 'Bu alan'} ${min} ile ${max} arasında olmalıdır.`,
-clearButtonAriaLabel: 'Değeri temizle',
+        clearButtonAriaLabel: 'Değeri temizle',
+        passwordStrengthValidationMessage: () => 'Lütfen daha güçlü bir şifre belirleyin.',
+        passwordStrengthLabel: (strength = 0) => ['Şifre yok', 'Şifre çok zayıf', 'Şifre zayıf', 'Şifre orta', 'Şifre güçlü'][strength] || 'Şifre yok',
+        passwordStrengthAriaLabel: 'Şifre gücü',
     },
     en: {
         required: label => `${label || 'This field'} is required.`,
         pattern: label => `Please enter a valid ${label || 'value'}.`,
         minlength: (label, min) => `${label || 'This field'} must be at least ${min} characters.`,
         maxlength: (label, max) => `${label || 'This field'} must be at most ${max} characters.`,
-min: (label, min) => `${label || 'This field'} cannot be less than ${min}.`,
+        min: (label, min) => `${label || 'This field'} cannot be less than ${min}.`,
         max: (label, max) => `${label || 'This field'} cannot be greater than ${max}.`,
         range: (label, min, max) => `${label || 'This field'} must be between ${min} and ${max}.`,
-clearButtonAriaLabel: 'Clear value',
+        clearButtonAriaLabel: 'Clear value',
+        passwordStrengthValidationMessage: () => 'Please choose a stronger password.',
+        passwordStrengthLabel: (strength = 0) => ['No password', 'Very weak password', 'Weak password', 'Medium password', 'Strong password'][strength] || 'No password',
+        passwordStrengthAriaLabel: 'Password strength',
     },
 };
 
@@ -191,3 +200,5 @@ function getMessage(key, ...args) {
 }
 
 export { getLocale, setLocale, configure, registerLocale, getMessages, getMessage };
+
+// mesajları json olarak dışarı almak??

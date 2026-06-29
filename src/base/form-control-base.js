@@ -254,7 +254,7 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
     /**
      * Validates the given value and returns a validation message if invalid.
      * Subclasses can override this method to provide custom validation logic.
-     * @param {string} value - The value to validate
+     * @param {string} value - The value to validate. `UnmaskedValue` if `autounmask` is enabled, otherwise the `maskedValue`.
      * @protected
      * @category internal hooks
      * @returns {string}

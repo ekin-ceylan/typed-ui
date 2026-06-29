@@ -1,44 +1,70 @@
 import { html, nothing } from 'lit';
 import PasswordBox from './password-box.js';
 
+/**
+ * New password input component. Extends the PasswordBox component to provide additional functionality for new password inputs, such as password strength validation and display.
+ * - Can be used after defining like `defineElement('new-password-box', NewPasswordBox)` or `customElement.define('new-password-box', NewPasswordBox)`.
+ * - The `required`, `pattern`, `maxlength`, `minlength`, `min`, `max` attributes can be used for validation.
+ * - The `allow-pattern` attribute determines which characters are allowed to be entered. For example, if `allow-pattern="\d"` then only numeric input is allowed.
+ * @example <new-password-box name="new-password" required allow-pattern="\S" minlength="8"></new-password-box>
+ * @extends {PasswordBox}
+ */
 export default class NewPasswordBox extends PasswordBox {
-    #strengthLabels = ['Şifre yok', 'Şifre çok zayıf', 'Şifre çok zayıf', 'Şifre zayıf', 'Şifre orta', 'Şifre güçlü'];
-
     static get properties() {
         return {
             ...super.properties,
-            strength: { type: Number, state: true }, // şifre gücü (0-4)
+            strength: { type: Number, state: true, noAccessor: true, attribute: false }, // şifre gücü (0-4)
+            minStrength: { type: Number, attribute: 'min-strength' }, // minimum şifre gücü (0-4)
         };
     }
 
-    onInput(e) {
-        super.onInput(e);
-        this.strength = this.#calcStrength(e.target.value || '');
+    /**
+     * Calculates the strength of the given password value.
+     * @returns {number}
+     */
+    get strength() {
+        return this.#calcStrength(this.value || '');
+    }
+
+    get passwordStrengthValidationMessage() {
+        return this.localeMessages.passwordStrengthValidationMessage();
+    }
+
+    /** @returns {string} */
+    getStrengthMessage(strength) {
+        return this.localeMessages.passwordStrengthLabel(strength);
     }
 
     validate(value) {
         const base = super.validate(value);
         if (base) return base;
 
-        if (this.strength < 4) return `Lütfen daha güçlü bir şifre belirleyin.`;
+        if (this.strength < this.minStrength) return this.passwordStrengthValidationMessage;
     }
 
     constructor() {
         super();
-
-        /** @type {number} */
-        this.strength = 0;
         this.autocomplete = 'new-password';
+        this.minStrength = 4; // varsayılan minimum şifre gücü
     }
 
-    /** @returns {string} */
-    getStrengthMessage(strength) {
-        return this.#strengthLabels[strength];
+    #calcStrength(v) {
+        if (!v) return 0;
+        if (v.length < 8) return 1; // minimum uzunluk kontrolü
+        // Güç kriterleri: büyük harf, rakam, özel karakter
+        return Number(/[A-Z]/.test(v)) + Number(/\d/.test(v)) + Number(/[^A-Za-z0-9]/.test(v)) + 1; // 1-4 arası değer döndürür
     }
 
     /** @return {import('lit').TemplateResult | typeof nothing} */
     renderStrengthBar(strength, strengthMessage) {
-        return html`<div role="progressbar" aria-label="Şifre gücü" aria-valuemin="0" aria-valuemax="5" aria-valuenow=${strength} aria-valuetext=${strengthMessage}>
+        return html`<div
+            role="progressbar"
+            aria-label=${this.localeMessages.passwordStrengthAriaLabel}
+            aria-valuemin="0"
+            aria-valuemax="5"
+            aria-valuenow=${strength}
+            aria-valuetext=${strengthMessage}
+        >
             <div role="presentation" data-strength=${strength}></div>
         </div>`;
     }
@@ -48,10 +74,7 @@ export default class NewPasswordBox extends PasswordBox {
         return html`<span data-visually-hidden role="status">${strengthMessage}</span>`;
     }
 
-    #calcStrength(v) {
-        return Number(!!v) + Number(v.length >= 8) + Number(/[A-Z]/.test(v)) + Number(/\d/.test(v)) + Number(/[^A-Za-z0-9]/.test(v));
-    }
-
+    /** @override */
     render() {
         const strengthMessage = this.getStrengthMessage(this.strength);
         const base = super.render ? super.render() : nothing;
