@@ -14,8 +14,8 @@ export const trMessages = {
     min: (label, min) => `${label || 'Bu alan'} ${min} değerinden az olamaz.`,
     max: (label, max) => `${label || 'Bu alan'} ${max} değerinden fazla olamaz.`,
     range: (label, min, max) => `${label || 'Bu alan'} ${min} ile ${max} arasında olmalıdır.`,
-    clearButtonAriaLabel: 'Değeri temizle',
-    passwordStrengthValidationMessage: () => 'Lütfen daha güçlü bir şifre belirleyin.',
+    passwordStrengthValidationMessage: label => `${label || 'Şifre'} daha güçlü olmalıdır.`,
     passwordStrengthLabel: (strength = 0) => ['Şifre yok', 'Şifre çok zayıf', 'Şifre zayıf', 'Şifre orta', 'Şifre güçlü'][strength] || 'Şifre yok',
     passwordStrengthAriaLabel: 'Şifre gücü',
+    clearButtonAriaLabel: 'Değeri temizle',
 };

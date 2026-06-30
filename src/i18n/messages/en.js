@@ -14,8 +14,8 @@ export const enMessages = {
     min: (label, min) => `${label || 'This field'} cannot be less than ${min}.`,
     max: (label, max) => `${label || 'This field'} cannot be greater than ${max}.`,
     range: (label, min, max) => `${label || 'This field'} must be between ${min} and ${max}.`,
-    clearButtonAriaLabel: 'Clear value',
-    passwordStrengthValidationMessage: () => 'Please choose a stronger password.',
+    passwordStrengthValidationMessage: label => `${label || 'Password'} must be stronger.`,
     passwordStrengthLabel: (strength = 0) => ['No password', 'Very weak password', 'Weak password', 'Medium password', 'Strong password'][strength] || 'No password',
     passwordStrengthAriaLabel: 'Password strength',
+    clearButtonAriaLabel: 'Clear value',
 };

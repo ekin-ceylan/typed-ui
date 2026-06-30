@@ -84,11 +84,12 @@ export interface LocaleMessages {
     // ===== Complex Messages with Special Logic =====
 
     /**
-     * Message displayed when password strength validation fails.
-     * Typically a general warning to choose a stronger password.
-     * Signature: `() => string`
+     * Message factory for password strength validation failure.
+     * Allows optional label context for more specific messaging.
+     * Signature: `(label?: string) => string`
+     * Example: "Please choose a stronger password" or "Email password must be stronger"
      */
-    passwordStrengthValidationMessage: () => string;
+    passwordStrengthValidationMessage: ValidationMessageFactory;
 
     /**
      * Label describing the current password strength level.
