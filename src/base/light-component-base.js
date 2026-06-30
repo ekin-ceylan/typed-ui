@@ -1,8 +1,8 @@
 import { LitElement } from 'lit';
-import { getMessages } from '../modules/locale';
+import { getMessages } from '../i18n/locale.js';
 
 /**
- * @typedef {keyof import('../modules/locale').LocaleRegistry} LocaleKey
+ * @typedef {keyof import('../i18n/types').LocaleRegistry} LocaleKey
  */
 
 /**
@@ -38,7 +38,7 @@ export default class LightComponentBase extends LitElement {
 
     /**
      * Messages for the current locale, derived from the closest ancestor with a `lang` attribute.
-     * @returns {Readonly<import('../modules/locale').LocaleMessages>}
+     * @returns {Readonly<import('../i18n/types').LocaleMessages>}
      */
     get localeMessages() {
         return getMessages(this.lang);

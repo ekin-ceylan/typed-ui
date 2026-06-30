@@ -1,66 +1,16 @@
 /**
- * @typedef {Object} LocaleMessages
- * @property {(label?: string) => string} required
- * @property {(label?: string) => string} pattern
- * @property {(label?: string, min?: number) => string} minlength
- * @property {(label?: string, max?: number) => string} maxlength
- * @property {(label?: string, min?: number) => string} min
- * @property {(label?: string, max?: number) => string} max
- * @property {(label?: string, min?: number, max?: number) => string} range
- * @property {string} clearButtonAriaLabel
- * @property {() => string} passwordStrengthValidationMessage
- * @property {(strength?: number) => string} passwordStrengthLabel
- * @property {string} passwordStrengthAriaLabel
+ * @typedef {import('./types.ts').LocaleMessages} LocaleMessages
+ * @typedef {import('./types.ts').LocaleRegistry} LocaleRegistry
+ * @typedef {import('./types.ts').LocaleKey} LocaleKey
  */
 
-/**
- * Registry of all known locales and their message shapes.
- * Consumers can extend this via module augmentation in their own `.d.ts` file:
- *
- * ```ts
- * // types.d.ts
- * declare module 'typed-ui/modules/locale' {
- *   interface LocaleRegistry {
- *     de: import('typed-ui/modules/locale').LocaleMessages;
- *   }
- * }
- * ```
- * @typedef {{ tr: LocaleMessages, en: LocaleMessages }} LocaleRegistry
- */
-
-/**
- * Union of all registered locale keys. Derived from {@link LocaleRegistry}.
- * @typedef {keyof LocaleRegistry} LocaleKey
- */
+import { trMessages } from './messages/tr.js';
+import { enMessages } from './messages/en.js';
 
 /** @type {Record<LocaleKey, LocaleMessages>} */
 const defaultMessages = {
-    tr: {
-        required: label => `${label || 'Bu alan'} gereklidir.`,
-        pattern: label => `Lütfen geçerli bir ${label || 'değer'} giriniz.`,
-        minlength: (label, min) => `${label || 'Bu alan'} en az ${min} karakter olmalıdır.`,
-        maxlength: (label, max) => `${label || 'Bu alan'} en fazla ${max} karakter olabilir.`,
-        min: (label, min) => `${label || 'Bu alan'} ${min} değerinden az olamaz.`,
-        max: (label, max) => `${label || 'Bu alan'} ${max} değerinden fazla olamaz.`,
-        range: (label, min, max) => `${label || 'Bu alan'} ${min} ile ${max} arasında olmalıdır.`,
-        clearButtonAriaLabel: 'Değeri temizle',
-        passwordStrengthValidationMessage: () => 'Lütfen daha güçlü bir şifre belirleyin.',
-        passwordStrengthLabel: (strength = 0) => ['Şifre yok', 'Şifre çok zayıf', 'Şifre zayıf', 'Şifre orta', 'Şifre güçlü'][strength] || 'Şifre yok',
-        passwordStrengthAriaLabel: 'Şifre gücü',
-    },
-    en: {
-        required: label => `${label || 'This field'} is required.`,
-        pattern: label => `Please enter a valid ${label || 'value'}.`,
-        minlength: (label, min) => `${label || 'This field'} must be at least ${min} characters.`,
-        maxlength: (label, max) => `${label || 'This field'} must be at most ${max} characters.`,
-        min: (label, min) => `${label || 'This field'} cannot be less than ${min}.`,
-        max: (label, max) => `${label || 'This field'} cannot be greater than ${max}.`,
-        range: (label, min, max) => `${label || 'This field'} must be between ${min} and ${max}.`,
-        clearButtonAriaLabel: 'Clear value',
-        passwordStrengthValidationMessage: () => 'Please choose a stronger password.',
-        passwordStrengthLabel: (strength = 0) => ['No password', 'Very weak password', 'Weak password', 'Medium password', 'Strong password'][strength] || 'No password',
-        passwordStrengthAriaLabel: 'Password strength',
-    },
+    tr: trMessages,
+    en: enMessages,
 };
 
 /** @type {Record<LocaleKey, LocaleMessages>} */
@@ -185,12 +135,42 @@ function getMessages(lang) {
 }
 
 /**
- * Retrieves a formatted validation message for the given key in the active locale.
- * Falls back to 'tr' if the active locale or the specific key is missing.
+ * Retrieves a formatted message for the given key in the active locale.
  *
- * @param {keyof LocaleMessages} key - The message key.
+ * Handles three message types:
+ * - **Validation messages**: Pass optional label and validation-specific args
+ * - **Simple strings**: Returns as-is without calling
+ * - **Complex messages**: Pass any required parameters (e.g., strength level)
+ *
+ * Falls back to 'tr' locale if the active locale or the specific key is missing.
+ *
+ * @param {keyof LocaleMessages} key - The message key to retrieve
  * @param {...any} args - Arguments forwarded to the message factory function.
- * @returns {string}
+ *   - For validation: `(label?, ...validationArgs?)` e.g., `getMessage('minlength', 'Password', 8)`
+ *   - For complex: Validation-specific params e.g., `getMessage('passwordStrengthLabel', 2)`
+ *   - For simple strings: No args (returns the string as-is)
+ *
+ * @returns {string} The formatted message in the active locale
+ *
+ * @example
+ * // Validation message without label (uses default)
+ * getMessage('required')
+ *
+ * @example
+ * // Validation message with label
+ * getMessage('required', 'Email')
+ *
+ * @example
+ * // Validation message with multiple args
+ * getMessage('minlength', 'Password', 8)
+ *
+ * @example
+ * // Complex message with special logic
+ * getMessage('passwordStrengthLabel', 3)
+ *
+ * @example
+ * // Simple string (no args)
+ * getMessage('clearButtonAriaLabel')
  */
 function getMessage(key, ...args) {
     const factory = getMessages()[key];
@@ -204,5 +184,3 @@ function getMessage(key, ...args) {
 }
 
 export { getLocale, setLocale, configure, registerLocale, getMessages, getMessage };
-
-// mesajları json olarak dışarı almak??

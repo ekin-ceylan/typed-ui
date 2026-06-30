@@ -6,7 +6,7 @@ export { defineComponent, isEmpty } from './modules/utilities.js';
 export { hideBodyScroll, showBodyScroll, lockAllScrolls, unlockAllScrolls } from './modules/scroll-lock-helper.js';
 export { lightMixins, mixins } from './modules/mixin-utils.js';
 export { spread } from './modules/spread.js';
-export { getLocale, setLocale, configure, registerLocale, getMessages, getMessage } from './modules/locale.js';
+export { getLocale, setLocale, configure, registerLocale, getMessages, getMessage } from './i18n/locale.js';
 
 // Models
 export { default as Option } from './models/Option.js';
