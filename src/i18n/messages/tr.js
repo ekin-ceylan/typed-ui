@@ -14,8 +14,11 @@ export const trMessages = {
     min: (label, min) => `${label || 'Bu alan'} ${min} değerinden az olamaz.`,
     max: (label, max) => `${label || 'Bu alan'} ${max} değerinden fazla olamaz.`,
     range: (label, min, max) => `${label || 'Bu alan'} ${min} ile ${max} arasında olmalıdır.`,
+    passwordMismatch: label => `${label || 'Şifreler'} eşleşmiyor.`,
     passwordStrengthValidationMessage: label => `${label || 'Şifre'} daha güçlü olmalıdır.`,
     passwordStrengthLabel: (strength = 0) => ['Şifre yok', 'Şifre çok zayıf', 'Şifre zayıf', 'Şifre orta', 'Şifre güçlü'][strength] || 'Şifre yok',
     passwordStrengthAriaLabel: 'Şifre gücü',
+    revealPasswordAriaLabel: 'Şifreyi göster',
+    hidePasswordAriaLabel: 'Şifreyi gizle',
     clearButtonAriaLabel: 'Değeri temizle',
 };

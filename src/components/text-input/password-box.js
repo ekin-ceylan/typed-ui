@@ -21,6 +21,22 @@ export default class PasswordBox extends TextControlBase {
         };
     }
 
+    /**
+     * Returns the aria label for the reveal password button.
+     * @returns {String}
+     */
+    get revealPasswordAriaLabel() {
+        return this.localeMessages.revealPasswordAriaLabel;
+    }
+
+    /**
+     * Returns the aria label for the hide password button.
+     * @returns {String}
+     */
+    get hidePasswordAriaLabel() {
+        return this.localeMessages.hidePasswordAriaLabel;
+    }
+
     constructor() {
         super();
 
@@ -35,17 +51,9 @@ export default class PasswordBox extends TextControlBase {
     updated(changedProperties) {
         super.updated(changedProperties);
 
-        if (changedProperties.has('revealed')) {
+        if (changedProperties.has('revealed') && this.inputElement) {
             this.inputElement.type = this.revealed ? 'text' : 'password';
         }
-    }
-
-    /** @inheritdoc */
-    validate(value) {
-        const base = super.validate(value);
-
-        if (base) return base;
-        if (/\s/.test(value)) return `${this.label} alanı boşluk içermemelidir.`;
     }
 
     #toggleVisibility() {
@@ -62,7 +70,7 @@ export default class PasswordBox extends TextControlBase {
         return html`<button
             type="button"
             @click=${this.#toggleVisibility}
-            aria-label=${this.revealed ? 'Şifreyi gizle' : 'Şifreyi göster'}
+            aria-label=${this.revealed ? this.hidePasswordAriaLabel : this.revealPasswordAriaLabel}
             aria-pressed=${this.revealed}
             data-role="toggle-visibility"
         >

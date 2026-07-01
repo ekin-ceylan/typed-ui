@@ -1,5 +1,4 @@
 import TcBox from '../../components/text-input/tc-box.js';
-import { checkTcNo } from '../../modules/utilities.js';
 
 defineElement('tc-box', TcBox);
 
@@ -113,6 +112,6 @@ describe('TcBox: Attribute forwarding', () => {
         expect(input.getAttribute('inputmode')).toBe('numeric');
         expect(input.minLength).toBe(11);
         expect(input.maxLength).toBe(11);
-        expect(input.getAttribute('pattern')).toBe('\\d{11}');
+        expect(input.getAttribute('pattern')).toBe(String.raw`\d{11}`);
     });
 });

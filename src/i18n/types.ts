@@ -23,7 +23,7 @@ export type ValidationMessageFactory = (label?: string, ...args: any[]) => strin
  * - **Complex messages**: Special logic (e.g., array-based strength levels)
  */
 export interface LocaleMessages {
-    // ===== Validation Messages (Consistent Signature) =====
+    // #region VALIDATION MESSAGES (Consistent Signature)
 
     /**
      * Message factory for required field validation.
@@ -67,7 +67,15 @@ export interface LocaleMessages {
      */
     range: ValidationMessageFactory;
 
-    // ===== Simple Strings =====
+    /**
+     * Message factory for password mismatch validation.
+     * Signature: `(label?: string) => string`
+     */
+    passwordMismatch: ValidationMessageFactory;
+
+    // #endregion VALIDATION MESSAGES (Consistent Signature)
+
+    // #region SIMPLE STRINGS
 
     /**
      * Aria label for the clear button in input components.
@@ -81,7 +89,21 @@ export interface LocaleMessages {
      */
     passwordStrengthAriaLabel: string;
 
-    // ===== Complex Messages with Special Logic =====
+    /**
+     * Aria label for the reveal password button when password is hidden.
+     * Example: "Show password"
+     */
+    revealPasswordAriaLabel: string;
+
+    /**
+     * Aria label for the reveal password button when password is visible.
+     * Example: "Hide password"
+     */
+    hidePasswordAriaLabel: string;
+
+    // #endregion SIMPLE STRINGS
+
+    // #region COMPLEX MESSAGES WITH SPECIAL LOGIC
 
     /**
      * Message factory for password strength validation failure.
@@ -98,6 +120,8 @@ export interface LocaleMessages {
      * Example results: "Weak", "Strong", "Very weak", "Medium"
      */
     passwordStrengthLabel: (strength?: number) => string;
+
+    // #endregion COMPLEX MESSAGES WITH SPECIAL LOGIC
 }
 
 /**

@@ -30,6 +30,12 @@ export default class PhoneBox extends mixins(TextControlBase, InputMaskMixin) {
         this.placeholder = '0(___) ___ __ __';
     }
 
+    /**
+     * Masks the input value to match the phone number format.
+     * It removes non-digit characters, handles country code removal, and formats the number according to the specified pattern.
+     * @param {string} value - The input value to be masked.
+     * @override
+     */
     mask(value) {
         if (isEmpty(value)) return value;
         value = value.replaceAll(/\D/g, ''); // Sayı olmayan karakterleri kaldır
@@ -40,7 +46,7 @@ export default class PhoneBox extends mixins(TextControlBase, InputMaskMixin) {
 
         value = value.match(/^0?\d{1,10}/)?.[0] || ''; // Geçerli kısmı al
 
-        if (value.length > 0 && value[0] !== '0') {
+        if (value.length > 0 && !value.startsWith('0')) {
             value = '0' + value;
         }
 
@@ -58,6 +64,12 @@ export default class PhoneBox extends mixins(TextControlBase, InputMaskMixin) {
         return value;
     }
 
+    /**
+     * Validates the last character entered in the phone input.
+     * Ensures that only digits are allowed and the maximum length is not exceeded.
+     * @param {KeyboardEvent & { target: HTMLInputElement }} keyDownEvent - The keyboard event triggered on key down.
+     * @override
+     */
     validateLastChar(keyDownEvent) {
         const val = keyDownEvent.target.value;
         const key = keyDownEvent.key;
