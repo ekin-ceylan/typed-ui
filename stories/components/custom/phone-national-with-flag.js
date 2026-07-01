@@ -1,6 +1,6 @@
 import { isEmpty } from '../../../src/modules/utilities.js';
 import { html, nothing } from 'lit';
-import { TextBase, ComboBox, defineComponent, LightComponentBase } from '../../../src/index.js';
+import { ComboBox, defineComponent, LightComponentBase, TextControlBase } from '../../../src/index.js';
 
 export default class PhoneNational extends LightComponentBase {
     static get properties() {
@@ -31,8 +31,8 @@ export default class PhoneNational extends LightComponentBase {
     }
 }
 
-/** @extends {TextBase} */
-class PhoneIntl extends TextBase {
+/** @extends {TextControlBase} */
+class PhoneIntl extends TextControlBase {
     static get properties() {
         return {
             ...super.properties,

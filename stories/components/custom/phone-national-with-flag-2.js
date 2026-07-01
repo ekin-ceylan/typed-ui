@@ -1,9 +1,8 @@
 import { defineComponent, ifDefined, isEmpty } from '../../../src/modules/utilities.js';
 import { CustomCombobox } from './custom-combobox.js';
 import { html, nothing } from 'lit';
-import TextBase from '../../../src/base/text-base.js';
 import UniqueIdGeneratorMixin from '../../../src/mixins/unique-id-generator-mixin.js';
-import { lightMixins } from '../../../src/index.js';
+import { lightMixins, TextControlBase } from '../../../src/index.js';
 
 export default class PhoneNational2 extends lightMixins(UniqueIdGeneratorMixin) {
     static get properties() {
@@ -78,8 +77,8 @@ export default class PhoneNational2 extends lightMixins(UniqueIdGeneratorMixin) 
 
 // TODO: diğerinden kalıtım al
 
-/** @extends {TextBase} */
-class PhoneIntl2 extends TextBase {
+/** @extends {TextControlBase} */
+class PhoneIntl2 extends TextControlBase {
     static get properties() {
         return {
             ...super.properties,

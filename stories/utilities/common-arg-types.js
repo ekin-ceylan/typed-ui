@@ -14,6 +14,7 @@ export const inputBaseArgTypes = {
     placeholder: createAttrType('Değer boşken gösterilecek yer tutucu metin.', 'string', '""'),
     clearable: createAttrType('Açıksa, "İçeriği Temizle" butonu gösterilir.', 'boolean', 'false'),
     readonly: createAttrType('Inputun salt okunur olup olmadığını belirler. Salt okunursa, input etkileşime kapatılır ancak form ile gönderilir.', 'boolean', 'false'),
+    lang: createAttrType('Inputun dilini belirler. Tarayıcı, bu öznitelik ile inputun dilini algılar ve yazım denetimi yaparken bu dili kullanır.', 'string', '""'),
 };
 
 export const textBoxArgTypes = {
