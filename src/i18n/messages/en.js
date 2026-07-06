@@ -21,4 +21,5 @@ export const enMessages = {
     revealPasswordAriaLabel: 'Show password',
     hidePasswordAriaLabel: 'Hide password',
     clearButtonAriaLabel: 'Clear value',
+    noOptionsLabel: 'No Records Found',
 };

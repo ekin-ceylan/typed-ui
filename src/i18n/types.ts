@@ -101,6 +101,12 @@ export interface LocaleMessages {
      */
     hidePasswordAriaLabel: string;
 
+    /**
+     * Label displayed when no options are available in a select box or dropdown.
+     * Example: "No Records Found"
+     */
+    noOptionsLabel: string;
+
     // #endregion SIMPLE STRINGS
 
     // #region COMPLEX MESSAGES WITH SPECIAL LOGIC

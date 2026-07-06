@@ -79,6 +79,10 @@ this.#optionList = list.filter(o => o instanceof OptionGroup || !isEmpty(o.value
         return this.#optionList?.length > 0;
     }
 
+    /**
+     * Checks if the current value of the select box is present in the list of available options.
+     * @returns {boolean}
+     */
     get hasValue() {
         return this.#valueList.includes(this.value);
     }

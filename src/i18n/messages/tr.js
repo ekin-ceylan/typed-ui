@@ -21,4 +21,5 @@ export const trMessages = {
     revealPasswordAriaLabel: 'Şifreyi göster',
     hidePasswordAriaLabel: 'Şifreyi gizle',
     clearButtonAriaLabel: 'Değeri temizle',
+    noOptionsLabel: 'Kayıt Bulunamadı',
 };

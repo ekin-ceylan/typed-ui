@@ -34,7 +34,7 @@ export default class OptionsControlBase extends mixins(StandardControlBase, Slot
         /** @type {boolean} */
         this.isOpen = false;
         /** @type {string} */
-        this.noOptionsLabel = 'Kayıt Bulunamadı';
+        this.noOptionsLabel = this.localeMessages?.noOptionsLabel;
     }
 
     /**
