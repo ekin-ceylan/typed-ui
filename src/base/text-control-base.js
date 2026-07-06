@@ -318,16 +318,17 @@ export default class TextControlBase extends StandardControlBase {
      * Set the input element's value to the masked value, checks for completion and validity, and dispatches an 'update' event.
      *
      * Subclasses can override this method to react to value changes (e.g., for validation or side effects).
-     * @fires update - Dispatched after the value has been updated.
      * @category internal hooks
      * @override
      */
     valueUpdated() {
-        if (this.inputElement?.value === this.maskedValue) return;
+        if (this.inputElement?.value === this.maskedValue) return false;
+
         this.inputElement.value = this.maskedValue;
         this.#checkCompletion();
         this.#checkValidity(false);
-        this.dispatchCustomEvent('update');
+
+        return true;
     }
 
     /** @override @protected */

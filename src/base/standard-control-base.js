@@ -3,7 +3,7 @@ import FormControlBase from './form-control-base.js';
 import Keys from '../enums/Keys.js';
 
 /**
- * Base class for standard form control components providing common functionality for inputs, selects, and other form controls.
+ * Base class for standard form control components that have `<label>` + `<input>` + `<error>` structure, providing common functionality for inputs, selects, and other form controls.
  * - Provides `hideLabel`, `clearable`, and `placeholder` properties for common form control features.
  * - Provides `renderLabel()` and `renderClearButton()` methods for rendering the label and clear button, respectively.
  * - Exposes underscore-based protected hooks for handling clear button interactions.
@@ -47,7 +47,7 @@ export default class StandardControlBase extends FormControlBase {
     // #region EVENT LISTENERS
 
     /**
-     * Clears the input value, dispatches a 'clear' custom event, and focuses the input element.
+     * Clears the input value, dispatches a "clear" custom event, and focuses the input element.
      * @param {Event} event The event that triggered the clear action.
      * @fires clear - Dispatched when the clear button is clicked, after the input value has been cleared.
      * @protected
@@ -66,7 +66,7 @@ export default class StandardControlBase extends FormControlBase {
     onClearKeyDown(event) {
         /** @type {string[]} */
         const stopKeys = [Keys.ENTER, Keys.SPACE];
-        if (stopKeys.includes(event.key)) event.stopPropagation();
+        if (stopKeys.includes(event.code)) event.stopPropagation();
     }
 
     // #endregion EVENT LISTENERS
@@ -116,7 +116,7 @@ export default class StandardControlBase extends FormControlBase {
      * @return {import('lit').TemplateResult | string | typeof nothing}
      */
     renderClearButtonText() {
-        return '&times;';
+        return html`&times;`;
     }
 
     /**

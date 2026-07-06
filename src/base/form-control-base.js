@@ -161,7 +161,10 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
      */
     updated(changedProperties) {
         super.updated(changedProperties);
-        if (changedProperties.has('value')) this.valueUpdated();
+
+        if (changedProperties.has('value') && this.valueUpdated()) {
+            this.dispatchCustomEvent('update');
+        }
     }
 
     // #endregion LIFECYCLE HOOKS
@@ -187,16 +190,19 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
 
     /**
      * Called when the `value` property or attribute of the component is updated.
+     * Sets the native input element's value to match the component's `value` property.
+     * Returns `true` if the value was updated, `false` if the native input element's value already matched the component's `value`.
      *
      * Subclasses can override this method to react to value changes (e.g., for validation or side effects).
-     * @fires update - Dispatched after the value has been updated.
      * @category internal hooks
      * @protected
+     * @returns {boolean}
      */
     valueUpdated() {
-        if (this.inputElement?.value === this.value) return;
+        if (this.inputElement?.value === this.value) return false;
+
         this.inputElement.value = /** @type {string} */ (this.value);
-        this.dispatchCustomEvent('update');
+        return true;
     }
 
     // #endregion INTERNAL HOOKS
@@ -260,7 +266,8 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
      * @returns {string}
      */
     validate(value) {
-        if (this.required && isEmpty(value)) return this.requiredValidationMessage;
+        const v = this.inputElement.validity;
+        if (v?.valueMissing) return this.requiredValidationMessage;
         return '';
     }
 
@@ -291,7 +298,8 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
     /**
      * Returns the HTML template for displaying validation error messages.
      * The span element includes ARIA attributes for accessibility and is hidden when no validation message exists.
-     * @returns {import('lit').TemplateResult | typeof nothing} Lit HTML template with validation message
+     * @protected
+     * @returns {import('lit').TemplateResult | typeof nothing}
      */
     renderErrorMessage() {
         if (!this.validationMessage) return nothing;

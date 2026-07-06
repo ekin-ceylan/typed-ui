@@ -172,7 +172,7 @@ export default class InputBase extends lightMixins(PropValidatorMixin, UniqueIdG
      */
     onClearKeyDown(event) {
         /** @type {string[]} */ const stopKeys = [Keys.ENTER, Keys.SPACE];
-        if (stopKeys.includes(event.key)) event.stopPropagation();
+        if (stopKeys.includes(event.code)) event.stopPropagation();
     }
 
     /**

@@ -96,7 +96,7 @@ export default function PropValidatorMixin(Base) {
         }
 
         /**
-         * Validates all required fields and throws an error if any are empty.         *
+         * Validates all required fields and throws an error if any are empty.
          * @throws {Error} If any required field is empty
          * @returns {void}
          */
