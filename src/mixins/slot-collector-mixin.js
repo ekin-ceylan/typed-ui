@@ -47,6 +47,7 @@ export default function SlotCollectorMixin(Base) {
 
         /**
          * Binds the collected nodes to their respective slot elements.
+         * Removes placeholder slots and replaces them with the collected nodes. If a slot has no collected nodes, it will render its fallback content.
          * @param {(HTMLElement|Text)[]} collectedNodes - Collected nodes to bind to slots.
          */
         bindSlots(collectedNodes = []) {
@@ -108,7 +109,7 @@ export default function SlotCollectorMixin(Base) {
         }
 
         /** Called after slots have been bound. */
-        afterSlotsBinded() {
+        afterSlotsBinded(hasProjectedContent) {
             // Hook for child classes.
         }
 
@@ -141,8 +142,9 @@ export default function SlotCollectorMixin(Base) {
             await this.updateComplete;
             this.bindSlots(this.#slotNodes); // Tüm slot placeholder'larını bul
             this.requestUpdate();
+
             await this.updateComplete;
-            this.afterSlotsBinded();
+            this.afterSlotsBinded(this.#slotNodes?.length > 0);
         }
 
         #collectSlots() {

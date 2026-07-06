@@ -1,83 +1,114 @@
 import { html, nothing } from 'lit';
-import { ifDefined } from '../../modules/utilities.js';
-import SelectBase from '../../base/select-base.js';
+import { findLastBy, ifDefined, isEmpty } from '../../modules/utilities.js';
 import { spread } from '../../modules/spread.js';
 import Option from '../../models/Option.js';
 import OptionGroup from '../../models/OptionGroup.js';
 import CustomOption from './custom-option.js';
 import CustomOptgroup from './custom-optgroup.js';
+import OptionsControlBase from '../../base/options-control-base.js';
+import Keys from '../../enums/Keys.js';
 
-/** @extends {SelectBase<HTMLSelectElement>} */
-export default class SelectBox extends SelectBase {
+export default class SelectBox extends OptionsControlBase {
     // #region STATICS, FIELDS, GETTERS
+
+    #cachedInput = undefined;
+    #mouseFlag = false;
 
     /** @type {(Option | OptionGroup)[]} */
     #optionList = []; // işlenmiş seçenek listesi
+    /** @type {(Object | string)[]} */
     #options = [];
-    #mouseFlag = false;
 
     get options() {
-        return this.#options;
+        if (this.#options?.length) return [...this.#options];
+        return this.#optionList?.length ? [...this.#optionList] : [];
     }
     set options(val) {
-        if (!Array.isArray(val)) {
-            throw new TypeError('options must be an array');
-        }
+        if (!Array.isArray(val)) throw new TypeError('options must be an array');
+
+        const oldValue = this.#options;
         this.#options = val;
         this.#optionList = val.map(o => this.#toOptionElement(o));
-        this.#completeOptionUpdate();
+        this.requestUpdate('options', oldValue);
+        this.#syncValueAfterOptionsChange();
     }
 
+    /**
+     * Returns the currently selected option object from the options array based on the current value of the control.
+     * If no matching option is found, it returns null.
+     * @returns {object|string|null}
+     */
+    get selectedOption() {
+        if (isEmpty(this.value)) return null;
+
+        if (this.#options?.length) {
+            return this.#options.find(o => o.value === this.value || o === this.value) || null;
+        }
+
+        const selectedOption = this.#optionList.find(o => o.value === this.value);
+
+        if (selectedOption instanceof OptionGroup) {
+            const option = selectedOption.options.find(o => o.value === this.value);
+            return option ? { value: option.value, label: option.displayText } : null;
+        }
+
+        return selectedOption ? { value: selectedOption.value, label: selectedOption.displayText } : null;
+    }
+
+    /**
+     * Returns the index of the currently selected option in the options list. If no option is selected, it returns -1.
+     * @returns {number}
+     */
+    get selectedIndex() {
+        return this.inputElement?.selectedIndex ?? -1;
+    }
+
+    /**
+     * Checks if the select box has any options available.
+     * @returns {boolean}
+     */
     get hasOptions() {
         return this.#optionList?.length > 0;
     }
 
+    get hasValue() {
+        return this.#valueList.includes(this.value);
+    }
+
+    get #valueList() {
+        return this.#optionList.flatMap(o => (o instanceof Option ? o.value : [...o.options.map(opt => opt.value)]));
+    }
+
     /**
-     * Renders a disabled option element with the noOptionsLabel if there are no options available and a label is provided. Otherwise, returns an empty template.
-     * @return {import('lit').TemplateResult | typeof nothing} The template for the no options message or an empty template if there are options or no label is provided.
+     * Returns the reference to the native input element within the component. Caches the reference after the first query for performance optimization.
+     * @returns {HTMLSelectElement | null}
      */
-    get noOptionHtml() {
-        const isHidden = this.hasOptions || !this.noOptionsLabel;
-        return isHidden ? nothing : html`<option disabled>${this.noOptionsLabel}</option>`;
+    get inputElement() {
+        if (this.#cachedInput === undefined) {
+            this.#cachedInput = this.renderRoot?.querySelector('select');
+        }
+
+        return this.#cachedInput;
     }
 
     // #endregion STATICS, FIELDS, GETTERS
 
-    // #region LIFECYCLE METHODS
-
-    constructor() {
-        super();
-        /** @type {HTMLOptionElement[] | HTMLOptGroupElement[] | Option[] | OptionGroup[] | []} */
-        this.options = [];
-    }
-
-    firstUpdated() {
-        this.inputElement = this.renderRoot.querySelector('select');
-    }
-
-    updated(changed) {
-        super.updated(changed);
-
-        if (changed.has('value')) {
-            this.#checkValidity();
-        }
-    }
-
-    // #endregion LIFECYCLE METHODS
+    // #region INTERNAL HOOKS
 
     /** @inheritdoc */
     validateNode(node, slotName, hiddenByCollector) {
         if (slotName != 'default') return true;
 
-        const hasOptions = this.options?.length > 0;
-        const isOptionElement = node instanceof HTMLOptionElement || node instanceof CustomOption;
-        const isOptGroupElement = node instanceof HTMLOptGroupElement || node instanceof CustomOptgroup;
-        const isAllowedType = isOptionElement || isOptGroupElement;
+        const hasOptions = this.#options?.length > 0;
 
         if (hasOptions) {
             console.warn('Options are already set via property. Ignoring slotted nodes.');
             return false;
         }
+
+        const isOptionElement = node instanceof HTMLOptionElement || node instanceof CustomOption;
+        const isOptGroupElement = node instanceof HTMLOptGroupElement || node instanceof CustomOptgroup;
+        const isAllowedType = isOptionElement || isOptGroupElement;
 
         if (!isAllowedType) {
             console.error(`Only <option> and <optgroup> elements are allowed as children of ${this.tagName.toLowerCase()}.`);
@@ -86,25 +117,50 @@ export default class SelectBox extends SelectBase {
 
         const option = isOptionElement ? new Option(node) : new OptionGroup(node);
         option.hidden = !hiddenByCollector;
-        this.#optionList.push(option);
-        if (option.selected) this.value = option.value; // ilk seçili olan değeri alır, birden fazla seçili varsa ilkini alır
+
+        if (isEmpty(this.placeholder) && isOptionElement && isEmpty(option.value)) {
+            this.placeholder = /** @type {Option} */ (option).displayText; // ilk değeri alma
+        } else {
+            this.#optionList.push(option);
+        }
+
+        if (option.selected) this.value = option.value;
 
         return false;
     }
-
-    /** @inheritdoc */
-    afterSlotsBinded() {
-        this.inputElement.value = /** @type {string} */ (this.value || '');
+    afterSlotsBinded(hasProjectedContent) {
+        if (hasProjectedContent) this.#syncValueAfterOptionsChange();
     }
 
+    /** @override @protected */
+    setupFirstInteraction() {
+        // programatik atama etkiler mi native ile dene
+        // focus yeterli değil aç kapa olmalı
+        this.inputElement?.addEventListener('focus', _e => this.dispatchCustomEvent('first-interaction'), { once: true });
+    }
+
+    valueUpdated() {
+        const newValue = !this.hasOptions || this.hasValue ? this.value : '';
+
+        if (this.inputElement?.value === newValue) return false;
+        else if (!this.hasOptions) return true;
+
+        this.inputElement.value = newValue;
+        this.#checkValidity();
+
+        return true;
+    }
+
+    // #endregion INTERNAL HOOKS
+
     // #region EVENT LISTENERS
-    onInput(e) {
+    #onInput(e) {
         e.stopPropagation();
         this.value = e.target.value;
         this.dispatchCustomEvent('input', e);
     }
 
-    onChange(e) {
+    #onChange(e) {
         e.stopPropagation();
         this.value = e.target.value;
         this.isOpen = false;
@@ -112,12 +168,16 @@ export default class SelectBox extends SelectBase {
         this.dispatchCustomEvent('change', e);
     }
 
-    onBlur(_e) {
+    #onBlur(_e) {
         this.isOpen = false;
         this.#checkValidity();
     }
 
-    onMouseup(e) {
+    /**
+     * Handles mouseup events on the select box. Closes the dropdown if the mouseup event occurs on an option element or if the mouse flag is not set.
+     * @param {MouseEvent} e
+     */
+    #onMouseup(e) {
         if (e.target instanceof HTMLOptionElement || !this.#mouseFlag) {
             this.isOpen = false;
         }
@@ -125,29 +185,43 @@ export default class SelectBox extends SelectBase {
         this.#mouseFlag = false;
     }
 
-    onMousedown(_e) {
+    #onMousedown(_e) {
         this.#mouseFlag = true;
         this.isOpen = !this.isOpen;
     }
 
-    onKeydown(e) {
-        if (e.key === ' ' || e.key === 'Enter') {
+    /**
+     * Handles keydown events on the select box.
+     * @param {KeyboardEvent} e
+     */
+    #onKeydown(e) {
+        if (e.code === Keys.SPACE || e.code === Keys.ENTER) {
             this.isOpen = true;
         }
     }
 
-    onKeyup(e) {
-        if (e.key === 'Escape' || e.key === 'Tab' || e.key === 'Enter') {
+    /**
+     * Handles keyup events on the select box. Closes the dropdown when Escape, Tab, or Enter keys are released.
+     * @param {KeyboardEvent} e
+     */
+    #onKeyup(e) {
+        // chrome'da bug var.  console.log('keyup', e.code);
+        if (e.code === Keys.ESCAPE || e.code === Keys.TAB || e.code === Keys.ENTER) {
             this.isOpen = false;
         }
     }
 
-    onInvalid(_e) {
+    #onInvalid(_e) {
         // e.preventDefault(); // mesaj baloncuğu çıkmaz
         this.#checkValidity(true);
     }
 
-    /** @override Clears the input value and dispatches a 'clear' custom event. */
+    /**
+     * @event input Dispatched when the value of the select box changes due to user input.
+     * @event change Dispatched when the value of the select box changes and the user commits the change (e.g., by selecting an option).
+     * @override
+     * @protected
+     */
     onClearClick(event) {
         super.onClearClick(event);
         this.dispatchCustomEvent('input');
@@ -159,25 +233,28 @@ export default class SelectBox extends SelectBase {
 
     // #region PRIVATE METHODS
 
-    #checkValidity(force) {
-        if (!this.focused && !force) return true; // etkileşime girilmediyse
+    #syncValueAfterOptionsChange() {
+        const selected = findLastBy(this.#optionList, o => o.selected);
 
-        const el = this.inputElement;
-        const v = el.validity;
+        if (selected) {
+            this.value = selected.value;
+        } else if (this.#valueList.includes(this.value)) {
+            this.updateComplete.then(() => (this.inputElement.value = this.value));
+        } else {
+            this.value = '';
+            this.inputElement.value = this.value;
+        }
+    }
 
-        el.setCustomValidity('');
-        this.invalid = !v?.valid; // TODO custom validasyon ekle
-        this.validationMessage = v?.valueMissing ? this.requiredValidationMessage : '';
-        el.setCustomValidity(this.validationMessage);
-        this.dispatchCustomEvent('validate', null, { validationMessage: this.validationMessage });
-
-        return !this.validationMessage;
+    #checkValidity(force = false) {
+        if (!this.interacted && !force) return true;
+        return this.checkValidity();
     }
 
     #toOptionElement(raw) {
         if (raw instanceof Option || raw instanceof OptionGroup) return raw;
-        if (raw instanceof HTMLOptionElement) return new Option(raw);
-        if (raw instanceof HTMLOptGroupElement) return new OptionGroup(raw);
+        if (raw instanceof HTMLOptionElement || raw instanceof CustomOption) return new Option(raw);
+        if (raw instanceof HTMLOptGroupElement || raw instanceof CustomOptgroup) return new OptionGroup(raw);
 
         if (typeof raw === 'string' || typeof raw === 'number') {
             return new Option({ value: String(raw) });
@@ -188,13 +265,6 @@ export default class SelectBox extends SelectBase {
         }
 
         throw new TypeError(`Invalid option entry: ${String(raw)}`);
-    }
-
-    #completeOptionUpdate() {
-        this.requestUpdate();
-        this.updateComplete.then(() => {
-            this.value = this.inputElement?.value || this.value;
-        });
     }
 
     #isGroupLike(object) {
@@ -212,6 +282,12 @@ export default class SelectBox extends SelectBase {
 
     // #endregion PRIVATE METHODS
 
+    /** @override */
+    renderNoOptions() {
+        const isHidden = this.hasOptions || !this.noOptionsLabel;
+        return isHidden ? nothing : html`<option disabled>${this.noOptionsLabel}</option>`;
+    }
+
     /** @override @protected @returns {import('lit').TemplateResult} */
     render() {
         return html`${this.renderLabel()}
@@ -222,24 +298,24 @@ export default class SelectBox extends SelectBase {
                     name=${ifDefined(this.name)}
                     ?required=${this.required}
                     ?disabled=${this.disabled}
-                    aria-labelledby=${ifDefined(this.labelId)}
+                    aria-labelledby=${ifDefined(this.hideLabel ? undefined : this.labelId)}
                     aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
                     aria-required=${this.required ? 'true' : 'false'}
                     aria-invalid=${ifDefined(this.ariaInvalid)}
-                    @input=${this.onInput}
-                    @change=${this.onChange}
-                    @mousedown=${this.onMousedown}
-                    @mouseup=${this.onMouseup}
-                    @keydown=${this.onKeydown}
-                    @keyup=${this.onKeyup}
-                    @blur=${this.onBlur}
-                    @invalid=${this.onInvalid}
-                    ?data-has-value=${this.value}
+                    @input=${this.#onInput}
+                    @change=${this.#onChange}
+                    @mousedown=${this.#onMousedown}
+                    @mouseup=${this.#onMouseup}
+                    @keydown=${this.#onKeydown}
+                    @keyup=${this.#onKeyup}
+                    @blur=${this.#onBlur}
+                    @invalid=${this.#onInvalid}
+                    ?data-has-value=${this.hasValue}
                     ?data-open=${this.isOpen}
                 >
                     <option value="" disabled selected hidden>${this.placeholder}</option>
-                    ${this.noOptionHtml} ${this.#optionList.map(option => option.htmlElement)}
+                    ${this.renderNoOptions()} ${this.#optionList.map(option => option.htmlElement)}
                 </select>
 
                 ${this.renderClearButton()} ${this.renderIndicator()}
@@ -247,5 +323,3 @@ export default class SelectBox extends SelectBase {
             ${this.renderErrorMessage()}`;
     }
 }
-
-// test case: başlangıç değeri varsa seçili gelsin

@@ -23,8 +23,12 @@ export interface SlotCollector {
      */
     bindSlots(collectedNodes: (HTMLElement | Text)[]): void;
 
-    /** A hook that is called after slots have been bound. @protected */
-    afterSlotsBinded(): void;
+    /**
+     * A hook that is called after slots have been bound.
+     * @param {boolean} hasProjectedContent Indicates if there is projected content in the slots.
+     * @protected
+     */
+    afterSlotsBinded(hasProjectedContent: boolean): void;
 
     /**
      * A hook that validates nodes for slot binding.

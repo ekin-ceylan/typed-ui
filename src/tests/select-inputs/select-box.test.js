@@ -93,7 +93,7 @@ describe('SelectBox - Accessibility (A11y) tests', () => {
 describe('SelectBox - Options & value', () => {
     it('parses slotted options and respects selected attribute on startup', async () => {
         const { select, host } = await initSelectBox(`
-			<select-box field-id="color" label="Color" placeholder="Pick one">
+			<select-box id="color" label="Color" placeholder="Pick one">
 				<option value="r">Red</option>
 				<option value="g" selected>Green</option>
 			</select-box>
@@ -107,7 +107,7 @@ describe('SelectBox - Options & value', () => {
 
     it('renders optgroup content from slotted markup', async () => {
         const { select } = await initSelectBox(`
-			<select-box field-id="cities" label="Cities">
+			<select-box id="cities" label="Cities">
 				<optgroup label="Turkey">
 					<option value="ank">Ankara</option>
 					<option value="ist">Istanbul</option>
@@ -123,7 +123,7 @@ describe('SelectBox - Options & value', () => {
 
     it('parses slotted custom-option nodes and respects selected attribute', async () => {
         const { select, host } = await initSelectBox(`
-			<select-box field-id="priority" label="Priority" placeholder="Pick one">
+			<select-box id="priority" label="Priority" placeholder="Pick one">
 				<custom-option value="low">Low</custom-option>
 				<custom-option value="high" selected>High</custom-option>
 			</select-box>
@@ -137,7 +137,7 @@ describe('SelectBox - Options & value', () => {
 
     it('renders custom-optgroup with custom-option children', async () => {
         const { select } = await initSelectBox(`
-			<select-box field-id="cars" label="Cars">
+			<select-box id="cars" label="Cars">
 				<custom-optgroup label="German Cars" hidden>
 					<custom-option value="bmw">BMW</custom-option>
 					<custom-option value="audi">Audi</custom-option>
@@ -154,7 +154,7 @@ describe('SelectBox - Options & value', () => {
     });
 
     it('renders noOptionsLabel as a disabled option when there are no options', async () => {
-        const { select } = await initSelectBox('<select-box field-id="empty" label="Empty" placeholder="Choose"></select-box>');
+        const { select } = await initSelectBox('<select-box id="empty" label="Empty" placeholder="Choose"></select-box>');
 
         expect(select.options).toHaveLength(2);
         expect(select.options[1].disabled).toBe(true);
@@ -163,7 +163,7 @@ describe('SelectBox - Options & value', () => {
 
     it('conditionally renders label attribute for slotted native option nodes', async () => {
         const { select } = await initSelectBox(`
-			<select-box field-id="city" label="City">
+			<select-box id="city" label="City">
 				<option value="ank" label="Ankara Label">Ankara Text</option>
 				<option value="ist" label="Istanbul">Istanbul</option>
 				<option value="izm">Izmir</option>
@@ -189,7 +189,7 @@ describe('SelectBox - Options & value', () => {
 
     it('conditionally renders label attribute for slotted custom-option nodes', async () => {
         const { select } = await initSelectBox(`
-			<select-box field-id="city" label="City">
+			<select-box id="city" label="City">
 				<custom-option value="ank" label="Ankara Label">Ankara Text</custom-option>
 				<custom-option value="ist" label="Istanbul">Istanbul</custom-option>
 				<custom-option value="izm">Izmir</custom-option>
@@ -217,7 +217,7 @@ describe('SelectBox - Options & value', () => {
 describe('SelectBox - Required validation', () => {
     it('shows required error on blur when no value is selected', async () => {
         const { select, host } = await initSelectBox(`
-			<select-box field-id="team" label="Team" required placeholder="Choose">
+			<select-box id="team" label="Team" required placeholder="Choose">
 				<option value="a">A</option>
 				<option value="b">B</option>
 			</select-box>
@@ -236,7 +236,7 @@ describe('SelectBox - Required validation', () => {
 
     it('clears the required error after a valid option is selected', async () => {
         const { select, host, user } = await initSelectBox(`
-			<select-box field-id="team" label="Team" required placeholder="Choose">
+			<select-box id="team" label="Team" required placeholder="Choose">
 				<option value="a">A</option>
 				<option value="b">B</option>
 			</select-box>
@@ -260,7 +260,7 @@ describe('SelectBox - Required validation', () => {
 describe('SelectBox - Clear button', () => {
     it('clears the current value when clearable is enabled', async () => {
         const { select, host, user, clearButton } = await initSelectBox(`
-			<select-box field-id="city" label="City" clearable>
+			<select-box id="city" label="City" clearable>
 				<option value="ank" selected>Ankara</option>
 				<option value="ist">Istanbul</option>
 			</select-box>
@@ -281,7 +281,7 @@ describe('SelectBox - Clear button', () => {
 
 describe('SelectBox - Options property', () => {
     it('accepts string-only arrays in options API and renders matching values/text', async () => {
-        const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
         host.options = ['one', 'two', 'three'];
         await host.updateComplete;
@@ -295,7 +295,7 @@ describe('SelectBox - Options property', () => {
     });
 
     it('accepts options arrays and renders them', async () => {
-        const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
         host.options = ['one', { value: 'two', label: 'Two' }];
         await host.updateComplete;
@@ -306,7 +306,7 @@ describe('SelectBox - Options property', () => {
     });
 
     it('renders dataset and ariaset from options API on option nodes', async () => {
-        const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
         host.options = [
             {
@@ -326,7 +326,7 @@ describe('SelectBox - Options property', () => {
     });
 
     it('renders dataset and ariaset from options API on optgroup nodes', async () => {
-        const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
         host.options = [
             {
@@ -346,7 +346,7 @@ describe('SelectBox - Options property', () => {
 
     it('collects slotted aria attributes into rendered option and optgroup nodes', async () => {
         const { select } = await initSelectBox(`
-            <select-box field-id="city" label="City">
+            <select-box id="city" label="City">
                 <optgroup label="Turkey" aria-label="Turkey group">
                     <option value="ank" aria-label="Ankara option">Ankara</option>
                 </optgroup>
@@ -363,7 +363,7 @@ describe('SelectBox - Options property', () => {
     });
 
     it('throws when options is not an array', async () => {
-        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
         expect(() => {
             host.options = /** @type {any} */ ('nope');
@@ -371,7 +371,7 @@ describe('SelectBox - Options property', () => {
     });
 
     it('resolves display text and label attribute via options API rules', async () => {
-        const { select, host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
         host.options = [
             { value: 'labelOnly', label: 'Only Label' },
@@ -406,7 +406,7 @@ describe('SelectBox - Options property', () => {
 
 describe('SelectBox - validateNode guards', () => {
     it('returns true for non-default slots', async () => {
-        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
         const node = document.createElement('div');
 
         const result = host.validateNode(node, 'suffix', false);
@@ -415,7 +415,7 @@ describe('SelectBox - validateNode guards', () => {
     });
 
     it('returns false and warns when slotted nodes exist while options property is already set', async () => {
-        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
         host.options = ['one'];
         await host.updateComplete;
 
@@ -432,7 +432,7 @@ describe('SelectBox - validateNode guards', () => {
     });
 
     it('returns false and logs error for invalid child element types', async () => {
-        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
         const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
         const invalidNode = document.createElement('div');
@@ -446,43 +446,116 @@ describe('SelectBox - validateNode guards', () => {
 
 describe('SelectBox - keyboard and invalid handlers', () => {
     it('opens when Enter or Space is pressed on keydown', async () => {
-        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
         host.isOpen = false;
-        host.onKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
+        select.dispatchEvent(new KeyboardEvent('keydown', { code: 'Enter', bubbles: true, cancelable: true }));
         expect(host.isOpen).toBe(true);
 
         host.isOpen = false;
-        host.onKeydown(new KeyboardEvent('keydown', { key: ' ' }));
+        select.dispatchEvent(new KeyboardEvent('keydown', { code: 'Space', bubbles: true, cancelable: true }));
         expect(host.isOpen).toBe(true);
     });
 
     it('closes when Escape, Tab, or Enter is pressed on keyup', async () => {
-        const { host } = await initSelectBox('<select-box field-id="x" label="X"></select-box>');
+        const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
         host.isOpen = true;
-        host.onKeyup(new KeyboardEvent('keyup', { key: 'Escape' }));
+        select.dispatchEvent(new KeyboardEvent('keyup', { code: 'Escape', bubbles: true, cancelable: true }));
         expect(host.isOpen).toBe(false);
 
         host.isOpen = true;
-        host.onKeyup(new KeyboardEvent('keyup', { key: 'Tab' }));
+        select.dispatchEvent(new KeyboardEvent('keyup', { code: 'Tab', bubbles: true, cancelable: true }));
         expect(host.isOpen).toBe(false);
 
         host.isOpen = true;
-        host.onKeyup(new KeyboardEvent('keyup', { key: 'Enter' }));
+        select.dispatchEvent(new KeyboardEvent('keyup', { code: 'Enter', bubbles: true, cancelable: true }));
         expect(host.isOpen).toBe(false);
     });
 
     it('forces validation on invalid handler', async () => {
-        const { host } = await initSelectBox(`
-			<select-box field-id="team" label="Team" required>
+        const { select, host } = await initSelectBox(`
+			<select-box id="team" label="Team" required>
 				<option value="a">A</option>
 			</select-box>
 		`);
 
-        host.onInvalid(new Event('invalid'));
+        select.dispatchEvent(new Event('invalid', { bubbles: false, cancelable: true }));
+        await host.updateComplete;
 
         expect(host.invalid).toBe(true);
         expect(host.validationMessage).toContain('gereklidir');
+    });
+});
+
+describe('SelectBox - Edge cases', () => {
+    it('keeps initial value when options arrive later and include that value', async () => {
+        const { select, host } = await initSelectBox('<select-box id="late-match" label="Late" value="ist"></select-box>');
+
+        expect(host.value).toBe('ist');
+
+        host.options = [
+            { value: 'ank', text: 'Ankara' },
+            { value: 'ist', text: 'Istanbul' },
+        ];
+        await host.updateComplete;
+
+        expect(host.value).toBe('ist');
+        expect(select.value).toBe('ist');
+    });
+
+    it('clears initial value when options arrive later and do not include that value', async () => {
+        const { select, host } = await initSelectBox('<select-box id="late-miss" label="Late" value="ist"></select-box>');
+
+        expect(host.value).toBe('ist');
+
+        host.options = [
+            { value: 'ank', text: 'Ankara' },
+            { value: 'izm', text: 'Izmir' },
+        ];
+        await host.updateComplete;
+
+        expect(host.value).toBe('');
+        expect(select.value).toBe('');
+    });
+
+    it('uses the last selected option when multiple selected entries are provided via options API', async () => {
+        const { select, host } = await initSelectBox('<select-box id="multi-selected" label="X"></select-box>');
+
+        host.options = [
+            { value: 'a', text: 'A', selected: true },
+            { value: 'b', text: 'B', selected: true },
+        ];
+        await host.updateComplete;
+
+        expect(host.value).toBe('b');
+        expect(select.value).toBe('b');
+    });
+
+    it('returns a copy from options getter so external mutations do not alter internal state', async () => {
+        const { select, host } = await initSelectBox('<select-box id="copy" label="X"></select-box>');
+
+        host.options = ['one'];
+        await host.updateComplete;
+
+        const snapshot = host.options;
+        snapshot.push('two');
+        await host.updateComplete;
+
+        const values = Array.from(select.querySelectorAll('option')).map(option => option.value);
+        expect(values).toContain('one');
+        expect(values).not.toContain('two');
+    });
+
+    it('keeps the last assignment when options are set rapidly', async () => {
+        const { select, host } = await initSelectBox('<select-box id="rapid" label="X"></select-box>');
+
+        host.options = [{ value: 'first', text: 'First' }];
+        host.options = [{ value: 'second', text: 'Second' }];
+        await host.updateComplete;
+
+        const values = Array.from(select.querySelectorAll('option')).map(option => option.value);
+        expect(values).toContain('second');
+        expect(values).not.toContain('first');
     });
 });
