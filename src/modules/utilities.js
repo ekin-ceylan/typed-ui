@@ -64,6 +64,26 @@ export function classMap(...args) {
 }
 
 /**
+ * Finds the last item in an array that matches the given predicate without creating a reversed copy.
+ * Returns `undefined` if no item matches.
+ *
+ * @template T
+ * @param {T[]} array
+ * @param {(item: T, index: number, array: T[]) => boolean} predicate
+ * @returns {T|undefined}
+ */
+export function findLastBy(array, predicate) {
+    if (!Array.isArray(array) || typeof predicate !== 'function') return undefined;
+
+    for (let index = array.length - 1; index >= 0; index--) {
+        const item = array[index];
+        if (predicate(item, index, array)) return item;
+    }
+
+    return undefined;
+}
+
+/**
  * Checks if a string is empty, `undefined`, or `null`.
  * @param {string|null|undefined} value The string to check.
  * @returns {boolean}

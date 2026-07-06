@@ -3,15 +3,17 @@ import Option from './Option.js';
 import CustomOption from '../components/select/custom-option.js';
 import { spread } from '../modules/spread.js';
 import HtmlBaseModel from './HtmlBaseModel.js';
+import { findLastBy } from '../modules/utilities.js';
 
 /** Represents an option group model. */
 export default class OptionGroup extends HtmlBaseModel {
     label = '';
+    /** @type {Option[]} */
     #options = [];
 
     /**
      * Gets or sets the child options of this option group.
-     * @type {Option[]}
+     * @returns {Option[]}
      */
     get options() {
         return this.#options;
@@ -35,7 +37,7 @@ export default class OptionGroup extends HtmlBaseModel {
 
     /**
      * Native alias for optgroup children. Helps for mapping HTMLOptGroupElement.children.
-     * @type {Option[]}
+     * @returns {Option[]}
      */
     get children() {
         return this.#options;
@@ -47,7 +49,7 @@ export default class OptionGroup extends HtmlBaseModel {
 
     /**
      * Checks if any option in the group is selected.
-     * @return {boolean} True if any option is selected, otherwise false.
+     * @returns {boolean} True if any option is selected, otherwise false.
      */
     get selected() {
         return this.#options.some(option => option.selected);
@@ -58,7 +60,7 @@ export default class OptionGroup extends HtmlBaseModel {
      * @return {string} The value of the selected option, or an empty string if none are selected.
      */
     get value() {
-        return this.#options.find(option => option.selected)?.value || '';
+        return findLastBy(this.#options, option => option.selected)?.value || '';
     }
 
     get htmlElement() {
