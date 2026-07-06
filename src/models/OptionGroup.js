@@ -3,7 +3,7 @@ import Option from './Option.js';
 import CustomOption from '../components/select/custom-option.js';
 import { spread } from '../modules/spread.js';
 import HtmlBaseModel from './HtmlBaseModel.js';
-import { findLastBy } from '../modules/utilities.js';
+import { findLastBy, isEmpty } from '../modules/utilities.js';
 
 /** Represents an option group model. */
 export default class OptionGroup extends HtmlBaseModel {
@@ -32,7 +32,7 @@ export default class OptionGroup extends HtmlBaseModel {
             return;
         }
 
-        this.#options = source.map(child => (child instanceof Option ? child : new Option(child)));
+        this.#options = source.map(child => (child instanceof Option ? child : new Option(child))).filter(c => !isEmpty(c.value));
     }
 
     /**

@@ -402,6 +402,91 @@ describe('SelectBox - Options property', () => {
         expect(sameTextOption.textContent.trim()).toBe('Istanbul');
         expect(sameTextOption.getAttribute('label')).toBeNull();
     });
+
+    it('uses the first empty-value option from options API as placeholder and filters subsequent empty-value options', async () => {
+        const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
+
+        host.options = [
+            { value: '', text: 'Choose option' },
+            { value: '', text: 'Unknown' },
+            { value: 'a', text: 'Option A' },
+        ];
+        await host.updateComplete;
+
+        expect(host.placeholder).toBe('Choose option');
+        const allOptions = Array.from(select.querySelectorAll('option'));
+        const emptyValueOptions = allOptions.filter(opt => opt.value === '');
+        expect(emptyValueOptions).toHaveLength(1);
+        expect(emptyValueOptions[0].textContent.trim()).toBe('Choose option');
+        expect(allOptions.map(opt => opt.textContent.trim())).not.toContain('Unknown');
+    });
+
+    it('preserves optgroups in options API even when they have no valid child options', async () => {
+        const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
+
+        host.options = [
+            {
+                label: 'Turkey',
+                options: [
+                    { value: 'ank', text: 'Ankara' },
+                    { value: 'ist', text: 'Istanbul' },
+                ],
+            },
+            {
+                label: 'Germany',
+                options: [{ value: 'ber', text: 'Berlin' }],
+            },
+        ];
+        await host.updateComplete;
+
+        const groups = Array.from(select.querySelectorAll('optgroup'));
+        expect(groups).toHaveLength(2);
+        expect(groups[0].label).toBe('Turkey');
+        expect(groups[1].label).toBe('Germany');
+        expect(groups[0].querySelectorAll('option')).toHaveLength(2);
+        expect(groups[1].querySelectorAll('option')).toHaveLength(1);
+    });
+
+    it('handles empty options array without errors', async () => {
+        const { host, select } = await initSelectBox('<select-box id="x" label="X"></select-box>');
+
+        host.options = [];
+        await host.updateComplete;
+
+        expect(host.hasOptions).toBe(false);
+        expect(host.placeholder).toBe('');
+        const options = Array.from(select.querySelectorAll('option'));
+        expect(options.length).toBeGreaterThanOrEqual(1);
+        expect(options[0].value).toBe('');
+    });
+
+    it('sets placeholder when first option in options API has empty value but placeholder attr not set', async () => {
+        const { host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
+
+        host.options = [
+            { value: '', text: 'Select one' },
+            { value: 'opt1', text: 'Option 1' },
+        ];
+        await host.updateComplete;
+
+        expect(host.placeholder).toBe('Select one');
+    });
+
+    it('ignores empty-value option from options API when placeholder already set', async () => {
+        const { host, select } = await initSelectBox('<select-box id="x" label="X" placeholder="Custom Placeholder"></select-box>');
+
+        host.options = [
+            { value: '', text: 'Auto Placeholder' },
+            { value: 'opt1', text: 'Option 1' },
+        ];
+        await host.updateComplete;
+
+        expect(host.placeholder).toBe('Custom Placeholder');
+        const allOptions = Array.from(select.querySelectorAll('option'));
+        const emptyValueOptions = allOptions.filter(opt => opt.value === '');
+        expect(emptyValueOptions).toHaveLength(1);
+        expect(emptyValueOptions[0].textContent.trim()).toBe('Custom Placeholder');
+    });
 });
 
 describe('SelectBox - validateNode guards', () => {
@@ -532,6 +617,27 @@ describe('SelectBox - Edge cases', () => {
         expect(select.value).toBe('b');
     });
 
+    it('overrides existing value when new options arrive with a selected entry', async () => {
+        const { select, host } = await initSelectBox('<select-box id="override-selected" label="X" value="a"></select-box>');
+
+        host.options = [
+            { value: 'a', text: 'A' },
+            { value: 'b', text: 'B' },
+        ];
+        await host.updateComplete;
+
+        expect(host.value).toBe('a');
+
+        host.options = [
+            { value: 'a', text: 'A' },
+            { value: 'b', text: 'B', selected: true },
+        ];
+        await host.updateComplete;
+
+        expect(host.value).toBe('b');
+        expect(select.value).toBe('b');
+    });
+
     it('returns a copy from options getter so external mutations do not alter internal state', async () => {
         const { select, host } = await initSelectBox('<select-box id="copy" label="X"></select-box>');
 
@@ -557,5 +663,42 @@ describe('SelectBox - Edge cases', () => {
         const values = Array.from(select.querySelectorAll('option')).map(option => option.value);
         expect(values).toContain('second');
         expect(values).not.toContain('first');
+    });
+
+    it('uses the first empty-value slotted option as placeholder and discards all subsequent empty-value options', async () => {
+        const { select, host } = await initSelectBox(`
+            <select-box id="empty-values" label="X">
+                <option value="">Choose city</option>
+                <option value="">Unknown city</option>
+                <option value="ank">Ankara</option>
+            </select-box>
+        `);
+
+        await host.updateComplete;
+
+        const allOptions = Array.from(select.querySelectorAll('option'));
+        const emptyValueOptions = allOptions.filter(option => option.value === '');
+
+        expect(host.placeholder).toBe('Choose city');
+        expect(select.options[0].textContent.trim()).toBe('Choose city');
+        expect(emptyValueOptions).toHaveLength(1);
+        expect(emptyValueOptions[0].textContent.trim()).toBe('Choose city');
+        expect(allOptions.map(o => o.textContent.trim())).not.toContain('Unknown city');
+    });
+
+    it('clears value when value is set directly to an option that does not exist', async () => {
+        const { select, host } = await initSelectBox('<select-box id="direct-invalid" label="X"></select-box>');
+
+        host.options = [
+            { value: 'ank', text: 'Ankara' },
+            { value: 'ist', text: 'Istanbul' },
+        ];
+        await host.updateComplete;
+
+        host.value = 'not-exists';
+        await host.updateComplete;
+
+        expect(host.value).toBe('');
+        expect(select.value).toBe('');
     });
 });

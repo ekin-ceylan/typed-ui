@@ -28,7 +28,15 @@ export default class SelectBox extends OptionsControlBase {
 
         const oldValue = this.#options;
         this.#options = val;
-        this.#optionList = val.map(o => this.#toOptionElement(o));
+        
+        const list = val.map(o => this.#toOptionElement(o));
+this.#optionList = list.filter(o => o instanceof OptionGroup || !isEmpty(o.value));
+        const first = list[0];
+
+        if (first instanceof Option && !this.placeholder && isEmpty(first.value)) {
+            this.placeholder = first.displayText;
+        }
+
         this.requestUpdate('options', oldValue);
         this.#syncValueAfterOptionsChange();
     }
@@ -93,6 +101,12 @@ export default class SelectBox extends OptionsControlBase {
 
     // #endregion STATICS, FIELDS, GETTERS
 
+    willUpdate(changing) {
+        if (changing.has('value') && this.hasOptions && !this.hasValue) {
+            this.value = '';
+        }
+    }
+
     // #region INTERNAL HOOKS
 
     /** @inheritdoc */
@@ -118,8 +132,10 @@ export default class SelectBox extends OptionsControlBase {
         const option = isOptionElement ? new Option(node) : new OptionGroup(node);
         option.hidden = !hiddenByCollector;
 
-        if (isEmpty(this.placeholder) && isOptionElement && isEmpty(option.value)) {
-            this.placeholder = /** @type {Option} */ (option).displayText; // ilk değeri alma
+        if (isOptionElement && isEmpty(option.value)) {
+if (isEmpty(this.placeholder)) {
+            this.placeholder = /** @type {Option} */ (option).displayText;
+            }
         } else {
             this.#optionList.push(option);
         }
@@ -128,6 +144,8 @@ export default class SelectBox extends OptionsControlBase {
 
         return false;
     }
+
+    /** @inheritdoc */
     afterSlotsBinded(hasProjectedContent) {
         if (hasProjectedContent) this.#syncValueAfterOptionsChange();
     }
@@ -140,12 +158,10 @@ export default class SelectBox extends OptionsControlBase {
     }
 
     valueUpdated() {
-        const newValue = !this.hasOptions || this.hasValue ? this.value : '';
-
-        if (this.inputElement?.value === newValue) return false;
+                if (this.inputElement?.value === this.value) return false;
         else if (!this.hasOptions) return true;
 
-        this.inputElement.value = newValue;
+        this.inputElement.value = this.value;
         this.#checkValidity();
 
         return true;
