@@ -17,6 +17,11 @@ async function initSelectBox(elementStr) {
     return { select, host, user, clearButton };
 }
 
+async function openSelect(select, host) {
+    select.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+    await host.updateComplete;
+}
+
 describe('SelectBox - Accessibility (A11y) tests', () => {
     it('associates <label> with <select> via for/id and aria-labelledby', async () => {
         const { select, host } = await initSelectBox('<select-box label="Country"></select-box>');
@@ -40,12 +45,13 @@ describe('SelectBox - Accessibility (A11y) tests', () => {
     });
 
     it('sets required semantics and wires aria-errormessage', async () => {
-        const { select, host, user } = await initSelectBox('<select-box label="Country" required><option value="tr">Turkey</option></select-box>');
+        const { select, host } = await initSelectBox('<select-box label="Country" required><option value="tr">Turkey</option></select-box>');
 
         expect(host.querySelector('[data-role="error-message"]')).toBeNull();
         expect(select.getAttribute('aria-errormessage')).toBeNull();
 
-        await user.tab();
+        await openSelect(select, host);
+        select.blur();
         await host.updateComplete;
 
         expect(select.required).toBe(true);
@@ -69,7 +75,8 @@ describe('SelectBox - Accessibility (A11y) tests', () => {
 
         expect(select.getAttribute('aria-errormessage')).toBeNull();
 
-        await user.tab();
+        await openSelect(select, host);
+        select.blur();
         await host.updateComplete;
 
         expect(select.getAttribute('aria-errormessage')).toBe(host.errorId);
@@ -223,7 +230,7 @@ describe('SelectBox - Required validation', () => {
 			</select-box>
 		`);
 
-        select.focus();
+        await openSelect(select, host);
         select.blur();
         await host.updateComplete;
 
@@ -242,7 +249,7 @@ describe('SelectBox - Required validation', () => {
 			</select-box>
 		`);
 
-        select.focus();
+        await openSelect(select, host);
         select.blur();
         await host.updateComplete;
         expect(host.querySelector('[data-role="error-message"]')).not.toBeNull();
@@ -533,29 +540,29 @@ describe('SelectBox - keyboard and invalid handlers', () => {
     it('opens when Enter or Space is pressed on keydown', async () => {
         const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
-        host.isOpen = false;
+        host.open = false;
         select.dispatchEvent(new KeyboardEvent('keydown', { code: 'Enter', bubbles: true, cancelable: true }));
-        expect(host.isOpen).toBe(true);
+        expect(host.open).toBe(true);
 
-        host.isOpen = false;
+        host.open = false;
         select.dispatchEvent(new KeyboardEvent('keydown', { code: 'Space', bubbles: true, cancelable: true }));
-        expect(host.isOpen).toBe(true);
+        expect(host.open).toBe(true);
     });
 
     it('closes when Escape, Tab, or Enter is pressed on keyup', async () => {
         const { select, host } = await initSelectBox('<select-box id="x" label="X"></select-box>');
 
-        host.isOpen = true;
+        host.open = true;
         select.dispatchEvent(new KeyboardEvent('keyup', { code: 'Escape', bubbles: true, cancelable: true }));
-        expect(host.isOpen).toBe(false);
+        expect(host.open).toBe(false);
 
-        host.isOpen = true;
+        host.open = true;
         select.dispatchEvent(new KeyboardEvent('keyup', { code: 'Tab', bubbles: true, cancelable: true }));
-        expect(host.isOpen).toBe(false);
+        expect(host.open).toBe(false);
 
-        host.isOpen = true;
+        host.open = true;
         select.dispatchEvent(new KeyboardEvent('keyup', { code: 'Enter', bubbles: true, cancelable: true }));
-        expect(host.isOpen).toBe(false);
+        expect(host.open).toBe(false);
     });
 
     it('forces validation on invalid handler', async () => {

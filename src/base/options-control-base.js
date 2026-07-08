@@ -20,7 +20,7 @@ export default class OptionsControlBase extends mixins(StandardControlBase, Slot
     static get properties() {
         return {
             ...super.properties,
-            isOpen: { type: Boolean, attribute: false }, // Açık / kapalı
+            open: { type: Boolean, attribute: false }, // Açık / kapalı
             noOptionsLabel: { type: String, attribute: 'no-options-label' },
             options: { type: Array, attribute: false, noAccessor: true }, // Options array, can contain Option, OptionGroup, or ComboOption objects
         };
@@ -32,7 +32,7 @@ export default class OptionsControlBase extends mixins(StandardControlBase, Slot
         super();
 
         /** @type {boolean} */
-        this.isOpen = false;
+        this.open = false;
         /** @type {string} */
         this.noOptionsLabel = this.localeMessages?.noOptionsLabel;
     }

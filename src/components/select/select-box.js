@@ -157,8 +157,7 @@ if (isEmpty(this.placeholder)) {
     /** @override @protected */
     setupFirstInteraction() {
         // programatik atama etkiler mi native ile dene
-        // focus yeterli değil aç kapa olmalı
-        this.inputElement?.addEventListener('focus', _e => this.dispatchCustomEvent('first-interaction'), { once: true });
+        this.addEventListener('open', _e => this.dispatchCustomEvent('first-interaction'), { once: true });
     }
 
     valueUpdated() {
@@ -183,13 +182,13 @@ if (isEmpty(this.placeholder)) {
     #onChange(e) {
         e.stopPropagation();
         this.value = e.target.value;
-        this.isOpen = false;
+        this.#setOpen(false);
         this.#checkValidity();
         this.dispatchCustomEvent('change', e);
     }
 
     #onBlur(_e) {
-        this.isOpen = false;
+        this.#setOpen(false);
         this.#checkValidity();
     }
 
@@ -199,7 +198,7 @@ if (isEmpty(this.placeholder)) {
      */
     #onMouseup(e) {
         if (e.target instanceof HTMLOptionElement || !this.#mouseFlag) {
-            this.isOpen = false;
+            this.#setOpen(false);
         }
 
         this.#mouseFlag = false;
@@ -207,7 +206,7 @@ if (isEmpty(this.placeholder)) {
 
     #onMousedown(_e) {
         this.#mouseFlag = true;
-        this.isOpen = !this.isOpen;
+        this.#setOpen(!this.open);
     }
 
     /**
@@ -216,7 +215,7 @@ if (isEmpty(this.placeholder)) {
      */
     #onKeydown(e) {
         if (e.code === Keys.SPACE || e.code === Keys.ENTER) {
-            this.isOpen = true;
+            this.#setOpen(true);
         }
     }
 
@@ -227,7 +226,7 @@ if (isEmpty(this.placeholder)) {
     #onKeyup(e) {
         // chrome'da bug var.  console.log('keyup', e.code);
         if (e.code === Keys.ESCAPE || e.code === Keys.TAB || e.code === Keys.ENTER) {
-            this.isOpen = false;
+            this.#setOpen(false);
         }
     }
 
@@ -253,6 +252,12 @@ if (isEmpty(this.placeholder)) {
 
     // #region PRIVATE METHODS
 
+    /** @param {boolean} open */
+    #setOpen(open) {
+        if (open && !this.open) this.dispatchCustomEvent('open');
+        else if (!open && this.open) this.dispatchCustomEvent('close');
+        this.open = open;
+    }
     #syncValueAfterOptionsChange() {
         const selected = findLastBy(this.#optionList, o => o.selected);
 
@@ -332,7 +337,7 @@ if (isEmpty(this.placeholder)) {
                     @blur=${this.#onBlur}
                     @invalid=${this.#onInvalid}
                     ?data-has-value=${this.hasValue}
-                    ?data-open=${this.isOpen}
+                    ?data-open=${this.open}
                 >
                     <option value="" disabled selected hidden>${this.placeholder}</option>
                     ${this.renderNoOptions()} ${this.#optionList.map(option => option.htmlElement)}
