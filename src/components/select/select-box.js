@@ -91,6 +91,11 @@ this.#optionList = list.filter(o => o instanceof OptionGroup || !isEmpty(o.value
         return this.#optionList.flatMap(o => (o instanceof Option ? o.value : [...o.options.map(opt => opt.value)]));
     }
 
+    get resetValue() {
+        const selectedValue = findLastBy(this.#optionList, o => o.selected)?.value ?? '';
+        return selectedValue || this.getAttribute('value') || '';
+    }
+
     /**
      * Returns the reference to the native input element within the component. Caches the reference after the first query for performance optimization.
      * @returns {HTMLSelectElement | null}

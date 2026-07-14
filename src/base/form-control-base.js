@@ -37,6 +37,15 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
     validationMessage = '';
 
     /**
+     * This is used to reset the form control to its initial state when the form is reset.
+     * Subclasses can override this getter to provide a different reset value if needed.
+     * @returns {string}
+     */
+    get resetValue() {
+        return this.getAttribute('value') || '';
+    }
+
+    /**
      * Represents the native form control element (e.g., input, select) within the component.
      *
      * MUST be overridden by subclasses to provide a reference to the native form control element (e.g., input, select).
@@ -231,10 +240,8 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
      * Resets the input value to its initial state, clears any validation messages, and resets the `interacted` state.
      * @category public api
      */
-    async reset() {
-        const valueAttr = this.getAttribute('value');
-        this.value = valueAttr || '';
-        await this.updateComplete;
+    reset() {
+        this.value = this.resetValue;
         this.clearValidation();
         this.#interacted = false;
         this.setupFirstInteraction();

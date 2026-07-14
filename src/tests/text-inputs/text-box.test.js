@@ -327,3 +327,125 @@ describe('Allow Pattern Tests', () => {
         expect(message).toMatch(/Invalid regular expression/);
     });
 });
+
+describe('Reset Tests', () => {
+    afterEach(() => {
+        document.body.innerHTML = '';
+    });
+
+    it('component.reset() sets value to the value attribute', async () => {
+        const [, host] = await initInputBase('<text-box label="Name" value="initial"></text-box>');
+
+        host.value = 'changed';
+        await host.updateComplete;
+
+        await host.reset();
+
+        expect(host.value).toBe('initial');
+    });
+
+    it('component.reset() syncs inner input value to the value attribute', async () => {
+        const [input, host] = await initInputBase('<text-box label="Name" value="initial"></text-box>');
+
+        host.value = 'changed';
+        await host.updateComplete;
+
+        await host.reset();
+        await host.updateComplete;
+
+        expect(input.value).toBe('initial');
+    });
+
+    it('component.reset() clears invalid state and error message', async () => {
+        const [input, host, user] = await initInputBase('<text-box label="Name" required></text-box>');
+
+        await user.type(input, 'x');
+        await user.clear(input);
+        await user.tab();
+        await host.updateComplete;
+
+        expect(host.invalid).toBe(true);
+        expect(host.querySelector('[data-role="error-message"]')).not.toBeNull();
+
+        await host.reset();
+        await host.updateComplete;
+
+        expect(host.invalid).toBe(false);
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
+    });
+
+    it('component.reset() resets interacted to false', async () => {
+        const [input, host, user] = await initInputBase('<text-box label="Name"></text-box>');
+
+        await user.type(input, 'hello');
+        expect(host.interacted).toBe(true);
+
+        await host.reset();
+
+        expect(host.interacted).toBe(false);
+    });
+
+    it('form reset sets value to the value attribute', async () => {
+        document.body.innerHTML = '<form><text-box label="Name" value="initial"></text-box><button type="reset">Reset</button></form>';
+        const host = document.body.querySelector('text-box');
+        await host.updateComplete;
+
+        host.value = 'changed';
+        await host.updateComplete;
+
+        document.body.querySelector('button[type="reset"]').click();
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        await host.updateComplete;
+
+        expect(host.value).toBe('initial');
+    });
+
+    it('form reset syncs inner input value to the value attribute', async () => {
+        document.body.innerHTML = '<form><text-box label="Name" value="initial"></text-box><button type="reset">Reset</button></form>';
+        const host = document.body.querySelector('text-box');
+        await host.updateComplete;
+
+        host.value = 'changed';
+        await host.updateComplete;
+
+        document.body.querySelector('button[type="reset"]').click();
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        await host.updateComplete;
+
+        expect(host.inputElement.value).toBe('initial');
+    });
+
+    it('form reset clears invalid state', async () => {
+        document.body.innerHTML = '<form><text-box label="Name" required></text-box><button type="reset">Reset</button></form>';
+        const host = document.body.querySelector('text-box');
+        await host.updateComplete;
+
+        // Trigger invalid state directly
+        host.checkValidity();
+        await host.updateComplete;
+
+        expect(host.invalid).toBe(true);
+
+        document.body.querySelector('button[type="reset"]').click();
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        await host.updateComplete;
+
+        expect(host.invalid).toBe(false);
+        expect(host.querySelector('[data-role="error-message"]')).toBeNull();
+    });
+
+    it('form reset resets interacted to false', async () => {
+        document.body.innerHTML = '<form><text-box label="Name"></text-box><button type="reset">Reset</button></form>';
+        const host = document.body.querySelector('text-box');
+        await host.updateComplete;
+
+        // Simulate interaction by dispatching a first-interaction event directly
+        host.dispatchEvent(new CustomEvent('first-interaction', { bubbles: true }));
+        expect(host.interacted).toBe(true);
+
+        document.body.querySelector('button[type="reset"]').click();
+        await new Promise(resolve => requestAnimationFrame(resolve));
+
+        expect(host.interacted).toBe(false);
+    });
+});
