@@ -241,7 +241,13 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
      * @category public api
      */
     reset() {
+        const currentValue = this.value;
+
+        if (currentValue !== this.resetValue) {
         this.value = this.resetValue;
+            this.requestUpdate('value', currentValue);
+        }
+
         this.clearValidation();
         this.#interacted = false;
         this.setupFirstInteraction();
