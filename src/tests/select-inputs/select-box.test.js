@@ -238,7 +238,7 @@ describe('SelectBox - Required validation', () => {
         expect(select.getAttribute('aria-invalid')).toBe('true');
         const error = host.querySelector('[data-role="error-message"]');
         expect(error).not.toBeNull();
-        expect(error.textContent.trim()).toContain('gereklidir');
+        expect(error.textContent.trim()).toContain('zorunludur');
     });
 
     it('clears the required error after a valid option is selected', async () => {
@@ -576,7 +576,7 @@ describe('SelectBox - keyboard and invalid handlers', () => {
         await host.updateComplete;
 
         expect(host.invalid).toBe(true);
-        expect(host.validationMessage).toContain('gereklidir');
+        expect(host.validationMessage).toContain('zorunludur');
     });
 });
 

@@ -63,7 +63,7 @@ describe('TcBox: Validation tests', () => {
 
         expect(input.validity.valueMissing).toBe(true);
         expect(getErrorElement()).not.toBeNull();
-        expect(getErrorElement().textContent).toContain('gereklidir');
+        expect(getErrorElement().textContent).toContain('zorunludur');
     });
 
     it('accepts a valid Turkish ID', async () => {
@@ -74,34 +74,18 @@ describe('TcBox: Validation tests', () => {
         expect(host.invalid).toBe(false);
     });
 
-    it('rejects an invalid Turkish ID', async () => {
-        await user.type(input, '10000000145');
+    it.each([
+        ['rejects an invalid Turkish ID', '10000000145', 'Lütfen geçerli bir TC Kimlik giriniz.'],
+        ['rejects an ID that starts with 0', '01234567890', 'Lütfen geçerli bir TC Kimlik giriniz.'],
+        ['keeps minlength validation for incomplete values', '1234567890', 'en az'],
+    ])('%s', async (_title, value, expectedErrorText) => {
+        await user.type(input, value);
         await user.tab();
 
         const error = getErrorElement();
         expect(error).not.toBeNull();
         expect(host.invalid).toBe(true);
-        expect(error.textContent).toContain('Lütfen geçerli bir TC Kimlik giriniz.');
-    });
-
-    it('rejects an ID that starts with 0', async () => {
-        await user.type(input, '01234567890');
-        await user.tab();
-
-        const error = getErrorElement();
-        expect(error).not.toBeNull();
-        expect(host.invalid).toBe(true);
-        expect(error.textContent).toContain('Lütfen geçerli bir TC Kimlik giriniz.');
-    });
-
-    it('keeps minlength validation for incomplete values', async () => {
-        await user.type(input, '1234567890');
-        await user.tab();
-
-        const error = getErrorElement();
-        expect(error).not.toBeNull();
-        expect(host.invalid).toBe(true);
-        expect(error.textContent).toContain('en az');
+        expect(error.textContent).toContain(expectedErrorText);
     });
 });
 

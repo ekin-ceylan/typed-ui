@@ -7,7 +7,7 @@
  * @type {import('../types.ts').LocaleMessages}
  */
 export const trMessages = {
-    required: label => `${label || 'Bu alan'} gereklidir.`,
+    required: label => `${label || 'Bu alan'} zorunludur.`,
     pattern: label => `Lütfen geçerli bir ${label || 'değer'} giriniz.`,
     minlength: (label, min) => `${label || 'Bu alan'} en az ${min} karakter olmalıdır.`,
     maxlength: (label, max) => `${label || 'Bu alan'} en fazla ${max} karakter olabilir.`,

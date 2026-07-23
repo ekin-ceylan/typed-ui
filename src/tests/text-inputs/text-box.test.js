@@ -48,7 +48,7 @@ describe('Validation Tests', () => {
         expect(input.validity.valueMissing).toBe(true);
         errorElement = getErrorElement();
         expect(errorElement).not.toBeNull();
-        expect(errorElement.textContent.trim()).toContain('gereklidir');
+        expect(errorElement.textContent.trim()).toContain('zorunludur');
     });
 
     it('minlength kontrolü', async () => {

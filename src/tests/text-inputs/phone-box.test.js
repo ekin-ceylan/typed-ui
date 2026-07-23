@@ -208,7 +208,7 @@ describe('PhoneBox: Validation tests', () => {
 
         expect(input.validity.valueMissing).toBe(true);
         expect(getErrorElement()).not.toBeNull();
-        expect(getErrorElement().textContent).toContain('gereklidir');
+        expect(getErrorElement().textContent).toContain('zorunludur');
     });
 
     it('shows pattern error for incomplete phone number', async () => {
