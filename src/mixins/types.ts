@@ -17,6 +17,13 @@ export interface UniqueIdGenerator {
 
 export interface SlotCollector {
     /**
+     * Attribute used to mark nodes as being collected.
+     * Default value is `'slot-collecting'`.
+     * @protected
+     */
+    readonly COLLECTING_ATTR: string;
+
+    /**
      * Binds the collected nodes to their respective slot elements.
      * @param {(HTMLElement|Text)[]} collectedNodes - Collected nodes to bind to slots.
      * @protected

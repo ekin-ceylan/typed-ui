@@ -31,6 +31,11 @@ export default function SlotCollectorMixin(Base) {
         /** @type {Set<Element>} */
         #hiddenByCollector = new Set();
 
+        /** Attribute used to mark nodes as being collected. */
+        get COLLECTING_ATTR() {
+            return 'slot-collecting';
+        }
+
         constructor(...args) {
             super(...args);
             this.#collectSlots(); // başlangıçta DOM'a bağlıysa çalışır
@@ -57,14 +62,14 @@ export default function SlotCollectorMixin(Base) {
             // validate nodes and group by slot name
             for (const node of collectedNodes) {
                 const isElement = node instanceof Element;
-                const nodeSlotName = (isElement && node.getAttribute('slot')) || 'default';
-                isElement && node.removeAttribute('slot');
+                const nodeSlotName = (isElement && node.getAttribute(SLOT_ATTR)) || 'default';
+                isElement && node.removeAttribute(SLOT_ATTR);
 
                 if (!this.validateNode(node, nodeSlotName, isElement && this.#hiddenByCollector.has(node))) {
                     node.remove();
                     continue;
                 }
-
+                // bu ikli if yer değiştirmeli mi?
                 if (node instanceof HTMLTemplateElement) {
                     const nodes = this.#extractTemplateContent(node, nodeSlotName);
                     this.#pushToMapArray(bySlot, nodeSlotName, ...nodes);
@@ -75,7 +80,7 @@ export default function SlotCollectorMixin(Base) {
                 this.#pushToMapArray(bySlot, nodeSlotName, node);
             }
 
-            const slotElements = Array.from(this.querySelectorAll('slot'));
+            const slotElements = Array.from(this.querySelectorAll(SLOT_TAG_NAME));
 
             // Replace placeholder slots with collected nodes
             for (const slotEl of slotElements) {
@@ -93,7 +98,7 @@ export default function SlotCollectorMixin(Base) {
             }
 
             this.#hiddenByCollector.forEach(node => node?.removeAttribute('hidden'));
-            collectedNodes.forEach(node => node instanceof Element && node?.removeAttribute(collectingAttr));
+            collectedNodes.forEach(node => node instanceof Element && node?.removeAttribute(this.COLLECTING_ATTR));
             this.#hiddenByCollector = new Set();
         }
 
@@ -129,7 +134,7 @@ export default function SlotCollectorMixin(Base) {
                       if (!this.validateNode(node, slotName, this.#hiddenByCollector.has(node))) return false;
 
                       if (node.nodeType === Node.ELEMENT_NODE) {
-                          node.removeAttribute('slot');
+                          node.removeAttribute(SLOT_ATTR);
                           return true;
                       }
 
@@ -156,7 +161,7 @@ export default function SlotCollectorMixin(Base) {
                 if (isTextNode)
                     node.remove(); // detach nodes
                 else if (node instanceof Element) {
-                    node.setAttribute(collectingAttr, '');
+                    node.setAttribute(this.COLLECTING_ATTR, '');
 
                     if (!node.hasAttribute('hidden')) {
                         node.setAttribute('hidden', '');
@@ -172,7 +177,8 @@ export default function SlotCollectorMixin(Base) {
     };
 }
 
-const collectingAttr = 'slot-collecting';
+const SLOT_TAG_NAME = 'slot';
+const SLOT_ATTR = 'slot';
 
 // template testleri
 // new testleri
