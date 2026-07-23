@@ -156,7 +156,10 @@ if (isEmpty(this.placeholder)) {
 
     /** @inheritdoc */
     afterSlotsBinded(hasProjectedContent) {
-        if (hasProjectedContent) this.#syncValueAfterOptionsChange();
+        if (hasProjectedContent) {
+            this.requestUpdate();
+this.#syncValueAfterOptionsChange();
+}
     }
 
     /** @override @protected */

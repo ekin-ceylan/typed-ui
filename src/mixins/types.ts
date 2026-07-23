@@ -32,6 +32,10 @@ export interface SlotCollector {
 
     /**
      * A hook that is called after slots have been bound.
+     * Components can perform post-processing here (e.g., derive state from slot content).
+     *
+     * **Important:** If you modify reactive properties, you must call `requestUpdate()`
+     * if Lit's reactivity doesn't automatically trigger it (e.g., direct assignments).
      * @param {boolean} hasProjectedContent Indicates if there is projected content in the slots.
      * @protected
      */

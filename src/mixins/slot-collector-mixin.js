@@ -43,10 +43,10 @@ export default function SlotCollectorMixin(Base) {
 
         connectedCallback() {
             super.connectedCallback?.();
+
             if (!this.#isCollected) {
                 this.#isCollected = true;
-                this.#collectSlots(); // sonradan DOM'a bağlandıysa çalışır
-                this.#firstUpdateCompleted();
+                this.#runCollectBindProcess();
             }
         }
 
@@ -143,12 +143,10 @@ export default function SlotCollectorMixin(Base) {
                 : [];
         }
 
-        async #firstUpdateCompleted() {
+        async #runCollectBindProcess() {
+            this.#collectSlots(); // sonradan DOM'a bağlandıysa çalışır
             await this.updateComplete;
             this.bindSlots(this.#slotNodes); // Tüm slot placeholder'larını bul
-            this.requestUpdate();
-
-            await this.updateComplete;
             this.afterSlotsBinded(this.#slotNodes?.length > 0);
         }
 
