@@ -112,6 +112,29 @@ describe('SelectBox - Options & value', () => {
         expect(select.selectedOptions[0].textContent).toContain('Green');
     });
 
+    it('handles initial value when no option is marked as selected', async () => {
+        const { select, host } = await initSelectBox(`
+			<select-box id="color" label="Color" placeholder="Pick one">
+				<option value="r">Red</option>
+				<option value="g">Green</option>
+				<option value="b">Blue</option>
+			</select-box>
+		`);
+
+        // When no option has selected attribute, host value should be empty
+        expect(host.value).toBe('');
+        expect(select.value).toBe('');
+
+        // Placeholder option is always rendered as selected (for visual display)
+        expect(select.selectedOptions).toHaveLength(1);
+        expect(select.selectedOptions[0].value).toBe('');
+        expect(select.selectedOptions[0].hasAttribute('hidden')).toBe(true);
+
+        // Placeholder option should be first
+        expect(select.options[0].value).toBe('');
+        expect(select.options[0].textContent).toContain('Pick one');
+    });
+
     it('renders optgroup content from slotted markup', async () => {
         const { select } = await initSelectBox(`
 			<select-box id="cities" label="Cities">
@@ -707,5 +730,32 @@ describe('SelectBox - Edge cases', () => {
 
         expect(host.value).toBe('');
         expect(select.value).toBe('');
+    });
+
+    it('syncs native input value when value is preserved after options change (else if branch)', async () => {
+        const { select, host } = await initSelectBox(`
+			<select-box id="preserve" label="Preserve" value="ist">
+				<option value="ank">Ankara</option>
+				<option value="ist">Istanbul</option>
+			</select-box>
+		`);
+
+        await host.updateComplete;
+
+        // Value preserved, native should sync
+        expect(host.value).toBe('ist');
+        expect(select.value).toBe('ist');
+
+        // Now change options, but value still valid - triggers #syncValueAfterOptionsChange
+        host.options = [
+            { value: 'ank', text: 'Ankara' },
+            { value: 'ist', text: 'Istanbul' },
+        ];
+        host.requestUpdate();
+        await host.updateComplete;
+
+        // Verify native input synced via the else if branch
+        expect(host.value).toBe('ist');
+        expect(select.value).toBe('ist');
     });
 });
