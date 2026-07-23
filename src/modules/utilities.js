@@ -98,9 +98,8 @@ export function isEmpty(value) {
  * @param {CustomElementConstructor} constructor The constructor of the custom element.
  */
 export function defineComponent(name, constructor) {
-    if (!customElements.get(name)) {
-        customElements.define(name, constructor);
-    }
+    if (customElements.get(name) === constructor) return;
+    customElements.define(name, constructor);
 }
 
 /**
