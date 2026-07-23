@@ -33,6 +33,11 @@ export default class StandardControlBase extends FormControlBase {
         };
     }
 
+    /** @override */
+    get labelId() {
+        return this.hideLabel ? null : super.labelId;
+    }
+
     constructor() {
         super();
 

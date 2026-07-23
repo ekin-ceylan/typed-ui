@@ -328,7 +328,7 @@ if (isEmpty(this.placeholder)) {
                     name=${ifDefined(this.name)}
                     ?required=${this.required}
                     ?disabled=${this.disabled}
-                    aria-labelledby=${ifDefined(this.hideLabel ? undefined : this.labelId)}
+                    aria-labelledby=${ifDefined(this.labelId)}
                     aria-label=${ifDefined(this.hideLabel ? this.label : undefined)}
                     aria-errormessage=${ifDefined(this.required ? this.errorId : undefined)}
                     aria-required=${this.required ? 'true' : 'false'}

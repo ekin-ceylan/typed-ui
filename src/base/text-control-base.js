@@ -78,11 +78,6 @@ export default class TextControlBase extends StandardControlBase {
         return this.#lastKey;
     }
 
-    /** @override */
-    get labelId() {
-        return this.hideLabel ? null : super.labelId;
-    }
-
     /**
      * Returns the validation message for the minlength constraint, using the current locale messages and the component's label.
      * @returns {string}
@@ -147,27 +142,27 @@ export default class TextControlBase extends StandardControlBase {
         this.required = false;
         this.value = '';
 
-        /** @type {String} The type attribute for the input element (e.g., 'text', 'email', 'tel') */
+        /** @type {string} The type attribute for the input element (e.g., 'text', 'email', 'tel') */
         this.type = 'text';
-        /** @type {String} The inputmode attribute for the input element (e.g., 'numeric', 'decimal', 'tel'). Will be 'text' if not specified */
+        /** @type {string | undefined} The inputmode attribute for the input element (e.g., 'numeric', 'decimal', 'tel'). Will be 'text' if not specified */
         this.inputmode = undefined;
-        /** @type {String} Regex source to allow/filter characters during masking */
+        /** @type {string | undefined} Regex source to allow/filter characters during masking */
         this.allowPattern = undefined; //'[a-zA-ZçÇğĞıİöÖşŞüÜâÂîÎ ]';
-        /** @type {String} The regex pattern for input validation */
+        /** @type {string | undefined} The regex pattern for input validation */
         this.pattern = undefined;
-        /** @type {Number} The maximum length of the input value */
+        /** @type {number | undefined} The maximum length of the input value */
         this.maxlength = undefined;
-        /** @type {Number} The minimum length of the input value */
+        /** @type {number | undefined} The minimum length of the input value */
         this.minlength = undefined;
-        /** @type {Number} The maximum numeric value allowed */
+        /** @type {number | undefined} The maximum numeric value allowed */
         this.max = undefined;
-        /** @type {Number} The minimum numeric value allowed */
+        /** @type {number | undefined} The minimum numeric value allowed */
         this.min = undefined;
-        /** @type {Boolean} Whether to unmask the value on change event */
+        /** @type {boolean} Whether to unmask the value on change event */
         this.autounmask = false;
-        /** @type {String} The autocomplete attribute for the input element */
+        /** @type {string | undefined} The autocomplete attribute for the input element */
         this.autocomplete = undefined;
-        /** @type {Boolean} Whether spellcheck is enabled for the input element */
+        /** @type {boolean | undefined} Whether spellcheck is enabled for the input element */
         this.spellcheck = undefined;
     }
 
