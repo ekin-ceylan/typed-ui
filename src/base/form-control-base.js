@@ -53,7 +53,7 @@ export default class FormControlBase extends lightMixins(PropValidatorMixin, Uni
      *
      * Recommendation: Override with a getter that queries the shadow root directly (e.g., `get inputElement() { return this.renderRoot?.querySelector('input'); }`)
      * @abstract
-     * @returns {HTMLInputElement | HTMLSelectElement | null}
+     * @returns {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null}
      */
     get inputElement() {
         throw new Error(`[${this.componentName}]: 'inputElement' getter MUST be overridden. Subclasses must provide a reference to the native DOM element.`);

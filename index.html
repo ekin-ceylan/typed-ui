@@ -19,8 +19,13 @@
 
     <body>
         <form id="form-1" oninvalid="invalid(event)">
-            <plate-box field-id="plate-no" label="Plaka Numarası" value="55  ty" required></plate-box>
+<text-area id="textarea" label="tekstarea" required><b>Hi</b></text-area>
             <br />
+            <br />
+            <plate-box label="Plaka Numarası" value="55  ty" required></plate-box>
+            <br />
+<br />
+            <input id="test" type="text" value="tr" pattern="\d+" required />
             <br />
             <typed-pagination current-page="11" page-count="20" sibling-count="3" aria-label="Pagination"></typed-pagination>
             <combo-box label="Kombo Native" field-id="combo-country-native" native-behavior placeholder="Seçiniz" value="de">

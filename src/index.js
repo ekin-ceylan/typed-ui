@@ -36,6 +36,8 @@ export { default as ConfirmPasswordBox } from './components/text-input/confirm-p
 export { default as NewPasswordBox } from './components/text-input/new-password-box.js';
 export { default as IntegerBox } from './components/text-input/integer-box.js';
 
+export { default as TextArea } from './components/text-area/text-area.js';
+
 // Select
 export { default as SelectBox } from './components/select/select-box.js';
 export { default as CustomOption } from './components/select/custom-option.js';
